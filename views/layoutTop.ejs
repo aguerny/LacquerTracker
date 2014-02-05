@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <title><%= title %></title>
+    <meta charset="iso-8859-1">
+    <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
+</head>
+
+<body>
+
+<!-- header -->
+<div class="wrapper row1">
+    <header id="header" class="clear">
+        <h1>Lacquer Tracker</h1>
+        <div id="logininfo">
+            <% if (!user) { %>
+                <p><a href="/login">Login</a> or <a href="/register">Register</a></p>
+            <% } %>
+            <% if (user) { %>
+                <p>Hello NAME<br><a href="/logout">Logout</a></p>
+            <% } %>
+        </div>
+    <nav>
+        <ul>
+            <li><a href="/browse">Browse</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/settings">Settings</a></li>
+            <li class="last"><a href="/contact">Contact</a></li>
+        </ul>
+    </nav>
+    </header>
+</div>
