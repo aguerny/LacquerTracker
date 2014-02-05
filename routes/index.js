@@ -11,4 +11,10 @@ module.exports = function(app) {
 
   var signup = require('./signup');
   app.get('/signup', signup.get);
+
+  var login = require('./login');
+  app.get('/login', login.get);
+
+  var forgotpassword = require('./forgotpassword');
+  app.get('/forgotpassword', forgotpassword.get);
  }

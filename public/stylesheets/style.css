@@ -75,6 +75,9 @@ input, textarea, select{font-size:12px; font-family:Georgia,"Times New Roman",Ti
 #header nav li a{color:#C0BAB6; background-color:#232323;}
 #header nav li a:hover{color:#10695A; background-color:#232323;}
 
+#logininfo {text-align: right; padding-top: 1.5%; color:#000000;}
+#logininfo a{color:#10695A;}
+
 
 /*---Main Content---*/
 
@@ -91,7 +94,7 @@ input, textarea, select{font-size:12px; font-family:Georgia,"Times New Roman",Ti
 
 .button {color:#FFFFFF; background-color:#10695A; border:none; margin: 0 0 2% 0; padding: .25%;}
 
-#polish-image {margin:0 0 2% 0; float:right; width:40%; vertical-align:middle; clear:right;}
+#polish-image {margin:0 0 4% 0; float:right; width:40%; vertical-align:middle; clear:right;}
 
 #polish-image2 {width:60%; margin: 0 0 4% 0;}
 
