@@ -1,20 +1,27 @@
 module.exports = function(app) {
 
-  var main = require('./main');
-  app.get('/', main.get);
+  app.get('/', function(req, res) {
+    res.render('main.ejs', {title: 'Lacquer Tracker'});
+  });
 
-  var browse = require('./browse');
-  app.get('/browse', browse.get);
+  app.get('/browse', function(req, res) {
+    res.render('browse.ejs', {title: 'Browse - Lacquer Tracker'});
+  });
 
-  var contact = require('./contact');
-  app.get('/contact', contact.get);
+  app.get('/contact', function(req, res) {
+    res.render('contact.ejs', {title: 'Contact - Lacquer Tracker'});
+  });
 
-  var signup = require('./signup');
-  app.get('/signup', signup.get);
+  app.get('/signup', function(req, res) {
+    res.render('signup.ejs', {title: 'Signup - Lacquer Tracker'});
+  });
 
-  var login = require('./login');
-  app.get('/login', login.get);
+  app.get('/login', function(req, res) {
+    res.render('login.ejs', {title: 'Login - Lacquer Tracker'});
+  });
 
-  var forgotpassword = require('./forgotpassword');
-  app.get('/forgotpassword', forgotpassword.get);
+  app.get('/forgotpassword', function(req, res) {
+    res.render('forgotpassword.ejs', {title: 'Retrieve Password - Lacquer Tracker'});
+  });
+
  }
