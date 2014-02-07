@@ -13,7 +13,11 @@
     <header id="header" class="clear">
         <h1>Lacquer Tracker</h1>
         <div id="logininfo">
-            <p>Hello NAME | <a href="/logout">Logout</a></p>
+            <% if (passport.authenticate()) { %>
+                <p>Hello <%= user.local.username %> | <a href="/logout">Logout</a></p>
+            <% } else { %>
+                <p><a href="/login">Login</a></p> or <a href="/signup">Signup</a></p>
+            <% } %>
         </div>
     <nav>
         <ul>

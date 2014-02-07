@@ -3,13 +3,17 @@
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
-    <section>
-      <form method="post" id="account-form">
-        <h4>Log in below:</h4><br>
-        Username: <input type="text" name="username"><br><br>
-        Password: <input type="password" name="password"><br><br><br>
-        <input type="submit" value="Submit" class="button" id="login-button"></form>
-    </section>
+    	<section>
+    		<form action="/login" method="post">
+	     		<h3>Log in below:</h3><br>
+    			Username: <input type="text" name="username"><br><br>
+    			Password: <input type="password" name="password"><br><br><br>
+    			<input type="submit" value="Submit" class="button" id="login-button">
+    		</form>
+    		<% if (message.length > 0) { %>
+    			<br><h4><%= message %></h4>
+    		<% } %>
+    	</section>
     </div>
 </div>
 

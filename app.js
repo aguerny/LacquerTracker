@@ -1,36 +1,59 @@
-
-/**
- * Module dependencies.
- */
-
+//set up
+var flash = require('connect-flash');
 var express = require('express');
 var http = require('http');
 var path = require('path');
+var mongoose = require('mongoose');
+var passport = require('passport');
+//var configDB = require('./config/database.js');
 
 var app = express();
 
-// all environments
-app.set('port', process.env.PORT || 3000);
-app.set('views', __dirname + '/views');
-app.engine('html', require('ejs').renderFile);
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded());
-app.use(express.methodOverride());
-app.use(express.cookieParser('your secret here'));
-app.use(express.session());
-app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'html')));
+//configuration
+mongoose.connect('localhost/test'); // connect to database
+require('./config/passport')(passport); // pass passport for configuration
+
+app.configure(function() {
+
+	//set up express
+	app.set('port', process.env.PORT || 3000);
+	app.set('views', __dirname + '/views');
+	app.engine('html', require('ejs').renderFile);
+
+	app.use(express.logger('dev')); // log every request to the console
+	app.use(express.cookieParser('lala')); // read cookies (needed for auth)
+	app.use(express.bodyParser()); // get information from HTML forms
+	//other from previous files
+	app.use(express.favicon());
+	app.use(express.json());
+	app.use(express.urlencoded());
+	app.use(express.methodOverride());
+	app.use(express.static(path.join(__dirname, 'public')));
+	app.use(express.static(path.join(__dirname, 'html')));
+
+	//required for passport
+	app.use(express.session({cookie: {maxAge: 60000}})); // session secret
+	app.use(flash()); // use connect-flash for flash messages stored in session
+	app.use(passport.initialize());
+	app.use(passport.session()); // persistent login sessions
+
+	//other old ones
+	app.use(app.router);
+
+});
+
 
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-require('./routes')(app);
 
+//routes
+require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+
+
+//launch
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
