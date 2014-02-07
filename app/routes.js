@@ -27,7 +27,7 @@ module.exports = function(app, passport) {
   });
 
   app.post('/signup', passport.authenticate('local-signup', {
-    successRedirect: '/profile', //redirect to the secure profile section
+    successRedirect: '/settings', //redirect to the secure profile section
     failureRedirect: '/signup', //redirect back to the signup page if there is an error
     failureFlash: true //allow flash messages
   }));
@@ -40,7 +40,7 @@ module.exports = function(app, passport) {
   });
 
   app.post('/login', passport.authenticate('local-login', {
-    successRedirect: '/profile',
+    successRedirect: '/browse',
     failureRedirect: '/login',
     failureFlash: true
   }));
@@ -63,8 +63,14 @@ module.exports = function(app, passport) {
 
 
   //profile
-  app.get('/profile', isLoggedIn, function(req, res) {
+  app.get('/profile', function(req, res) {
     res.render('profile.ejs', {user: req.user, title: 'Profile - Lacquer Tracker'});
+  });
+
+
+  //settings
+  app.get('/settings', isLoggedIn, function(req, res) {
+    res.render('settings.ejs', {user: req.user, title: 'settings - Lacquer Tracker'});
   });
 
 };
