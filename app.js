@@ -37,6 +37,18 @@ app.configure(function() {
 	app.use(passport.initialize());
 	app.use(passport.session()); // persistent login sessions
 
+	app.use(function (req, res, next) {
+    res.locals({
+        get user() { // as a getter to delay retrieval until `res.render()`
+            return req.user;
+        },
+        isAuthenticated: function () {
+            return req.user != null;
+        }
+    })
+    	next();
+	});
+	
 	//other old ones
 	app.use(app.router);
 
