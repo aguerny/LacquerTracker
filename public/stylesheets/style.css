@@ -102,6 +102,18 @@ input, textarea, select{font-size:12px; font-family:Georgia,"Times New Roman",Ti
 
 .contact {width:80%;}
 
+table {width:100%; border-collapse: collapse; table-layout:fixed; margin-bottom: 2%;}
+table, th, td {border: 1px solid black;}
+th, td {padding:1%;}
+th {color: #10695A; font-weight:bold; background-color: #D5DEDE;}
+
+/* Sortable tables */
+table.sortable thead {
+    background-color:#eee;
+    font-weight: bold;
+    cursor: default;
+}
+
 
 /*---Footer---*/
 

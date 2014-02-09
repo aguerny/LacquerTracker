@@ -16,7 +16,7 @@ module.exports = function(app, passport) {
           .exec(function (err, docs) {
              var newDocs = docs.map(function(idoc){
                 console.log(idoc);
-                return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><tr>";
+                return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td>" + idoc.year + "</td><td>" + idoc.color + "</td><td>" + idoc.type + "</td></tr>";
             })
             res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes:  newDocs });
           });
@@ -36,13 +36,45 @@ module.exports = function(app, passport) {
       var polishItems = [];
       var newDocs = docs.map(function(idoc){
           console.log(idoc);
-          return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><tr>";
+          return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td>" + idoc.year + "</td><td>" + idoc.color + "</td><td>" + idoc.type + "</td></tr>";
       })
 
       res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes: newDocs});
     });
 
   });
+
+
+
+  //add new polish
+  app.get('/addnewpolish', function(req, res) {
+    res.render('addnewpolish.ejs', {title: 'Add a Polish - Lacquer Tracker', message : req.flash('addPolishMessage')});
+  });
+
+  app.post('/addnewpolish', function(req, res) {
+    Polish.findOne({ name : req.body.name, brand : req.body.brand}, function(err, polish) {
+        //check to see if there's already a polish name and brand in the database
+        if (polish) {
+          req.flash('addPolishMessage', 'That polish already exists in the database.')
+          res.redirect('/addnewpolish');
+        } else {
+          var newPolish = new Polish ({
+            name: req.body.name,
+            brand: req.body.brand,
+            batch: req.body.batch,
+            year: req.body.year,
+            color: req.body.color,
+            type: req.body.type
+          });
+          newPolish.save(function(err) {
+            req.flash('addPolishMessage', 'Polish has been successfully added. Add another?')
+            res.redirect('/addnewpolish');
+          });
+        }
+      });
+  });
+
+
 
 
   //contact

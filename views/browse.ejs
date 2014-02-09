@@ -38,9 +38,12 @@
             </form>
         </div>
         <div id="browse-right_col">
+        <table id="polishbrowse" class="sortable">
+          <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Year</th><th>Color</th><th>Type</th></tr>
         <% for(var i=0; i<polishes.length; i++) {%>
          <%- polishes[i] %>
         <% } %>
+        </table>
         </div>
         </div>
     </section>
