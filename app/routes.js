@@ -1,3 +1,5 @@
+var Polish = require('../app/models/polish');
+
 module.exports = function(app, passport) {
 
   //home page
@@ -7,11 +9,40 @@ module.exports = function(app, passport) {
 
 
 
-  //browse
+//browse
   app.get('/browse', function(req, res) {
-    res.render('browse.ejs', {title: 'Browse - Lacquer Tracker'});
+    Polish.find({})
+          .limit(10)
+          .exec(function (err, docs) {
+             var newDocs = docs.map(function(idoc){
+                console.log(idoc);
+                return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><tr>";
+            })
+            res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes:  newDocs });
+          });
   });
 
+//
+  app.post('/browse', function(req, res) {
+    var filterOptions = req.body;
+    for(var key in filterOptions) {
+      if(filterOptions.hasOwnProperty(key)) {
+          filterOptions[key] = new RegExp(filterOptions[key], "i");
+      }
+    }
+
+    Polish.find(filterOptions , function (err, docs) {
+      console.log(docs);
+      var polishItems = [];
+      var newDocs = docs.map(function(idoc){
+          console.log(idoc);
+          return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><tr>";
+      })
+
+      res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes: newDocs});
+    });
+
+  });
 
 
   //contact

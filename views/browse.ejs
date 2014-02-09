@@ -7,43 +7,40 @@
         <div id="browse-wrap">
         <div id="browse-left_col">
           <h3>Filter by:</h3><br>
-            <form action="">
-              <input type="text" class="filter" placeholder="Name or Keyword">
-            </form><br><br>
-            <form action="">
+            <form action="browse" method="post">
+              <input type="text" name="name" placeholder="Name">
+              <br><br>
               <input type="checkbox" name="own" value="own">Owned polish<br><br>
               <input type="checkbox" name="wish" value="wish">Wanted polish
-            </form><br><br>
-            <form action="">
-               <select id="filter-brand" class="filter">
-                 <option value="all-brands">All Brands</option>
+              <br><br><br>
+              <select name="brand">
+                 <option value="">All Brands</option>
+                 <option value="test">Test</option>
                  <option value="china glaze">China Glaze</option>
                  <option value="opi">OPI</option>
                  <option value="zoya">Zoya</option>
-               </select>
-             </form><br><br>
-            <form action="">
-               <select id="filter-color" class="filter">
-                 <option value="all-colors">All Colors</option>
+              </select>
+              <br><br><br>
+              <select name="color">
+                 <option value="">All Colors</option>
                  <option value="green">green</option>
                  <option value="blue">blue</option>
                  <option value="purple">purple</option>
-               </select>
-             </form><br><br>
-            <form action="">
-               <select id="filter-type" class="filter">
-                 <option value="all-types">All Types</option>
+              </select>
+              <br><br><br>
+              <select name="type">
+                 <option value="">All Types</option>
                  <option value="glitter">glitter</option>
                  <option value="holo">holo</option>
                </select>
-             </form><br><br>
-            <input type="submit" class="button" id="search-button" value="Filter">
-        </fieldset>
-    </form>
-
+              <br><br><br>
+              <input type="submit" class="button" id="search-button" value="Filter">
+            </form>
         </div>
         <div id="browse-right_col">
-
+        <% for(var i=0; i<polishes.length; i++) {%>
+         <%- polishes[i] %>
+        <% } %>
         </div>
         </div>
     </section>
