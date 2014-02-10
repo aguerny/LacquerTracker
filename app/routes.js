@@ -1,5 +1,4 @@
 var Polish = require('../app/models/polish');
-var jQuery = require('//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js');
 
 module.exports = function(app, passport) {
 
@@ -83,29 +82,27 @@ app.post('/addpolish', function(req, res) {
 
 //edit polish
 app.get('/editpolish/:id', function(req, res) {
-	var pathname = window.location.pathname.split("/");
-	var editid = pathname[2];
-	Polish.findById(editid, function(err, p) {
-        if (!p) {
-            req.flash('editPolishMessage', 'Error editing polish.')
-            res.redirect('/browse');
-        } else {
-            var editname = p.name;
-            var editbrand = p.brand;
-            var editbatch = p.batch;
-            var editcolor = p.color;
-            var edittype = p.type;
-            var editindie = p.indie;
-        }
-    });
-	res.render('editpolish.ejs', {title: 'Edit a Polish - Lacquer Tracker', message : req.flash('editPolishMessage')});
+	Polish.findById(req.params.id, function(err, p) {
+	var data = {};
+		data.title = 'Edit a Polish - Lacquer Tracker';
+		data.message = req.flash('editPolishMessage');
+		data.editid = p.id;
+		data.editname = p.name;
+		data.editbrand = p.brand;
+		data.editbatch = p.batch;
+		data.editcolor = p.color;
+		data.edittype = p.type;
+		data.editindie = p.indie;
+		/*data.editcode = p.code;*/
+	res.render('editpolish.ejs', data);
+	});
 });
 
 app.post('/editpolish/:id', function(req, res) {
-	Polish.findById(id, function(err, p) {
+	Polish.findById(req.params.id, function(err, p) {
 		if (!p) {
 			req.flash('editPolishMessage', 'Error editing polish.')
-			res.redirect('/editpolish');
+			res.redirect('/editpolish/:id');
 		} else {
 			p.name = req.body.name;
 			p.brand = req.body.brand;
@@ -113,8 +110,8 @@ app.post('/editpolish/:id', function(req, res) {
 			p.color = req.body.color;
 			p.type = req.body.type;
 			p.indie = req.body.indie;
+			/*p.code = req.body.code;*/
 			p.save(function(err) {
-				req.flash('editPolishMessage', 'Polish has been edited successfully.')
 				res.redirect('/browse');
 			});
 		}

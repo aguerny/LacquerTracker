@@ -4,12 +4,12 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     	<section>
-    		<form action="/editpolish" method="post">
+    		<form action="/editpolish/<%= editid %>" method="post">
 	     		<h3>Edit polish:</h3><br>
-    			Name: <input type="text" name="name" placeholder="<%= editname %>" required><br><br>
-                Brand: <input type="text" name="brand" required><br><br>
-                Collection: <input type="text" name="batch"><br><br>
-                Color: <select name="color">
+    			Name: <input type="text" name="name" value="<%= editname %>" required><br><br>
+                Brand: <input type="text" name="brand" value="<%= editbrand %>" required><br><br>
+                Collection: <input type="text" name="batch" value="<%= editbatch %>"><br><br>
+                Color: <select name="color" value="<%= editcolor %>">
                     <option value="">select a color</option>
                     <option value="black">black</option>
                     <option value="blue">blue</option>
@@ -25,24 +25,24 @@
                     </select><br><br>
                 Type: <select name="type">
                     <option value="">select a special type</option>
-                    <option value="colorchange">color changing</option>
-                    <option value="crackle">crackle</option>
-                    <option value="creme">creme</option>
-                    <option value="flakie">flakie</option>
-                    <option value="glitter">glitter</option>
-                    <option value="holo">holo</option>
-                    <option value="jelly">jelly</option>
-                    <option value="magnetic">magnetic</option>
-                    <option value="matte">matte</option>
-                    <option value="metallic">metallic</option>
-                    <option value="sheer">sheer</option>
-                    <option value="shimmer">shimmer</option>
-                    <option value="texture">texture</option>
-                    <option value="topbase">top/base coat</option>
+                    <option value="colorchange" <% if (edittype === "colorchange") { %> selected="selected" <%}%>>color changing</option>
+                    <option value="crackle" <% if (edittype === "crackle") { %> selected="selected" <%}%>>crackle</option>
+                    <option value="creme" <% if (edittype === "creme") { %> selected="selected" <%}%>>creme</option>
+                    <option value="flakie" <% if (edittype === "flakie") { %> selected="selected" <%}%>>flakie</option>
+                    <option value="glitter" <% if (edittype === "glitter") { %> selected="selected" <%}%>>glitter</option>
+                    <option value="holo" <% if (edittype === "holo") { %> selected="selected" <%}%>>holo</option>
+                    <option value="jelly" <% if (edittype === "jelly") { %> selected="selected" <%}%>>jelly</option>
+                    <option value="magnetic" <% if (edittype === "magnetic") { %> selected="selected" <%}%>>magnetic</option>
+                    <option value="matte" <% if (edittype === "matte") { %> selected="selected" <%}%>>matte</option>
+                    <option value="metallic" <% if (edittype === "metallic") { %> selected="selected" <%}%>>metallic</option>
+                    <option value="sheer" <% if (edittype === "sheer") { %> selected="selected" <%}%>>sheer</option>
+                    <option value="shimmer" <% if (edittype === "shimmer") { %> selected="selected" <%}%>>shimmer</option>
+                    <option value="texture" <% if (edittype === "texture") { %> selected="selected" <%}%>>texture</option>
+                    <option value="topbase" <% if (edittype === "topbase") { %> selected="selected" <%}%>>top/base coat</option>
                     </select><br><br>
-                Is this an indie?: <select name="indie">
-                    <option value="off">no</option>
-                    <option value="on">yes</option>
+                Is this an indie?: <select name="indie" selected="<%= editindie %>">
+                    <option value="off"<% if (editindie === "off") { %> selected="selected" <%}%>>no</option>
+                    <option value="on"<% if (editindie === "on") { %> selected="selected" <%}%>>yes</option>
                     </select><br><br><br><br>
                 <input type="submit" value="Submit" class="button">
             </form>
