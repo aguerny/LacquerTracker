@@ -1,140 +1,189 @@
 var Polish = require('../app/models/polish');
+var jQuery = require('//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js');
 
 module.exports = function(app, passport) {
 
-  //home page
-  app.get('/', function(req, res) {
-    res.render('main.ejs', {title: 'Lacquer Tracker'});
-  });
+
+//home page
+app.get('/', function(req, res) {
+	res.render('main.ejs', {title: 'Lacquer Tracker'});
+});
+
 
 
 
 //browse
-  app.get('/browse', function(req, res) {
-    Polish.find({})
-          .limit(10)
-          .exec(function (err, docs) {
-             var newDocs = docs.map(function(idoc){
-                console.log(idoc);
-                return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td>" + idoc.year + "</td><td>" + idoc.color + "</td><td>" + idoc.type + "</td></tr>";
-            })
-            res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes:  newDocs });
-          });
-  });
-
-//
-  app.post('/browse', function(req, res) {
-    var filterOptions = req.body;
-    for(var key in filterOptions) {
-      if(filterOptions.hasOwnProperty(key)) {
-          filterOptions[key] = new RegExp(filterOptions[key], "i");
-      }
-    }
-
-    Polish.find(filterOptions , function (err, docs) {
-      console.log(docs);
-      var polishItems = [];
-      var newDocs = docs.map(function(idoc){
-          console.log(idoc);
-          return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td>" + idoc.year + "</td><td>" + idoc.color + "</td><td>" + idoc.type + "</td></tr>";
-      })
-
-      res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes: newDocs});
-    });
-
-  });
+app.get('/browse', function(req, res) {
+	Polish.find({})
+		.limit(10)
+		.exec(function (err, docs) {
+			var newDocs = docs.map(function(idoc){
+				console.log(idoc);
+				return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td>" + idoc.color + "</td><td>" + idoc.type + "</td><td><a href=/editpolish/" + idoc.id + ">Edit</a></td></tr>";
+			})
+		res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes:  newDocs });
+	});
+});
 
 
+app.post('/browse', function(req, res) {
+	var filterOptions = req.body;
+	console.log(filterOptions);
+	for(var key in filterOptions) {
+		if(filterOptions.hasOwnProperty(key)) {
+			filterOptions[key] = new RegExp(filterOptions[key], "i");
+		}
+	}
 
-  //add new polish
-  app.get('/addnewpolish', function(req, res) {
-    res.render('addnewpolish.ejs', {title: 'Add a Polish - Lacquer Tracker', message : req.flash('addPolishMessage')});
-  });
+	Polish.find(filterOptions , function (err, docs) {
+		console.log(docs);
+		var polishItems = [];
+		var newDocs = docs.map(function(idoc){
+			console.log(idoc);
+			return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td>" + idoc.color + "</td><td>" + idoc.type + "</td><td><a href=/editpolish/" + idoc.id + ">Edit</a></td></tr>";
+	})
 
-  app.post('/addnewpolish', function(req, res) {
-    Polish.findOne({ name : req.body.name, brand : req.body.brand}, function(err, polish) {
-        //check to see if there's already a polish name and brand in the database
-        if (polish) {
-          req.flash('addPolishMessage', 'That polish already exists in the database.')
-          res.redirect('/addnewpolish');
+	res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes: newDocs});
+	});
+
+	});
+
+
+
+//add polish
+app.get('/addpolish', /*isLoggedIn,*/ function(req, res) {
+	res.render('addpolish.ejs', {title: 'Add a Polish - Lacquer Tracker', message : req.flash('addPolishMessage')});
+});
+
+app.post('/addpolish', function(req, res) {
+	Polish.findOne({ name : req.body.name, brand : req.body.brand}, function(err, polish) {
+		//check to see if there's already a polish name and brand in the database
+		if (polish) {
+			req.flash('addPolishMessage', 'That polish already exists in the database.')
+			res.redirect('/addpolish');
+		} else {
+			var newPolish = new Polish ({
+				name: req.body.name,
+				brand: req.body.brand,
+				batch: req.body.batch,
+				color: req.body.color,
+				type: req.body.type,
+				indie: req.body.indie
+			});
+			newPolish.save(function(err) {
+				req.flash('addPolishMessage', 'Polish has been successfully added. Add another?')
+				res.redirect('/addpolish');
+			});
+		}
+	});
+});
+
+
+
+
+//edit polish
+app.get('/editpolish/:id', function(req, res) {
+	var pathname = window.location.pathname.split("/");
+	var editid = pathname[2];
+	Polish.findById(editid, function(err, p) {
+        if (!p) {
+            req.flash('editPolishMessage', 'Error editing polish.')
+            res.redirect('/browse');
         } else {
-          var newPolish = new Polish ({
-            name: req.body.name,
-            brand: req.body.brand,
-            batch: req.body.batch,
-            year: req.body.year,
-            color: req.body.color,
-            type: req.body.type
-          });
-          newPolish.save(function(err) {
-            req.flash('addPolishMessage', 'Polish has been successfully added. Add another?')
-            res.redirect('/addnewpolish');
-          });
+            var editname = p.name;
+            var editbrand = p.brand;
+            var editbatch = p.batch;
+            var editcolor = p.color;
+            var edittype = p.type;
+            var editindie = p.indie;
         }
-      });
-  });
+    });
+	res.render('editpolish.ejs', {title: 'Edit a Polish - Lacquer Tracker', message : req.flash('editPolishMessage')});
+});
+
+app.post('/editpolish/:id', function(req, res) {
+	Polish.findById(id, function(err, p) {
+		if (!p) {
+			req.flash('editPolishMessage', 'Error editing polish.')
+			res.redirect('/editpolish');
+		} else {
+			p.name = req.body.name;
+			p.brand = req.body.brand;
+			p.batch = req.body.batch;
+			p.color = req.body.color;
+			p.type = req.body.type;
+			p.indie = req.body.indie;
+			p.save(function(err) {
+				req.flash('editPolishMessage', 'Polish has been edited successfully.')
+				res.redirect('/browse');
+			});
+		}
+	});
+});
 
 
 
 
-  //contact
-  app.get('/contact', function(req, res) {
-    res.render('contact.ejs', {title: 'Contact - Lacquer Tracker'});
-  });
+//contact
+app.get('/contact', function(req, res) {
+	res.render('contact.ejs', {title: 'Contact - Lacquer Tracker'});
+});
 
 
 
-  //sign up
-  app.get('/signup', function(req, res) {
-    res.render('signup.ejs', {title: 'Signup - Lacquer Tracker', message: req.flash('signupMessage')});
-  });
+//sign up
+app.get('/signup', function(req, res) {
+	res.render('signup.ejs', {title: 'Signup - Lacquer Tracker', message: req.flash('signupMessage')});
+});
 
-  app.post('/signup', passport.authenticate('local-signup', {
-    successRedirect: '/settings', //redirect to the secure profile section
-    failureRedirect: '/signup', //redirect back to the signup page if there is an error
-    failureFlash: true //allow flash messages
-  }));
-
-
-
-  //log in
-  app.get('/login', function(req, res) {
-    res.render('login.ejs', {title: 'Login - Lacquer Tracker', message: req.flash('loginMessage')});
-  });
-
-  app.post('/login', passport.authenticate('local-login', {
-    successRedirect: '/browse',
-    failureRedirect: '/login',
-    failureFlash: true
-  }));
+app.post('/signup', passport.authenticate('local-signup', {
+	successRedirect: '/settings', //redirect to the secure profile section
+	failureRedirect: '/signup', //redirect back to the signup page if there is an error
+	failureFlash: true //allow flash messages
+}));
 
 
 
-  //forgot password
-  app.get('/forgotpassword', function(req, res) {
-    res.render('forgotpassword.ejs', {title: 'Retrieve Password - Lacquer Tracker'});
-  });
+//log in
+app.get('/login', function(req, res) {
+	res.render('login.ejs', {title: 'Login - Lacquer Tracker', message: req.flash('loginMessage')});
+});
+
+app.post('/login', passport.authenticate('local-login', {
+	successRedirect: '/browse',
+	failureRedirect: '/login',
+	failureFlash: true
+}));
 
 
 
-  //log out
-  app.get('/logout', function(req, res) {
-    req.logout();
-    res.redirect('/');
-  });
+//forgot password
+app.get('/forgotpassword', function(req, res) {
+	res.render('forgotpassword.ejs', {title: 'Retrieve Password - Lacquer Tracker'});
+});
 
 
 
-  //profile
-  app.get('/profile', function(req, res) {
-    res.render('profile.ejs', {user: req.user, title: 'Profile - Lacquer Tracker'});
-  });
+//log out
+app.get('/logout', function(req, res) {
+	req.logout();
+	res.redirect('/');
+});
 
 
-  //settings
-  app.get('/settings', isLoggedIn, function(req, res) {
-    res.render('settings.ejs', {user: req.user, title: 'settings - Lacquer Tracker'});
-  });
+
+//profile
+app.get('/profile', function(req, res) {
+	res.render('profile.ejs', {user: req.user, title: 'Profile - Lacquer Tracker'});
+});
+
+
+//settings
+app.get('/settings', isLoggedIn, function(req, res) {
+	res.render('settings.ejs', {user: req.user, title: 'settings - Lacquer Tracker'});
+});
+
+
 
 };
 
@@ -145,7 +194,7 @@ function isLoggedIn(req, res, next) {
 
   //if user is authenticated in the session, carry on
   if (req.isAuthenticated())
-    return next();
+	return next();
 
   //if they aren't, redirect them to the home apge
   res.redirect('/');

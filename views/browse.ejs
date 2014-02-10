@@ -10,9 +10,9 @@
             <form action="browse" method="post">
               <input type="text" name="name" placeholder="Name">
               <br><br>
-              <input type="checkbox" name="own" value="own">Owned polish<br><br>
-              <input type="checkbox" name="wish" value="wish">Wanted polish
-              <br><br><br>
+              <input type="checkbox" name="own">Owned polish<br><br>
+              <input type="checkbox" name="wish">Wanted polish<br><br>
+              <input type="checkbox" name="indie">Indie polishes only<br><br><br>
               <select name="brand">
                  <option value="">All Brands</option>
                  <option value="test">Test</option>
@@ -23,15 +23,35 @@
               <br><br><br>
               <select name="color">
                  <option value="">All Colors</option>
-                 <option value="green">green</option>
+                 <option value="black">black</option>
                  <option value="blue">blue</option>
+                 <option value="clear">clear</option>
+                 <option value="green">green</option>
+                 <option value="grey">grey</option>
+                 <option value="orange">orange</option>
+                 <option value="pink">pink</option>
                  <option value="purple">purple</option>
+                 <option value="red">red</option>
+                 <option value="white">white</option>
+                 <option value="yellow">yellow</option>
               </select>
               <br><br><br>
               <select name="type">
-                 <option value="">All Types</option>
-                 <option value="glitter">glitter</option>
-                 <option value="holo">holo</option>
+                <option value="">All Types</option>
+                <option value="colorchange">color changing</option>
+                <option value="crackle">crackle</option>
+                <option value="creme">creme</option>
+                <option value="flakie">flakie</option>
+                <option value="glitter">glitter</option>
+                <option value="holo">holo</option>
+                <option value="jelly">jelly</option>
+                <option value="magnetic">magnetic</option>
+                <option value="matte">matte</option>
+                <option value="metallic">metallic</option>
+                <option value="sheer">sheer</option>
+                <option value="shimmer">shimmer</option>
+                <option value="texture">texture</option>
+                <option value="topbase">top/base coat</option>
                </select>
               <br><br><br>
               <input type="submit" class="button" id="search-button" value="Filter">
@@ -39,11 +59,12 @@
         </div>
         <div id="browse-right_col">
         <table id="polishbrowse" class="sortable">
-          <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Year</th><th>Color</th><th>Type</th></tr>
+          <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Type</th><th>Edit</th></tr>
         <% for(var i=0; i<polishes.length; i++) {%>
          <%- polishes[i] %>
         <% } %>
         </table>
+        <p>Can't find the polish you're looking for? <a href="/addpolish">Add it to the database.</a></p>
         </div>
         </div>
     </section>

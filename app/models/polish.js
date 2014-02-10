@@ -7,9 +7,10 @@ var polishSchema = mongoose.Schema({
 	batch: String,
     brand: String,
     name: String,
-	year: String,
     color: String,
     type: String,
+    indie: String,
+    code: String,
 });
 
 
