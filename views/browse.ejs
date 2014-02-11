@@ -8,12 +8,12 @@
         <div id="browse-left_col">
           <h3>Filter by:</h3><br>
             <form action="browse" method="post">
-              <input type="text" name="name" placeholder="Name">
+              <input type="text" name="name" placeholder="Name" class="filter">
               <br><br>
               <input type="checkbox" name="own">Owned polish<br><br>
               <input type="checkbox" name="wish">Wanted polish<br><br>
               <input type="checkbox" name="indie">Indie polishes only<br><br><br>
-              <select name="brand">
+              <select name="brand" class="filter">
                  <option value="">All Brands</option>
                  <option value="test">Test</option>
                  <option value="china glaze">China Glaze</option>
@@ -21,7 +21,7 @@
                  <option value="zoya">Zoya</option>
               </select>
               <br><br><br>
-              <select name="color">
+              <select name="colorcat" class="filter">
                  <option value="">All Colors</option>
                  <option value="black">black</option>
                  <option value="blue">blue</option>
@@ -36,7 +36,7 @@
                  <option value="yellow">yellow</option>
               </select>
               <br><br><br>
-              <select name="type">
+              <select name="type" class="filter">
                 <option value="">All Types</option>
                 <option value="colorchange">color changing</option>
                 <option value="crackle">crackle</option>
@@ -59,7 +59,7 @@
         </div>
         <div id="browse-right_col">
         <table id="polishbrowse" class="sortable">
-          <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Type</th><th>Edit</th></tr>
+          <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Type</th><th>Options</th></tr>
         <% for(var i=0; i<polishes.length; i++) {%>
          <%- polishes[i] %>
         <% } %>

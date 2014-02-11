@@ -98,7 +98,7 @@ input, textarea, select{font-size:12px; font-family:Georgia,"Times New Roman",Ti
 
 #polish-image2 {width:60%; margin: 0 0 4% 0;}
 
-.filter {width:100%;}
+.filter {width:80%;}
 
 .contact {width:80%;}
 
@@ -114,6 +114,11 @@ table.sortable thead {
     cursor: default;
 }
 
+#swatch {
+	height: 95%;
+	width: 95%;
+	border-radius: 50%;
+}
 
 /*---Footer---*/
 

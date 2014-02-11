@@ -1,6 +1,9 @@
 var Polish = require('../app/models/polish');
+var User = require('../app/models/user');
 
 module.exports = function(app, passport) {
+
+///////////////////////////////////////////////////////////////////////////
 
 
 //home page
@@ -9,6 +12,7 @@ app.get('/', function(req, res) {
 });
 
 
+///////////////////////////////////////////////////////////////////////////
 
 
 //browse
@@ -18,7 +22,7 @@ app.get('/browse', function(req, res) {
 		.exec(function (err, docs) {
 			var newDocs = docs.map(function(idoc){
 				console.log(idoc);
-				return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td>" + idoc.color + "</td><td>" + idoc.type + "</td><td><a href=/editpolish/" + idoc.id + ">Edit</a></td></tr>";
+				return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td><a href=/browse/addown" + idoc.id + ">Own</a> | <a href=/browse/addwant" + idoc.id + ">Want</a> | <a href=/editpolish/" + idoc.id + ">Edit</a></td></tr>";
 			})
 		res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes:  newDocs });
 	});
@@ -39,14 +43,30 @@ app.post('/browse', function(req, res) {
 		var polishItems = [];
 		var newDocs = docs.map(function(idoc){
 			console.log(idoc);
-			return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td>" + idoc.color + "</td><td>" + idoc.type + "</td><td><a href=/editpolish/" + idoc.id + ">Edit</a></td></tr>";
+			return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td><a href=/browse/addown" + idoc.id + ">Own</a> | <a href=/browse/addwant" + idoc.id + ">Want</a> | <a href=/editpolish/" + idoc.id + ">Edit</a></td></tr>";
 	})
 
 	res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes: newDocs});
 	});
 
-	});
+});
 
+//own polish
+app.get('/browse/addown:id', isLoggedIn, function(req, res) {
+	req.user.ownedpolish.addToSet(req.params.id);
+	req.user.save();
+	res.redirect('/browse');
+});
+
+//wishlist polish
+app.get('/browse/addwant:id', isLoggedIn, function(req, res) {
+	req.user.wantedpolish.addToSet(req.params.id);
+	req.user.save();
+	res.redirect('/browse');
+});
+
+
+///////////////////////////////////////////////////////////////////////////
 
 
 //add polish
@@ -65,7 +85,8 @@ app.post('/addpolish', function(req, res) {
 				name: req.body.name,
 				brand: req.body.brand,
 				batch: req.body.batch,
-				color: req.body.color,
+				colorcat: req.body.colorcat,
+				colorhex: "#" + req.body.colorhex,
 				type: req.body.type,
 				indie: req.body.indie
 			});
@@ -78,10 +99,11 @@ app.post('/addpolish', function(req, res) {
 });
 
 
+///////////////////////////////////////////////////////////////////////////
 
 
 //edit polish
-app.get('/editpolish/:id', function(req, res) {
+app.get('/editpolish/:id', /*isLoggedIn,*/ function(req, res) {
 	Polish.findById(req.params.id, function(err, p) {
 	var data = {};
 		data.title = 'Edit a Polish - Lacquer Tracker';
@@ -90,7 +112,8 @@ app.get('/editpolish/:id', function(req, res) {
 		data.editname = p.name;
 		data.editbrand = p.brand;
 		data.editbatch = p.batch;
-		data.editcolor = p.color;
+		data.editcolorcat = p.colorcat;
+		data.editcolorhex = p.colorhex;
 		data.edittype = p.type;
 		data.editindie = p.indie;
 		/*data.editcode = p.code;*/
@@ -107,7 +130,8 @@ app.post('/editpolish/:id', function(req, res) {
 			p.name = req.body.name;
 			p.brand = req.body.brand;
 			p.batch = req.body.batch;
-			p.color = req.body.color;
+			p.colorcat = req.body.colorcat;
+			p.colorhex = "#" + req.body.colorhex;
 			p.type = req.body.type;
 			p.indie = req.body.indie;
 			/*p.code = req.body.code;*/
@@ -119,6 +143,7 @@ app.post('/editpolish/:id', function(req, res) {
 });
 
 
+///////////////////////////////////////////////////////////////////////////
 
 
 //contact
@@ -126,6 +151,8 @@ app.get('/contact', function(req, res) {
 	res.render('contact.ejs', {title: 'Contact - Lacquer Tracker'});
 });
 
+
+///////////////////////////////////////////////////////////////////////////
 
 
 //sign up
@@ -140,6 +167,8 @@ app.post('/signup', passport.authenticate('local-signup', {
 }));
 
 
+///////////////////////////////////////////////////////////////////////////
+
 
 //log in
 app.get('/login', function(req, res) {
@@ -153,12 +182,16 @@ app.post('/login', passport.authenticate('local-login', {
 }));
 
 
+///////////////////////////////////////////////////////////////////////////
+
 
 //forgot password
 app.get('/forgotpassword', function(req, res) {
 	res.render('forgotpassword.ejs', {title: 'Retrieve Password - Lacquer Tracker'});
 });
 
+
+///////////////////////////////////////////////////////////////////////////
 
 
 //log out
@@ -168,11 +201,16 @@ app.get('/logout', function(req, res) {
 });
 
 
+///////////////////////////////////////////////////////////////////////////
+
 
 //profile
 app.get('/profile', function(req, res) {
 	res.render('profile.ejs', {user: req.user, title: 'Profile - Lacquer Tracker'});
 });
+
+
+///////////////////////////////////////////////////////////////////////////
 
 
 //settings
@@ -185,6 +223,8 @@ app.get('/settings', isLoggedIn, function(req, res) {
 };
 
 
+///////////////////////////////////////////////////////////////////////////
+
 
 //route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
@@ -193,6 +233,6 @@ function isLoggedIn(req, res, next) {
   if (req.isAuthenticated())
 	return next();
 
-  //if they aren't, redirect them to the home apge
-  res.redirect('/');
-}
+  //if they aren't, redirect them to the login apge
+  res.redirect('/login');
+};

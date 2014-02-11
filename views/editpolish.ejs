@@ -9,20 +9,21 @@
     			Name: <input type="text" name="name" value="<%= editname %>" required><br><br>
                 Brand: <input type="text" name="brand" value="<%= editbrand %>" required><br><br>
                 Collection: <input type="text" name="batch" value="<%= editbatch %>"><br><br>
-                Color: <select name="color" value="<%= editcolor %>">
-                    <option value="">select a color</option>
-                    <option value="black">black</option>
-                    <option value="blue">blue</option>
-                    <option value="clear">clear</option>
-                    <option value="green">green</option>
-                    <option value="grey">grey</option>
-                    <option value="orange">orange</option>
-                    <option value="pink">pink</option>
-                    <option value="purple">purple</option>
-                    <option value="red">red</option>
-                    <option value="white">white</option>
-                    <option value="yellow">yellow</option>
-                    </select><br><br>
+                Color: <select name="colorcat">
+                    <option value="">select a color category</option>
+                    <option value="black" <% if (editcolorcat === "black") { %> selected="selected" <%}%>>black</option>
+                    <option value="blue" <% if (editcolorcat === "blue") { %> selected="selected" <%}%>>blue</option>
+                    <option value="clear" <% if (editcolorcat === "clear") { %> selected="selected" <%}%>>clear</option>
+                    <option value="green" <% if (editcolorcat === "green") { %> selected="selected" <%}%>>green</option>
+                    <option value="grey" <% if (editcolorcat === "grey") { %> selected="selected" <%}%>>grey</option>
+                    <option value="orange" <% if (editcolorcat === "orange") { %> selected="selected" <%}%>>orange</option>
+                    <option value="pink" <% if (editcolorcat === "pink") { %> selected="selected" <%}%>>pink</option>
+                    <option value="purple" <% if (editcolorcat === "purple") { %> selected="selected" <%}%>>purple</option>
+                    <option value="red" <% if (editcolorcat === "red") { %> selected="selected" <%}%>>red</option>
+                    <option value="white" <% if (editcolorcat === "white") { %> selected="selected" <%}%>>white</option>
+                    <option value="yellow" <% if (editcolorcat === "yellow") { %> selected="selected" <%}%>>yellow</option>
+                    </select>
+                    <input class="color" value="<%= editcolorhex %>" name="colorhex"><br><br>
                 Type: <select name="type">
                     <option value="">select a special type</option>
                     <option value="colorchange" <% if (edittype === "colorchange") { %> selected="selected" <%}%>>color changing</option>
@@ -30,6 +31,7 @@
                     <option value="creme" <% if (edittype === "creme") { %> selected="selected" <%}%>>creme</option>
                     <option value="flakie" <% if (edittype === "flakie") { %> selected="selected" <%}%>>flakie</option>
                     <option value="glitter" <% if (edittype === "glitter") { %> selected="selected" <%}%>>glitter</option>
+                    <option value="glow" <% if (edittype === "glow") { %> selected="selected" <%}%>>glow in the dark</option>
                     <option value="holo" <% if (edittype === "holo") { %> selected="selected" <%}%>>holo</option>
                     <option value="jelly" <% if (edittype === "jelly") { %> selected="selected" <%}%>>jelly</option>
                     <option value="magnetic" <% if (edittype === "magnetic") { %> selected="selected" <%}%>>magnetic</option>
