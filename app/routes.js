@@ -21,8 +21,14 @@ app.get('/browse', function(req, res) {
 		.limit(10)
 		.exec(function (err, docs) {
 			var newDocs = docs.map(function(idoc){
-				console.log(idoc);
-				return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td><a href=/browse/addown" + idoc.id + ">Own</a> | <a href=/browse/addwant" + idoc.id + ">Want</a> | <a href=/editpolish/" + idoc.id + ">Edit</a></td></tr>";
+				if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === idoc.id})) {
+					var options = "Owned | <a href=/editpolish/" + idoc.id + ">Edit</a>";
+				} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === idoc.id})) {
+					var options = "Wanted | <a href=/browse/addown/" + idoc.id + ">Own</a> | <a href=/editpolish/" + idoc.id + ">Edit</a>";
+				} else {
+					var options = "<a href=/browse/addown/" + idoc.id + ">Own</a> | <a href=/browse/addwant/" + idoc.id + ">Want</a> | <a href=/editpolish/" + idoc.id + ">Edit</a>";
+				}
+				return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td>" + options + "</td></tr>";
 			})
 		res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes:  newDocs });
 	});
@@ -43,7 +49,7 @@ app.post('/browse', function(req, res) {
 		var polishItems = [];
 		var newDocs = docs.map(function(idoc){
 			console.log(idoc);
-			return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td><a href=/browse/addown" + idoc.id + ">Own</a> | <a href=/browse/addwant" + idoc.id + ">Want</a> | <a href=/editpolish/" + idoc.id + ">Edit</a></td></tr>";
+			return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td><% if (" + idoc.id + " in req.user.ownedpolish) { %> Owned | <a href=/editpolish/" + idoc.id + ">Edit</a> <% } else { %><a href=/browse/addown" + idoc.id + ">Own</a> | <a href=/browse/addwant" + idoc.id + ">Want</a> | <a href=/editpolish/" + idoc.id + ">Edit</a> <%}%></td></tr>";
 	})
 
 	res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes: newDocs});
@@ -52,14 +58,14 @@ app.post('/browse', function(req, res) {
 });
 
 //own polish
-app.get('/browse/addown:id', isLoggedIn, function(req, res) {
+app.get('/browse/addown/:id', isLoggedIn, function(req, res) {
 	req.user.ownedpolish.addToSet(req.params.id);
 	req.user.save();
 	res.redirect('/browse');
 });
 
 //wishlist polish
-app.get('/browse/addwant:id', isLoggedIn, function(req, res) {
+app.get('/browse/addwant/:id', isLoggedIn, function(req, res) {
 	req.user.wantedpolish.addToSet(req.params.id);
 	req.user.save();
 	res.redirect('/browse');
