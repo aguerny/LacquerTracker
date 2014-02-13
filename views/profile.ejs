@@ -4,7 +4,15 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
-
+		<% if (message) { %>
+        	<h4><%= message %></h4>
+    	<% } %>
+    	<table id="ownedpolish" class="sortable">
+          	<tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Type</th><th>Options</th></tr>
+        <% for(var i=0; i<polishes.length; i++) {%>
+         	<%- polishes[i] %>
+		<% } %>
+        </table>
     </section>
     </div>
 </div>

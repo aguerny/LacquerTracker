@@ -1,5 +1,6 @@
 var Polish = require('../app/models/polish');
 var User = require('../app/models/user');
+var mongoose = require('mongoose');
 
 module.exports = function(app, passport) {
 
@@ -48,17 +49,24 @@ app.post('/browse', function(req, res) {
 		console.log(docs);
 		var polishItems = [];
 		var newDocs = docs.map(function(idoc){
-			console.log(idoc);
-			return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td><% if (" + idoc.id + " in req.user.ownedpolish) { %> Owned | <a href=/editpolish/" + idoc.id + ">Edit</a> <% } else { %><a href=/browse/addown" + idoc.id + ">Own</a> | <a href=/browse/addwant" + idoc.id + ">Want</a> | <a href=/editpolish/" + idoc.id + ">Edit</a> <%}%></td></tr>";
-	})
+			if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === idoc.id})) {
+					var options = "Owned | <a href=/editpolish/" + idoc.id + ">Edit</a>";
+			} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === idoc.id})) {
+					var options = "Wanted | <a href=/browse/addown/" + idoc.id + ">Own</a> | <a href=/editpolish/" + idoc.id + ">Edit</a>";
+			} else {
+					var options = "<a href=/browse/addown/" + idoc.id + ">Own</a> | <a href=/browse/addwant/" + idoc.id + ">Want</a> | <a href=/editpolish/" + idoc.id + ">Edit</a>";
+			}
+			return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td>" + options + "</td></tr>";
+		})
 
-	res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes: newDocs});
+		res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes: newDocs});
 	});
 
 });
 
 //own polish
 app.get('/browse/addown/:id', isLoggedIn, function(req, res) {
+	req.user.wantedpolish.remove(req.params.id);
 	req.user.ownedpolish.addToSet(req.params.id);
 	req.user.save();
 	res.redirect('/browse');
@@ -211,8 +219,20 @@ app.get('/logout', function(req, res) {
 
 
 //profile
-app.get('/profile', function(req, res) {
-	res.render('profile.ejs', {user: req.user, title: 'Profile - Lacquer Tracker'});
+app.get('/profile/:username', function(req, res) {
+	User.findOne({username: req.params.username}, function(err, user) {
+		var newDocs = [];
+		if (!user) {
+			req.flash('profilemessage', 'No such user exists.');
+		} else {
+			user.ownedpolish.map(function(i) {
+				Polish.findById(mongoose.Types.ObjectId(i), function(err, idoc) {
+					newDocs.push("<tr><td>" + idoc.name + "</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td><a href=/editpolish/" + idoc.id + ">Edit</a></td></tr>");
+				});
+			}); 
+		}
+		res.render('profile.ejs', {title: 'Profile - Lacquer Tracker', polishes: newDocs, message: req.flash('profilemessage')});
+	});
 });
 
 
