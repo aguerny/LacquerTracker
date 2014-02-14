@@ -32,7 +32,7 @@ app.configure(function() {
 	app.use(express.static(path.join(__dirname, 'html')));
 
 	//required for passport
-	app.use(express.session({cookie: {maxAge: 60000}})); // session secret
+	app.use(express.session({cookie: {maxAge: 365 * 24 * 60 * 60 * 1000}})); // session secret
 	app.use(flash()); // use connect-flash for flash messages stored in session
 	app.use(passport.initialize());
 	app.use(passport.session()); // persistent login sessions

@@ -2,6 +2,7 @@ var Polish = require('../app/models/polish');
 var User = require('../app/models/user');
 var mongoose = require('mongoose');
 
+
 module.exports = function(app, passport) {
 
 ///////////////////////////////////////////////////////////////////////////
@@ -31,7 +32,8 @@ app.get('/browse', function(req, res) {
 				}
 				return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td>" + options + "</td></tr>";
 			})
-		res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes:  newDocs });
+
+		res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes: newDocs});
 	});
 });
 
@@ -215,24 +217,65 @@ app.get('/logout', function(req, res) {
 
 ///////////////////////////////////////////////////////////////////////////
 
+//profile general
+app.get('/profile', isLoggedIn, function(req, res) {
+	var username = req.user.username;
+	res.redirect('/profile/' + username);
+});
 
-//profile
+
+//profile specific
 app.get('/profile/:username', function(req, res) {
 	User.findOne({username: req.params.username}, function(err, user) {
-		var newDocs = [];
+		var oPolish = [];
+		var wPolish = [];
 		if (!user) {
 			req.flash('profilemessage', 'No such user exists.');
-			res.render('profile.ejs', {title: 'Profile - Lacquer Tracker', polishes: newDocs, message: req.flash('profilemessage')});
+			res.render('profile.ejs', {title: 'Profile - Lacquer Tracker', opolishes: oPolish, wpolishes: wPolish, message: req.flash('profilemessage')});
 		} else {
 			var ownedPolish = user.ownedpolish.map(function(id) {
 				return mongoose.Types.ObjectId(id);
 			});
+
+			var wantedPolish = user.wantedpolish.map(function(id) {
+				return mongoose.Types.ObjectId(id);
+			});
+
 			Polish.find({_id: {$in: ownedPolish}}, function(err, docs){
 				for(var docIndex = 0; docIndex < docs.length; docIndex++) {
-			 		newDocs.push("<tr><td>" + docs[docIndex].name + "</td><td>" + docs[docIndex].brand + "</td><td>" + docs[docIndex].batch + "</td><td><div id='swatch' style='background-color:" + docs[docIndex].colorhex + ";'>&nbsp;</div></td><td>" + docs[docIndex].type + "</td><td><a href=/editpolish/" + docs[docIndex].id + ">Edit</a></td></tr>");
+					if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === docs[docIndex].id})) {
+						var options = "Owned | <a href=/editpolish/" + docs[docIndex].id + ">Edit</a>";
+					} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === docs[docIndex].id})) {
+						var options = "Wanted | <a href=/browse/addown/" + docs[docIndex].id + ">Own</a> | <a href=/editpolish/" + docs[docIndex].id + ">Edit</a>";
+					} else {
+						var options = "<a href=/browse/addown/" + docs[docIndex].id + ">Own</a> | <a href=/browse/addwant/" + docs[docIndex].id + ">Want</a> | <a href=/editpolish/" + docs[docIndex].id + ">Edit</a>";
+					}
+			 		oPolish.push("<tr><td>" + docs[docIndex].name + "</td><td>" + docs[docIndex].brand + "</td><td>" + docs[docIndex].batch + "</td><td><div id='swatch' style='background-color:" + docs[docIndex].colorhex + ";'>&nbsp;</div></td><td>" + docs[docIndex].type + "</td><td>" + options + "</td></tr>");
 				}
-			res.render('profile.ejs', {title: 'Profile - Lacquer Tracker', polishes: newDocs, message: req.flash('profilemessage')});
-			})
+			});
+
+			Polish.find({_id: {$in: wantedPolish}}, function(err, docs){
+				for(var docIndex = 0; docIndex < docs.length; docIndex++) {
+					if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === docs[docIndex].id})) {
+						var options = "Owned | <a href=/editpolish/" + docs[docIndex].id + ">Edit</a>";
+					} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === docs[docIndex].id})) {
+						var options = "Wanted | <a href=/browse/addown/" + docs[docIndex].id + ">Own</a> | <a href=/editpolish/" + docs[docIndex].id + ">Edit</a>";
+					} else {
+						var options = "<a href=/browse/addown/" + docs[docIndex].id + ">Own</a> | <a href=/browse/addwant/" + docs[docIndex].id + ">Want</a> | <a href=/editpolish/" + docs[docIndex].id + ">Edit</a>";
+					}
+			 		wPolish.push("<tr><td>" + docs[docIndex].name + "</td><td>" + docs[docIndex].brand + "</td><td>" + docs[docIndex].batch + "</td><td><div id='swatch' style='background-color:" + docs[docIndex].colorhex + ";'>&nbsp;</div></td><td>" + docs[docIndex].type + "</td><td>" + options + "</td></tr>");
+				}
+
+			var data = {};
+			data.title = 'Profile - Lacquer Tracker';
+			data.message = req.flash('profileMessage');
+			data.opolishes = oPolish;
+			data.wpolishes = wPolish;
+			data.username = user.username;
+			
+			res.render('profile.ejs', data);
+
+			});
 		}
 	});
 });
