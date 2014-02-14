@@ -38,7 +38,6 @@ app.get('/browse', function(req, res) {
 
 app.post('/browse', function(req, res) {
 	var filterOptions = req.body;
-	console.log(filterOptions);
 	for(var key in filterOptions) {
 		if(filterOptions.hasOwnProperty(key)) {
 			filterOptions[key] = new RegExp(filterOptions[key], "i");
@@ -46,7 +45,6 @@ app.post('/browse', function(req, res) {
 	}
 
 	Polish.find(filterOptions , function (err, docs) {
-		console.log(docs);
 		var polishItems = [];
 		var newDocs = docs.map(function(idoc){
 			if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === idoc.id})) {
@@ -224,14 +222,18 @@ app.get('/profile/:username', function(req, res) {
 		var newDocs = [];
 		if (!user) {
 			req.flash('profilemessage', 'No such user exists.');
+			res.render('profile.ejs', {title: 'Profile - Lacquer Tracker', polishes: newDocs, message: req.flash('profilemessage')});
 		} else {
-			user.ownedpolish.map(function(i) {
-				Polish.findById(mongoose.Types.ObjectId(i), function(err, idoc) {
-					newDocs.push("<tr><td>" + idoc.name + "</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td><a href=/editpolish/" + idoc.id + ">Edit</a></td></tr>");
-				});
-			}); 
+			var ownedPolish = user.ownedpolish.map(function(id) {
+				return mongoose.Types.ObjectId(id);
+			});
+			Polish.find({_id: {$in: ownedPolish}}, function(err, docs){
+				for(var docIndex = 0; docIndex < docs.length; docIndex++) {
+			 		newDocs.push("<tr><td>" + docs[docIndex].name + "</td><td>" + docs[docIndex].brand + "</td><td>" + docs[docIndex].batch + "</td><td><div id='swatch' style='background-color:" + docs[docIndex].colorhex + ";'>&nbsp;</div></td><td>" + docs[docIndex].type + "</td><td><a href=/editpolish/" + docs[docIndex].id + ">Edit</a></td></tr>");
+				}
+			res.render('profile.ejs', {title: 'Profile - Lacquer Tracker', polishes: newDocs, message: req.flash('profilemessage')});
+			})
 		}
-		res.render('profile.ejs', {title: 'Profile - Lacquer Tracker', polishes: newDocs, message: req.flash('profilemessage')});
 	});
 });
 
