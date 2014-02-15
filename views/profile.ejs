@@ -10,7 +10,7 @@
     	<% } %>
 
         <% if (opolishes.length > 0) { %>
-            <h4>Owned Polishes (<%= opolishes.length %>):</h4><br>
+            <h4><%= username %>'s Owned Polishes (<%= opolishes.length %>):</h4><br>
             <table id="ownedpolish" class="sortable">
                 <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Type</th><th>Options</th></tr>
             <% for(var i=0; i<opolishes.length; i++) {%>
@@ -20,7 +20,7 @@
         <% } %>
 
         <% if (opolishes.length > 0) { %>
-            <h4>Wanted Polishes (<%= wpolishes.length %>):</h4><br>
+            <h4><%= username %>'s Wanted Polishes (<%= wpolishes.length %>):</h4><br>
             <table id="wantedpolish" class="sortable">
                 <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Type</th><th>Options</th></tr>
                 <% for(var i=0; i<wpolishes.length; i++) {%>

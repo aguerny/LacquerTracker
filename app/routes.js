@@ -24,11 +24,11 @@ app.get('/browse', function(req, res) {
 		.exec(function (err, docs) {
 			var newDocs = docs.map(function(idoc){
 				if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === idoc.id})) {
-					var options = "Owned | <a href=/editpolish/" + idoc.id + ">Edit</a>";
+					var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + idoc.id + ">Remove ownership</a></li><li><a href=/editpolish/" + idoc.id + ">Edit polish</a></li></ul></div>";
 				} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === idoc.id})) {
-					var options = "Wanted | <a href=/browse/addown/" + idoc.id + ">Own</a> | <a href=/editpolish/" + idoc.id + ">Edit</a>";
+					var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/removewant/" + idoc.id + ">Remove from wishlist</a></li><li><a href=/editpolish/" + idoc.id + ">Edit polish</a></li></ul></div>";
 				} else {
-					var options = "<a href=/browse/addown/" + idoc.id + ">Own</a> | <a href=/browse/addwant/" + idoc.id + ">Want</a> | <a href=/editpolish/" + idoc.id + ">Edit</a>";
+					var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/addwant/" + idoc.id + ">Add to wishlist</a></li><li><a href=/editpolish/" + idoc.id + ">Edit polish</a></li></ul></div>";
 				}
 				return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td>" + options + "</td></tr>";
 			})
@@ -50,11 +50,11 @@ app.post('/browse', function(req, res) {
 		var polishItems = [];
 		var newDocs = docs.map(function(idoc){
 			if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === idoc.id})) {
-					var options = "Owned | <a href=/editpolish/" + idoc.id + ">Edit</a>";
+				var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + idoc.id + ">Remove ownership</a></li><li><a href=/editpolish/" + idoc.id + ">Edit polish</a></li></ul></div>";
 			} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === idoc.id})) {
-					var options = "Wanted | <a href=/browse/addown/" + idoc.id + ">Own</a> | <a href=/editpolish/" + idoc.id + ">Edit</a>";
+				var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/removewant/" + idoc.id + ">Remove from wishlist</a></li><li><a href=/editpolish/" + idoc.id + ">Edit polish</a></li></ul></div>";
 			} else {
-					var options = "<a href=/browse/addown/" + idoc.id + ">Own</a> | <a href=/browse/addwant/" + idoc.id + ">Want</a> | <a href=/editpolish/" + idoc.id + ">Edit</a>";
+				var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/addwant/" + idoc.id + ">Add to wishlist</a></li><li><a href=/editpolish/" + idoc.id + ">Edit polish</a></li></ul></div>";
 			}
 			return "<tr><td>"+idoc.name+"</td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td>" + options + "</td></tr>";
 		})
@@ -75,6 +75,20 @@ app.get('/browse/addown/:id', isLoggedIn, function(req, res) {
 //wishlist polish
 app.get('/browse/addwant/:id', isLoggedIn, function(req, res) {
 	req.user.wantedpolish.addToSet(req.params.id);
+	req.user.save();
+	res.redirect('/browse');
+});
+
+//remove owned polish
+app.get('/browse/removeown/:id', isLoggedIn, function(req, res) {
+	req.user.ownedpolish.remove(req.params.id);
+	req.user.save();
+	res.redirect('/browse');
+});
+
+//remove wanted polish
+app.get('/browse/removewant/:id', isLoggedIn, function(req, res) {
+	req.user.wantedpolish.remove(req.params.id);
 	req.user.save();
 	res.redirect('/browse');
 });
@@ -244,11 +258,11 @@ app.get('/profile/:username', function(req, res) {
 			Polish.find({_id: {$in: ownedPolish}}, function(err, docs){
 				for(var docIndex = 0; docIndex < docs.length; docIndex++) {
 					if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === docs[docIndex].id})) {
-						var options = "Owned | <a href=/editpolish/" + docs[docIndex].id + ">Edit</a>";
+						var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + docs[docIndex].id + ">Remove ownership</a></li><li><a href=/editpolish/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
 					} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === docs[docIndex].id})) {
-						var options = "Wanted | <a href=/browse/addown/" + docs[docIndex].id + ">Own</a> | <a href=/editpolish/" + docs[docIndex].id + ">Edit</a>";
+						var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add ownership</a></li><li><a href=/browse/removewant/" + docs[docIndex].id + ">Remove from wishlist</a></li><li><a href=/editpolish/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
 					} else {
-						var options = "<a href=/browse/addown/" + docs[docIndex].id + ">Own</a> | <a href=/browse/addwant/" + docs[docIndex].id + ">Want</a> | <a href=/editpolish/" + docs[docIndex].id + ">Edit</a>";
+						var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add ownership</a></li><li><a href=/browse/addwant/" + docs[docIndex].id + ">Add to wishlist</a></li><li><a href=/editpolish/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
 					}
 			 		oPolish.push("<tr><td>" + docs[docIndex].name + "</td><td>" + docs[docIndex].brand + "</td><td>" + docs[docIndex].batch + "</td><td><div id='swatch' style='background-color:" + docs[docIndex].colorhex + ";'>&nbsp;</div></td><td>" + docs[docIndex].type + "</td><td>" + options + "</td></tr>");
 				}
@@ -257,11 +271,11 @@ app.get('/profile/:username', function(req, res) {
 			Polish.find({_id: {$in: wantedPolish}}, function(err, docs){
 				for(var docIndex = 0; docIndex < docs.length; docIndex++) {
 					if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === docs[docIndex].id})) {
-						var options = "Owned | <a href=/editpolish/" + docs[docIndex].id + ">Edit</a>";
+						var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + docs[docIndex].id + ">Remove own</a></li><li><a href=/editpolish/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
 					} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === docs[docIndex].id})) {
-						var options = "Wanted | <a href=/browse/addown/" + docs[docIndex].id + ">Own</a> | <a href=/editpolish/" + docs[docIndex].id + ">Edit</a>";
+						var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add own</a></li><li><a href=/browse/removewant/" + docs[docIndex].id + ">Remove want</a></li><li><a href=/editpolish/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
 					} else {
-						var options = "<a href=/browse/addown/" + docs[docIndex].id + ">Own</a> | <a href=/browse/addwant/" + docs[docIndex].id + ">Want</a> | <a href=/editpolish/" + docs[docIndex].id + ">Edit</a>";
+						var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add own</a></li><li><a href=/browse/addwant/" + docs[docIndex].id + ">Add want</a></li><li><a href=/editpolish/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
 					}
 			 		wPolish.push("<tr><td>" + docs[docIndex].name + "</td><td>" + docs[docIndex].brand + "</td><td>" + docs[docIndex].batch + "</td><td><div id='swatch' style='background-color:" + docs[docIndex].colorhex + ";'>&nbsp;</div></td><td>" + docs[docIndex].type + "</td><td>" + options + "</td></tr>");
 				}
@@ -272,7 +286,7 @@ app.get('/profile/:username', function(req, res) {
 			data.opolishes = oPolish;
 			data.wpolishes = wPolish;
 			data.username = user.username;
-			
+
 			res.render('profile.ejs', data);
 
 			});

@@ -120,6 +120,21 @@ table.sortable thead {
 	border-radius: 50%;
 }
 
+
+#optionsmenu:hover ul {
+    display: inline-block;
+    list-style: none;
+    padding-left:0;
+
+}
+#optionsmenu ul {
+    display:none;
+}
+
+#optionsmenu a:hover {
+    background:#e6e6e6;
+}
+
 /*---Footer---*/
 
 #footer {padding:20px 0;}
