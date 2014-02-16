@@ -1,0 +1,24 @@
+<% include layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    	<section>
+        <h2><%= pbrand %> - <%= pname %></h2><br><br>
+        <div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br>
+        <b>Code:</b> <%= pcode %><br><br>
+        <b>Collection:</b> <%= pbatch %><br><br>
+        <b>Color:</b> <%= pcolorcat %><br><br>
+        <b>Type:</b> <%= ptype %><br><br>
+        [<i><a href="/editpolish/<%= pid %>">Edit or correct this information</a></i>]
+        <br><br><br><br>
+        <% if (isAuthenticated()) { %>
+            <h5>Your Notes:</h5> (Only seen by you.)<br><br><br><br>
+            <h5>Your Review:</h5><br><br><br><br>
+        <% } %>
+        <h5>User Reviews:</h5><br>
+        </section>
+    </div>
+</div>
+
+<% include layoutBottom %>

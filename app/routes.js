@@ -93,6 +93,35 @@ app.get('/browse/removewant/:id', isLoggedIn, function(req, res) {
 	res.redirect('/browse');
 });
 
+///////////////////////////////////////////////////////////////////////////
+
+//polish page specific
+app.get('/polish/:brand/:name', function(req, res) {
+	Polish.findOne({brand: req.params.brand, name:req.params.name}, function(err, polish) {
+		data = {};
+		data.title = polish.name + ' - ' + polish.brand + ' - Lacquer Tracker'
+		data.pname = polish.name;
+		data.pbrand = polish.brand;
+		data.pbatch = polish.batch;
+		data.pcolorcat = polish.colorcat;
+		data.pcolorhex = polish.colorhex;
+		data.ptype = polish.type;
+		data.pcode = polish.code;
+		data.pid = polish.id;
+
+
+
+	res.render('polish.ejs', data);
+
+
+	});
+});
+
+
+
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////
 
