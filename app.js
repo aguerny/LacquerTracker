@@ -24,7 +24,7 @@ app.configure(function() {
 	app.use(express.cookieParser('lala')); // read cookies (needed for auth)
 	app.use(express.bodyParser()); // get information from HTML forms
 	//other from previous files
-	app.use(express.favicon());
+	app.use(express.favicon('./public/images/lt.png'));
 	app.use(express.json());
 	app.use(express.urlencoded());
 	app.use(express.methodOverride());

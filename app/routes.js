@@ -119,12 +119,12 @@ app.get('/polish/:brand/:name', function(req, res) {
 				data.notes = review.notes;
 				data.dupes = review.dupes;
 				} else {
-				data.rating = "&nbsp;";
-				data.userreview = "&nbsp;";
-				data.notes = "&nbsp;";
-				data.dupes = "&nbsp;";
+				data.rating = "";
+				data.userreview = "";
+				data.notes = "";
+				data.dupes = "";
 				}
-			
+
 			Review.find({polishid:polish.id}, function(err, r) {
 				var allReviews = r.map(function(x) {
 					return x.userreview;
@@ -136,7 +136,7 @@ app.get('/polish/:brand/:name', function(req, res) {
 				data.alldupes = allDupes;
 				res.render('polish.ejs', data);
 			})
-		
+
 			})
 		} else {
 			data.rating = "&nbsp;";
@@ -154,7 +154,7 @@ app.get('/polish/:brand/:name', function(req, res) {
 				data.alldupes = allDupes;
 				res.render('polish.ejs', data);
 			})
-			
+
 		}
 
 	});

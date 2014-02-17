@@ -12,13 +12,16 @@
         <b>Type:</b> <%= ptype %><br><br>
         [<i><a href="/editpolish/<%= pid %>">Edit or correct this information</a></i>]
         <br><br><hr><br><br>
-        <% if (isAuthenticated()) { %>
+        <% if (isAuthenticated() && rating.length > 1) { %>
             <h5>Your Rating:</h5><br><%= rating %><br><br><br><br>
             <h5>Your Review:</h5><br><%= userreview %><br><br><br><br>
             <h5>Your Notes:</h5><br><%= notes %><br><br><br><br>
             <h5>Dupes You've Added:</h5><br><%= dupes %><br><br>
             [<i><a href="/editreview/<%= pid %>">Edit your review</a></i>]
             <br><br><hr><br><br>
+        <% } else {%>
+        [<i><a href="/editreview/<%= pid %>">Add a review or personal notes for this polish.</a></i>]
+            <br><br><br><hr><br><br>
         <% } %>
         <h5>All User Reviews:</h5><br>
         <% for (i=0; i<allreviews.length; i++) {%>
