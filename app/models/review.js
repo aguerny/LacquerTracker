@@ -7,10 +7,11 @@ var reviewSchema = mongoose.Schema({
 	polishid: String,
     userid: String,
     rating: String,
-    review: String,
+    userreview: String,
     dupes: String,
+    notes: String,
 });
 
 
 //create the model for users and expose it to our app
-module.exports = mongoose.model('Review', polishSchema);
+module.exports = mongoose.model('Review', reviewSchema);
