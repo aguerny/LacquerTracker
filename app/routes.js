@@ -1,7 +1,10 @@
 var Polish = require('../app/models/polish');
 var User = require('../app/models/user');
 var Review = require('../app/models/review');
+var Photo = require('../app/models/photo');
 var mongoose = require('mongoose');
+var fs = require('fs');
+var path = require('path');
 
 
 module.exports = function(app, passport) {
@@ -159,6 +162,48 @@ app.get('/polish/:brand/:name', function(req, res) {
 
 	});
 
+});
+
+
+
+///////////////////////////////////////////////////////////////////////////
+
+
+//add photo
+app.get('/addphoto/:id', isLoggedIn, function(req, res) {
+	Polish.findById(req.params.id, function(err, p) {
+		var data = {};
+			data.title = 'Add a Photo - Lacquer Tracker';
+			data.pname = p.name;
+			data.pbrand = p.brand;
+			data.pid = p.id;
+	res.render('addphoto.ejs', data);
+	})
+});
+
+app.post('/addphoto/:id', function(req, res) {
+	var tempPath = req.files.photo.path;
+	var targetPath = path.resolve('./public/images/polish/' + req.params.id + "-" + req.files.photo.name.replace(/ /g,"_"));
+	fs.rename(tempPath, targetPath, function(err) {
+		if (err) {
+			throw err;
+		} else {
+			fs.unlink(tempPath, function() {
+				if (err) throw err;
+			})
+			Polish.findById(req.params.id, function(err, p) {
+				var newPhoto = new Photo ({
+					polishid: p.id,
+					userid: req.user.id,
+					type: req.body.type,
+					location: targetPath,
+				})
+				newPhoto.save(function(err) {
+					res.redirect('/polish/' + p.brand.replace(/ /g,"_") "/" p.name.replace(/ /g,"_"));
+				})
+			})
+		}
+	})
 });
 
 

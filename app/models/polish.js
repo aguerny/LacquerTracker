@@ -12,6 +12,7 @@ var polishSchema = mongoose.Schema({
     type: String,
     indie: String,
     code: String,
+    pictures: [],
 });
 
 

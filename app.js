@@ -5,6 +5,7 @@ var http = require('http');
 var path = require('path');
 var mongoose = require('mongoose');
 var passport = require('passport');
+var fs = require('fs');
 //var configDB = require('./config/database.js');
 
 var app = express();
@@ -22,7 +23,7 @@ app.configure(function() {
 
 	app.use(express.logger('dev')); // log every request to the console
 	app.use(express.cookieParser('lala')); // read cookies (needed for auth)
-	app.use(express.bodyParser()); // get information from HTML forms
+	app.use(express.bodyParser({uploadDir:'./public/images/tmp/'})); // get information from HTML forms
 	//other from previous files
 	app.use(express.favicon('./public/images/lt.png'));
 	app.use(express.json());
