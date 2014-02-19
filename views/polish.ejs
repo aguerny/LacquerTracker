@@ -1,16 +1,50 @@
 <% include layoutTop %>
 
+<script>
+$(function(){
+    $("#big-image img:eq(0)").nextAll().hide();
+    $(".small-images img").click(function(e){
+        var index = $(this).index();
+        $("#big-image img").eq(index).show().siblings().hide();
+    });
+});
+</script>
+
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
-    	<section>
+        <section>
         <h2><%= pbrand %> - <%= pname %></h2><br><br>
-        <div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br>
-        <b>Code:</b> <%= pcode %><br><br>
-        <b>Collection:</b> <%= pbatch %><br><br>
-        <b>Color:</b> <%= pcolorcat %><br><br>
-        <b>Type:</b> <%= ptype %><br><br>
-        [<i><a href="/editpolish/<%= pid %>">Edit or correct this information</a></i>]
+        <div id="polish-wrap">
+            <div id="polish-left_col">
+                <div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br>
+                <b>Code:</b> <%= pcode %><br><br>
+                <b>Collection:</b> <%= pbatch %><br><br>
+                <b>Color:</b> <%= pcolorcat %><br><br>
+                <b>Type:</b> <%= ptype %><br><br>
+                [<i><a href="/editpolish/<%= pid %>">Edit or correct this information</a></i>]
+            </div>
+            <div id="polish-right_col">
+                <div id="photo-wrap">
+                    <div id="photo-left_col">
+                        <div id="big-image">
+                            <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRzg5QqSt4nJs4j6yTCf_qkXnmD0y-XkNgk8ZrZoeTyidT8AMRrKg">
+                            <img src="http://4.bp.blogspot.com/-HvPqTT8-9C4/UA2GM2_Kq4I/AAAAAAAABXk/IcGT61XWXvU/s400/Lillibet%27s+Jubilee+1.jpg">
+                        </div>
+                    </div>
+                    <div id="photo-right_col">
+                        <div class="small-images">
+                            <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRzg5QqSt4nJs4j6yTCf_qkXnmD0y-XkNgk8ZrZoeTyidT8AMRrKg">
+                            <img src="http://4.bp.blogspot.com/-HvPqTT8-9C4/UA2GM2_Kq4I/AAAAAAAABXk/IcGT61XWXvU/s400/Lillibet%27s+Jubilee+1.jpg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+    </div>
+    <div id="container" class="clear">
+        <section>
         <br><br><hr><br><br>
         <% if (isAuthenticated() && (rating.length > 0 || notes.length > 0)) { %>
             <h5>Your Rating:</h5><br><%= rating %><br><br><br><br>

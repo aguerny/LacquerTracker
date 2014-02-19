@@ -114,51 +114,63 @@ app.get('/polish/:brand/:name', function(req, res) {
 		data.pcode = polish.code;
 		data.pid = polish.id;
 
-		if (req.isAuthenticated()) {
-			Review.findOne({userid:req.user.id, polishid:polish.id}, function (err, review) {
-				if (review) {
-				data.rating = review.rating;
-				data.userreview = review.userreview;
-				data.notes = review.notes;
-				data.dupes = review.dupes;
-				} else {
-				data.rating = "";
-				data.userreview = "";
-				data.notes = "";
-				data.dupes = "";
-				}
+		Photo.find({polishid : polish.id}, function(err, photo) {
+			if (err) {
+				data.allphoto = [];
+			} else {
+				var allphotos = photo.map(function(x) {
+					x.location.toString("");
+					console.log(x.location);
+					return '<img src="' + x.location + '">';
+				})
+				data.allphotos = allphotos;
+			}
 
-			Review.find({polishid:polish.id}, function(err, r) {
-				var allReviews = r.map(function(x) {
-					return x.userreview;
-				})
-				var allDupes = r.map(function(x) {
-					return x.dupes;
-				})
-				data.allreviews = allReviews;
-				data.alldupes = allDupes;
-				res.render('polish.ejs', data);
-			})
+			if (req.isAuthenticated()) {
+				Review.findOne({userid:req.user.id, polishid:polish.id}, function (err, review) {
+					if (review) {
+					data.rating = review.rating;
+					data.userreview = review.userreview;
+					data.notes = review.notes;
+					data.dupes = review.dupes;
+					} else {
+					data.rating = "";
+					data.userreview = "";
+					data.notes = "";
+					data.dupes = "";
+					}
 
-			})
-		} else {
-			data.rating = "&nbsp;";
-			data.userreview = "&nbsp;";
-			data.notes = "&nbsp;";
-			data.dupes = "&nbsp;";
-			Review.find({polishid:polish.id}, function(err, r) {
-				var allReviews = r.map(function(x) {
-					return x.userreview;
+				Review.find({polishid:polish.id}, function(err, r) {
+					var allReviews = r.map(function(x) {
+						return x.userreview;
+					})
+					var allDupes = r.map(function(x) {
+						return x.dupes;
+					})
+					data.allreviews = allReviews;
+					data.alldupes = allDupes;
+					res.render('polish.ejs', data);
 				})
-				var allDupes = r.map(function(x) {
-					return x.dupes;
-				})
-				data.allreviews = allReviews;
-				data.alldupes = allDupes;
-				res.render('polish.ejs', data);
-			})
 
-		}
+				})
+			} else {
+				data.rating = "&nbsp;";
+				data.userreview = "&nbsp;";
+				data.notes = "&nbsp;";
+				data.dupes = "&nbsp;";
+				Review.find({polishid:polish.id}, function(err, r) {
+					var allReviews = r.map(function(x) {
+						return x.userreview;
+					})
+					var allDupes = r.map(function(x) {
+						return x.dupes;
+					})
+					data.allreviews = allReviews;
+					data.alldupes = allDupes;
+					res.render('polish.ejs', data);
+				})
+			}
+		})
 
 	});
 
@@ -199,7 +211,7 @@ app.post('/addphoto/:id', function(req, res) {
 					location: targetPath,
 				})
 				newPhoto.save(function(err) {
-					res.redirect('/polish/' + p.brand.replace(/ /g,"_") "/" p.name.replace(/ /g,"_"));
+					res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
 				})
 			})
 		}
