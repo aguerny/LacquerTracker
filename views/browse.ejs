@@ -10,12 +10,13 @@
             <form action="browse" method="post">
               <input type="text" name="name" placeholder="Name" class="filter">
               <br><br><br>
+              <input type="text" name="code" placeholder="Code" class="filter">
+              <br><br><br>
               <select name="brand" class="filter">
                  <option value="">All Brands</option>
-                 <option value="butter London">butter London</option>
-                 <option value="China Glaze">China Glaze</option>
-                 <option value="OPI">OPI</option>
-                 <option value="Zoya">Zoya</option>
+                 <% for (i=0; i<brands.length; i++) { %>
+                 <option value="<%= brands[i] %>"><%= brands[i] %></option>
+                 <% } %>
               </select>
               <br><br><br>
               <select name="colorcat" class="filter">

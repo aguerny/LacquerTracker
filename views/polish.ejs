@@ -1,15 +1,5 @@
 <% include layoutTop %>
 
-<script>
-$(function(){
-    $("#big-image img:eq(0)").nextAll().hide();
-    $(".small-images img").click(function(e){
-        var index = $(this).index();
-        $("#big-image img").eq(index).show().siblings().hide();
-    });
-});
-</script>
-
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
@@ -17,7 +7,7 @@ $(function(){
         <h2><%= pbrand %> - <%= pname %></h2><br><br>
         <div id="polish-wrap">
             <div id="polish-left_col">
-                <div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br>
+                <div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br><br>
                 <b>Code:</b> <%= pcode %><br><br>
                 <b>Collection:</b> <%= pbatch %><br><br>
                 <b>Color:</b> <%= pcolorcat %><br><br>
@@ -25,17 +15,29 @@ $(function(){
                 [<i><a href="/editpolish/<%= pid %>">Edit or correct this information</a></i>]
             </div>
             <div id="polish-right_col">
-                <% for (i=0; i<allphotos.length; i++) { %>
-                    <img src="<%= allphotos[i] %>">
-                <% } %>
+                <div id=outside>
+                    <!-- prev/next links -->
+                        <div class=center>
+                        <span>(<%= numphotos %>)</span>
+                        <span><a href="/addphoto/<%= pid %>">Add Photo</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span id=prev><a href="#">Prev Photo</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span id=next><a href="#">Next Photo</a></span>
+                </div><br>
+                <!-- slideshow -->
+                <div class="cycle-slideshow" data-cycle-fx=scrollHorz data-cycle-timeout=0 data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-center-horz="true">
+                    <% for (i=0; i<allphotos.length; i++) { %>
+                        <img src="<%= allphotos[i] %>">
+                    <% } %>
+                    </div>
+                </div>
             </div>
         </div>
         </section>
     </div>
     <div id="container" class="clear">
         <section>
-        <br><br><hr><br><br>
-        <% if (isAuthenticated() && (rating.length > 0 || notes.length > 0)) { %>
+        <hr><br><br>
+        <% if (userreview.length > 0 || notes.length > 0) { %>
             <h5>Your Rating:</h5><br><%= rating %><br><br><br><br>
             <h5>Your Review:</h5><br><%= userreview %><br><br><br><br>
             <h5>Your Notes:</h5><br><%= notes %><br><br><br><br>

@@ -6,7 +6,6 @@ var path = require('path');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var fs = require('fs');
-//var configDB = require('./config/database.js');
 
 var app = express();
 
