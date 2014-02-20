@@ -25,20 +25,9 @@ $(function(){
                 [<i><a href="/editpolish/<%= pid %>">Edit or correct this information</a></i>]
             </div>
             <div id="polish-right_col">
-                <div id="photo-wrap">
-                    <div id="photo-left_col">
-                        <div id="big-image">
-                            <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRzg5QqSt4nJs4j6yTCf_qkXnmD0y-XkNgk8ZrZoeTyidT8AMRrKg">
-                            <img src="http://4.bp.blogspot.com/-HvPqTT8-9C4/UA2GM2_Kq4I/AAAAAAAABXk/IcGT61XWXvU/s400/Lillibet%27s+Jubilee+1.jpg">
-                        </div>
-                    </div>
-                    <div id="photo-right_col">
-                        <div class="small-images">
-                            <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRzg5QqSt4nJs4j6yTCf_qkXnmD0y-XkNgk8ZrZoeTyidT8AMRrKg">
-                            <img src="http://4.bp.blogspot.com/-HvPqTT8-9C4/UA2GM2_Kq4I/AAAAAAAABXk/IcGT61XWXvU/s400/Lillibet%27s+Jubilee+1.jpg">
-                        </div>
-                    </div>
-                </div>
+                <% for (i=0; i<allphotos.length; i++) { %>
+                    <img src="<%= allphotos[i] %>">
+                <% } %>
             </div>
         </div>
         </section>

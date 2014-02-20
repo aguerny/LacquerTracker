@@ -116,12 +116,11 @@ app.get('/polish/:brand/:name', function(req, res) {
 
 		Photo.find({polishid : polish.id}, function(err, photo) {
 			if (err) {
-				data.allphoto = [];
+				data.allphotos = [];
 			} else {
 				var allphotos = photo.map(function(x) {
-					x.location.toString("");
 					console.log(x.location);
-					return '<img src="' + x.location + '">';
+					return x.location;
 				})
 				data.allphotos = allphotos;
 			}
@@ -208,7 +207,7 @@ app.post('/addphoto/:id', function(req, res) {
 					polishid: p.id,
 					userid: req.user.id,
 					type: req.body.type,
-					location: targetPath,
+					location: '/images/polish/' + p.id + "-" + req.files.photo.name.replace(/ /g,"_"),
 				})
 				newPhoto.save(function(err) {
 					res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
