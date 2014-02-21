@@ -6,11 +6,9 @@
     <section>
         <div id="browse-wrap">
         <div id="browse-left_col">
-          <h3>Filter by:</h3><br>
+          <h3>Browse by:</h3><br>
             <form action="browse" method="post">
-              <input type="text" name="name" placeholder="Name" class="filter">
-              <br><br><br>
-              <input type="text" name="code" placeholder="Code" class="filter">
+              <input type="text" name="keywords" placeholder="Name / Code / Keyword" class="filter">
               <br><br><br>
               <select name="brand" class="filter">
                  <option value="">All Brands</option>
@@ -23,6 +21,7 @@
                  <option value="">All Colors</option>
                  <option value="black">black</option>
                  <option value="blue">blue</option>
+                 <option value="brown">brown</option>
                  <option value="clear">clear</option>
                  <option value="green">green</option>
                  <option value="grey">grey</option>
@@ -53,7 +52,7 @@
                </select>
               <br><br><br>
               <input type="checkbox" name="indie">Indie polishes only<br><br><br>
-              <input type="submit" class="button" id="search-button" value="Filter">
+              <input type="submit" class="button" id="search-button" value="Browse">
             </form>
         </div>
         <div id="browse-right_col">

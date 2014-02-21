@@ -7,6 +7,7 @@ var userSchema = mongoose.Schema({
 	username     : String,
 	password     : String,
 	email		 : String,
+	about		 : String,
 	ownedpolish  : [],
 	wantedpolish : [],
 });

@@ -8,7 +8,9 @@
 		<% if (message) { %>
         	<h4><%= message %></h4>
     	<% } %>
-
+        <% if (about.length > 0) { %>
+            <p style="white-space: pre;"><%= about %></p><br><br>
+        <% } %>
         <% if (opolishes.length > 0) { %>
             <h4><%= username %>'s Owned Polishes (<%= opolishes.length %>):</h4><br>
             <table id="ownedpolish" class="sortable">

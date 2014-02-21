@@ -13,6 +13,8 @@
                 <b>Color:</b> <%= pcolorcat %><br><br>
                 <b>Type:</b> <%= ptype %><br><br>
                 [<i><a href="/editpolish/<%= pid %>">Edit or correct this information</a></i>]
+                <br><br><br><br>
+                <a target="_blank" href="http://www.amazon.com/s/?_encoding=UTF8&camp=1789&creative=390957&linkCode=ur2&pageMinusResults=1&suo=1393008765386&tag=lacqutrack-20&url=search-alias%3Daps#/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=<%= linkbrand %>%20<%= linkname %>&sepatfbtf=true&tc=1393008769421">View on Amazon</a><img src="https://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
             </div>
             <div id="polish-right_col">
                 <div id=outside>
@@ -51,7 +53,7 @@
         <h5>All User Reviews:</h5><br>
         <% for (i=0; i<allreviews.length; i++) {%>
             <% if (allreviews[i].length > 1) { %>
-                &bull; <%= allreviews[i] %><br><br>
+                &bull; <%= allreviews[i] %> - <a href="/profile/<%= allreviewsusername %>"><%= allreviewsusername %></a><br><br>
             <% } %>
         <% } %><br><br><br><br>
         <h5>All Submitted Dupes:</h5><br>

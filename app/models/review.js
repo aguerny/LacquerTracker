@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var reviewSchema = mongoose.Schema({
 	polishid: String,
     userid: String,
+    username: String,
     rating: String,
     userreview: String,
     dupes: String,

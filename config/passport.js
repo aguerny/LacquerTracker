@@ -55,6 +55,8 @@ module.exports = function(passport) {
 					//set the user's local credentials
 					newUser.username = username;
 					newUser.password = newUser.generateHash(password);
+					newUser.email = "";
+					newUser.about = "";
 
 					//save the user
 					newUser.save(function(err) {
@@ -89,11 +91,11 @@ module.exports = function(passport) {
 
 			//if no user is found, return the message
 			if (!user)
-				return done(null, false, req.flash('loginMessage', 'No such user found.'));
+				return done(null, false, req.flash('loginMessage', 'Wrong username or password.'));
 
 			//if the user is found but the password is wrong
 			if (!user.validPassword(password))
-				return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));
+				return done(null, false, req.flash('loginMessage', 'Wrong username or password.'));
 
 			//all is well, return successful user
 			return done(null, user);

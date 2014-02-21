@@ -120,6 +120,8 @@ app.get('/polish/:brand/:name', function(req, res) {
 		data.ptype = polish.type;
 		data.pcode = polish.code;
 		data.pid = polish.id;
+		data.linkbrand = polish.brand.replace("%20"," ");
+		data.linkname = polish.name.replace("%20"," ");
 
 		Photo.find({polishid : polish.id}, function(err, photo) {
 			if (photo.length < 1) {
@@ -152,10 +154,14 @@ app.get('/polish/:brand/:name', function(req, res) {
 					var allReviews = r.map(function(x) {
 						return x.userreview;
 					})
+					var allReviewsUser = r.map(function(x) {
+						return x.username;
+					})
 					var allDupes = r.map(function(x) {
 						return x.dupes;
 					})
 					data.allreviews = allReviews;
+					data.allreviewsusername = allReviewsUser;
 					data.alldupes = allDupes;
 					res.render('polish.ejs', data);
 				})
@@ -170,10 +176,14 @@ app.get('/polish/:brand/:name', function(req, res) {
 					var allReviews = r.map(function(x) {
 						return x.userreview;
 					})
+					var allReviewsUser = r.map(function(x) {
+						return x.username;
+					})
 					var allDupes = r.map(function(x) {
 						return x.dupes;
 					})
 					data.allreviews = allReviews;
+					data.allreviewsusername = allReviewsUser;
 					data.alldupes = allDupes;
 					res.render('polish.ejs', data);
 				})
@@ -244,6 +254,7 @@ app.get('/editreview/:id', isLoggedIn, function(req, res) {
 		Review.findOne({polishid: req.params.id, userid:req.user.id}, function(err, review) {
 			if (review) { //if review already exists
 				data.userid = review.userid;
+				data.username = review.username;
 				data.rating = review.rating;
 				data.userreview = review.userreview;
 				data.dupes = review.dupes;
@@ -251,6 +262,7 @@ app.get('/editreview/:id', isLoggedIn, function(req, res) {
 				res.render('editreview.ejs', data);
 			} else { //the review doesn't exist yet.
 				data.userid = req.user.id;
+				data.username = req.user.username;
 				data.rating = "";
 				data.userreview = "";
 				data.dupes = "";
@@ -280,6 +292,7 @@ app.post('/editreview/:id', function(req, res) {
 				var newReview = new Review ({
 					polishid: req.params.id,
 					userid: req.user.id,
+					username: req.user.username,
 					rating: req.body.rating,
 					userreview: req.body.userreview,
 					dupes: req.body.dupes,
@@ -319,7 +332,8 @@ app.post('/addpolish', function(req, res) {
 				colorhex: "#" + req.body.colorhex,
 				type: req.body.type,
 				indie: req.body.indie,
-				code: req.body.code
+				code: req.body.code,
+				keywords: req.body.name + " " + req.body.brand + " " + req.body.batch + " " + req.body.code,
 			});
 			newPolish.save(function(err) {
 				req.flash('addPolishMessage', 'Polish has been successfully added. Add another?')
@@ -366,6 +380,7 @@ app.post('/editpolish/:id', function(req, res) {
 			p.type = req.body.type;
 			p.indie = req.body.indie;
 			p.code = req.body.code;
+			p.keywords = req.body.name + " " + req.body.brand + " " + req.body.batch + " " + req.body.code,
 			p.save(function(err) {
 				res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));;
 			});
@@ -407,7 +422,7 @@ app.get('/login', function(req, res) {
 });
 
 app.post('/login', passport.authenticate('local-login', {
-	successReturnToOrRedirect: 'browse',
+	successReturnToOrRedirect: '/browse',
 	failureRedirect: '/login',
 	failureFlash: true
 }));
@@ -490,9 +505,49 @@ app.get('/profile/:username', function(req, res) {
 			data.opolishes = oPolish;
 			data.wpolishes = wPolish;
 			data.username = user.username;
+			data.about = user.about;
 
 			res.render('profile.ejs', data);
 
+			});
+		}
+	});
+});
+
+
+///////////////////////////////////////////////////////////////////////////
+
+
+//edit profile
+app.get('/editprofile', isLoggedIn, function(req, res) {
+	var username = req.user.username;
+	res.redirect('/editprofile/' + username);
+});
+
+
+app.get('/editprofile/:username', isLoggedIn, function(req, res) {
+	User.findOne({username : req.params.username}, function(err, user) {
+	var data = {};
+		data.title = 'Edit Your Profile - Lacquer Tracker';
+		data.message = req.flash('editProfileMessage');
+		data.userid = user.id;
+		data.username = user.username;
+		data.email = user.email;
+		data.about = user.about;
+	res.render('editprofile.ejs', data);
+	});
+});
+
+app.post('/editprofile/:username', function(req, res) {
+	User.findOne({username:req.params.username}, function(err, user) {
+		if (!user) {
+			req.flash('editProfileMessage', 'Error editing profile.')
+			res.redirect('/editpolish/:username');
+		} else {
+			user.email = req.body.email;
+			user.about = req.body.about;
+			user.save(function(err) {
+				res.redirect('/profile/' + req.user.username);
 			});
 		}
 	});
@@ -523,5 +578,6 @@ function isLoggedIn(req, res, next) {
 	return next();
 
   //if they aren't, redirect them to the login page
+  req.session.returnTo = req.path;
   res.redirect('/login');
 };
