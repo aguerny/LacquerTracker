@@ -37,7 +37,7 @@ div.wrapper {display:block; width:100%; margin:0; padding:0; text-align:left;}
 
 /*---General---*/
 
-#header, #container, #footer{display:block; width:60%; margin:0 auto;}
+#header, #container, #footer{display:block; width:70%; margin:0 auto;}
 
 nav ul{margin:0; padding:0; list-style:none;}
 
@@ -171,3 +171,4 @@ table.sortable thead {
 
 #footer {padding:20px 0;}
 #footer p{margin:0; padding:0;}
+#footer {box-shadow: 0px 500px 0px 500px #9ED9CF;}

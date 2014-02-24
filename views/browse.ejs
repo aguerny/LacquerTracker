@@ -1,5 +1,11 @@
 <% include layoutTop %>
 
+<script>
+function valid(f) {
+!(/^[A-z0-9]*$/i).test(f.value)?f.value = f.value.replace(/[^A-z0-9]/ig,''):null;
+} 
+</script>
+
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
@@ -8,7 +14,7 @@
         <div id="browse-left_col">
           <h3>Browse by:</h3><br>
             <form action="browse" method="post">
-              <input type="text" name="keywords" placeholder="Name / Code / Keyword" class="filter">
+              <input type="text" name="keywords" placeholder="Name / Code / Keyword" class="filter" onkeyup="valid(this)" onblue="valid(this)">
               <br><br><br>
               <select name="brand" class="filter">
                  <option value="">All Brands</option>

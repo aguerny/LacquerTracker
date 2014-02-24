@@ -6,6 +6,7 @@ var path = require('path');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var fs = require('fs');
+var nodemailer = require('nodemailer');
 
 var app = express();
 
@@ -28,8 +29,7 @@ app.configure(function() {
 	app.use(express.json());
 	app.use(express.urlencoded());
 	app.use(express.methodOverride());
-	app.use(express.static(path.join(__dirname, 'public')));
-	app.use(express.static(path.join(__dirname, 'html')));
+	app.use(express.static(path.join(__dirname, '/public')));
 
 	//required for passport
 	app.use(express.session({cookie: {maxAge: 365 * 24 * 60 * 60 * 1000}})); // session secret

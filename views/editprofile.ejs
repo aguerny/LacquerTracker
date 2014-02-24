@@ -6,7 +6,7 @@
     	<section>
     		<form action="/editprofile/<%= username %>" method="post">
 	     		<h3>Edit your profile:</h3><br>
-    			Email: <i>(This is only visible to you and will be used if you need to reset your password.)</i><br><input type="text" name="email" value="<%= email %>"><br><br><br>
+    			Email: <i>(This is only visible to you and will be used if you need to reset your password.)</i><br><input type="text" name="email" value="<%= email %>" size="63"><br><br><br>
                 All about you: <i>(Tell us about yourself! How did you get into nail polish? What are your other hobbies?</i><br><textarea type="text" name="about" value="<%= about %>" cols="60" rows="20"><%= about %></textarea><br><br>
                 <input type="submit" value="Submit" class="button">
             </form>
