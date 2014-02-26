@@ -2,6 +2,7 @@ var Polish = require('../app/models/polish');
 var User = require('../app/models/user');
 var Review = require('../app/models/review');
 var Photo = require('../app/models/photo');
+var Blog = require('../app/models/blog');
 var mongoose = require('mongoose');
 var fs = require('fs');
 var path = require('path');
@@ -596,16 +597,60 @@ app.post('/editprofile/:username', function(req, res) {
 
 //settings
 app.get('/settings', isLoggedIn, function(req, res) {
-	res.render('settings.ejs', {user: req.user, title: 'settings - Lacquer Tracker'});
+	res.render('settings.ejs', {user: req.user, title: 'Settings - Lacquer Tracker'});
 });
-
-
-
-};
 
 
 ///////////////////////////////////////////////////////////////////////////
 
+//main blog page
+app.get('/blog', function(req, res) {
+	data = {}
+	data.title = 'Blog - Lacquer Tracker';
+	var blogposts = [];
+	Blog.find({}).sort({date: -1}).exec(function(err, posts) {
+		var allposts = posts.map(function(post) {
+			blogposts.push(post);
+		})
+		data.blogposts = blogposts;
+		res.render('blog.ejs', data);
+	})
+});
+
+
+
+app.get('/blog/add', isLoggedIn, function(req, res) {
+	res.render('blogadd.ejs', {title: 'Add a Blog Entry - Lacquer Tracker'});
+});
+
+
+app.post('/blog/add', function(req, res) {
+	var dateformat = new Date();
+	var options = {weekday: "long", year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit"};
+	var newBlog = new Blog ({
+		userid: req.user.id,
+		username: req.user.username,
+		title: req.body.posttitle,
+		message: req.body.postmessage,
+		date: new Date(),
+		dateformatted: dateformat.toLocaleString(options),
+	});
+	newBlog.save(function(err) {
+		if (err) throw err;
+		else res.redirect('/blog');
+	})
+});
+
+
+	//res.render('blogadd.ejs', {title: 'Add a Blog Entry - Lacquer Tracker'});
+//});
+
+
+
+///////////////////////////////////////////////////////////////////////////
+
+
+};
 
 //route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
