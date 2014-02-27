@@ -1,0 +1,19 @@
+<% include layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
+        <h2><%= posttitle %></h2><br>
+            <i>Posted on <%= postdate %> by <a href="/profile/<%= postusername%>"><%= postusername %></a></i><br><br><br>
+            <p style="white-space: pre;"><%= postmessage %></p><br><br><hr><br><br>
+            <h3>Comments (<%= postcomments.length %>)</h3><br><br><a href="/blog/<%= posttitle %>/addcomment"><i>Add a comment</i></a><br><br>
+            <% for (i=0; i<postcomments.length; i++) { %>
+                <br><br><a href="/profile/<%= postcomments[i].username %>"><%= postcomments[i].username %></a> on <%= postcomments[i].date %>:<br><br>
+                <%= postcomments[i].message %><br><br><br><br><br>
+            <% } %>
+    </section>
+    </div>
+</div>
+
+<% include layoutBottom %>

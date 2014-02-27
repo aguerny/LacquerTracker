@@ -7,12 +7,9 @@
         <h2 align="center">Lacquer Tracker Official Blog</h2><br><br>
         <% for (i=0; i<blogposts.length; i++) { %>
             <h3><%= blogposts[i].title %></h3><br>
-            <i>Posted by <a href="/profile/<%=blogposts[i].username%>"><%= blogposts[i].username %></a> on <%= blogposts[i].dateformatted %></i><br><br><br>
-            <p style="white-space: pre;"><%= blogposts[i].message %></p><br><br><hr><br><br>
-
-
-
-
+            <i>Posted on <%= blogposts[i].dateformat %> by <a href="/profile/<%=blogposts[i].username%>"><%= blogposts[i].username %></a></i><br><br><br>
+            <p style="white-space: pre;"><%= blogposts[i].message %></p><br><br>
+            <a href="/blog/<%= blogposts[i].title.replace(/ /g,"_") %>"><i>View / Leave a comment</i></a><br><br><hr><br><br>
         <% } %>
     </section>
     </div>

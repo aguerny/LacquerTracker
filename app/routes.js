@@ -3,6 +3,7 @@ var User = require('../app/models/user');
 var Review = require('../app/models/review');
 var Photo = require('../app/models/photo');
 var Blog = require('../app/models/blog');
+var BlogComment = require('../app/models/blogcomment');
 var mongoose = require('mongoose');
 var fs = require('fs');
 var path = require('path');
@@ -608,7 +609,7 @@ app.get('/blog', function(req, res) {
 	data = {}
 	data.title = 'Blog - Lacquer Tracker';
 	var blogposts = [];
-	Blog.find({}).sort({date: -1}).exec(function(err, posts) {
+	Blog.find({}).sort({datefull: -1}).exec(function(err, posts) {
 		var allposts = posts.map(function(post) {
 			blogposts.push(post);
 		})
@@ -625,15 +626,28 @@ app.get('/blog/add', isLoggedIn, function(req, res) {
 
 
 app.post('/blog/add', function(req, res) {
-	var dateformat = new Date();
-	var options = {weekday: "long", year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit"};
+	var m_names = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+	var d_names = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+	var d = new Date();
+	var curr_date = d.getDate();
+	var curr_month = d.getMonth();
+	var curr_year = d.getFullYear();
+	var curr_day = d.getDay();
+	var curr_hour = d.getHours();
+	var curr_min = d.getMinutes();
+	if (curr_min < 10) {curr_min = "0" + curr_min;}
+	var suffix = "AM";
+	if (curr_hour >= 12) {suffix = "PM"; curr_hour = curr_hour - 12;}
+	if (curr_hour == 0) {curr_hour = 12;}
+	var dateformatted = d_names[curr_day] + ", " + m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
+
 	var newBlog = new Blog ({
 		userid: req.user.id,
 		username: req.user.username,
 		title: req.body.posttitle,
 		message: req.body.postmessage,
-		date: new Date(),
-		dateformatted: dateformat.toLocaleString(options),
+		datefull: new Date(),
+		date: dateformatted,
 	});
 	newBlog.save(function(err) {
 		if (err) throw err;
@@ -642,10 +656,66 @@ app.post('/blog/add', function(req, res) {
 });
 
 
-	//res.render('blogadd.ejs', {title: 'Add a Blog Entry - Lacquer Tracker'});
-//});
+
+//Specific Blog Page
+app.get('/blog/:title', function(req, res) {
+	data = {};
+	Blog.findOne({title: req.params.title.replace(/_/g," ")}, function (err, blog) {
+		data.title = blog.title + " - Lacquer Tracker";
+		data.posttitle = blog.title;
+		data.postuserid = blog.userid;
+		data.postusername = blog.username;
+		data.postmessage = blog.message;
+		data.postdate = blog.date;
+		BlogComment.find({parentid:blog.id}, function(err, c) {
+			data.postcomments = c;
+			res.render('blogview.ejs', data);
+		})
+	})
+});
 
 
+
+app.get('/blog/:title/addcomment', isLoggedIn, function(req, res) {
+	res.render('addcomment.ejs', {title: 'Add a Comment - Lacquer Tracker', posttitle: req.params.title});
+});
+
+
+
+app.post('/blog/:title/addcomment', function(req, res) {
+	var thistitle = req.params.title.replace(/_/g," ")
+	Blog.findOne({title: thistitle}, function (err, blog){
+		var m_names = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+		var d_names = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+		var d = new Date();
+		var curr_date = d.getDate();
+		var curr_month = d.getMonth();
+		var curr_year = d.getFullYear();
+		var curr_day = d.getDay();
+		var curr_hour = d.getHours();
+		var curr_min = d.getMinutes();
+		if (curr_min < 10) {curr_min = "0" + curr_min;}
+		var suffix = "AM";
+		if (curr_hour >= 12) {suffix = "PM"; curr_hour = curr_hour - 12;}
+		if (curr_hour == 0) {curr_hour = 12;}
+		var dateformatted = d_names[curr_day] + ", " + m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
+
+		var newBlogComment = new BlogComment ({
+			parentid: blog.id,
+			userid: req.user.id,
+			username: req.username,
+			message: req.body.message,
+			datefull: new Date(),
+			date: dateformatted,
+		})
+		newBlogComment.save(function(err) {
+			res.redirect('/blog/' + blog.title)
+		})
+	})
+});
+
+
+//.replace(/ /g,"_")
 
 ///////////////////////////////////////////////////////////////////////////
 
