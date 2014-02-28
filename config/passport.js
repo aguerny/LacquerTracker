@@ -38,7 +38,7 @@ module.exports = function(passport) {
 
 			//find a user whose username is the same as the form's username
 			//we are checking to see if the user trying to login already exists
-			User.findOne({ 'username' : username}, function(err, user) {
+			User.findOne({ 'username' : username.toLowerCase()}, function(err, user) {
 				//if there are any errors, return the error
 				if (err)
 					return done(err);
@@ -84,7 +84,7 @@ module.exports = function(passport) {
 
 		//find a user who username is the same as the form's username
 		//we are checking to see if the user trying to login already exists
-		User.findOne({ 'username' : username}, function(err, user) {
+		User.findOne({ 'username' : username.toLowerCase()}, function(err, user) {
 			//if there are any errors, return the error before anything else
 			if (err)
 				return done(err);

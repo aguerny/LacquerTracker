@@ -4,7 +4,7 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     	<section>
-    		<form action="/editreview/<%= polishid %>" method="post">
+    		<form action="/review/edit/<%= polishid %>" method="post">
 	     		<h3>Edit Review for: <%= polishbrand %> - <%= polishname %>:</h3><br><br>
     			Rating: <select name="rating">
                     <option value="" <% if (rating === "") { %> selected="selected" <%}%>>select a rating</option>

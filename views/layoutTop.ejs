@@ -10,6 +10,10 @@
     <script src="/scripts/jquery.js"></script>
     <script src="/scripts/cycle2.js"></script>
     <script src="/scripts/cycle2center.js"></script>
+    <script src="/scripts/markitup/markitup/jquery.markitup.js"></script>
+        <script type="text/javascript" src="/scripts/markitup/markitup/sets/html/set.js"></script>
+        <link rel="stylesheet" type="text/css" href="/scripts/markitup/markitup/skins/simple/style.css" />
+        <link rel="stylesheet" type="text/css" href="/scripts/markitup/markitup/sets/html/style.css" />
 </head>
 
 <body>
@@ -29,10 +33,15 @@
         <ul>
             <li><a href="/browse">Browse</a></li>
             <li><a href="/profile">Profile</a></li>
-            <li><a href="/editprofile">Settings</a></li>
             <li><a href="/blog">Blog</a></li>
             <li class="last"><a href="/contact">Contact</a></li>
         </ul>
     </nav>
     </header>
 </div>
+
+<script type="text/javascript" >
+   $(document).ready(function() {
+      $(".markItUp").markItUp(mySettings);
+   });
+</script>

@@ -4,13 +4,20 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
-        <h3><%= username %>'s Profile</h3><br><br>
 		<% if (message) { %>
         	<h4><%= message %></h4>
     	<% } %>
-        <% if (about.length > 0) { %>
-            <p style="white-space: pre;"><%= about %></p><br><br>
+        <% if (username.length > 0) { %>
+            <h3><%= username %>'s Profile</h3>
+            <% if (isAuthenticated()) { %>
+                <% if (user.username === username) { %>
+                    <br><a href="/profile/<%= username %>/edit">Edit your profile</a>
+                <% } %>
+            <% } %>
+            <br><br><p style="white-space: pre; padding-left: 3em"><%- about %></p><br><br>
         <% } %>
+
+
         <% if (opolishes.length > 0) { %>
             <h4><%= username %>'s Owned Polishes (<%= opolishes.length %>):</h4><br>
             <table id="ownedpolish" class="sortable">
@@ -28,9 +35,8 @@
                 <% for(var i=0; i<wpolishes.length; i++) {%>
                 <%- wpolishes[i] %>
                 <% } %>
-            </table><br><br>
+            </table>
         <% } %>
-        </table>
     </section>
     </div>
 </div>

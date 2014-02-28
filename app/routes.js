@@ -34,11 +34,11 @@ app.get('/browse', function(req, res) {
 		.exec(function (err, docs) {
 			var newDocs = docs.map(function(idoc){
 				if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === idoc.id})) {
-					var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + idoc.id + ">Remove ownership</a></li><li><a href=/editpolish/" + idoc.id + ">Edit polish</a></li></ul></div>";
+					var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + idoc.id + ">Remove ownership</a></li><li><a href=/polishedit/" + idoc.id + ">Edit polish</a></li></ul></div>";
 				} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === idoc.id})) {
-					var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/removewant/" + idoc.id + ">Remove from wishlist</a></li><li><a href=/editpolish/" + idoc.id + ">Edit polish</a></li></ul></div>";
+					var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/removewant/" + idoc.id + ">Remove from wishlist</a></li><li><a href=/polishedit/" + idoc.id + ">Edit polish</a></li></ul></div>";
 				} else {
-					var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/addwant/" + idoc.id + ">Add to wishlist</a></li><li><a href=/editpolish/" + idoc.id + ">Edit polish</a></li></ul></div>";
+					var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/addwant/" + idoc.id + ">Add to wishlist</a></li><li><a href=/polishedit/" + idoc.id + ">Edit polish</a></li></ul></div>";
 				}
 				return "<tr><td><a id='tablelink' href=/polish/" + idoc.brand.replace(/ /g,"_") + "/" + idoc.name.replace(/ /g,"_") + ">" + idoc.name + "</a></td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td>" + options + "</td></tr>";
 			})
@@ -64,11 +64,11 @@ app.post('/browse', function(req, res) {
 			var polishItems = [];
 			var newDocs = docs.map(function(idoc){
 				if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === idoc.id})) {
-					var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + idoc.id + ">Remove ownership</a></li><li><a href=/editpolish/" + idoc.id + ">Edit polish</a></li></ul></div>";
+					var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + idoc.id + ">Remove ownership</a></li><li><a href=/polishedit/" + idoc.id + ">Edit polish</a></li></ul></div>";
 				} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === idoc.id})) {
-					var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/removewant/" + idoc.id + ">Remove from wishlist</a></li><li><a href=/editpolish/" + idoc.id + ">Edit polish</a></li></ul></div>";
+					var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/removewant/" + idoc.id + ">Remove from wishlist</a></li><li><a href=/polishedit/" + idoc.id + ">Edit polish</a></li></ul></div>";
 				} else {
-					var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/addwant/" + idoc.id + ">Add to wishlist</a></li><li><a href=/editpolish/" + idoc.id + ">Edit polish</a></li></ul></div>";
+					var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/addwant/" + idoc.id + ">Add to wishlist</a></li><li><a href=/polishedit/" + idoc.id + ">Edit polish</a></li></ul></div>";
 				}
 				return "<tr><td><a id='tablelink' href=/polish/" + idoc.brand.replace(/ /g,"_") + "/" + idoc.name.replace(/ /g,"_") + ">" + idoc.name + "</a></td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td>" + options + "</td></tr>";
 			})
@@ -203,18 +203,18 @@ app.get('/polish/:brand/:name', function(req, res) {
 
 
 //add photo
-app.get('/addphoto/:id', isLoggedIn, function(req, res) {
+app.get('/photo/add/:id', isLoggedIn, function(req, res) {
 	Polish.findById(req.params.id, function(err, p) {
 		var data = {};
 			data.title = 'Add a Photo - Lacquer Tracker';
 			data.pname = p.name;
 			data.pbrand = p.brand;
 			data.pid = p.id;
-	res.render('addphoto.ejs', data);
+	res.render('photoadd.ejs', data);
 	})
 });
 
-app.post('/addphoto/:id', function(req, res) {
+app.post('/photo/add/:id', function(req, res) {
 	var tempPath = req.files.photo.path;
 	var targetPath = path.resolve('./public/images/polish/' + req.params.id + "-" + req.files.photo.name.replace(/ /g,"_"));
 	fs.rename(tempPath, targetPath, function(err) {
@@ -245,7 +245,7 @@ app.post('/addphoto/:id', function(req, res) {
 
 
 //edit review
-app.get('/editreview/:id', isLoggedIn, function(req, res) {
+app.get('/review/edit/:id', isLoggedIn, function(req, res) {
 	var data = {};
 	data.title = 'Edit Your Review - Lacquer Tracker';
 	data.polishid = req.params.id;
@@ -262,7 +262,7 @@ app.get('/editreview/:id', isLoggedIn, function(req, res) {
 				data.userreview = review.userreview;
 				data.dupes = review.dupes;
 				data.notes = review.notes;
-				res.render('editreview.ejs', data);
+				res.render('reviewedit.ejs', data);
 			} else { //the review doesn't exist yet.
 				data.userid = req.user.id;
 				data.username = req.user.username;
@@ -270,14 +270,14 @@ app.get('/editreview/:id', isLoggedIn, function(req, res) {
 				data.userreview = "";
 				data.dupes = "";
 				data.notes = "";
-				res.render('editreview.ejs', data);
+				res.render('reviewedit.ejs', data);
 			}
 		})
 	})
 });
 
 
-app.post('/editreview/:id', function(req, res) {
+app.post('/review/edit/:id', function(req, res) {
 	Polish.findById(req.params.id, function(err, polish) {
 		var polishname = polish.name;
 		var polishbrand = polish.brand;
@@ -316,11 +316,11 @@ app.post('/editreview/:id', function(req, res) {
 
 
 //add polish
-app.get('/addpolish', isLoggedIn, function(req, res) {
-	res.render('addpolish.ejs', {title: 'Add a Polish - Lacquer Tracker', message : req.flash('addPolishMessage')});
+app.get('/polishadd', isLoggedIn, function(req, res) {
+	res.render('polishadd.ejs', {title: 'Add a Polish - Lacquer Tracker', message : req.flash('addPolishMessage')});
 });
 
-app.post('/addpolish', function(req, res) {
+app.post('/polishadd', function(req, res) {
 	Polish.findOne({ name : req.body.name, brand : req.body.brand}, function(err, polish) {
 		//check to see if there's already a polish name and brand in the database
 		if (polish) {
@@ -340,7 +340,7 @@ app.post('/addpolish', function(req, res) {
 			});
 			newPolish.save(function(err) {
 				req.flash('addPolishMessage', 'Polish has been successfully added. Add another?')
-				res.redirect('/addpolish');
+				res.redirect('/polishadd');
 			});
 		}
 	});
@@ -351,7 +351,7 @@ app.post('/addpolish', function(req, res) {
 
 
 //edit polish
-app.get('/editpolish/:id', isLoggedIn, function(req, res) {
+app.get('/polishedit/:id', isLoggedIn, function(req, res) {
 	Polish.findById(req.params.id, function(err, p) {
 	var data = {};
 		data.title = 'Edit a Polish - Lacquer Tracker';
@@ -365,15 +365,15 @@ app.get('/editpolish/:id', isLoggedIn, function(req, res) {
 		data.edittype = p.type;
 		data.editindie = p.indie;
 		data.editcode = p.code;
-	res.render('editpolish.ejs', data);
+	res.render('polishedit.ejs', data);
 	});
 });
 
-app.post('/editpolish/:id', function(req, res) {
+app.post('/polishedit/:id', function(req, res) {
 	Polish.findById(req.params.id, function(err, p) {
 		if (!p) {
 			req.flash('editPolishMessage', 'Error editing polish.')
-			res.redirect('/editpolish/:id');
+			res.redirect('/polishedit/:id');
 		} else {
 			p.name = req.body.name;
 			p.brand = req.body.brand;
@@ -503,7 +503,7 @@ app.get('/profile/:username', function(req, res) {
 		var wPolish = [];
 		if (!user) {
 			req.flash('profilemessage', 'No such user exists.');
-			res.render('profile.ejs', {title: 'Profile - Lacquer Tracker', opolishes: oPolish, wpolishes: wPolish, message: req.flash('profilemessage')});
+			res.render('profile.ejs', {title: 'Profile - Lacquer Tracker', opolishes: oPolish, wpolishes: wPolish, message: req.flash('profilemessage'), about: ""});
 		} else {
 			var ownedPolish = user.ownedpolish.map(function(id) {
 				return mongoose.Types.ObjectId(id);
@@ -516,11 +516,11 @@ app.get('/profile/:username', function(req, res) {
 			Polish.find({_id: {$in: ownedPolish}}, function(err, docs){
 				for(var docIndex = 0; docIndex < docs.length; docIndex++) {
 					if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === docs[docIndex].id})) {
-						var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + docs[docIndex].id + ">Remove ownership</a></li><li><a href=/editpolish/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
+						var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + docs[docIndex].id + ">Remove ownership</a></li><li><a href=/polishedit/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
 					} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === docs[docIndex].id})) {
-						var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add ownership</a></li><li><a href=/browse/removewant/" + docs[docIndex].id + ">Remove from wishlist</a></li><li><a href=/editpolish/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
+						var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add ownership</a></li><li><a href=/browse/removewant/" + docs[docIndex].id + ">Remove from wishlist</a></li><li><a href=/polishedit/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
 					} else {
-						var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add ownership</a></li><li><a href=/browse/addwant/" + docs[docIndex].id + ">Add to wishlist</a></li><li><a href=/editpolish/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
+						var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add ownership</a></li><li><a href=/browse/addwant/" + docs[docIndex].id + ">Add to wishlist</a></li><li><a href=/polishedit/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
 					}
 			 		oPolish.push("<tr><td><a id='tablelink' href=/polish/" + docs[docIndex].brand.replace(/ /g," ") + "/" + docs[docIndex].name.replace(/ /g,"_") + ">" + docs[docIndex].name + "</a></td><td>" + docs[docIndex].brand + "</td><td>" + docs[docIndex].batch + "</td><td>" + docs[docIndex].colorcat + "</td><td><div id='swatch' style='background-color:" + docs[docIndex].colorhex + ";'>&nbsp;</div></td><td>" + docs[docIndex].type + "</td><td>" + options + "</td></tr>");
 				}
@@ -529,11 +529,11 @@ app.get('/profile/:username', function(req, res) {
 			Polish.find({_id: {$in: wantedPolish}}, function(err, docs){
 				for(var docIndex = 0; docIndex < docs.length; docIndex++) {
 					if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === docs[docIndex].id})) {
-						var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + docs[docIndex].id + ">Remove own</a></li><li><a href=/editpolish/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
+						var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + docs[docIndex].id + ">Remove own</a></li><li><a href=/polishedit/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
 					} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === docs[docIndex].id})) {
-						var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add own</a></li><li><a href=/browse/removewant/" + docs[docIndex].id + ">Remove want</a></li><li><a href=/editpolish/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
+						var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add own</a></li><li><a href=/browse/removewant/" + docs[docIndex].id + ">Remove want</a></li><li><a href=/polishedit/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
 					} else {
-						var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add own</a></li><li><a href=/browse/addwant/" + docs[docIndex].id + ">Add want</a></li><li><a href=/editpolish/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
+						var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add own</a></li><li><a href=/browse/addwant/" + docs[docIndex].id + ">Add want</a></li><li><a href=/polishedit/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
 					}
 			 		wPolish.push("<tr><td><a id='tablelink' href=/polish/" + docs[docIndex].brand.replace(/ /g," ") + "/" + docs[docIndex].name.replace(/ /g,"_") + ">" + docs[docIndex].name + "</a></td><td>" + docs[docIndex].brand + "</td><td>" + docs[docIndex].batch + "</td><td>" + docs[docIndex].colorcat + "</td><td><div id='swatch' style='background-color:" + docs[docIndex].colorhex + ";'>&nbsp;</div></td><td>" + docs[docIndex].type + "</td><td>" + options + "</td></tr>");
 				}
@@ -558,13 +558,13 @@ app.get('/profile/:username', function(req, res) {
 
 
 //edit profile
-app.get('/editprofile', isLoggedIn, function(req, res) {
-	var username = req.user.username;
-	res.redirect('/editprofile/' + username);
+app.get('/profile/edit', isLoggedIn, function(req, res) {
+	var usernamee = req.user.username;
+	res.redirect('/profile/edit/' + usernamee);
 });
 
 
-app.get('/editprofile/:username', isLoggedIn, function(req, res) {
+app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
 	User.findOne({username : req.params.username}, function(err, user) {
 	var data = {};
 		data.title = 'Edit Your Profile - Lacquer Tracker';
@@ -573,15 +573,15 @@ app.get('/editprofile/:username', isLoggedIn, function(req, res) {
 		data.username = user.username;
 		data.email = user.email;
 		data.about = user.about;
-	res.render('editprofile.ejs', data);
+	res.render('profileedit.ejs', data);
 	});
 });
 
-app.post('/editprofile/:username', function(req, res) {
+app.post('/profile/:username/edit', function(req, res) {
 	User.findOne({username:req.params.username}, function(err, user) {
 		if (!user) {
 			req.flash('editProfileMessage', 'Error editing profile.')
-			res.redirect('/editpolish/:username');
+			res.redirect('/polishedit/:username');
 		} else {
 			user.email = req.body.email;
 			user.about = req.body.about;
@@ -626,8 +626,8 @@ app.get('/blog/add', isLoggedIn, function(req, res) {
 
 
 app.post('/blog/add', function(req, res) {
-	var m_names = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-	var d_names = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+	var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
+	var d_names = new Array("Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat");
 	var d = new Date();
 	var curr_date = d.getDate();
 	var curr_month = d.getMonth();
@@ -636,8 +636,8 @@ app.post('/blog/add', function(req, res) {
 	var curr_hour = d.getHours();
 	var curr_min = d.getMinutes();
 	if (curr_min < 10) {curr_min = "0" + curr_min;}
-	var suffix = "AM";
-	if (curr_hour >= 12) {suffix = "PM"; curr_hour = curr_hour - 12;}
+	var suffix = "am";
+	if (curr_hour >= 12) {suffix = "pm"; curr_hour = curr_hour - 12;}
 	if (curr_hour == 0) {curr_hour = 12;}
 	var dateformatted = d_names[curr_day] + ", " + m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
 
@@ -676,17 +676,17 @@ app.get('/blog/:title', function(req, res) {
 
 
 
-app.get('/blog/:title/addcomment', isLoggedIn, function(req, res) {
-	res.render('addcomment.ejs', {title: 'Add a Comment - Lacquer Tracker', posttitle: req.params.title});
+app.get('/blog/:title/add', isLoggedIn, function(req, res) {
+	res.redirect('/blog/' + req.params.title.replace(/_/g," ") + "#addcomment")
 });
 
 
 
-app.post('/blog/:title/addcomment', function(req, res) {
+app.post('/blog/:title/add', isLoggedIn, function(req, res) {
 	var thistitle = req.params.title.replace(/_/g," ")
 	Blog.findOne({title: thistitle}, function (err, blog){
-		var m_names = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-		var d_names = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+		var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
+		var d_names = new Array("Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat");
 		var d = new Date();
 		var curr_date = d.getDate();
 		var curr_month = d.getMonth();
@@ -695,15 +695,15 @@ app.post('/blog/:title/addcomment', function(req, res) {
 		var curr_hour = d.getHours();
 		var curr_min = d.getMinutes();
 		if (curr_min < 10) {curr_min = "0" + curr_min;}
-		var suffix = "AM";
-		if (curr_hour >= 12) {suffix = "PM"; curr_hour = curr_hour - 12;}
+		var suffix = "am";
+		if (curr_hour >= 12) {suffix = "pm"; curr_hour = curr_hour - 12;}
 		if (curr_hour == 0) {curr_hour = 12;}
 		var dateformatted = d_names[curr_day] + ", " + m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
 
 		var newBlogComment = new BlogComment ({
 			parentid: blog.id,
 			userid: req.user.id,
-			username: req.username,
+			username: req.user.username,
 			message: req.body.message,
 			datefull: new Date(),
 			date: dateformatted,
@@ -711,6 +711,13 @@ app.post('/blog/:title/addcomment', function(req, res) {
 		newBlogComment.save(function(err) {
 			res.redirect('/blog/' + blog.title)
 		})
+	})
+});
+
+
+app.get('/blog/:title/:id/remove', isLoggedIn, function(req, res) {
+	BlogComment.findByIdAndRemove(req.params.id, function(err) {
+		res.redirect("/blog/" + req.params.title);
 	})
 });
 

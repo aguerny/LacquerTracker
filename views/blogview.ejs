@@ -5,12 +5,26 @@
     <div id="container" class="clear">
     <section>
         <h2><%= posttitle %></h2><br>
-            <i>Posted on <%= postdate %> by <a href="/profile/<%= postusername%>"><%= postusername %></a></i><br><br><br>
-            <p style="white-space: pre;"><%= postmessage %></p><br><br><hr><br><br>
-            <h3>Comments (<%= postcomments.length %>)</h3><br><br><a href="/blog/<%= posttitle %>/addcomment"><i>Add a comment</i></a><br><br>
+            <i>Posted by <a href="/profile/<%= postusername%>"><%= postusername %></a> on <%= postdate %></i><br><br><br>
+            <p style="white-space: pre;"><%- postmessage %></p><br><br><hr><br><br>
+            <b>Comments (<%= postcomments.length %>)</b> | <a href="/blog/<%= posttitle %>/add">Add a comment</a><br><br>
             <% for (i=0; i<postcomments.length; i++) { %>
-                <br><br><a href="/profile/<%= postcomments[i].username %>"><%= postcomments[i].username %></a> on <%= postcomments[i].date %>:<br><br>
-                <%= postcomments[i].message %><br><br><br><br><br>
+                <br><br><b><a href="/profile/<%= postcomments[i].username %>"><%= postcomments[i].username %></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[i].date %>:</font>
+                <% if (isAuthenticated()) { %>
+                    <% if (user.username === postcomments[i].username) { %>
+                        <a href="/blog/<%= posttitle %>/<%= postcomments[i].id %>/remove">Delete this comment</a>
+                    <% } %>
+                <% } %>
+                <br><br>
+                <p style="white-space: pre; padding-left: 3em"><%- postcomments[i].message %></p><br>
+            <% } %>
+            <hr><br><br>
+            <% if (isAuthenticated()) { %>
+                <b><a name="addcomment"><font color="#000000">Add a Comment:</font><br><br>
+                <form action="/blog/<%= posttitle %>/add" method="post">
+                    <textarea class="markItUp" name="message" cols="100" rows="10"></textarea><br><br>
+                    <input type="submit" value="Submit" class="button">
+                </form>
             <% } %>
     </section>
     </div>
