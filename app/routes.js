@@ -113,86 +113,89 @@ app.get('/browse/removewant/:id', isLoggedIn, function(req, res) {
 app.get('/polish/:brand/:name', function(req, res) {
 
 	Polish.findOne({brand: req.params.brand.replace(/_/g," "), name:req.params.name.replace(/_/g," ")}, function(err, polish) {
-		data = {};
-		data.title = polish.name + ' - ' + polish.brand + ' - Lacquer Tracker'
-		data.pname = polish.name;
-		data.pbrand = polish.brand;
-		data.pbatch = polish.batch;
-		data.pcolorcat = polish.colorcat;
-		data.pcolorhex = polish.colorhex;
-		data.ptype = polish.type;
-		data.pcode = polish.code;
-		data.pid = polish.id;
-		data.linkbrand = polish.brand.replace("%20"," ");
-		data.linkname = polish.name.replace("%20"," ");
+		if (polish === null) {
+			res.redirect('/error');
+		} else {
+			data = {};
+			data.title = polish.name + ' - ' + polish.brand + ' - Lacquer Tracker'
+			data.pname = polish.name;
+			data.pbrand = polish.brand;
+			data.pbatch = polish.batch;
+			data.pcolorcat = polish.colorcat;
+			data.pcolorhex = polish.colorhex;
+			data.ptype = polish.type;
+			data.pcode = polish.code;
+			data.pid = polish.id;
+			data.linkbrand = polish.brand.replace("%20"," ");
+			data.linkname = polish.name.replace("%20"," ");
 
-		Photo.find({polishid : polish.id}, function(err, photo) {
-			if (photo.length < 1) {
-				data.allphotos = ['/images/questionmark.png'];
-				data.numphotos = "0";
-			} else {
-				var allphotos = photo.map(function(x) {
-					console.log(x.location);
-					return x.location;
-				})
-				data.allphotos = allphotos;
-				data.numphotos = photo.length;
-			}
+			Photo.find({polishid : polish.id}, function(err, photo) {
+				if (photo.length < 1) {
+					data.allphotos = ['/images/questionmark.png'];
+					data.numphotos = "0";
+				} else {
+					var allphotos = photo.map(function(x) {
+						console.log(x.location);
+						return x.location;
+					})
+					data.allphotos = allphotos;
+					data.numphotos = photo.length;
+				}
 
-			if (req.isAuthenticated()) {
-				Review.findOne({userid:req.user.id, polishid:polish.id}, function (err, review) {
-					if (review) {
-					data.rating = review.rating;
-					data.userreview = review.userreview;
-					data.notes = review.notes;
-					data.dupes = review.dupes;
-					} else {
+				if (req.isAuthenticated()) {
+					Review.findOne({userid:req.user.id, polishid:polish.id}, function (err, review) {
+						if (review) {
+						data.rating = review.rating;
+						data.userreview = review.userreview;
+						data.notes = review.notes;
+						data.dupes = review.dupes;
+						} else {
+						data.rating = "";
+						data.userreview = "";
+						data.notes = "";
+						data.dupes = "";
+						}
+
+					Review.find({polishid:polish.id}, function(err, r) {
+						var allReviews = r.map(function(x) {
+							return x.userreview;
+						})
+						var allReviewsUser = r.map(function(x) {
+							return x.username;
+						})
+						var allDupes = r.map(function(x) {
+							return x.dupes;
+						})
+						data.allreviews = allReviews;
+						data.allreviewsusername = allReviewsUser;
+						data.alldupes = allDupes;
+						res.render('polish.ejs', data);
+					})
+
+					})
+				} else {
 					data.rating = "";
 					data.userreview = "";
 					data.notes = "";
 					data.dupes = "";
-					}
-
-				Review.find({polishid:polish.id}, function(err, r) {
-					var allReviews = r.map(function(x) {
-						return x.userreview;
+					Review.find({polishid:polish.id}, function(err, r) {
+						var allReviews = r.map(function(x) {
+							return x.userreview;
+						})
+						var allReviewsUser = r.map(function(x) {
+							return x.username;
+						})
+						var allDupes = r.map(function(x) {
+							return x.dupes;
+						})
+						data.allreviews = allReviews;
+						data.allreviewsusername = allReviewsUser;
+						data.alldupes = allDupes;
+						res.render('polish.ejs', data);
 					})
-					var allReviewsUser = r.map(function(x) {
-						return x.username;
-					})
-					var allDupes = r.map(function(x) {
-						return x.dupes;
-					})
-					data.allreviews = allReviews;
-					data.allreviewsusername = allReviewsUser;
-					data.alldupes = allDupes;
-					res.render('polish.ejs', data);
-				})
-
-				})
-			} else {
-				data.rating = "";
-				data.userreview = "";
-				data.notes = "";
-				data.dupes = "";
-				Review.find({polishid:polish.id}, function(err, r) {
-					var allReviews = r.map(function(x) {
-						return x.userreview;
-					})
-					var allReviewsUser = r.map(function(x) {
-						return x.username;
-					})
-					var allDupes = r.map(function(x) {
-						return x.dupes;
-					})
-					data.allreviews = allReviews;
-					data.allreviewsusername = allReviewsUser;
-					data.alldupes = allDupes;
-					res.render('polish.ejs', data);
-				})
-			}
-		})
-
+				}
+			})
+		}
 	});
 
 });
@@ -205,12 +208,16 @@ app.get('/polish/:brand/:name', function(req, res) {
 //add photo
 app.get('/photo/add/:id', isLoggedIn, function(req, res) {
 	Polish.findById(req.params.id, function(err, p) {
-		var data = {};
-			data.title = 'Add a Photo - Lacquer Tracker';
-			data.pname = p.name;
-			data.pbrand = p.brand;
-			data.pid = p.id;
-	res.render('photoadd.ejs', data);
+		if (p === null) {
+			res.redirect('/error');
+		} else {
+			var data = {};
+				data.title = 'Add a Photo - Lacquer Tracker';
+				data.pname = p.name;
+				data.pbrand = p.brand;
+				data.pid = p.id;
+			res.render('photoadd.ejs', data);
+		}
 	})
 });
 
@@ -353,19 +360,23 @@ app.post('/polishadd', function(req, res) {
 //edit polish
 app.get('/polishedit/:id', isLoggedIn, function(req, res) {
 	Polish.findById(req.params.id, function(err, p) {
-	var data = {};
-		data.title = 'Edit a Polish - Lacquer Tracker';
-		data.message = req.flash('editPolishMessage');
-		data.editid = p.id;
-		data.editname = p.name;
-		data.editbrand = p.brand;
-		data.editbatch = p.batch;
-		data.editcolorcat = p.colorcat;
-		data.editcolorhex = p.colorhex;
-		data.edittype = p.type;
-		data.editindie = p.indie;
-		data.editcode = p.code;
-	res.render('polishedit.ejs', data);
+		if (p === null || err) {
+			res.redirect('/error');
+		} else {
+			var data = {};
+				data.title = 'Edit a Polish - Lacquer Tracker';
+				data.message = req.flash('editPolishMessage');
+				data.editid = p.id;
+				data.editname = p.name;
+				data.editbrand = p.brand;
+				data.editbatch = p.batch;
+				data.editcolorcat = p.colorcat;
+				data.editcolorhex = p.colorhex;
+				data.edittype = p.type;
+				data.editindie = p.indie;
+				data.editcode = p.code;
+			res.render('polishedit.ejs', data);
+		}
 	});
 });
 
@@ -524,7 +535,7 @@ app.get('/profile/:username', function(req, res) {
 					}
 			 		oPolish.push("<tr><td><a id='tablelink' href=/polish/" + docs[docIndex].brand.replace(/ /g," ") + "/" + docs[docIndex].name.replace(/ /g,"_") + ">" + docs[docIndex].name + "</a></td><td>" + docs[docIndex].brand + "</td><td>" + docs[docIndex].batch + "</td><td>" + docs[docIndex].colorcat + "</td><td><div id='swatch' style='background-color:" + docs[docIndex].colorhex + ";'>&nbsp;</div></td><td>" + docs[docIndex].type + "</td><td>" + options + "</td></tr>");
 				}
-			});
+			
 
 			Polish.find({_id: {$in: wantedPolish}}, function(err, docs){
 				for(var docIndex = 0; docIndex < docs.length; docIndex++) {
@@ -549,6 +560,7 @@ app.get('/profile/:username', function(req, res) {
 			res.render('profile.ejs', data);
 
 			});
+			});
 		}
 	});
 });
@@ -565,16 +577,20 @@ app.get('/profile/edit', isLoggedIn, function(req, res) {
 
 
 app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
-	User.findOne({username : req.params.username}, function(err, user) {
-	var data = {};
-		data.title = 'Edit Your Profile - Lacquer Tracker';
-		data.message = req.flash('editProfileMessage');
-		data.userid = user.id;
-		data.username = user.username;
-		data.email = user.email;
-		data.about = user.about;
-	res.render('profileedit.ejs', data);
-	});
+	if (req.params.username === req.user.username) {
+		User.findOne({username : req.params.username}, function(err, user) {
+		var data = {};
+			data.title = 'Edit Your Profile - Lacquer Tracker';
+			data.message = req.flash('editProfileMessage');
+			data.userid = user.id;
+			data.username = user.username;
+			data.email = user.email;
+			data.about = user.about;
+		res.render('profileedit.ejs', data);
+		})
+	} else {
+		res.redirect('/error');
+	}
 });
 
 app.post('/profile/:username/edit', function(req, res) {
@@ -596,14 +612,6 @@ app.post('/profile/:username/edit', function(req, res) {
 ///////////////////////////////////////////////////////////////////////////
 
 
-//settings
-app.get('/settings', isLoggedIn, function(req, res) {
-	res.render('settings.ejs', {user: req.user, title: 'Settings - Lacquer Tracker'});
-});
-
-
-///////////////////////////////////////////////////////////////////////////
-
 //main blog page
 app.get('/blog', function(req, res) {
 	data = {}
@@ -621,7 +629,11 @@ app.get('/blog', function(req, res) {
 
 
 app.get('/blog/add', isLoggedIn, function(req, res) {
-	res.render('blogadd.ejs', {title: 'Add a Blog Entry - Lacquer Tracker'});
+	if (req.user.username === "t" || req.user.username === "alli") {
+		res.render('blogadd.ejs', {title: 'Add a Blog Entry - Lacquer Tracker'});
+	} else {
+		res.redirect('/error');
+	}
 });
 
 
@@ -661,16 +673,20 @@ app.post('/blog/add', function(req, res) {
 app.get('/blog/:title', function(req, res) {
 	data = {};
 	Blog.findOne({title: req.params.title.replace(/_/g," ")}, function (err, blog) {
-		data.title = blog.title + " - Lacquer Tracker";
-		data.posttitle = blog.title;
-		data.postuserid = blog.userid;
-		data.postusername = blog.username;
-		data.postmessage = blog.message;
-		data.postdate = blog.date;
-		BlogComment.find({parentid:blog.id}, function(err, c) {
-			data.postcomments = c;
-			res.render('blogview.ejs', data);
-		})
+		if (blog === null) {
+			res.redirect('/error');
+		} else {
+			data.title = blog.title + " - Lacquer Tracker";
+			data.posttitle = blog.title;
+			data.postuserid = blog.userid;
+			data.postusername = blog.username;
+			data.postmessage = blog.message;
+			data.postdate = blog.date;
+			BlogComment.find({parentid:blog.id}, function(err, c) {
+				data.postcomments = c;
+				res.render('blogview.ejs', data);
+			})
+		}
 	})
 });
 
@@ -721,6 +737,12 @@ app.get('/blog/:title/:id/remove', isLoggedIn, function(req, res) {
 	})
 });
 
+
+///////////////////////////////////////////////////////////////////////////
+
+app.get('/error', function(req, res) {
+	res.render('error.ejs', {title: 'Oops! - Lacquer Tracker'});
+});
 
 //.replace(/ /g,"_")
 
