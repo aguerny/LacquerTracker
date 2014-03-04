@@ -1,0 +1,34 @@
+<% include layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
+        <h2><%= posttitle %></h2><br>
+            <i>Posted by <a href="/profile/<%= postusername%>"><%= postusername %></a> on <%= postdate %></i><br><br><br>
+            <p style="white-space: pre;"><%- postmessage %></p><br><br><hr><br><br>
+            <b>Comments (<%= postcomments.length %>)</b> | <a href="/forums/<%= postforum %>/<%= postid %>/add">Add a comment</a><br><br>
+            <% for (i=0; i<postcomments.length; i++) { %>
+                <br><br><b><a href="/profile/<%= postcomments[i].username %>"><%= postcomments[i].username %></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[i].date %>:</font>
+                <% if (isAuthenticated()) { %>
+                    <% if (user.username === postcomments[i].username) { %>
+                        <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[i].id %>/remove">Delete this comment</a>
+                    <% } %>
+                <% } %>
+                <br><br>
+                <p style="white-space: pre; padding-left: 3em"><%- postcomments[i].message %></p><br>
+            <% } %>
+            <hr><br><br>
+            <% if (isAuthenticated()) { %>
+                <b><a name="addcomment"><font color="#000000">Add a Comment:</font><br><br>
+                <form action="/forums/<%= postforum %>/<%= postid %>/add" method="post">
+                    <textarea class="markItUp" name="message" cols="100" rows="10"></textarea><br><br>
+                    <input type="submit" value="Submit" class="button">
+                </form>
+            <% } %>
+		<table>
+    </section>
+    </div>
+</div>
+
+<% include layoutBottom %>

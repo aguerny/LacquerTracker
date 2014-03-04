@@ -1,0 +1,26 @@
+<% include layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
+        <form action="/forums/add" method="post">
+            <h3>Add a discussion post:</h3><br>
+                Forum:<br><select name="forum" required>
+                    <option value="">select a forum to post to</option>
+                    <option value="intro">Introductions</option>
+                    <option value="general">General Polish Discussion</option>
+                    <option value="notd">Nails of the Day</option>
+                    <option value="contests">Contests / Giveaways</option>
+                    <option value="tutorials">Tutorials</option>
+                    <option value="offtopic">Off Topic</option>
+                    </select><br><br>
+                Title:<br><input type="text" name="posttitle" size="63" required><br><br><br>
+                Post:<br><textarea type="text" class="markItUp" name="postmessage" cols="60" rows="20" required></textarea><br><br>
+                <input type="submit" value="Submit" class="button">
+        </form>
+    </section>
+    </div>
+</div>
+
+<% include layoutBottom %>

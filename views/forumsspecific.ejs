@@ -1,0 +1,35 @@
+<% include layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
+        <% if (forumposts.length < 1) { %>
+            <h3>There isn't anything here.</h3>
+        <% } else { %>
+            <center><h3>
+                <% if (forumcat === "intro") { %>
+                    Introductions</h3><br>New to Lacquer Tracker? Tell us about yourself!<%}%>
+                <% if (forumcat === "general") { %>
+                    General Polish Dicussion<br>Any discussion related to polish is welcome here.<%}%>
+                <% if (forumcat === "notd") { %>
+                    Nails of the Day<br>Post a photo of what you're wearing today. Be sure to include the colors you used!<%}%>
+                <% if (forumcat === "contests") { %>
+                    Contests and Giveaways<br>Hosts contests or giveaways.<%}%>
+                <% if (forumcat === "tutorials") { %>
+                    Tutorials<br>Post nail art tutorials or link to great ones you've found elsewhere.<%}%>
+                <% if (forumcat === "offtopic") { %>
+                    Off Topic Discussion<br>Anything goes here!<%}%>
+            | <a href="/forums/add">Add a post</a><br><br>
+            <table>
+        	<tr><th>Post Title</th><th>Started By</th></tr>
+        	<% for (i=0; i<forumposts.length; i++) { %>
+        		<tr><td><a href="/forums/<%= forumcat %>/<%= forumposts[i].id %>"><%= forumposts[i].title %></a></td><td><a href='/profile/<%= forumposts[i].username %>'><%= forumposts[i].username %></a></td></tr>
+        	<% } %>
+        <% } %>
+		<table>
+    </section>
+    </div>
+</div>
+
+<% include layoutBottom %>
