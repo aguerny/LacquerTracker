@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 
 //define the schema for our blog post model
 var blogcommentSchema = mongoose.Schema({
-	parentid: String,
+	parentid: {type: String, ref: 'Blog'},
 	userid: String,
 	username: String,
 	message: String,

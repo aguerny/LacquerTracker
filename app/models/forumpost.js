@@ -10,7 +10,9 @@ var forumpostSchema = mongoose.Schema({
 	message: String,
 	datefull: Date,
 	date: String,
+	dateupdated: String,
 	forum: String,
+	comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'ForumComment'}],
 });
 
 

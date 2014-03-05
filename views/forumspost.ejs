@@ -1,18 +1,36 @@
 <% include layoutTop %>
 
+<script type="text/javascript">
+function confirm_alert(node) {
+    return confirm("Are you sure you want to permanently delete this?");
+}
+</script>
+
+<script type="text/javascript">
+function AlertIt() {
+var answer = confirm ("Are you sure you want to completely delete this post?")
+if (answer === true) {
+    window.location="/forums/" + postforum + "/" + postid + "/remove";
+</script>
+
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
+        <a href="/forums/<%= postforum %>">&#8592; Back to Forum</a><br><br>
         <h2><%= posttitle %></h2><br>
-            <i>Posted by <a href="/profile/<%= postusername%>"><%= postusername %></a> on <%= postdate %></i><br><br><br>
+            <i>Posted by <a href="/profile/<%= postusername%>"><%= postusername %></a> on <%= postdate %></i><% if (isAuthenticated()) { %>
+                    <% if (user.username === postusername) { %>
+                        : <a href="/forums/<%=postforum%>/<%=postid%>/remove" onclick="return confirm_alert(this);">Delete this post</a>
+                    <% } %>
+                <% } %><br><br><br>
             <p style="white-space: pre;"><%- postmessage %></p><br><br><hr><br><br>
             <b>Comments (<%= postcomments.length %>)</b> | <a href="/forums/<%= postforum %>/<%= postid %>/add">Add a comment</a><br><br>
             <% for (i=0; i<postcomments.length; i++) { %>
                 <br><br><b><a href="/profile/<%= postcomments[i].username %>"><%= postcomments[i].username %></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[i].date %>:</font>
                 <% if (isAuthenticated()) { %>
                     <% if (user.username === postcomments[i].username) { %>
-                        <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[i].id %>/remove">Delete this comment</a>
+                        <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[i].id %>/remove" onclick="return confirm_alert(this);">Delete this comment</a>
                     <% } %>
                 <% } %>
                 <br><br>
@@ -22,7 +40,7 @@
             <% if (isAuthenticated()) { %>
                 <b><a name="addcomment"><font color="#000000">Add a Comment:</font><br><br>
                 <form action="/forums/<%= postforum %>/<%= postid %>/add" method="post">
-                    <textarea class="markItUp" name="message" cols="100" rows="10"></textarea><br><br>
+                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
                     <input type="submit" value="Submit" class="button">
                 </form>
             <% } %>

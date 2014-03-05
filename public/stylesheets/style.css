@@ -163,8 +163,13 @@ table.sortable thead {
     max-width: 100%;
 }
 
+.forumtable {
+    width: 70%;
+}
 
-
+.forumtable th {
+    color: #000000;
+}
 
 
 /*---Footer---*/

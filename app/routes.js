@@ -2,6 +2,7 @@ var Polish = require('../app/models/polish');
 var User = require('../app/models/user');
 var Review = require('../app/models/review');
 var Photo = require('../app/models/photo');
+var UserPhoto = require('../app/models/photouser');
 var Blog = require('../app/models/blog');
 var BlogComment = require('../app/models/blogcomment');
 var ForumPost = require('../app/models/forumpost');
@@ -248,6 +249,35 @@ app.post('/photo/add/:id', function(req, res) {
 	})
 });
 
+
+app.get('/photo/upload', isLoggedIn, function(req, res) {
+	var data = {};
+	data.title = 'Upload a Photo - Lacquer Tracker';
+	data.message = "";
+	res.render('photoadduser.ejs', data);
+});
+
+
+app.post('/photo/upload', function(req, res) {
+	var tempPath = req.files.photo.path;
+	var targetPath = path.resolve('./public/images/useruploads/' + req.user.username + "-" + req.files.photo.name.replace(/ /g,"_"));
+	fs.rename(tempPath, targetPath, function(err) {
+		if (err) {
+			throw err;
+		} else {
+			fs.unlink(tempPath, function() {
+				if (err) throw err;
+			})
+			var newUserPhoto = new UserPhoto ({
+				userid: req.user.id,
+				location: '/images/useruploads/' + req.user.username + "-" + req.files.photo.name.replace(/ /g,"_"),
+			})
+			newUserPhoto.save(function(err) {
+				res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'Your photo URL is: localhost:3000/images/useruploads/' + req.user.username + "-" + req.files.photo.name.replace(/ /g,"_")});
+			})
+		}
+	})
+});
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -641,7 +671,6 @@ app.get('/blog/add', isLoggedIn, function(req, res) {
 
 app.post('/blog/add', function(req, res) {
 	var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
-	var d_names = new Array("Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat");
 	var d = new Date();
 	var curr_date = d.getDate();
 	var curr_month = d.getMonth();
@@ -653,7 +682,7 @@ app.post('/blog/add', function(req, res) {
 	var suffix = "am";
 	if (curr_hour >= 12) {suffix = "pm"; curr_hour = curr_hour - 12;}
 	if (curr_hour == 0) {curr_hour = 12;}
-	var dateformatted = d_names[curr_day] + ", " + m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
+	var dateformatted = m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
 
 	var newBlog = new Blog ({
 		userid: req.user.id,
@@ -674,7 +703,7 @@ app.post('/blog/add', function(req, res) {
 //Specific Blog Page
 app.get('/blog/:title', function(req, res) {
 	data = {};
-	Blog.findOne({title: req.params.title.replace(/_/g," ")}, function (err, blog) {
+	Blog.findOne({title: req.params.title.replace(/_/g," ")}).populate('comments').exec(function (err, blog) {
 		if (blog === null) {
 			res.redirect('/error');
 		} else {
@@ -684,10 +713,8 @@ app.get('/blog/:title', function(req, res) {
 			data.postusername = blog.username;
 			data.postmessage = blog.message;
 			data.postdate = blog.date;
-			BlogComment.find({parentid:blog.id}, function(err, c) {
-				data.postcomments = c;
-				res.render('blogview.ejs', data);
-			})
+			data.postcomments = blog.comments;
+			res.render('blogview.ejs', data);
 		}
 	})
 });
@@ -704,7 +731,6 @@ app.post('/blog/:title/add', isLoggedIn, function(req, res) {
 	var thistitle = req.params.title.replace(/_/g," ")
 	Blog.findOne({title: thistitle}, function (err, blog){
 		var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
-		var d_names = new Array("Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat");
 		var d = new Date();
 		var curr_date = d.getDate();
 		var curr_month = d.getMonth();
@@ -716,7 +742,7 @@ app.post('/blog/:title/add', isLoggedIn, function(req, res) {
 		var suffix = "am";
 		if (curr_hour >= 12) {suffix = "pm"; curr_hour = curr_hour - 12;}
 		if (curr_hour == 0) {curr_hour = 12;}
-		var dateformatted = d_names[curr_day] + ", " + m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
+		var dateformatted = m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
 
 		var newBlogComment = new BlogComment ({
 			parentid: blog.id,
@@ -727,13 +753,17 @@ app.post('/blog/:title/add', isLoggedIn, function(req, res) {
 			date: dateformatted,
 		})
 		newBlogComment.save(function(err) {
-			res.redirect('/blog/' + blog.title)
+			blog.comments.push(newBlogComment.id);
+			blog.save(function(err) {
+				res.redirect('/blog/' + blog.title)
+			})
 		})
 	})
 });
 
 
 app.get('/blog/:title/:id/remove', isLoggedIn, function(req, res) {
+	Blog.find({title: req.params.title}).remove({comments: req.params.id});
 	BlogComment.findByIdAndRemove(req.params.id, function(err) {
 		res.redirect("/blog/" + req.params.title);
 	})
@@ -752,15 +782,15 @@ app.get('/forums', function(req, res) {
 
 
 //forums add post
-app.get('/forums/add', isLoggedIn, function(req, res) {
+app.get('/forums/:forum/add', isLoggedIn, function(req, res) {
 	data = {}
 	data.title = 'Add a Discussion Post - Lacquer Tracker';
+	data.forumcat = req.params.forum;
 	res.render('forumsadd.ejs', data);
 });
 
-app.post('/forums/add', function(req, res) {
+app.post('/forums/:forum/add', function(req, res) {
 	var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
-	var d_names = new Array("Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat");
 	var d = new Date();
 	var curr_date = d.getDate();
 	var curr_month = d.getMonth();
@@ -772,7 +802,7 @@ app.post('/forums/add', function(req, res) {
 	var suffix = "am";
 	if (curr_hour >= 12) {suffix = "pm"; curr_hour = curr_hour - 12;}
 	if (curr_hour == 0) {curr_hour = 12;}
-	var dateformatted = d_names[curr_day] + ", " + m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
+	var dateformatted = m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
 
 	var newForumPost = new ForumPost ({
 		userid: req.user.id,
@@ -780,6 +810,7 @@ app.post('/forums/add', function(req, res) {
 		title: req.body.posttitle,
 		message: req.body.postmessage,
 		datefull: new Date(),
+		dateupdated: dateformatted,
 		date: dateformatted,
 		forum: req.body.forum,
 	});
@@ -792,24 +823,28 @@ app.post('/forums/add', function(req, res) {
 
 //forums individual
 app.get('/forums/:forum', function(req, res) {
-	data = {}
-	data.title = req.params.forum + ' - Lacquer Tracker';
-	data.forumcat = req.params.forum;
-	var forumposts = [];
-	ForumPost.find({forum: req.params.forum}).sort({datefull: -1}).exec(function(err, posts) {
-		var allposts = posts.map(function(post) {
-			forumposts.push(post);
+	if (req.params.forum === "intro" || req.params.forum === "general" || req.params.forum === "notd" || req.params.forum === "contests" || req.params.forum === "tutorials" || req.params.forum === "offtopic") {
+		data = {}
+		data.title = req.params.forum + ' - Lacquer Tracker';
+		data.forumcat = req.params.forum;
+		var forumposts = [];
+		ForumPost.find({forum: req.params.forum}).sort({dateupdated: -1}).populate('comments').exec(function(err, posts) {
+			var allposts = posts.map(function(post) {
+				forumposts.push(post);
+			})
+			data.forumposts = forumposts;
+			res.render('forumsspecific.ejs', data);
 		})
-		data.forumposts = forumposts;
-		res.render('forumsspecific.ejs', data);
-	})
+	} else {
+		res.redirect('/error');
+	}
 });
 
 
 //forums post
 app.get('/forums/:forum/:id', function(req, res) {
 	data = {};
-	ForumPost.findById(req.params.id, function (err, post) {
+	ForumPost.findById(req.params.id).populate('comments').exec(function (err, post) {
 		if (post === null) {
 			res.redirect('/error');
 		} else {
@@ -821,10 +856,8 @@ app.get('/forums/:forum/:id', function(req, res) {
 			data.postmessage = post.message;
 			data.postdate = post.date;
 			data.postforum = post.forum;
-			ForumComment.find({parentid:post.id}, function(err, c) {
-				data.postcomments = c;
-				res.render('forumspost.ejs', data);
-			})
+			data.postcomments = post.comments;
+			res.render('forumspost.ejs', data);
 		}
 	})
 });
@@ -832,7 +865,6 @@ app.get('/forums/:forum/:id', function(req, res) {
 app.post('/forums/:forum/:id/add', isLoggedIn, function(req, res) {
 	ForumPost.findById(req.params.id, function (err, post){
 		var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
-		var d_names = new Array("Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat");
 		var d = new Date();
 		var curr_date = d.getDate();
 		var curr_month = d.getMonth();
@@ -844,7 +876,7 @@ app.post('/forums/:forum/:id/add', isLoggedIn, function(req, res) {
 		var suffix = "am";
 		if (curr_hour >= 12) {suffix = "pm"; curr_hour = curr_hour - 12;}
 		if (curr_hour == 0) {curr_hour = 12;}
-		var dateformatted = d_names[curr_day] + ", " + m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
+		var dateformatted = m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
 
 		var newForumComment = new ForumComment ({
 			parentid: post.id,
@@ -855,7 +887,11 @@ app.post('/forums/:forum/:id/add', isLoggedIn, function(req, res) {
 			date: dateformatted,
 		})
 		newForumComment.save(function(err) {
-			res.redirect('/forums/' + post.forum + '/' + post.id)
+			post.dateupdated = dateformatted;
+			post.comments.push(newForumComment.id);
+			post.save(function (err) {
+				res.redirect('/forums/' + post.forum + '/' + post.id)
+			});
 		})
 	})
 });
@@ -868,8 +904,17 @@ app.get('/forums/:forum/:id/add', isLoggedIn, function(req, res) {
 
 
 app.get('/forums/:forum/:id/:cid/remove', isLoggedIn, function(req, res) {
+	ForumPost.find({id: req.params.id}).remove({comments: req.params.cid});
 	ForumComment.findByIdAndRemove(req.params.cid, function(err) {
 		res.redirect('/forums/' + req.params.forum + '/' + req.params.id);
+	})
+});
+
+
+app.get('/forums/:forum/:id/remove', isLoggedIn, function(req, res) {
+	ForumPost.findByIdAndRemove(req.params.id, function(err) {
+		ForumComment.find({parentid : req.params.id}).remove();
+		res.redirect('/forums/' + req.params.forum);
 	})
 });
 

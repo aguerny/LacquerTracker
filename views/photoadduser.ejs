@@ -1,0 +1,21 @@
+<% include layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    	<section>
+    		<form action="/photo/upload" method="post" enctype='multipart/form-data'>
+	     		<h3>Add a Photo:</h3><br>
+                Image for Upload: <input type="file" value="photo" name="photo" required>
+                    </input><br><br>
+                <input type="submit" value="Submit" class="button">
+    		</form>
+            <br>Once the photo upload is complete, copy the URL to include it in your post.<br><br>
+            <% if (message) { %>
+                <br><h4><%= message %></h4>
+            <% } %>
+    	</section>
+    </div>
+</div>
+
+<% include layoutBottom %>
