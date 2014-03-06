@@ -2,7 +2,7 @@ var Polish = require('../app/models/polish');
 var User = require('../app/models/user');
 var Review = require('../app/models/review');
 var Photo = require('../app/models/photo');
-var UserPhoto = require('../app/models/photouser');
+var UserPhoto = require('../app/models/userphoto');
 var Blog = require('../app/models/blog');
 var BlogComment = require('../app/models/blogcomment');
 var ForumPost = require('../app/models/forumpost');
@@ -238,7 +238,6 @@ app.post('/photo/add/:id', function(req, res) {
 				var newPhoto = new Photo ({
 					polishid: p.id,
 					userid: req.user.id,
-					type: req.body.type,
 					location: '/images/polish/' + p.id + "-" + req.files.photo.name.replace(/ /g,"_"),
 				})
 				newPhoto.save(function(err) {
@@ -270,11 +269,15 @@ app.post('/photo/upload', function(req, res) {
 			})
 			var newUserPhoto = new UserPhoto ({
 				userid: req.user.id,
+                onprofile: req.body.onprofile,
 				location: '/images/useruploads/' + req.user.username + "-" + req.files.photo.name.replace(/ /g,"_"),
 			})
 			newUserPhoto.save(function(err) {
-				res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'Your photo URL is: localhost:3000/images/useruploads/' + req.user.username + "-" + req.files.photo.name.replace(/ /g,"_")});
-			})
+                req.user.photos.push(newUserPhoto.id);
+                req.user.save(function(err) {
+                    res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'Your photo URL is: localhost:3000/images/useruploads/' + req.user.username + "-" + req.files.photo.name.replace(/ /g,"_")});
+			    })
+            })
 		}
 	})
 });
@@ -541,7 +544,7 @@ app.get('/profile', isLoggedIn, function(req, res) {
 
 //profile specific
 app.get('/profile/:username', function(req, res) {
-	User.findOne({username: req.params.username}, function(err, user) {
+	User.findOne({username: req.params.username}).populate('photos').exec(function(err, user) {
 		var oPolish = [];
 		var wPolish = [];
 		if (!user) {
@@ -588,7 +591,13 @@ app.get('/profile/:username', function(req, res) {
 			data.wpolishes = wPolish;
 			data.username = user.username;
 			data.about = user.about;
-
+            yesphotos = [];
+            for (i=0; i < user.photos.length; i++) {
+                if (user.photos[i].onprofile === "yes") {
+                    yesphotos.push(user.photos[i]);
+                }
+            }
+            data.photos = yesphotos;
 			res.render('profile.ejs', data);
 
 			});
@@ -610,7 +619,7 @@ app.get('/profile/edit', isLoggedIn, function(req, res) {
 
 app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
 	if (req.params.username === req.user.username) {
-		User.findOne({username : req.params.username}, function(err, user) {
+		User.findOne({username : req.params.username}).populate('photos').exec(function(err, user) {
 		var data = {};
 			data.title = 'Edit Your Profile - Lacquer Tracker';
 			data.message = req.flash('editProfileMessage');
@@ -618,6 +627,17 @@ app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
 			data.username = user.username;
 			data.email = user.email;
 			data.about = user.about;
+            yesphotos = [];
+            nophotos = [];
+            for (i=0; i < user.photos.length; i++) {
+                if (user.photos[i].onprofile === "yes") {
+                    yesphotos.push(user.photos[i]);
+                } else if (user.photos[i].onprofile === "no") {
+                    nophotos.push(user.photos[i]);
+                }
+            }
+            data.yesphotos = yesphotos;
+            data.nophotos = nophotos;
 		res.render('profileedit.ejs', data);
 		})
 	} else {
@@ -638,6 +658,24 @@ app.post('/profile/:username/edit', function(req, res) {
 			});
 		}
 	});
+});
+
+
+app.get('/profile/:username/:id/remove', isLoggedIn, function(req, res) {
+    UserPhoto.findById(req.params.id, function(err, photo) {
+        photo.onprofile = "no";
+        photo.save();
+        res.redirect('/profile/' + req.user.username);
+    })
+});
+
+
+app.get('/profile/:username/:id/add', isLoggedIn, function(req, res) {
+    UserPhoto.findById(req.params.id, function(err, photo) {
+        photo.onprofile = "yes";
+        photo.save();
+        res.redirect('/profile/' + req.user.username);
+    })
 });
 
 

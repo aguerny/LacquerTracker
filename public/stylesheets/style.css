@@ -171,6 +171,23 @@ table.sortable thead {
     color: #000000;
 }
 
+.userphotosmall {
+    max-height: 200px;
+    max-width: 200px;
+}
+
+.collage {
+    padding: 10px;
+}
+
+.collage img{
+    /* ensures padding at the bottom of the image is correct */
+    vertical-align:bottom;
+}
+
+.forumpost img {
+    max-width: 800px;
+}
 
 /*---Footer---*/
 

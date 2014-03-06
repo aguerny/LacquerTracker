@@ -17,6 +17,7 @@ if (answer === true) {
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
+        <div class="forumpost">
         <a href="/forums/<%= postforum %>">&#8592; Back to Forum</a><br><br>
         <h2><%= posttitle %></h2><br>
             <i>Posted by <a href="/profile/<%= postusername%>"><%= postusername %></a> on <%= postdate %></i><% if (isAuthenticated()) { %>
@@ -45,6 +46,7 @@ if (answer === true) {
                 </form>
             <% } %>
 		<table>
+        </div>
     </section>
     </div>
 </div>

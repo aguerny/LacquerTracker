@@ -6,7 +6,6 @@ var mongoose = require('mongoose');
 var photoSchema = mongoose.Schema({
 	polishid: String,
 	userid: String,
-    type: String,
     location: String,
 });
 

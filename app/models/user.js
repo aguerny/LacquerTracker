@@ -10,6 +10,7 @@ var userSchema = mongoose.Schema({
 	about		 : String,
 	ownedpolish  : [],
 	wantedpolish : [],
+	photos       : [{type: mongoose.Schema.Types.ObjectId, ref: 'UserPhoto'}],
 });
 
 
