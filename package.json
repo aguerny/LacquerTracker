@@ -15,6 +15,6 @@
     "passport-local": "*",
     "bcrypt-nodejs": "*",
     "connect-flash": "*",
-    "nodemailer": "*"
+    "nodemailer": "*",
   }
 }

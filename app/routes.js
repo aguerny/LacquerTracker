@@ -34,19 +34,24 @@ app.get('/browse', function(req, res) {
 		
 		Polish.find({})
 		.limit(10)
-		.exec(function (err, docs) {
-			var newDocs = docs.map(function(idoc){
-				if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === idoc.id})) {
-					var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + idoc.id + ">Remove ownership</a></li><li><a href=/polishedit/" + idoc.id + ">Edit polish</a></li></ul></div>";
-				} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === idoc.id})) {
-					var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/removewant/" + idoc.id + ">Remove from wishlist</a></li><li><a href=/polishedit/" + idoc.id + ">Edit polish</a></li></ul></div>";
-				} else {
-					var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/addwant/" + idoc.id + ">Add to wishlist</a></li><li><a href=/polishedit/" + idoc.id + ">Edit polish</a></li></ul></div>";
+		.exec(function (err, polishes) {
+			var statuses = [];
+			if (req.isAuthenticated()) {
+				for (i=0; i < polishes.length; i++) {
+					if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
+						statuses.push("owned");
+					} else if (req.user.wantedpolish.indexOf(polishes[i].id) > -1) {
+						statuses.push("wanted");
+					} else {
+						statuses.push("");
+					}
 				}
-				return "<tr><td><a id='tablelink' href=/polish/" + idoc.brand.replace(/ /g,"_") + "/" + idoc.name.replace(/ /g,"_") + ">" + idoc.name + "</a></td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td>" + options + "</td></tr>";
-			})
-
-		res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes: newDocs, brands: allbrands});
+				var returnedpolish = polishes;
+				res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes: returnedpolish, status: statuses, brands: allbrands});
+			} else {
+    			var returnedpolish = polishes;
+    			res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes: returnedpolish, status: statuses, brands: allbrands});
+			}
 		});
 	})
 });
@@ -56,59 +61,35 @@ app.post('/browse', function(req, res) {
 	Polish.find().distinct('brand', function(error, brands) {
     	var allbrands = brands;
 
-		var filterOptions = req.body;
-		for(var key in filterOptions) {
+    	var filterOptions = req.body;
+    	for(var key in filterOptions) {
 			if(filterOptions.hasOwnProperty(key)) {
 				filterOptions[key] = new RegExp(filterOptions[key], "i");
 				}
 			}
 
-		Polish.find(filterOptions , function (err, docs) {
-			var polishItems = [];
-			var newDocs = docs.map(function(idoc){
-				if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === idoc.id})) {
-					var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + idoc.id + ">Remove ownership</a></li><li><a href=/polishedit/" + idoc.id + ">Edit polish</a></li></ul></div>";
-				} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === idoc.id})) {
-					var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/removewant/" + idoc.id + ">Remove from wishlist</a></li><li><a href=/polishedit/" + idoc.id + ">Edit polish</a></li></ul></div>";
-				} else {
-					var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + idoc.id + ">Add ownership</a></li><li><a href=/browse/addwant/" + idoc.id + ">Add to wishlist</a></li><li><a href=/polishedit/" + idoc.id + ">Edit polish</a></li></ul></div>";
+		Polish.find(filterOptions, function(err, polishes) {
+			var statuses = [];
+			if (req.isAuthenticated()) {
+				for (i=0; i < polishes.length; i++) {
+					if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
+						statuses.push("owned");
+					} else if (req.user.wantedpolish.indexOf(polishes[i].id) > -1) {
+						statuses.push("wanted");
+					} else {
+						statuses.push("");
+					}
 				}
-				return "<tr><td><a id='tablelink' href=/polish/" + idoc.brand.replace(/ /g,"_") + "/" + idoc.name.replace(/ /g,"_") + ">" + idoc.name + "</a></td><td>" + idoc.brand + "</td><td>" + idoc.batch + "</td><td><div id='swatch' style='background-color:" + idoc.colorhex + ";'>&nbsp;</div></td><td>" + idoc.type + "</td><td>" + options + "</td></tr>";
-			})
-
-			res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes: newDocs, brands: allbrands});
-		});
-	});
+				var returnedpolish = polishes;
+				res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes: returnedpolish, status: statuses, brands: allbrands});
+			} else {
+    			var returnedpolish = polishes;
+    			res.render('browse.ejs', {title: 'Browse - Lacquer Tracker', polishes: returnedpolish, status: statuses, brands: allbrands});
+    		}
+    	})
+    })
 });
 
-//own polish
-app.get('/browse/addown/:id', isLoggedIn, function(req, res) {
-	req.user.wantedpolish.remove(req.params.id);
-	req.user.ownedpolish.addToSet(req.params.id);
-	req.user.save();
-	res.redirect('/browse');
-});
-
-//wishlist polish
-app.get('/browse/addwant/:id', isLoggedIn, function(req, res) {
-	req.user.wantedpolish.addToSet(req.params.id);
-	req.user.save();
-	res.redirect('/browse');
-});
-
-//remove owned polish
-app.get('/browse/removeown/:id', isLoggedIn, function(req, res) {
-	req.user.ownedpolish.remove(req.params.id);
-	req.user.save();
-	res.redirect('/browse');
-});
-
-//remove wanted polish
-app.get('/browse/removewant/:id', isLoggedIn, function(req, res) {
-	req.user.wantedpolish.remove(req.params.id);
-	req.user.save();
-	res.redirect('/browse');
-});
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -146,6 +127,16 @@ app.get('/polish/:brand/:name', function(req, res) {
 				}
 
 				if (req.isAuthenticated()) {
+
+					if (req.user.ownedpolish.indexOf(polish.id) > -1) {
+						data.status = "owned";
+					} else if (req.user.wantedpolish.indexOf(polish.id) > -1) {
+						data.status = "wanted";
+					} else {
+						data.status = "none";
+					}
+
+
 					Review.findOne({userid:req.user.id, polishid:polish.id}, function (err, review) {
 						if (review) {
 						data.rating = review.rating;
@@ -181,6 +172,7 @@ app.get('/polish/:brand/:name', function(req, res) {
 					data.userreview = "";
 					data.notes = "";
 					data.dupes = "";
+					data.status = "none";
 					Review.find({polishid:polish.id}, function(err, r) {
 						var allReviews = r.map(function(x) {
 							return x.userreview;
@@ -203,6 +195,43 @@ app.get('/polish/:brand/:name', function(req, res) {
 
 });
 
+
+//add own polish
+app.get('/addown/:id', isLoggedIn, function(req, res) {
+	req.user.wantedpolish.find({id:req.params.id}).remove();
+	req.user.ownedpolish.addToSet(req.params.id);
+	req.user.save();
+	Polish.findById(req.params.id, function(err, p) {
+		res.redirect('/polish/' + p.brand.replace(/ /g,"_") + '/' + p.name.replace(/ /g,"_"))
+	})
+});
+
+//add wishlist polish
+app.get('/addwant/:id', isLoggedIn, function(req, res) {
+	req.user.wantedpolish.addToSet(req.params.id);
+	req.user.save();
+	Polish.findById(req.params.id, function(err, p) {
+		res.redirect('/polish/' + p.brand.replace(/ /g,"_") + '/' + p.name.replace(/ /g,"_"))
+	})
+});
+
+//remove owned polish
+app.get('/removeown/:id', isLoggedIn, function(req, res) {
+	req.user.ownedpolish.find({id:req.params.id}).remove();
+	req.user.save();
+	Polish.findById(req.params.id, function(err, p) {
+		res.redirect('/polish/' + p.brand.replace(/ /g,"_") + '/' + p.name.replace(/ /g,"_"))
+	})
+});
+
+//remove wanted polish
+app.get('/removewant/:id', isLoggedIn, function(req, res) {
+	req.user.wantedpolish.remove(req.params.id);
+	req.user.save();
+	Polish.findById(req.params.id, function(err, p) {
+		res.redirect('/polish/' + p.brand.replace(/ /g,"_") + '/' + p.name.replace(/ /g,"_"))
+	})
+});
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -278,6 +307,34 @@ app.post('/photo/upload', function(req, res) {
                     res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'Your photo URL is: localhost:3000/images/useruploads/' + req.user.username + "-" + req.files.photo.name.replace(/ /g,"_")});
 			    })
             })
+		}
+	})
+});
+
+
+//profile photo
+
+app.get('/photo/profile', isLoggedIn, function(req, res) {
+	var data = {};
+	data.title = 'Upload a Profile Photo - Lacquer Tracker';
+	res.render('photoaddprofile.ejs', data);
+});
+
+
+app.post('/photo/profile', function(req, res) {
+	var tempPath = req.files.photo.path;
+	var targetPath = path.resolve('./public/images/profilephotos/' + req.user.username + "-" + req.files.photo.name.replace(/ /g,"_"));
+	fs.rename(tempPath, targetPath, function(err) {
+		if (err) {
+			throw err;
+		} else {
+			fs.unlink(tempPath, function() {
+				if (err) throw err;
+			})
+			req.user.profilephoto = '/images/profilephotos/' + req.user.username + "-" + req.files.photo.name.replace(/ /g,"_"),
+			req.user.save(function(err) {
+				res.redirect('/profile/' + req.user.username);
+			})
 		}
 	})
 });
@@ -370,14 +427,14 @@ app.post('/polishadd', function(req, res) {
 			res.redirect('/addpolish');
 		} else {
 			var newPolish = new Polish ({
-				name: req.body.name,
-				brand: req.body.brand,
-				batch: req.body.batch,
+				name: req.body.name/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/,
+				brand: req.body.brand/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/,
+				batch: req.body.batch/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/,
 				colorcat: req.body.colorcat,
 				colorhex: "#" + req.body.colorhex,
 				type: req.body.type,
 				indie: req.body.indie,
-				code: req.body.code,
+				code: req.body.code/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/,
 				keywords: req.body.name + " " + req.body.brand + " " + req.body.batch + " " + req.body.code,
 			});
 			newPolish.save(function(err) {
@@ -421,14 +478,14 @@ app.post('/polishedit/:id', function(req, res) {
 			req.flash('editPolishMessage', 'Error editing polish.')
 			res.redirect('/polishedit/:id');
 		} else {
-			p.name = req.body.name;
-			p.brand = req.body.brand;
-			p.batch = req.body.batch;
+			p.name = req.body.name/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/;
+			p.brand = req.body.brand/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/;
+			p.batch = req.body.batch/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/;
 			p.colorcat = req.body.colorcat;
 			p.colorhex = "#" + req.body.colorhex;
 			p.type = req.body.type;
 			p.indie = req.body.indie;
-			p.code = req.body.code;
+			p.code = req.body.code/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/;
 			p.keywords = req.body.name + " " + req.body.brand + " " + req.body.batch + " " + req.body.code,
 			p.save(function(err) {
 				res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));;
@@ -544,53 +601,18 @@ app.get('/profile', isLoggedIn, function(req, res) {
 
 //profile specific
 app.get('/profile/:username', function(req, res) {
-	User.findOne({username: req.params.username}).populate('photos').exec(function(err, user) {
-		var oPolish = [];
-		var wPolish = [];
+	User.findOne({username: req.params.username}).populate('photos').populate('ownedpolish').populate('wantedpolish').exec(function(err, user) {
 		if (!user) {
-			req.flash('profilemessage', 'No such user exists.');
-			res.render('profile.ejs', {title: 'Profile - Lacquer Tracker', opolishes: oPolish, wpolishes: wPolish, message: req.flash('profilemessage'), about: ""});
+			res.redirect('/error');
 		} else {
-			var ownedPolish = user.ownedpolish.map(function(id) {
-				return mongoose.Types.ObjectId(id);
-			});
-
-			var wantedPolish = user.wantedpolish.map(function(id) {
-				return mongoose.Types.ObjectId(id);
-			});
-
-			Polish.find({_id: {$in: ownedPolish}}, function(err, docs){
-				for(var docIndex = 0; docIndex < docs.length; docIndex++) {
-					if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === docs[docIndex].id})) {
-						var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + docs[docIndex].id + ">Remove ownership</a></li><li><a href=/polishedit/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
-					} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === docs[docIndex].id})) {
-						var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add ownership</a></li><li><a href=/browse/removewant/" + docs[docIndex].id + ">Remove from wishlist</a></li><li><a href=/polishedit/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
-					} else {
-						var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add ownership</a></li><li><a href=/browse/addwant/" + docs[docIndex].id + ">Add to wishlist</a></li><li><a href=/polishedit/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
-					}
-			 		oPolish.push("<tr><td><a id='tablelink' href=/polish/" + docs[docIndex].brand.replace(/ /g," ") + "/" + docs[docIndex].name.replace(/ /g,"_") + ">" + docs[docIndex].name + "</a></td><td>" + docs[docIndex].brand + "</td><td>" + docs[docIndex].batch + "</td><td>" + docs[docIndex].colorcat + "</td><td><div id='swatch' style='background-color:" + docs[docIndex].colorhex + ";'>&nbsp;</div></td><td>" + docs[docIndex].type + "</td><td>" + options + "</td></tr>");
-				}
-			
-
-			Polish.find({_id: {$in: wantedPolish}}, function(err, docs){
-				for(var docIndex = 0; docIndex < docs.length; docIndex++) {
-					if (req.isAuthenticated() && req.user.ownedpolish.some(function (id) {return id === docs[docIndex].id})) {
-						var options = "<div id='optionsmenu'>Owned<ul><li><a href=/browse/removeown/" + docs[docIndex].id + ">Remove own</a></li><li><a href=/polishedit/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
-					} else if (req.isAuthenticated() && req.user.wantedpolish.some(function (id) {return id === docs[docIndex].id})) {
-						var options = "<div id='optionsmenu'>Wanted<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add own</a></li><li><a href=/browse/removewant/" + docs[docIndex].id + ">Remove want</a></li><li><a href=/polishedit/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
-					} else {
-						var options = "<div id='optionsmenu'>&nbsp;<ul><li><a href=/browse/addown/" + docs[docIndex].id + ">Add own</a></li><li><a href=/browse/addwant/" + docs[docIndex].id + ">Add want</a></li><li><a href=/polishedit/" + docs[docIndex].id + ">Edit polish</a></li></ul></div>";
-					}
-			 		wPolish.push("<tr><td><a id='tablelink' href=/polish/" + docs[docIndex].brand.replace(/ /g," ") + "/" + docs[docIndex].name.replace(/ /g,"_") + ">" + docs[docIndex].name + "</a></td><td>" + docs[docIndex].brand + "</td><td>" + docs[docIndex].batch + "</td><td>" + docs[docIndex].colorcat + "</td><td><div id='swatch' style='background-color:" + docs[docIndex].colorhex + ";'>&nbsp;</div></td><td>" + docs[docIndex].type + "</td><td>" + options + "</td></tr>");
-				}
-
 			var data = {};
 			data.title = 'Profile - Lacquer Tracker';
 			data.message = req.flash('profileMessage');
-			data.opolishes = oPolish;
-			data.wpolishes = wPolish;
+			data.opolishes = user.ownedpolish;
+			data.wpolishes = user.wantedpolish;
 			data.username = user.username;
 			data.about = user.about;
+			data.profilephoto = user.profilephoto;
             yesphotos = [];
             for (i=0; i < user.photos.length; i++) {
                 if (user.photos[i].onprofile === "yes") {
@@ -599,13 +621,9 @@ app.get('/profile/:username', function(req, res) {
             }
             data.photos = yesphotos;
 			res.render('profile.ejs', data);
-
-			});
-			});
 		}
 	});
 });
-
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -687,7 +705,7 @@ app.get('/blog', function(req, res) {
 	data = {}
 	data.title = 'Blog - Lacquer Tracker';
 	var blogposts = [];
-	Blog.find({}).sort({datefull: -1}).exec(function(err, posts) {
+	Blog.find({}).sort({datefull: -1}).populate('user').exec(function(err, posts) {
 		var allposts = posts.map(function(post) {
 			blogposts.push(post);
 		})
@@ -723,8 +741,7 @@ app.post('/blog/add', function(req, res) {
 	var dateformatted = m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
 
 	var newBlog = new Blog ({
-		userid: req.user.id,
-		username: req.user.username,
+		user: req.user.id,
 		title: req.body.posttitle,
 		message: req.body.postmessage,
 		datefull: new Date(),
@@ -741,18 +758,20 @@ app.post('/blog/add', function(req, res) {
 //Specific Blog Page
 app.get('/blog/:title', function(req, res) {
 	data = {};
-	Blog.findOne({title: req.params.title.replace(/_/g," ")}).populate('comments').exec(function (err, blog) {
+	Blog.findOne({title: req.params.title.replace(/_/g," ")}).populate('comments').populate('user').exec(function (err, blog) {
 		if (blog === null) {
 			res.redirect('/error');
 		} else {
 			data.title = blog.title + " - Lacquer Tracker";
 			data.posttitle = blog.title;
-			data.postuserid = blog.userid;
-			data.postusername = blog.username;
+			data.postuser = blog.user;
 			data.postmessage = blog.message;
 			data.postdate = blog.date;
-			data.postcomments = blog.comments;
-			res.render('blogview.ejs', data);
+			User.populate(blog, {path:'comments.user'}, function(err) {
+				console.log(blog.comments.user);
+				data.postcomments = blog.comments;
+				res.render('blogview.ejs', data);
+			})
 		}
 	})
 });
@@ -784,8 +803,7 @@ app.post('/blog/:title/add', isLoggedIn, function(req, res) {
 
 		var newBlogComment = new BlogComment ({
 			parentid: blog.id,
-			userid: req.user.id,
-			username: req.user.username,
+			user: req.user.id,
 			message: req.body.message,
 			datefull: new Date(),
 			date: dateformatted,
@@ -843,7 +861,7 @@ app.post('/forums/:forum/add', function(req, res) {
 	var dateformatted = m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
 
 	var newForumPost = new ForumPost ({
-		userid: req.user.id,
+		user: req.user.id,
 		username: req.user.username,
 		title: req.body.posttitle,
 		message: req.body.postmessage,
@@ -859,19 +877,21 @@ app.post('/forums/:forum/add', function(req, res) {
 });
 
 
-//forums individual
+//forums specific
 app.get('/forums/:forum', function(req, res) {
 	if (req.params.forum === "intro" || req.params.forum === "general" || req.params.forum === "notd" || req.params.forum === "contests" || req.params.forum === "tutorials" || req.params.forum === "offtopic") {
 		data = {}
 		data.title = req.params.forum + ' - Lacquer Tracker';
 		data.forumcat = req.params.forum;
 		var forumposts = [];
-		ForumPost.find({forum: req.params.forum}).sort({dateupdated: -1}).populate('comments').exec(function(err, posts) {
-			var allposts = posts.map(function(post) {
+		ForumPost.find({forum: req.params.forum}).sort({dateupdated: -1}).populate('comments').populate('user').exec(function(err, posts) {
+			User.populate(posts, {path:'comments.user'}, function(err) {
+				var allposts = posts.map(function(post) {
 				forumposts.push(post);
+				data.forumposts = forumposts;
+				res.render('forumsspecific.ejs', data);
+				})
 			})
-			data.forumposts = forumposts;
-			res.render('forumsspecific.ejs', data);
 		})
 	} else {
 		res.redirect('/error');
@@ -882,20 +902,21 @@ app.get('/forums/:forum', function(req, res) {
 //forums post
 app.get('/forums/:forum/:id', function(req, res) {
 	data = {};
-	ForumPost.findById(req.params.id).populate('comments').exec(function (err, post) {
+	ForumPost.findById(req.params.id).populate('comments').populate('user').exec(function (err, post) {
 		if (post === null) {
 			res.redirect('/error');
 		} else {
 			data.title = post.title + " - Lacquer Tracker";
 			data.postid = post.id;
 			data.posttitle = post.title;
-			data.postuserid = post.userid;
-			data.postusername = post.username;
+			data.postuser = post.user;
 			data.postmessage = post.message;
 			data.postdate = post.date;
 			data.postforum = post.forum;
-			data.postcomments = post.comments;
-			res.render('forumspost.ejs', data);
+			User.populate(post, {path:'comments.user'}, function(err) {
+				data.postcomments = post.comments;
+				res.render('forumspost.ejs', data);
+			})
 		}
 	})
 });
@@ -918,8 +939,7 @@ app.post('/forums/:forum/:id/add', isLoggedIn, function(req, res) {
 
 		var newForumComment = new ForumComment ({
 			parentid: post.id,
-			userid: req.user.id,
-			username: req.user.username,
+			user: req.user.id,
 			message: req.body.message,
 			datefull: new Date(),
 			date: dateformatted,

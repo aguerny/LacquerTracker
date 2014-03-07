@@ -189,6 +189,19 @@ table.sortable thead {
     max-width: 800px;
 }
 
+.profilephoto {
+    max-height: 150px;
+    max-width: 150px;
+    position: inline;
+    float: right;
+}
+
+.profilephotocomment {
+    max-height: 25px;
+    max-width: 25px;
+    position: inline;
+}
+
 /*---Footer---*/
 
 #footer {padding:20px 0;}

@@ -1,78 +1,98 @@
 <% include layoutTop %>
 
-<script>
-function valid(f) {
-!(/^[A-z0-9]*$/i).test(f.value)?f.value = f.value.replace(/[^A-z0-9]/ig,''):null;
-} 
-</script>
-
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
         <div id="browse-wrap">
         <div id="browse-left_col">
-          <h3>Browse by:</h3><br>
+            <h3>Browse by:</h3><br>
             <form action="browse" method="post">
-              <input type="text" name="keywords" placeholder="Name / Code / Keyword" class="filter" onkeyup="valid(this)" onblue="valid(this)">
-              <br><br><br>
-              <select name="brand" class="filter">
-                 <option value="">All Brands</option>
-                 <% for (i=0; i<brands.length; i++) { %>
-                 <option value="<%= brands[i] %>"><%= brands[i] %></option>
-                 <% } %>
-              </select>
-              <br><br><br>
-              <select name="colorcat" class="filter">
-                 <option value="">All Colors</option>
-                 <option value="black">black</option>
-                 <option value="blue">blue</option>
-                 <option value="brown">brown</option>
-                 <option value="clear">clear</option>
-                 <option value="green">green</option>
-                 <option value="grey">grey</option>
-                 <option value="orange">orange</option>
-                 <option value="pink">pink</option>
-                 <option value="purple">purple</option>
-                 <option value="red">red</option>
-                 <option value="white">white</option>
-                 <option value="yellow">yellow</option>
-              </select>
-              <br><br><br>
-              <select name="type" class="filter">
-                <option value="">All Types</option>
-                <option value="colorchange">color changing</option>
-                <option value="crackle">crackle</option>
-                <option value="creme">creme</option>
-                <option value="flakie">flakie</option>
-                <option value="glitter">glitter</option>
-                <option value="holo">holo</option>
-                <option value="jelly">jelly</option>
-                <option value="magnetic">magnetic</option>
-                <option value="matte">matte</option>
-                <option value="metallic">metallic</option>
-                <option value="sheer">sheer</option>
-                <option value="shimmer">shimmer</option>
-                <option value="texture">texture</option>
-                <option value="topbase">top/base coat</option>
-               </select>
-              <br><br><br>
-              <input type="checkbox" name="indie">Indie polishes only<br><br><br>
-              <input type="submit" class="button" id="search-button" value="Browse">
+                <input type="text" name="keywords" placeholder="Name / Code / Keyword" class="restrict filter">
+                <br><br><br>
+                <select name="brand" class="filter">
+                    <option value="">All Brands</option>
+                    <% for (i=0; i<brands.length; i++) { %>
+                    <option value="<%= brands[i] %>"><%= brands[i] %></option>
+                    <% } %>
+                </select>
+                <br><br><br>
+                <select name="colorcat" class="filter">
+                    <option value="">All Colors</option>
+                    <option value="black">black</option>
+                    <option value="blue">blue</option>
+                    <option value="brown">brown</option>
+                    <option value="clear">clear</option>
+                    <option value="green">green</option>
+                    <option value="grey">grey</option>
+                    <option value="orange">orange</option>
+                    <option value="pink">pink</option>
+                    <option value="purple">purple</option>
+                    <option value="red">red</option>
+                    <option value="white">white</option>
+                    <option value="yellow">yellow</option>
+                </select>
+                <br><br><br>
+                <select name="type" class="filter">
+                    <option value="">All Types</option>
+                    <option value="colorchange">color changing</option>
+                    <option value="crackle">crackle</option>
+                    <option value="creme">creme</option>
+                    <option value="flakie">flakie</option>
+                    <option value="glitter">glitter</option>
+                    <option value="holo">holo</option>
+                    <option value="jelly">jelly</option>
+                    <option value="magnetic">magnetic</option>
+                    <option value="matte">matte</option>
+                    <option value="metallic">metallic</option>
+                    <option value="sheer">sheer</option>
+                    <option value="shimmer">shimmer</option>
+                    <option value="texture">texture</option>
+                    <option value="topbase">top/base coat</option>
+                </select>
+                <br><br><br>
+                <input type="checkbox" name="indie">Indie polishes only<br><br><br>
+                <input type="submit" class="button" id="search-button" value="Browse">
             </form>
         </div>
         <div id="browse-right_col">
-        <table id="polishbrowse" class="sortable">
-          <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Type</th><th>Options</th></tr>
-        <% for(var i=0; i<polishes.length; i++) {%>
-         <%- polishes[i] %>
-        <% } %>
-        </table>
-        <p>Can't find the polish you're looking for? <a href="/polish/add">Add it to the database.</a></p>
+            <table id="polishbrowse" class="sortable" style="width:100%">
+            <col width="20%">
+            <col width="20%">
+            <col width="18%">
+            <col width="16%">
+            <col width="16%">
+            <col width="10%">
+                <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Type</th><th>Info</th></tr>
+                <% for(var i=0; i<polishes.length; i++) {%>
+                    <tr><td><a id='tablelink' href='/polish/<%= polishes[i].brand.replace(/ /g,"_") %>/<%= polishes[i].name.replace(/ /g,"_") %>'><%= polishes[i].name %></a></td>
+                    <td><%= polishes[i].brand %></td>
+                    <td><%= polishes[i].batch %></td>
+                    <td><div id='swatch' style='background-color:<%= polishes[i].colorhex %>;'>&nbsp;</div></td>
+                    <td><%= polishes[i].type %></td>
+                    <td><% if (isAuthenticated()) { %>
+                            <% if (status[i] === "owned") { %>
+                                Owned
+                            <% } else if (status[i] === "wanted") { %>
+                                Wanted
+                            <% } %>
+                        <% } else { %>
+                            &nbsp;
+                        <% } %>
+                    </td></tr>
+                <% } %>
+            </table>
+            <p>Can't find the polish you're looking for? <a href="/polishadd">Add it to the database.</a></p>
         </div>
         </div>
     </section>
     </div>
 </div>
+
+<script>
+$('.restrict').keyup(function() {
+    $(this).val($(this).val().replace(/[^A-Za-z 0-9!,-]/g,''))
+});
+</script>
 
 <% include layoutBottom %>

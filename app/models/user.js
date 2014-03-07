@@ -8,9 +8,10 @@ var userSchema = mongoose.Schema({
 	password     : String,
 	email		 : String,
 	about		 : String,
-	ownedpolish  : [],
-	wantedpolish : [],
+	ownedpolish  : [{type: mongoose.Schema.Types.ObjectId, ref: 'Polish'}],
+	wantedpolish : [{type: mongoose.Schema.Types.ObjectId, ref: 'Polish'}],
 	photos       : [{type: mongoose.Schema.Types.ObjectId, ref: 'UserPhoto'}],
+	profilephoto : String,
 });
 
 

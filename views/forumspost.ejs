@@ -20,17 +20,21 @@ if (answer === true) {
         <div class="forumpost">
         <a href="/forums/<%= postforum %>">&#8592; Back to Forum</a><br><br>
         <h2><%= posttitle %></h2><br>
-            <i>Posted by <a href="/profile/<%= postusername%>"><%= postusername %></a> on <%= postdate %></i><% if (isAuthenticated()) { %>
-                    <% if (user.username === postusername) { %>
+            <i>Posted by <a href="/profile/<%= postuser.username%>"><%= postuser.username %></a> on <%= postdate %></i><% if (isAuthenticated()) { %>
+                    <% if (user.username === postuser.username) { %>
                         : <a href="/forums/<%=postforum%>/<%=postid%>/remove" onclick="return confirm_alert(this);">Delete this post</a>
                     <% } %>
                 <% } %><br><br><br>
             <p style="white-space: pre;"><%- postmessage %></p><br><br><hr><br><br>
             <b>Comments (<%= postcomments.length %>)</b> | <a href="/forums/<%= postforum %>/<%= postid %>/add">Add a comment</a><br><br>
             <% for (i=0; i<postcomments.length; i++) { %>
-                <br><br><b><a href="/profile/<%= postcomments[i].username %>"><%= postcomments[i].username %></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[i].date %>:</font>
+                <br><br>
+                <% if (postcomments[i].user.profilephoto) { %>
+                    <img class="profilephotocomment" src="<%= postcomments[i].user.profilephoto %>">&nbsp;
+                <% } %>
+                <b><a href="/profile/<%= postcomments[i].user.username %>"><% if (postuser.username === postcomments[i].user.username) {%>*<%}%><%= postcomments[i].user.username %><% if (postuser.username === postcomments[i].user.username) {%>*<%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[i].date %>:</font>
                 <% if (isAuthenticated()) { %>
-                    <% if (user.username === postcomments[i].username) { %>
+                    <% if (user.username === postcomments[i].user.username) { %>
                         <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[i].id %>/remove" onclick="return confirm_alert(this);">Delete this comment</a>
                     <% } %>
                 <% } %>
@@ -45,7 +49,6 @@ if (answer === true) {
                     <input type="submit" value="Submit" class="button">
                 </form>
             <% } %>
-		<table>
         </div>
     </section>
     </div>
