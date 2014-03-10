@@ -11,6 +11,8 @@ var mongoose = require('mongoose');
 var fs = require('fs');
 var path = require('path');
 var nodemailer = require('nodemailer');
+var sanitizer = require('sanitizer');
+var markdown = require('markdown').markdown;
 
 
 module.exports = function(app, passport) {
@@ -198,7 +200,7 @@ app.get('/polish/:brand/:name', function(req, res) {
 
 //add own polish
 app.get('/addown/:id', isLoggedIn, function(req, res) {
-	req.user.wantedpolish.find({id:req.params.id}).remove();
+	req.user.wantedpolish.remove(req.params.id);
 	req.user.ownedpolish.addToSet(req.params.id);
 	req.user.save();
 	Polish.findById(req.params.id, function(err, p) {
@@ -217,7 +219,7 @@ app.get('/addwant/:id', isLoggedIn, function(req, res) {
 
 //remove owned polish
 app.get('/removeown/:id', isLoggedIn, function(req, res) {
-	req.user.ownedpolish.find({id:req.params.id}).remove();
+	req.user.ownedpolish.remove(req.params.id);
 	req.user.save();
 	Polish.findById(req.params.id, function(err, p) {
 		res.redirect('/polish/' + p.brand.replace(/ /g,"_") + '/' + p.name.replace(/ /g,"_"))
@@ -384,9 +386,9 @@ app.post('/review/edit/:id', function(req, res) {
 		Review.findOne({polishid: req.params.id, userid:req.user.id}, function(err, review) {
 			if (review) { //if review already exists
 				review.rating = req.body.rating;
-				review.userreview = req.body.userreview;
-				review.dupes = req.body.dupes;
-				review.notes = req.body.notes;
+				review.userreview = sanitizer.sanitize(req.body.userreview);
+				review.dupes = sanitizer.sanitize(req.body.dupes);
+				review.notes = sanitizer.sanitize(req.body.notes);
 				review.save(function(err) {
 					res.redirect('/polish/' + polishbrand.replace(/ /g,"_") + "/" + polishname.replace(/ /g,"_"));
 				});
@@ -396,9 +398,9 @@ app.post('/review/edit/:id', function(req, res) {
 					userid: req.user.id,
 					username: req.user.username,
 					rating: req.body.rating,
-					userreview: req.body.userreview,
-					dupes: req.body.dupes,
-					notes: req.body.notes,
+					userreview: sanitizer.sanitize(req.body.userreview),
+					dupes: sanitizer.sanitize(req.body.dupes),
+					notes: sanitizer.sanitize(req.body.notes),
 				});
 				newReview.save(function(err) {
 					res.redirect('/polish/' + polishbrand.replace(/ /g,"_") + "/" + polishname.replace(/ /g,"_"));
@@ -427,15 +429,17 @@ app.post('/polishadd', function(req, res) {
 			res.redirect('/addpolish');
 		} else {
 			var newPolish = new Polish ({
-				name: req.body.name/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/,
-				brand: req.body.brand/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/,
-				batch: req.body.batch/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/,
+				name: sanitizer.sanitize(req.body.name)/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/,
+				brand: sanitizer.sanitize(req.body.brand)/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/,
+				batch: sanitizer.sanitize(req.body.batch)/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/,
 				colorcat: req.body.colorcat,
-				colorhex: "#" + req.body.colorhex,
+				colorhex: "#" + sanitizer.sanitize(req.body.colorhex),
 				type: req.body.type,
 				indie: req.body.indie,
-				code: req.body.code/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/,
+				code: sanitizer.sanitize(req.body.code)/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/,
 				keywords: req.body.name + " " + req.body.brand + " " + req.body.batch + " " + req.body.code,
+                owned: "on",
+                wanted: "on",
 			});
 			newPolish.save(function(err) {
 				req.flash('addPolishMessage', 'Polish has been successfully added. Add another?')
@@ -478,14 +482,14 @@ app.post('/polishedit/:id', function(req, res) {
 			req.flash('editPolishMessage', 'Error editing polish.')
 			res.redirect('/polishedit/:id');
 		} else {
-			p.name = req.body.name/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/;
-			p.brand = req.body.brand/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/;
-			p.batch = req.body.batch/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/;
+			p.name = req.body.name;
+			p.brand = req.body.brand;
+			p.batch = sanitizer.sanitize(req.body.batch)/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/;
 			p.colorcat = req.body.colorcat;
-			p.colorhex = "#" + req.body.colorhex;
+			p.colorhex = "#" + sanitizer.sanitize(req.body.colorhex);
 			p.type = req.body.type;
 			p.indie = req.body.indie;
-			p.code = req.body.code/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/;
+			p.code = sanitizer.sanitize(req.body.code)/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/;
 			p.keywords = req.body.name + " " + req.body.brand + " " + req.body.batch + " " + req.body.code,
 			p.save(function(err) {
 				res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));;
@@ -670,7 +674,7 @@ app.post('/profile/:username/edit', function(req, res) {
 			res.redirect('/polishedit/:username');
 		} else {
 			user.email = req.body.email;
-			user.about = req.body.about;
+			user.about = markdown.toHTML(sanitizer.sanitize(req.body.about));
 			user.save(function(err) {
 				res.redirect('/profile/' + req.user.username);
 			});
@@ -768,7 +772,6 @@ app.get('/blog/:title', function(req, res) {
 			data.postmessage = blog.message;
 			data.postdate = blog.date;
 			User.populate(blog, {path:'comments.user'}, function(err) {
-				console.log(blog.comments.user);
 				data.postcomments = blog.comments;
 				res.render('blogview.ejs', data);
 			})
@@ -804,7 +807,7 @@ app.post('/blog/:title/add', isLoggedIn, function(req, res) {
 		var newBlogComment = new BlogComment ({
 			parentid: blog.id,
 			user: req.user.id,
-			message: req.body.message,
+			message: markdown.toHTML(sanitizer.sanitize(req.body.message)),
 			datefull: new Date(),
 			date: dateformatted,
 		})
@@ -863,8 +866,8 @@ app.post('/forums/:forum/add', function(req, res) {
 	var newForumPost = new ForumPost ({
 		user: req.user.id,
 		username: req.user.username,
-		title: req.body.posttitle,
-		message: req.body.postmessage,
+		title: sanitizer.sanitize(req.body.posttitle),
+		message: markdown.toHTML(sanitizer.sanitize(req.body.postmessage)),
 		datefull: new Date(),
 		dateupdated: dateformatted,
 		date: dateformatted,
@@ -940,7 +943,7 @@ app.post('/forums/:forum/:id/add', isLoggedIn, function(req, res) {
 		var newForumComment = new ForumComment ({
 			parentid: post.id,
 			user: req.user.id,
-			message: req.body.message,
+			message: markdown.toHTML(sanitizer.sanitize(req.body.message)),
 			datefull: new Date(),
 			date: dateformatted,
 		})

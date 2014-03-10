@@ -8,17 +8,10 @@
 .markItUp .markItUpButton2 a {
 	background-image:url(images/italic.png);
 }
-.markItUp .markItUpButton3 a {
-	background-image:url(images/stroke.png);
-}
 
-.markItUp .markItUpButton4 a {
+.markItUp .markItUpButton3 a {
 	background-image:url(images/picture.png); 
 }
-.markItUp .markItUpButton5 a {
+.markItUp .markItUpButton4 a {
 	background-image:url(images/link.png);
-}
-
-.markItUp .preview a {
-	background-image:url(images/preview.png);
 }

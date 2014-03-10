@@ -16,5 +16,7 @@
     "bcrypt-nodejs": "*",
     "connect-flash": "*",
     "nodemailer": "*",
+    "sanitizer": "*",
+    "markdown": "*"
   }
 }

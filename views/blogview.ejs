@@ -31,7 +31,8 @@ function confirm_alert(node) {
             <% } %>
             <hr><br><br>
             <% if (isAuthenticated()) { %>
-                <b><a name="addcomment"><font color="#000000">Add a Comment:</font><br><br>
+               <b><a name="addcomment"><font color="#000000">Add a Comment:</font></b><br><br>
+                <a href="/photo/upload">Upload a photo?</a><br><br>
                 <form action="/blog/<%= posttitle %>/add" method="post">
                     <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
                     <input type="submit" value="Submit" class="button">

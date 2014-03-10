@@ -7,6 +7,8 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var fs = require('fs');
 var nodemailer = require('nodemailer');
+var sanitizer = require('sanitizer');
+var markdown = require('markdown').markdown;
 
 var app = express();
 
