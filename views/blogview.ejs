@@ -10,6 +10,7 @@ function confirm_alert(node) {
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
+        <div class="forumpost">
         <h2><%= posttitle %></h2><br>
             <i>Posted by <a href="/profile/<%= postuser.username%>"><%= postuser.username %></a> on <%= postdate %></i><br><br><br>
             <p style="white-space: pre;"><%- postmessage %></p><br><br><hr><br><br>
@@ -25,9 +26,9 @@ function confirm_alert(node) {
                         <a href="/blog/<%= posttitle %>/<%= postcomments[i].id %>/remove" onclick="return confirm_alert(this);">Delete this comment</a>
                     <% } %>
                 <% } %>
-                <br><br>
+                <br>
                 <p style="white-space: pre; padding-left: 3em"><%- postcomments[i].message %></p><br>
-                <a href="/blog/<%= posttitle %>/<%= postcomments[i].id %>/reply">Reply</a><br><br><br>
+                <!--<a href="/blog/<%= posttitle %>/<%= postcomments[i].id %>/reply">Reply</a><br><br><br>-->
             <% } %>
             <hr><br><br>
             <% if (isAuthenticated()) { %>
@@ -38,6 +39,7 @@ function confirm_alert(node) {
                     <input type="submit" value="Submit" class="button">
                 </form>
             <% } %>
+            </div>
     </section>
     </div>
 </div>

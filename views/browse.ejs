@@ -52,8 +52,10 @@
                 </select>
                 <br><br><br>
                 <input type="checkbox" name="indie">Indie polishes<br><br><br>
-                <input type="checkbox" name="owned">Owned polishes<br><br><br>
-                <input type="checkbox" name="wanted">Wanted polishes<br><br><br>
+                <% if (isAuthenticated()) { %>
+                    <input type="checkbox" name="owned">Owned polishes<br><br><br>
+                    <input type="checkbox" name="wanted">Wanted polishes<br><br><br>
+                <% } %>
                 <input type="submit" class="button" id="search-button" value="Browse">
             </form>
         </div>
@@ -91,10 +93,10 @@
     </div>
 </div>
 
-<script>
+<!--<script>
 $('.restrict').keyup(function() {
     $(this).val($(this).val().replace(/[^A-Za-z 0-9!,-]/g,''))
 });
-</script>
+</script>-->
 
 <% include layoutBottom %>

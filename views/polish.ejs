@@ -1,5 +1,17 @@
 <% include layoutTop %>
 
+<script>
+$.fn.stars = function() {
+    return $(this).each(function() {
+        $(this).html($('<span />').width(Math.max(0, (Math.min(5, parseFloat($(this).html())))) * 16));
+    });
+}
+
+$(function() {
+    $('span.stars').stars();
+});
+</script>
+
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
@@ -47,7 +59,7 @@
         <section>
         <hr><br><br>
         <% if (userreview.length > 0 || notes.length > 0 || rating.length > 0 || dupes.length > 0) { %>
-            <h5>Your Rating:</h5><br><%= rating %><br><br><br><br>
+            <h5>Your Rating:</h5><br><span class="stars"><%= rating %></span><br><br><br><br>
             <h5>Your Review:</h5><br><%= userreview %><br><br><br><br>
             <h5>Your Notes:</h5><br><%= notes %><br><br><br><br>
             <h5>Dupes You've Added:</h5><br><%= dupes %><br><br>
@@ -59,16 +71,16 @@
         <% } %>
         <h5>All User Reviews:</h5><br>
         <% for (i=0; i<allreviews.length; i++) {%>
-            <% if (allreviews[i].length > 1) { %>
-                &bull; <%= allreviews[i] %> - <a href="/profile/<%= allreviewsusername %>"><%= allreviewsusername[i] %></a><br><br>
+            <% if (allreviews[i].userreview.length > 0) { %>
+                <span class="stars"><%= allreviews[i].rating %></span> - <%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
             <% } %>
         <% } %><br><br><br><br>
         <h5>All Submitted Dupes:</h5><br>
-        <% for (i=0; i<alldupes.length; i++) {%>
-            <% if (alldupes[i].length > 1) { %>
-                &bull; <%= alldupes[i] %><br><br>
+        <% for (i=0; i<allreviews.length; i++) {%>
+            <% if (allreviews[i].dupes.length > 0) { %>
+                &bull; <%= allreviews[i].dupes %><br><br>
             <% } %>
-        <% } %><br><br><br><br>
+        <% } %>
         </section>
     </div>
 </div>

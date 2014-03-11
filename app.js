@@ -9,12 +9,13 @@ var fs = require('fs');
 var nodemailer = require('nodemailer');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown').markdown;
+var _ = require('lodash');
 
 var app = express();
 
 //configuration
 mongoose.connect('localhost/test'); // connect to database
-require('./config/passport')(passport); // pass passport for configuration
+require('./app/passport')(passport); // pass passport for configuration
 
 app.configure(function() {
 

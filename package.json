@@ -17,6 +17,7 @@
     "connect-flash": "*",
     "nodemailer": "*",
     "sanitizer": "*",
-    "markdown": "*"
+    "markdown": "*",
+    "lodash": "*"
   }
 }
