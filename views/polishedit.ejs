@@ -47,7 +47,8 @@
                 Is this an indie?: <select name="indie" selected="<%= editindie %>">
                     <option value="off"<% if (editindie === "off") { %> selected="selected" <%}%>>no</option>
                     <option value="on"<% if (editindie === "on") { %> selected="selected" <%}%>>yes</option>
-                    </select><br><br><br><br>
+                    </select><br><br>
+                Dupes:<br><textarea name="dupes" value="<%= editdupes %>" cols="60" rows="10"><%= editdupes %></textarea><br><br><br><br>
                 <input type="submit" value="Submit" class="button">
             </form>
             <% if (message) { %>

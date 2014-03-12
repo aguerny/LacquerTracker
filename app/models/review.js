@@ -8,7 +8,6 @@ var reviewSchema = mongoose.Schema({
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     rating: String,
     userreview: String,
-    dupes: String,
     notes: String,
 });
 

@@ -40,6 +40,7 @@
                     <option value="creme">creme</option>
                     <option value="flakie">flakie</option>
                     <option value="glitter">glitter</option>
+                    <option value="glow">glow in the dark</option>
                     <option value="holo">holo</option>
                     <option value="jelly">jelly</option>
                     <option value="magnetic">magnetic</option>
@@ -61,19 +62,24 @@
         </div>
         <div id="browse-right_col">
             <table id="polishbrowse" class="sortable" style="width:100%">
-            <col width="20%">
-            <col width="20%">
-            <col width="18%">
-            <col width="16%">
-            <col width="16%">
-            <col width="10%">
+            <col width="24%">
+            <col width="22%">
+            <col width="22%">
+            <col width="12%">
+            <col width="12%">
+            <col width="8%">
                 <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Type</th><th>Info</th></tr>
                 <% for(var i=0; i<polishes.length; i++) {%>
                     <tr><td><a id='tablelink' href='/polish/<%= polishes[i].brand.replace(/ /g,"_") %>/<%= polishes[i].name.replace(/ /g,"_") %>'><%= polishes[i].name %></a></td>
                     <td><%= polishes[i].brand %></td>
                     <td><%= polishes[i].batch %></td>
                     <td><div id='swatch' style='background-color:<%= polishes[i].colorhex %>;'>&nbsp;</div></td>
-                    <td><%= polishes[i].type %></td>
+                    <td>
+                        <% if (polishes[i].type === "colorchange") {%>color changing
+                        <%} else if (polishes[i].type === "topbase") {%>top/base coat
+                        <%} else if (polishes[i].type === "glow") {%>glow in the dark
+                        <%} else {%><%= polishes[i].type %><%}%>
+                    </td>
                     <td><% if (isAuthenticated()) { %>
                             <% if (status[i] === "owned") { %>
                                 Owned

@@ -27,8 +27,8 @@ function confirm_alert(node) {
                     <% } %>
                 <% } %>
                 <br>
-                <p style="white-space: pre; padding-left: 3em"><%- postcomments[i].message %></p><br>
-                <!--<a href="/blog/<%= posttitle %>/<%= postcomments[i].id %>/reply">Reply</a><br><br><br>-->
+                <p style="white-space: pre; padding-left: 3em"><%- postcomments[i].message %></p>
+                <a href="#">Reply</a><br><br><br>
             <% } %>
             <hr><br><br>
             <% if (isAuthenticated()) { %>

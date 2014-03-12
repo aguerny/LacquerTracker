@@ -58,11 +58,10 @@ $(function() {
     <div id="container" class="clear">
         <section>
         <hr><br><br>
-        <% if (userreview.length > 0 || notes.length > 0 || rating.length > 0 || dupes.length > 0) { %>
+        <% if (userreview.length > 0 || notes.length > 0 || rating.length > 0) { %>
             <h5>Your Rating:</h5><br><span class="stars"><%= rating %></span><br><br><br><br>
             <h5>Your Review:</h5><br><%= userreview %><br><br><br><br>
             <h5>Your Notes:</h5><br><%= notes %><br><br><br><br>
-            <h5>Dupes You've Added:</h5><br><%= dupes %><br><br>
             [<i><a href="/review/edit/<%= pid %>">Edit your review</a></i>]
             <br><br><hr><br><br>
         <% } else {%>
@@ -75,11 +74,9 @@ $(function() {
                 <span class="stars"><%= allreviews[i].rating %></span> - <%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
             <% } %>
         <% } %><br><br><br><br>
-        <h5>All Submitted Dupes:</h5><br>
-        <% for (i=0; i<allreviews.length; i++) {%>
-            <% if (allreviews[i].dupes.length > 0) { %>
-                &bull; <%= allreviews[i].dupes %><br><br>
-            <% } %>
+        <h5>User-Submitted Dupes:</h5>
+        <% if (pdupes.length > 0) { %>
+            <p style="white-space: pre;"><%= pdupes %></p><br><br>
         <% } %>
         </section>
     </div>

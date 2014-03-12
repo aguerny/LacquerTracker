@@ -19,6 +19,8 @@ var _ = require('lodash');
 
 
 module.exports = function(app, passport) {fs.readdirSync('./routes').forEach(function (file) {
+
+    
     // Avoid to read this current file.
     if (file === path.basename(__filename)) { return; }
 

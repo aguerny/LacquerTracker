@@ -1,4 +1,21 @@
-//contact
+var Polish = require('../app/models/polish');
+var User = require('../app/models/user');
+var Review = require('../app/models/review');
+var Photo = require('../app/models/photo');
+var UserPhoto = require('../app/models/userphoto');
+var Blog = require('../app/models/blog');
+var BlogComment = require('../app/models/blogcomment');
+var ForumPost = require('../app/models/forumpost');
+var ForumComment = require('../app/models/forumcomment');
+var mongoose = require('mongoose');
+var fs = require('fs');
+var path = require('path');
+var nodemailer = require('nodemailer');
+var sanitizer = require('sanitizer');
+var markdown = require('markdown').markdown;
+var _ = require('lodash');
+
+
 module.exports = function(app, passport) {
 
 
@@ -18,6 +35,7 @@ app.get('/polish/:brand/:name', function(req, res) {
             data.ptype = polish.type;
             data.pcode = polish.code;
             data.pid = polish.id;
+            data.pdupes = polish.dupes;
             data.linkbrand = polish.brand.replace("%20"," ");
             data.linkname = polish.name.replace("%20"," ");
 
@@ -49,12 +67,10 @@ app.get('/polish/:brand/:name', function(req, res) {
                         data.rating = review.rating;
                         data.userreview = review.userreview;
                         data.notes = review.notes;
-                        data.dupes = review.dupes;
                         } else {
                         data.rating = "";
                         data.userreview = "";
                         data.notes = "";
-                        data.dupes = "";
                         }
 
                     Review.find({polishid:polish.id}).populate('user').exec(function(err, r) {
@@ -67,7 +83,6 @@ app.get('/polish/:brand/:name', function(req, res) {
                     data.rating = "";
                     data.userreview = "";
                     data.notes = "";
-                    data.dupes = "";
                     data.status = "none";
                     Review.find({polishid:polish.id}).populate('user').exec(function(err, r) {
                         data.allreviews = r;
@@ -117,5 +132,106 @@ app.get('/removewant/:id', isLoggedIn, function(req, res) {
     })
 });
 
+///////////////////////////////////////////////////////////////////////////
 
+//add polish
+app.get('/polishadd', isLoggedIn, function(req, res) {
+    res.render('polishadd.ejs', {title: 'Add a Polish - Lacquer Tracker', message : req.flash('addPolishMessage')});
+});
+
+app.post('/polishadd', function(req, res) {
+    Polish.findOne({ name : req.body.name, brand : req.body.brand}, function(err, polish) {
+        //check to see if there's already a polish name and brand in the database
+        if (polish) {
+            req.flash('addPolishMessage', 'That polish already exists in the database.')
+            res.redirect('/addpolish');
+        } else {
+            var newPolish = new Polish ({
+                name: sanitizer.sanitize(req.body.name),
+                brand: sanitizer.sanitize(req.body.brand),
+                batch: sanitizer.sanitize(req.body.batch),
+                colorcat: req.body.colorcat,
+                colorhex: "#" + sanitizer.sanitize(req.body.colorhex),
+                type: req.body.type,
+                indie: req.body.indie,
+                code: sanitizer.sanitize(req.body.code),
+                keywords: sanitizer.sanitize(req.body.name) + " " + sanitizer.sanitize(req.body.brand) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
+                dateupdated: new Date(),
+                dupes: sanitizer.sanitize(req.body.dupes),
+            });
+            newPolish.save(function(err) {
+            req.flash('addPolishMessage', 'Polish has been successfully added. Add another?')
+            res.redirect('/polishadd');
+            });
+        }
+    });
+});
+
+
+///////////////////////////////////////////////////////////////////////////
+
+
+//edit polish
+app.get('/polishedit/:id', isLoggedIn, function(req, res) {
+    Polish.findById(req.params.id, function(err, p) {
+        if (p === null || err) {
+            res.redirect('/error');
+        } else {
+            var data = {};
+                data.title = 'Edit a Polish - Lacquer Tracker';
+                data.message = req.flash('editPolishMessage');
+                data.editid = p.id;
+                data.editname = p.name;
+                data.editbrand = p.brand;
+                data.editbatch = p.batch;
+                data.editcolorcat = p.colorcat;
+                data.editcolorhex = p.colorhex;
+                data.edittype = p.type;
+                data.editindie = p.indie;
+                data.editcode = p.code;
+                data.editdupes = p.dupes;
+            res.render('polishedit.ejs', data);
+        }
+    });
+});
+
+app.post('/polishedit/:id', function(req, res) {
+    Polish.findById(req.params.id, function(err, p) {
+        if (!p) {
+            req.flash('editPolishMessage', 'Error editing polish.')
+            res.redirect('/polishedit/:id');
+        } else {
+            p.name = sanitizer.sanitize(req.body.name);
+            p.brand = sanitizer.sanitize(req.body.brand);
+            p.batch = sanitizer.sanitize(req.body.batch)/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/;
+            p.colorcat = req.body.colorcat;
+            p.colorhex = "#" + sanitizer.sanitize(req.body.colorhex);
+            p.type = req.body.type;
+            p.indie = req.body.indie;
+            p.code = sanitizer.sanitize(req.body.code)/*.replace(/[^A-Za-z 0-9!,?-()]/g,'')*/;
+            p.keywords = sanitizer.sanitize(req.body.name) + " " + sanitizer.sanitize(req.body.brand) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
+            p.dateupdated = new Date();
+            p.dupes = sanitizer.sanitize(req.body.dupes);
+            p.save(function(err) {
+                res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));;
+            });
+        }
+    });
+});
+
+
+};
+
+
+
+//route middleware to make sure a user is logged in
+function isLoggedIn(req, res, next) {
+
+    //if user is authenticated in the session, carry on
+    if (req.isAuthenticated())
+    return next();
+
+    //if they aren't, redirect them to the login page
+    req.session.returnTo = req.path;
+    res.redirect('/login');
 };

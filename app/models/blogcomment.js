@@ -9,6 +9,7 @@ var blogcommentSchema = mongoose.Schema({
 	message: String,
 	datefull: Date,
 	date: String,
+	subcomments: [{type: String, ref: 'BlogComment'}]
 });
 
 

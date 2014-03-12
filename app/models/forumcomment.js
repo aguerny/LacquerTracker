@@ -6,7 +6,6 @@ var mongoose = require('mongoose');
 var forumcommentSchema = mongoose.Schema({
 	parentid: {type: String, ref: 'ForumPost'},
 	user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-	username: String,
 	message: String,
 	datefull: Date,
 	date: String,

@@ -214,6 +214,10 @@ span.stars span {
     background-position: 0 0;
 }
 
+.small {
+    font-size: 11px;
+}
+
 
 
 /*---Footer---*/

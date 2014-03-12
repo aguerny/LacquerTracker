@@ -65,7 +65,7 @@ if ('development' == app.get('env')) {
 
 
 //routes
-require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+require('./routes/index.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 
 //launch
