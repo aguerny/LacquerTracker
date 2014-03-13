@@ -81,6 +81,7 @@ app.get('/blog/:title', function(req, res) {
             res.redirect('/error');
         } else {
             data.title = blog.title + " - Lacquer Tracker";
+            data.postid = blog.id;
             data.posttitle = blog.title;
             data.postuser = blog.user;
             data.postmessage = blog.message;
@@ -103,7 +104,7 @@ app.get('/blog/:title/add', isLoggedIn, function(req, res) {
 
 
 
-app.post('/blog/:title/add', isLoggedIn, function(req, res) {
+app.post('/blog/:title/:id/add', isLoggedIn, function(req, res) {
     var thistitle = req.params.title.replace(/_/g," ")
     Blog.findOne({title: thistitle}, function (err, blog){
         var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
@@ -121,7 +122,8 @@ app.post('/blog/:title/add', isLoggedIn, function(req, res) {
         var dateformatted = m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
 
         var newBlogComment = new BlogComment ({
-            parentid: blog.id,
+            blogid: blog.id,
+            parentid: req.params.id,
             user: req.user.id,
             message: markdown.toHTML(sanitizer.sanitize(req.body.message)),
             datefull: new Date(),
@@ -129,20 +131,64 @@ app.post('/blog/:title/add', isLoggedIn, function(req, res) {
         })
         newBlogComment.save(function(err) {
             blog.comments.push(newBlogComment.id);
-            blog.save(function(err) {
-                res.redirect('/blog/' + blog.title)
+            BlogComment.findById(req.params.id, function(err, parent) {
+                if (parent) {
+                    parent.childid.push(newBlogComment.id);
+                    blog.save(function(err) {
+                        parent.save(function(err) {
+                            res.redirect('/blog/' + blog.title)
+                        })
+                    })
+                } else {
+                    blog.save(function(err) {
+                        res.redirect('/blog/' + blog.title)
+                    })
+                }
             })
         })
+    })
+});
+
+
+
+//reply to blog post comment
+app.get('/blog/:title/:id/add', isLoggedIn, function(req, res) {
+    data = {};
+    Blog.findOne({title: req.params.title.replace(/_/g," ")}).populate('user').exec(function (err, blog) {
+        BlogComment.findById(req.params.id).populate('user').exec(function(err, comment) {
+            if (comment === null) {
+                res.redirect('/error');
+            } else {
+                data.replyid = req.params.id;
+                data.title = blog.title + " - Lacquer Tracker";
+                data.posttitle = blog.title;
+                data.postuser = blog.user;
+                data.postmessage = blog.message;
+                data.postdate = blog.date;
+                data.comment = comment;
+                res.render('blogviewreply.ejs', data);
+            }
         })
+    })
 });
 
 
 
 //remove blog post comment
 app.get('/blog/:title/:id/remove', isLoggedIn, function(req, res) {
-    Blog.find({title: req.params.title}).remove({comments: req.params.id});
-    BlogComment.findByIdAndRemove(req.params.id, function(err) {
-        res.redirect("/blog/" + req.params.title);
+    BlogComment.findById(req.params.id, function(err, comment) {
+        console.log(comment.childid.length);
+        if (comment.childid.length > 0) {
+            comment.message = "<i>deleted</i>";
+            comment.save(function(err) {
+                res.redirect("/blog/" + req.params.title);
+            })
+        } else {
+            Blog.find({title: req.params.title}).remove({comments: req.params.id});
+                BlogComment.findByIdAndRemove(req.params.id, function(err) {
+                res.redirect("/blog/" + req.params.title);
+            })
+        }
     })
 });
 

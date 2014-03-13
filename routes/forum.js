@@ -113,7 +113,7 @@ app.get('/forums/:forum/:id', function(req, res) {
     })
 });
 
-app.post('/forums/:forum/:id/add', isLoggedIn, function(req, res) {
+app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
     ForumPost.findById(req.params.id, function (err, post){
         var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
         var d = new Date();
@@ -130,7 +130,8 @@ app.post('/forums/:forum/:id/add', isLoggedIn, function(req, res) {
         var dateformatted = m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
 
         var newForumComment = new ForumComment ({
-            parentid: post.id,
+            postid: post.id,
+            parentid: req.params.cid,
             user: req.user.id,
             message: markdown.toHTML(sanitizer.sanitize(req.body.message)),
             datefull: new Date(),
@@ -139,11 +140,46 @@ app.post('/forums/:forum/:id/add', isLoggedIn, function(req, res) {
         newForumComment.save(function(err) {
             post.dateupdated = dateformatted;
             post.comments.push(newForumComment.id);
-            post.save(function (err) {
-                res.redirect('/forums/' + post.forum + '/' + post.id)
-            });
+            ForumComment.findById(req.params.cid, function(err, parent) {
+                if (parent) {
+                    parent.childid.push(newForumComment.id);
+                    post.save(function(err) {
+                        parent.save(function(err) {
+                            res.redirect('/forums/' + post.forum + '/' + post.id)
+                        })
+                    })
+                } else {
+                    post.save(function(err) {
+                        res.redirect('/forums/' + post.forum + '/' + post.id)
+                    })
+                }
+            })
         })
+    })
+});
+
+
+//reply specific forum comment
+app.get('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
+    data = {};
+    ForumPost.findById(req.params.id).populate('user').exec(function (err, post) {
+        ForumComment.findById(req.params.cid).populate('user').exec(function(err, comment) {
+            if (comment === null) {
+                res.redirect('/error');
+            } else {
+                data.replyid = req.params.cid;
+                data.title = post.title + " - Lacquer Tracker";
+                data.postid = post.id;
+                data.posttitle = post.title;
+                data.postuser = post.user;
+                data.postmessage = post.message;
+                data.postdate = post.date;
+                data.postforum = post.forum;
+                data.comment = comment;
+                res.render('forumspostreply.ejs', data);
+            }
         })
+    })
 });
 
 
@@ -154,9 +190,18 @@ app.get('/forums/:forum/:id/add', isLoggedIn, function(req, res) {
 
 
 app.get('/forums/:forum/:id/:cid/remove', isLoggedIn, function(req, res) {
-    ForumPost.find({id: req.params.id}).remove({comments: req.params.cid});
-    ForumComment.findByIdAndRemove(req.params.cid, function(err) {
-        res.redirect('/forums/' + req.params.forum + '/' + req.params.id);
+    ForumComment.findById(req.params.cid, function(err, comment) {
+        if (comment.childid.length > 0) {
+            comment.message = markdown.toHTML("_deleted_");
+            comment.save(function(err) {
+                res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
+            })
+        } else {
+            ForumPost.findById(req.params.id).remove({comments: req.params.cid});
+                ForumComment.findByIdAndRemove(req.params.cid, function(err) {
+                res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
+            })
+        }
     })
 });
 

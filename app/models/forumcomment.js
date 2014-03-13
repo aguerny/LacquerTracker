@@ -4,11 +4,13 @@ var mongoose = require('mongoose');
 
 //define the schema for our blog post model
 var forumcommentSchema = mongoose.Schema({
-	parentid: {type: String, ref: 'ForumPost'},
+	postid: String,
+	parentid: String,
 	user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
 	message: String,
 	datefull: Date,
 	date: String,
+	childid: [],
 });
 
 

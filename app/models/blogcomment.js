@@ -4,12 +4,13 @@ var mongoose = require('mongoose');
 
 //define the schema for our blog post model
 var blogcommentSchema = mongoose.Schema({
-	parentid: {type: String, ref: 'Blog'},
+	blogid: String,
+	parentid: String,
 	user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
 	message: String,
 	datefull: Date,
 	date: String,
-	subcomments: [{type: String, ref: 'BlogComment'}]
+	childid: [],
 });
 
 

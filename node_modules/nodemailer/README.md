@@ -1,5 +1,4 @@
-Nodemailer
-==========
+![Nodemailer](https://raw2.github.com/andris9/Nodemailer/master/assets/nm_logo_200x136.png)
 
 **Nodemailer** is an easy to use module to send e-mails with Node.JS (using
 SMTP or sendmail or Amazon SES) and is unicode friendly - You can use any characters you like ✔
@@ -330,7 +329,8 @@ Possible SES options are the following:
 
  * **AWSAccessKeyID** - AWS access key (required)
  * **AWSSecretKey** - AWS secret (required)
- * **ServiceUrl** - optional API end point URL (defaults to *"https://email.us-east-1.amazonaws.com"*)
+ * **ServiceUrl** - *optional* API end point URL (defaults to *"https://email.us-east-1.amazonaws.com"*)
+ * **AWSSecurityToken** - *optional* security token
 
 Example:
 
@@ -971,5 +971,9 @@ message composing/sending process you should look at the  appropriate module.
 ## License
 
 **Nodemailer** is licensed under [MIT license](https://github.com/andris9/Nodemailer/blob/master/LICENSE). Basically you can do whatever you want to with it.
+
+----
+
+The Nodemailer logo was designed by [Sven Kristjansen](https://www.behance.net/kristjansen).
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/andris9/nodemailer/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

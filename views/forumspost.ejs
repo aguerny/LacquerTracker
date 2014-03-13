@@ -28,24 +28,92 @@ if (answer === true) {
             <p style="white-space: pre;"><%- postmessage %></p><br><br><hr><br><br>
             <b>Comments (<%= postcomments.length %>)</b> | <a href="/forums/<%= postforum %>/<%= postid %>/add">Add a comment</a><br><br>
             <% for (i=0; i<postcomments.length; i++) { %>
-                <br><br>
-                <% if (postcomments[i].user.profilephoto) { %>
-                    <img class="profilephotocomment" src="<%= postcomments[i].user.profilephoto %>">&nbsp;
-                <% } %>
-                <b><a href="/profile/<%= postcomments[i].user.username %>"><% if (postuser.username === postcomments[i].user.username) {%>*<%}%><%= postcomments[i].user.username %><% if (postuser.username === postcomments[i].user.username) {%>*<%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[i].date %>:</font>
-                <% if (isAuthenticated()) { %>
-                    <% if (user.username === postcomments[i].user.username) { %>
-                        <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[i].id %>/remove" onclick="return confirm_alert(this);">Delete this comment</a>
+                <% if (postcomments[i].parentid === postcomments[i].postid) { %>
+                    <br><br><br>
+                    <img class="profilephotocomment" src="<%= postcomments[i].user.profilephoto %>">&nbsp;<b><a href="/profile/<%= postcomments[i].user.username %>"><% if (postuser.username === postcomments[i].user.username) {%>*<%}%><%= postcomments[i].user.username %><% if (postuser.username === postcomments[i].user.username) {%>*<%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[i].date %>:</font>
+                    <% if (isAuthenticated()) { %>
+                        <% if (user.username === postcomments[i].user.username) { %>
+                            <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[i].id %>/remove" onclick="return confirm_alert(this);">Delete this comment</a>
+                        <% } %>
                     <% } %>
+                    <br>
+                    <div style="padding-left: 3%">
+                    <p style="white-space: pre; padding-left: 3em"><%- postcomments[i].message %></p>
+                    <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[i].id %>/add">Reply</a></div>
+                        <% for (j=0; j<postcomments.length; j++) { %>
+                            <% if (postcomments[j].parentid === postcomments[i].id) { %>
+                            <br><div style="padding-left:5%">
+                            <br><br>
+                            <img class="profilephotocomment" src="<%= postcomments[j].user.profilephoto %>">&nbsp;<b><a href="/profile/<%= postcomments[j].user.username %>"><% if (postuser.username === postcomments[j].user.username) {%>*<%}%><%= postcomments[j].user.username %><% if (postuser.username === postcomments[j].user.username) {%>*<%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[j].date %>:</font>
+                            <% if (isAuthenticated()) { %>
+                                <% if (user.username === postcomments[j].user.username) { %>
+                                    <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[j].id %>/remove" onclick="return confirm_alert(this);">Delete this comment</a>
+                                <% } %>
+                            <% } %>
+                            <br>
+                            <div style="padding-left: 3%">
+                            <p style="white-space: pre; padding-left: 3em"><%- postcomments[j].message %></p>
+                            <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[j].id %>/add">Reply</a></div>
+                            </div>
+                                <% for (k=0; k<postcomments.length; k++) { %>
+                                <% if (postcomments[k].parentid === postcomments[j].id) { %>
+                                <br><div style="padding-left:10%">
+                                <br><br>
+                                <img class="profilephotocomment" src="<%= postcomments[k].user.profilephoto %>">&nbsp;<b><a href="/profile/<%= postcomments[k].user.username %>"><% if (postuser.username === postcomments[k].user.username) {%>*<%}%><%= postcomments[k].user.username %><% if (postuser.username === postcomments[k].user.username) {%>*<%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[k].date %>:</font>
+                                <% if (isAuthenticated()) { %>
+                                    <% if (user.username === postcomments[k].user.username) { %>
+                                        <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[k].id %>/remove" onclick="return confirm_alert(this);">Delete this comment</a>
+                                    <% } %>
+                                <% } %>
+                                <br>
+                                <div style="padding-left: 3%">
+                                <p style="white-space: pre; padding-left: 3em"><%- postcomments[k].message %></p>
+                                <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[k].id %>/add">Reply</a></div>
+                                </div>
+                                    <% for (l=0; l<postcomments.length; l++) { %>
+                                    <% if (postcomments[l].parentid === postcomments[k].id) { %>
+                                    <br><div style="padding-left:15%">
+                                    <br><br>
+                                    <img class="profilephotocomment" src="<%= postcomments[l].user.profilephoto %>">&nbsp;<b><a href="/profile/<%= postcomments[l].user.username %>"><% if (postuser.username === postcomments[l].user.username) {%>*<%}%><%= postcomments[l].user.username %><% if (postuser.username === postcomments[l].user.username) {%>*<%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[l].date %>:</font>
+                                    <% if (isAuthenticated()) { %>
+                                        <% if (user.username === postcomments[l].user.username) { %>
+                                            <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[l].id %>/remove" onclick="return confirm_alert(this);">Delete this comment</a>
+                                        <% } %>
+                                    <% } %>
+                                    <br>
+                                    <div style="padding-left: 3%">
+                                    <p style="white-space: pre; padding-left: 3em"><%- postcomments[l].message %></p>
+                                    <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[l].id %>/add">Reply</a></div>
+                                    </div>
+                                        <% for (m=0; m<postcomments.length; m++) { %>
+                                        <% if (postcomments[m].parentid === postcomments[l].id) { %>
+                                        <br><div style="padding-left:20%">
+                                        <br><br>
+                                        <img class="profilephotocomment" src="<%= postcomments[m].user.profilephoto %>">&nbsp;<b><a href="/profile/<%= postcomments[m].user.username %>"><% if (postuser.username === postcomments[m].user.username) {%>*<%}%><%= postcomments[m].user.username %><% if (postuser.username === postcomments[m].user.username) {%>*<%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[m].date %>:</font>
+                                        <% if (isAuthenticated()) { %>
+                                            <% if (user.username === postcomments[m].user.username) { %>
+                                                <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[m].id %>/remove" onclick="return confirm_alert(this);">Delete this comment</a>
+                                            <% } %>
+                                        <% } %>
+                                        <br>
+                                        <div style="padding-left: 3%">
+                                        <p style="white-space: pre; padding-left: 3em"><%- postcomments[m].message %></p></div>
+                                        </div>
+                                        <% } %>
+                                        <% } %>
+                                    <% } %>
+                                    <% } %>
+                                <% } %>
+                                <% } %>
+                            <% } %>
+                            <% } %>
                 <% } %>
-                <br>
-                <p style="white-space: pre; padding-left: 3em"><%- postcomments[i].message %></p><br>
             <% } %>
-            <hr><br><br>
+            <br><br><hr><br><br>
             <% if (isAuthenticated()) { %>
                 <b><a name="addcomment"><font color="#000000">Add a Comment:</font></b><br><br>
                 <a href="/photo/upload">Upload a photo?</a><br><br>
-                <form action="/forums/<%= postforum %>/<%= postid %>/add" method="post">
+                <form action="/forums/<%= postforum %>/<%= postid %>/<%= postid %>/add" method="post">
                     <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
                     <input type="submit" value="Submit" class="button">
                 </form>

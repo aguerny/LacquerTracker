@@ -36,11 +36,11 @@ app.post('/contact', function (req, res) {
 
     //construct the email sending module
     mailOpts = {
-        from: req.body.name + ' &lt;' + req.body.email + '&gt;',
-        to: 'lacquertrackermailer@gmail.com',
+        from: sanitizer.sanitize(req.body.name) + sanitizer.sanitize(req.body.email),
+        to: 'alligiveaway@gmail.com',
         //replace it with id you want to send multiple must be separated by ,(comma)
         subject: 'Contact Form Submission',
-        text: "From:" + req.body.name + '@' + req.body.email + "Message:" + req.body.message
+        text: "Message from " + sanitizer.sanitize(req.body.name) + " @ " + sanitizer.sanitize(req.body.email) + ":\n\n\n" + sanitizer.sanitize(req.body.message)
     };
 
     //send Email
@@ -62,7 +62,6 @@ app.post('/contact', function (req, res) {
 
 
 };
-
 
 
 
