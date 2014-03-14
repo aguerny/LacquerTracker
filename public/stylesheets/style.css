@@ -218,7 +218,9 @@ span.stars span {
     font-size: 11px;
 }
 
-
+#recaptcha {
+    width: 80%;
+}
 
 /*---Footer---*/
 

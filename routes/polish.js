@@ -14,6 +14,7 @@ var nodemailer = require('nodemailer');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown').markdown;
 var _ = require('lodash');
+var simple_recaptcha = require('simple-recaptcha');
 
 
 module.exports = function(app, passport) {
@@ -41,12 +42,13 @@ app.get('/polish/:brand/:name', function(req, res) {
 
             Photo.find({polishid : polish.id}, function(err, photo) {
                 if (photo.length < 1) {
-                    data.allphotos = ['/images/questionmark.png'];
-                    data.numphotos = "0";
+                    data.allphotos = [{location:'/images/questionmark.png'}];
+                    data.numphotos = 0;
                 } else {
                     var allphotos = photo.map(function(x) {
-                        return x.location;
+                        return x;
                     })
+                    data.j = 1;
                     data.allphotos = _.shuffle(allphotos);
                     data.numphotos = photo.length;
                 }
@@ -147,7 +149,7 @@ app.post('/polishadd', function(req, res) {
             res.redirect('/addpolish');
         } else {
             var newPolish = new Polish ({
-                name: sanitizer.sanitize(req.body.name),
+                name: sanitizer.sanitize((req.body.name).replace(/[?]/g,"")),
                 brand: sanitizer.sanitize(req.body.brand),
                 batch: sanitizer.sanitize(req.body.batch),
                 colorcat: req.body.colorcat,
@@ -160,8 +162,7 @@ app.post('/polishadd', function(req, res) {
                 dupes: sanitizer.sanitize(req.body.dupes),
             });
             newPolish.save(function(err) {
-            req.flash('addPolishMessage', 'Polish has been successfully added. Add another?')
-            res.redirect('/polishadd');
+                res.redirect('/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"));;
             });
         }
     });

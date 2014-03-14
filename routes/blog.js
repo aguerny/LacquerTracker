@@ -14,6 +14,7 @@ var nodemailer = require('nodemailer');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown').markdown;
 var _ = require('lodash');
+var simple_recaptcha = require('simple-recaptcha');
 
 
 module.exports = function(app, passport) {

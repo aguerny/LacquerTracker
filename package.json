@@ -18,6 +18,7 @@
     "nodemailer": "*",
     "sanitizer": "*",
     "markdown": "*",
-    "lodash": "*"
+    "lodash": "*",
+    "simple-recaptcha": "*"
   }
 }

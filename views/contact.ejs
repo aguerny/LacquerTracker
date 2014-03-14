@@ -1,5 +1,12 @@
 <% include layoutTop %>
  
+<script type="text/javascript">
+    var RecaptchaOptions = {
+    theme : 'clean'
+};
+</script>
+
+
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
@@ -15,10 +22,19 @@
                 Name:<br><input type="text" name="name" size="95" required><br><br>
                 Email:<br><input type="text" name="email" size="95" required><br><br>
                 Message:<br><textarea name="message" rows="10" class="contact" required></textarea><br><br>
+                <div id="recaptcha">
+                <script type="text/javascript"
+                    src="http://www.google.com/recaptcha/api/challenge?k=6Leqre8SAAAAAPF0aSeJiXTZVodtro9YDxlA-9a_"></script>
+                    <noscript>
+                    <iframe src="http://www.google.com/recaptcha/api/noscript?k=6Leqre8SAAAAAPF0aSeJiXTZVodtro9YDxlA-9a_" height="300" width="500" frameborder="0"></iframe><br>
+                    <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+                    <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
+                    </noscript>
+                </div><br><br>
                 <input type="submit" class="button" value="Submit Feedback"/>
             </form>
             <% if (message.length > 0) { %>
-                <br><br><h4><%= message %></h4>
+                <br><br><h4><%= message %></h4><br><br>
             <% } %>  
         </div>
         </div>

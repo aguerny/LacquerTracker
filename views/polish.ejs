@@ -10,6 +10,7 @@ $.fn.stars = function() {
 $(function() {
     $('span.stars').stars();
 });
+
 </script>
 
 <!-- content -->
@@ -41,13 +42,23 @@ $(function() {
                         <div class=center>
                         <span>(<%= numphotos %>)</span>
                         <span><a href="/photo/add/<%= pid %>">Add Photo</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
-                        <span id=prev><a href="#">Prev Photo</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
-                        <span id=next><a href="#">Next Photo</a></span>
+                        <!--<% if (numphotos > 0) { %>
+                            <span><a href="/photo/remove/<= pid %>/<= allphotos[j].id %>">Remove Photo</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                            <script>
+                                $(function() {
+                                    $('#next').click(function (){
+                                        var j++;
+                                    });
+                                }
+                            </script>
+                        <% } %>-->
+                        <span id="prev"><a href="#">Prev Photo</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span id="next"><a href="#">Next Photo</a></span>
                 </div><br>
                 <!-- slideshow -->
                 <div class="cycle-slideshow" data-cycle-fx=scrollHorz data-cycle-timeout=0 data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-center-horz="true">
                     <% for (i=0; i<allphotos.length; i++) { %>
-                        <img src="<%= allphotos[i] %>">
+                        <img src="<%= allphotos[i].location %>">
                     <% } %>
                     </div>
                 </div>

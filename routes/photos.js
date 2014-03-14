@@ -14,6 +14,7 @@ var nodemailer = require('nodemailer');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown').markdown;
 var _ = require('lodash');
+var simple_recaptcha = require('simple-recaptcha');
 
 
 
@@ -62,6 +63,21 @@ app.post('/photo/add/:id', function(req, res) {
         }
     })
 });
+
+
+//remove polish photo
+app.get('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
+    Photo.findById(req.params.id).exec(function(err, photo) {
+        fs.unlink('./public' + photo.location, function(err) {
+            if (err) throw err;
+            photo.remove();
+        });
+    })
+
+    Polish.findById(req.params.pid, function(err, p) {
+            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+    });
+})
 
 
 //user photo
