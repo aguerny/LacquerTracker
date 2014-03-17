@@ -18,14 +18,14 @@
                 <br><br><hr><br><br>
                 <h3>Remove Photos From Appearing on Your Profile Page</h3><br><br>
                 <% for (i=0; i < yesphotos.length; i++) { %>
-                    <img class="userphotosmall" src="<%= yesphotos[i].location %>"><br><a href="/profile/<%= username %>/<%= yesphotos[i].id %>/remove">Remove from profile</a><br><br>
+                    <img class="userphotosmall" src="<%= yesphotos[i].location %>"><br><a href="/profile/<%= username %>/<%= yesphotos[i].id %>/remove">Remove from profile</a> | <a href="/profile/<%= username %>/<%= yesphotos[i].id %>/delete">Delete this photo</a><br><br>
                 <% } %>
             <% } %>
             <% if (nophotos.length > 0) { %>
                 <br><br><hr><br><br>
                 <h3>Add Photos to Appear on Your Profile Page</h3><br><br>
                 <% for (i=0; i < nophotos.length; i++) { %>
-                    <img class="userphotosmall" src="<%= nophotos[i].location %>"><br><a href="/profile/<%= username %>/<%= nophotos[i].id %>/add">Add to profile</a><br><br>
+                    <img class="userphotosmall" src="<%= nophotos[i].location %>"><br><a href="/profile/<%= username %>/<%= nophotos[i].id %>/add">Add to profile</a> | <a href="/profile/<%= username %>/<%= nophotos[i].id %>/delete">Delete this photo</a><br><br>
                 <% } %>
             <% } %>
         </section>

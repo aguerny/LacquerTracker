@@ -91,7 +91,7 @@ app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
     }
 });
 
-app.post('/profile/:username/edit', function(req, res) {
+app.post('/profile/:username/edit', isLoggedIn, function(req, res) {
     User.findOne({username:req.params.username}, function(err, user) {
         if (!user) {
             req.flash('editProfileMessage', 'Error editing profile.')
@@ -122,6 +122,13 @@ app.get('/profile/:username/:id/add', isLoggedIn, function(req, res) {
         photo.save();
         res.redirect('/profile/' + req.user.username);
     })
+});
+
+
+app.get('/profile/:username/:id/delete', isLoggedIn, function(req, res) {
+    req.user.photos.remove(req.params.id);
+    req.user.save();
+    res.redirect('/profile/' + req.user.username);
 });
 
 

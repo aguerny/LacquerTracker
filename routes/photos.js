@@ -37,7 +37,7 @@ app.get('/photo/add/:id', isLoggedIn, function(req, res) {
     })
 });
 
-app.post('/photo/add/:id', function(req, res) {
+app.post('/photo/add/:id', isLoggedIn, function(req, res) {
     var tempPath = req.files.photo.path;
     var targetPath = path.resolve('./public/images/polish/' + req.params.id + "-" + req.files.photo.name.replace(/ /g,"_"));
     fs.rename(tempPath, targetPath, function(err) {
@@ -89,7 +89,7 @@ app.get('/photo/upload', isLoggedIn, function(req, res) {
 });
 
 
-app.post('/photo/upload', function(req, res) {
+app.post('/photo/upload', isLoggedIn, function(req, res) {
     var tempPath = req.files.photo.path;
     var targetPath = path.resolve('./public/images/useruploads/' + req.user.username + "-" + req.files.photo.name.replace(/ /g,"_"));
     fs.rename(tempPath, targetPath, function(err) {
@@ -124,7 +124,7 @@ app.get('/photo/profile', isLoggedIn, function(req, res) {
 });
 
 
-app.post('/photo/profile', function(req, res) {
+app.post('/photo/profile', isLoggedIn, function(req, res) {
     var tempPath = req.files.photo.path;
     var targetPath = path.resolve('./public/images/profilephotos/' + req.user.username + "-" + req.files.photo.name.replace(/ /g,"_"));
     fs.rename(tempPath, targetPath, function(err) {

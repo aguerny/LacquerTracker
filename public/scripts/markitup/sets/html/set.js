@@ -16,7 +16,6 @@ mySettings = {
 	markupSet: [
 		{name:'Bold', key:'B', openWith:'**', closeWith:'**' },
 		{name:'Italic', key:'I', openWith:'_', closeWith:'_' },
-		{name:'Stroke through', key:'S', openWith:'<del>', closeWith:'</del>' },
 		{separator:'---------------' },
 		{name:'Ul', openWith:'\n* \n* \n* ' },
 		{separator:'---------------' },

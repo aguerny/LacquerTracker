@@ -141,7 +141,7 @@ app.get('/polishadd', isLoggedIn, function(req, res) {
     res.render('polishadd.ejs', {title: 'Add a Polish - Lacquer Tracker', message : req.flash('addPolishMessage')});
 });
 
-app.post('/polishadd', function(req, res) {
+app.post('/polishadd', isLoggedIn, function(req, res) {
     Polish.findOne({ name : req.body.name, brand : req.body.brand}, function(err, polish) {
         //check to see if there's already a polish name and brand in the database
         if (polish) {
@@ -196,7 +196,7 @@ app.get('/polishedit/:id', isLoggedIn, function(req, res) {
     });
 });
 
-app.post('/polishedit/:id', function(req, res) {
+app.post('/polishedit/:id', isLoggedIn, function(req, res) {
     Polish.findById(req.params.id, function(err, p) {
         if (!p) {
             req.flash('editPolishMessage', 'Error editing polish.')

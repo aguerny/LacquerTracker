@@ -43,7 +43,7 @@ app.get('/blog/add', isLoggedIn, function(req, res) {
 });
 
 
-app.post('/blog/add', function(req, res) {
+app.post('/blog/add', isLoggedIn, function(req, res) {
     var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
     var d = new Date();
     var curr_date = d.getDate();

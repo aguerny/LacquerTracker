@@ -49,7 +49,7 @@ app.get('/review/edit/:id', isLoggedIn, function(req, res) {
 });
 
 
-app.post('/review/edit/:id', function(req, res) {
+app.post('/review/edit/:id', isLoggedIn, function(req, res) {
     Polish.findById(req.params.id, function(err, polish) {
         var polishname = polish.name;
         var polishbrand = polish.brand;
