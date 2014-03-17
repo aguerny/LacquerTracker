@@ -19,7 +19,7 @@
     "markdown": "*",
     "lodash": "*",
     "simple-recaptcha": "*",
-    "bcrypt": "*",
+    "bcrypt-nodejs": "*",
     "pagedown": "*"
   }
 }

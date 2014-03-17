@@ -18,6 +18,7 @@ var _ = require('lodash');
 var simple_recaptcha = require('simple-recaptcha');
 var pagedown = require("pagedown");
 var safeConverter = pagedown.getSanitizingConverter();
+var bcrypt = require("bcrypt-nodejs");
 
 
 module.exports = function(app, passport) {
@@ -138,21 +139,15 @@ app.get('/reset/:key', function(req, res) {
 });
 
 
-/*app.post('/reset', function(req, res) {
+app.post('/reset/:username', function(req, res) {
     if (req.body.password === req.body.confirm) {
-        User.findOne({username: req.body.username}, function(err, user) {
-            bcrypt.genSalt(10, function(err, salt) {
-                bcrypt.hash("B4c0/\/", salt, function(err, hash) {
-                    user.password = hash;
-                    user.save();
-                    res.redirect('/login')
-                })
-            })
-        })
+        User.findOneAndUpdate({username: req.params.username}, {password: bcrypt.hashSync(req.body.password)}, function(err, user) {
+            res.redirect('/login');
+        });
     } else {
         res.render('passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: resetkey.username})
     }
-});*/
+});
 
 
 

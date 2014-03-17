@@ -16,6 +16,7 @@ var converter = new pagedown.Converter();
 var safeConverter = pagedown.getSanitizingConverter();
 var pagedown = require("pagedown");
 var safeConverter = pagedown.getSanitizingConverter();
+var bycrypt = require("bcrypt-nodejs");
 
 var app = express();
 
