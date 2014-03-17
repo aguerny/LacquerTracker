@@ -15,6 +15,8 @@ var sanitizer = require('sanitizer');
 var markdown = require('markdown').markdown;
 var _ = require('lodash');
 var simple_recaptcha = require('simple-recaptcha');
+var pagedown = require("pagedown");
+var safeConverter = pagedown.getSanitizingConverter();
 
 
 module.exports = function(app, passport) {
@@ -61,7 +63,7 @@ app.post('/blog/add', isLoggedIn, function(req, res) {
     var newBlog = new Blog ({
         user: req.user.id,
         title: sanitizer.sanitize(req.body.posttitle),
-        message: markdown.toHTML(sanitizer.sanitize(req.body.postmessage)),
+        message: safeConverter.makeHtml(sanitizer.sanitize(req.body.postmessage)),
         datefull: new Date(),
         date: dateformatted,
     });
@@ -85,7 +87,7 @@ app.get('/blog/:title', function(req, res) {
             data.postid = blog.id;
             data.posttitle = blog.title;
             data.postuser = blog.user;
-            data.postmessage = blog.message;
+            data.postmessage = safeConverter.makeHtml(blog.message);
             data.postdate = blog.date;
             User.populate(blog, {path:'comments.user'}, function(err) {
                 data.postcomments = blog.comments;
@@ -126,7 +128,7 @@ app.post('/blog/:title/:id/add', isLoggedIn, function(req, res) {
             blogid: blog.id,
             parentid: req.params.id,
             user: req.user.id,
-            message: markdown.toHTML(sanitizer.sanitize(req.body.message)),
+            message: safeConverter.makeHtml(sanitizer.sanitize(req.body.message)),
             datefull: new Date(),
             date: dateformatted,
         })

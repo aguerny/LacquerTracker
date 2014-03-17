@@ -1,0 +1,27 @@
+<% include layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
+        <form action="/forums/<%= postforum %>/<%= postid %>/edit" method="post">
+            <h3>Edit your post:</h3><br><br>
+                <a target="blank" href="/photo/upload">Want to include a photo?</a><br><br><br>
+                Forum:<br><select name="forum" required>
+                    <option value="">select a forum to post to</option>
+                    <option value="intro" <% if (postforum === "intro") { %> selected="selected" <%}%>>Introductions</option>
+                    <option value="general" <% if (postforum === "general") { %> selected="selected" <%}%>>General Polish Discussion</option>
+                    <option value="notd" <% if (postforum === "notd") { %> selected="selected" <%}%>>Nails of the Day</option>
+                    <option value="contests" <% if (postforum === "contests") { %> selected="selected" <%}%>>Contests / Giveaways</option>
+                    <option value="tutorials" <% if (postforum === "tutorials") { %> selected="selected" <%}%>>Tutorials</option>
+                    <option value="offtopic" <% if (postforum === "offtopic") { %> selected="selected" <%}%>>Off Topic</option>
+                    </select><br><br>
+                Title:<br><input type="text" name="posttitle" size="130" value="<%=posttitle%>" required><br><br><br>
+                Post:<br><textarea type="text" class="markItUp" name="postmessage" cols="60" rows="20" required><%=postmessage%></textarea><br><br>
+                <input type="submit" value="Submit" class="button">
+        </form>
+    </section>
+    </div>
+</div>
+
+<% include layoutBottom %>

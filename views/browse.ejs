@@ -8,59 +8,59 @@
         <div id="browse-left_col">
             <h3>Browse by:</h3><br>
             <form action="browse" method="post">
-                <input type="text" name="keywords" placeholder="Name / Code / Keyword" class="restrict filter">
+                <input type="text" name="keywords" <% if (browsekeywords) { %> value=<%=browsekeywords%> <% } %>placeholder="Name / Code / Keyword" class="restrict filter">
                 <br><br><br>
                 <select name="brand" class="filter">
                     <option value="">All Brands</option>
                     <% for (i=0; i<brands.length; i++) { %>
-                    <option value="<%= brands[i] %>"><%= brands[i] %></option>
+                    <option value="<%= brands[i] %>" <% if (browsebrand === brands[i]) { %> selected="selected" <% } %>><%= brands[i] %></option>
                     <% } %>
                 </select>
                 <br><br><br>
                 <select name="colorcat" class="filter">
                     <option value="">All Colors</option>
-                    <option value="beige">beige</option>
-                    <option value="black">black</option>
-                    <option value="blue">blue</option>
-                    <option value="brown">brown</option>
-                    <option value="clear">clear</option>
-                    <option value="gold">gold</option>
-                    <option value="green">green</option>
-                    <option value="grey">grey</option>
-                    <option value="nude">nude</option>
-                    <option value="orange">orange</option>
-                    <option value="pink">pink</option>
-                    <option value="purple">purple</option>
-                    <option value="red">red</option>
-                    <option value="silver">silver</option>
-                    <option value="white">white</option>
-                    <option value="yellow">yellow</option>
+                    <option value="beige" <% if (browsecolorcat === "beige") { %> selected="selected" <% } %>>beige</option>
+                    <option value="black" <% if (browsecolorcat === "black") { %> selected="selected" <% } %>>black</option>
+                    <option value="blue" <% if (browsecolorcat === "blue") { %> selected="selected" <% } %>>blue</option>
+                    <option value="brown" <% if (browsecolorcat === "brown") { %> selected="selected" <% } %>>brown</option>
+                    <option value="clear" <% if (browsecolorcat === "clear") { %> selected="selected" <% } %>>clear</option>
+                    <option value="gold" <% if (browsecolorcat === "gold") { %> selected="selected" <% } %>>gold</option>
+                    <option value="green" <% if (browsecolorcat === "green") { %> selected="selected" <% } %>>green</option>
+                    <option value="grey" <% if (browsecolorcat === "grey") { %> selected="selected" <% } %>>grey</option>
+                    <option value="nude" <% if (browsecolorcat === "nude") { %> selected="selected" <% } %>>nude</option>
+                    <option value="orange" <% if (browsecolorcat === "orange") { %> selected="selected" <% } %>>orange</option>
+                    <option value="pink" <% if (browsecolorcat === "pink") { %> selected="selected" <% } %>>pink</option>
+                    <option value="purple" <% if (browsecolorcat === "purple") { %> selected="selected" <% } %>>purple</option>
+                    <option value="red" <% if (browsecolorcat === "red") { %> selected="selected" <% } %>>red</option>
+                    <option value="silver" <% if (browsecolorcat === "silver") { %> selected="selected" <% } %>>silver</option>
+                    <option value="white" <% if (browsecolorcat === "white") { %> selected="selected" <% } %>>white</option>
+                    <option value="yellow" <% if (browsecolorcat === "yellow") { %> selected="selected" <% } %>>yellow</option>
                 </select>
                 <br><br><br>
                 <select name="type" class="filter">
                     <option value="">All Types</option>
-                    <option value="colorchange">color changing</option>
-                    <option value="crackle">crackle</option>
-                    <option value="creme">creme</option>
-                    <option value="flakie">flakie</option>
-                    <option value="glitter">glitter</option>
-                    <option value="glow">glow in the dark</option>
-                    <option value="holo">holo</option>
-                    <option value="jelly">jelly</option>
-                    <option value="magnetic">magnetic</option>
-                    <option value="matte">matte</option>
-                    <option value="metallic">metallic</option>
-                    <option value="neon">neon</option>
-                    <option value="sheer">sheer</option>
-                    <option value="shimmer">shimmer</option>
-                    <option value="texture">texture</option>
-                    <option value="topbase">top/base coat</option>
+                    <option value="colorchange" <% if (browsetype === "colorchange") { %> selected="selected" <% } %>>color changing</option>
+                    <option value="crackle" <% if (browsetype === "crackle") { %> selected="selected" <% } %>>crackle</option>
+                    <option value="creme" <% if (browsetype === "creme") { %> selected="selected" <% } %>>creme</option>
+                    <option value="flakie" <% if (browsetype === "flakie") { %> selected="selected" <% } %>>flakie</option>
+                    <option value="glitter" <% if (browsetype === "glitter") { %> selected="selected" <% } %>>glitter</option>
+                    <option value="glow" <% if (browsetype === "glow") { %> selected="selected" <% } %>>glow in the dark</option>
+                    <option value="holo" <% if (browsetype === "holo") { %> selected="selected" <% } %>>holo</option>
+                    <option value="jelly" <% if (browsetype === "jelly") { %> selected="selected" <% } %>>jelly</option>
+                    <option value="magnetic" <% if (browsetype === "magnetic") { %> selected="selected" <% } %>>magnetic</option>
+                    <option value="matte" <% if (browsetype === "matte") { %> selected="selected" <% } %>>matte</option>
+                    <option value="metallic" <% if (browsetype === "metallic") { %> selected="selected" <% } %>>metallic</option>
+                    <option value="neon" <% if (browsetype === "neon") { %> selected="selected" <% } %>>neon</option>
+                    <option value="sheer" <% if (browsetype === "sheer") { %> selected="selected" <% } %>>sheer</option>
+                    <option value="shimmer" <% if (browsetype === "shimmer") { %> selected="selected" <% } %>>shimmer</option>
+                    <option value="texture" <% if (browsetype === "texture") { %> selected="selected" <% } %>>texture</option>
+                    <option value="topbase" <% if (browsetype === "topbase") { %> selected="selected" <% } %>>top/base coat</option>
                 </select>
                 <br><br><br>
-                <input type="checkbox" name="indie">Indie polishes<br><br><br>
+                <input type="checkbox" name="indie" <% if (browseindie === "on") { %> checked <% } %>>Indie polishes<br><br><br>
                 <% if (isAuthenticated()) { %>
-                    <input type="checkbox" name="owned">Owned polishes<br><br><br>
-                    <input type="checkbox" name="wanted">Wanted polishes<br><br><br>
+                    <input type="checkbox" name="owned" <% if (browseowned === "on") { %> checked <% } %>>Owned polishes<br><br><br>
+                    <input type="checkbox" name="wanted" <% if (browsewanted === "on") { %> checked <% } %>>Wanted polishes<br><br><br>
                 <% } %>
                 <input type="submit" class="button" id="search-button" value="Browse">
             </form>
@@ -97,6 +97,7 @@
                     </td></tr>
                 <% } %>
             </table>
+            <!--<p style="text-align:right;"><a href="/browse/<=browsenext%>">Next 100 &#8594;</a></p>-->
             <p>Can't find the polish you're looking for? <a href="/polishadd">Add it to the database.</a></p>
         </div>
         </div>

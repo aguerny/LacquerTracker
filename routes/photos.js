@@ -15,7 +15,8 @@ var sanitizer = require('sanitizer');
 var markdown = require('markdown').markdown;
 var _ = require('lodash');
 var simple_recaptcha = require('simple-recaptcha');
-
+var pagedown = require("pagedown");
+var safeConverter = pagedown.getSanitizingConverter();
 
 
 module.exports = function(app, passport) {
@@ -71,13 +72,26 @@ app.get('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
         fs.unlink('./public' + photo.location, function(err) {
             if (err) throw err;
             photo.remove();
-        });
-    })
-
+        })
     Polish.findById(req.params.pid, function(err, p) {
             res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+    })
     });
-})
+});
+
+
+app.get('/photo/remove/:pid', isLoggedIn, function(req, res) {
+    data = {};
+    data.title = 'Remove Polish Photos - Lacquer Tracker';
+    Photo.find({polishid: req.params.pid}, function(err, photo) {
+        data.allphotos = photo;
+        Polish.findById(req.params.pid, function(err, p) {
+            data.urlbrand = p.brand.replace(/ /g,"_");
+            data.urlname = p.name.replace(/ /g,"_");
+            res.render('photoremove.ejs', data)
+        })
+    })
+});
 
 
 //user photo

@@ -15,7 +15,8 @@ var sanitizer = require('sanitizer');
 var markdown = require('markdown').markdown;
 var _ = require('lodash');
 var simple_recaptcha = require('simple-recaptcha');
-
+var pagedown = require("pagedown");
+var safeConverter = pagedown.getSanitizingConverter();
 
 module.exports = function(app, passport) {
 
@@ -48,7 +49,7 @@ app.get('/polish/:brand/:name', function(req, res) {
                     var allphotos = photo.map(function(x) {
                         return x;
                     })
-                    data.j = 1;
+                    /*data.j = 1;*/
                     data.allphotos = _.shuffle(allphotos);
                     data.numphotos = photo.length;
                 }

@@ -15,6 +15,8 @@ var sanitizer = require('sanitizer');
 var markdown = require('markdown').markdown;
 var _ = require('lodash');
 var simple_recaptcha = require('simple-recaptcha');
+var pagedown = require("pagedown");
+var safeConverter = pagedown.getSanitizingConverter();
 
 
 module.exports = function(app, passport) {
@@ -39,7 +41,7 @@ app.get('/profile/:username', function(req, res) {
             data.opolishes = user.ownedpolish;
             data.wpolishes = user.wantedpolish;
             data.username = user.username;
-            data.about = user.about;
+            data.about = safeConverter.makeHtml(user.about);
             data.profilephoto = user.profilephoto;
             yesphotos = [];
             for (i=0; i < user.photos.length; i++) {
@@ -98,7 +100,7 @@ app.post('/profile/:username/edit', isLoggedIn, function(req, res) {
             res.redirect('/polishedit/:username');
         } else {
             user.email = sanitizer.sanitize(req.body.email);
-            user.about = markdown.toHTML(sanitizer.sanitize(req.body.about));
+            user.about = sanitizer.sanitize(req.body.about);
             user.save(function(err) {
                 res.redirect('/profile/' + req.user.username);
             });

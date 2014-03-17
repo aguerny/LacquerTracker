@@ -7,7 +7,7 @@
             <form action="/blog/add" method="post">
                 <% if (user.username === "t" || user.username === "alli" || user.username === "admin") { %>
                     <h3>Add a blog entry:</h3><br>
-                    Title:<br><input type="text" name="posttitle" size="63"><br><br><br>
+                    Title:<br><input type="text" name="posttitle" size="130"><br><br><br>
                     Post:<br><textarea type="text" class="markItUp" name="postmessage" cols="60" rows="20"></textarea><br><br>
                     <input type="submit" value="Submit" class="button">
                 <% } else { %>

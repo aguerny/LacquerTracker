@@ -11,6 +11,11 @@ var sanitizer = require('sanitizer');
 var markdown = require('markdown').markdown;
 var _ = require('lodash');
 var simple_recaptcha = require('simple-recaptcha');
+var pagedown = require("pagedown");
+var converter = new pagedown.Converter();
+var safeConverter = pagedown.getSanitizingConverter();
+var pagedown = require("pagedown");
+var safeConverter = pagedown.getSanitizingConverter();
 
 var app = express();
 

@@ -11,6 +11,17 @@ $(function() {
     $('span.stars').stars();
 });
 
+
+var j = 0;
+ 
+$('#next').click(function (){
+    j += 1;
+});
+
+$('#prev').click(function (){
+    j -= 1;
+});
+
 </script>
 
 <!-- content -->
@@ -42,16 +53,10 @@ $(function() {
                         <div class=center>
                         <span>(<%= numphotos %>)</span>
                         <span><a href="/photo/add/<%= pid %>">Add Photo</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
-                        <!--<% if (numphotos > 0) { %>
-                            <span><a href="/photo/remove/<= pid %>/<= allphotos[j].id %>">Remove Photo</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
-                            <script>
-                                $(function() {
-                                    $('#next').click(function (){
-                                        var j++;
-                                    });
-                                }
-                            </script>
-                        <% } %>-->
+                        <script>var j = 0</script>
+                        <% if (numphotos > 0) { %>
+                            <span><a href="/photo/remove/<%= pid %>">Remove Photo</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <% } %>
                         <span id="prev"><a href="#">Prev Photo</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
                         <span id="next"><a href="#">Next Photo</a></span>
                 </div><br>

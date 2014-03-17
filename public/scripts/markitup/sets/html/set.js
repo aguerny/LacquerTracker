@@ -15,7 +15,7 @@ mySettings = {
 	onTab:			{keepDefault:false, openWith:'	 '},
 	markupSet: [
 		{name:'Bold', key:'B', openWith:'**', closeWith:'**' },
-		{name:'Italic', key:'I', openWith:'_', closeWith:'_' },
+		{name:'Italic', key:'I', openWith:'*', closeWith:'*' },
 		{separator:'---------------' },
 		{name:'Ul', openWith:'\n* \n* \n* ' },
 		{separator:'---------------' },

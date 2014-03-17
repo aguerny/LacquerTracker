@@ -18,6 +18,8 @@
     "sanitizer": "*",
     "markdown": "*",
     "lodash": "*",
-    "simple-recaptcha": "*"
+    "simple-recaptcha": "*",
+    "bcrypt": "*",
+    "pagedown": "*"
   }
 }
