@@ -1,22 +1,7 @@
-var Polish = require('../app/models/polish');
-var User = require('../app/models/user');
-var Review = require('../app/models/review');
-var Photo = require('../app/models/photo');
-var UserPhoto = require('../app/models/userphoto');
-var Blog = require('../app/models/blog');
-var BlogComment = require('../app/models/blogcomment');
-var ForumPost = require('../app/models/forumpost');
-var ForumComment = require('../app/models/forumcomment');
 var mongoose = require('mongoose');
-var fs = require('fs');
-var path = require('path');
 var nodemailer = require('nodemailer');
 var sanitizer = require('sanitizer');
-var markdown = require('markdown').markdown;
-var _ = require('lodash');
 var simple_recaptcha = require('simple-recaptcha');
-var pagedown = require("pagedown");
-var safeConverter = pagedown.getSanitizingConverter();
 
 
 module.exports = function(app, passport) {
@@ -36,7 +21,7 @@ app.post('/contact', function (req, res) {
     simple_recaptcha(privateKey, ip, challenge, response, function(err) {
         if (err) {
             req.flash('contactMessage', 'Captcha wrong. Try again.');
-            res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:req.flash('contactMessage')});
+            res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:req.flash('contactMessage'), inputname:req.body.name, inputemail:req.body.email, inputmessage:req.body.usermessage});
         } else {
             var mailOpts, smtpConfig;
             smtpConfig = nodemailer.createTransport('SMTP', {
@@ -53,7 +38,7 @@ app.post('/contact', function (req, res) {
                 to: 'alligiveaway@gmail.com',
                 //replace it with id you want to send multiple must be separated by ,(comma)
                 subject: 'Contact Form Submission',
-                text: "Message from " + sanitizer.sanitize(req.body.name) + " @ " + sanitizer.sanitize(req.body.email) + ":\n\n\n" + sanitizer.sanitize(req.body.message)
+                text: "Message from " + sanitizer.sanitize(req.body.name) + " @ " + sanitizer.sanitize(req.body.email) + ":\n\n\n" + sanitizer.sanitize(req.body.usermessage)
             };
 
             //send Email
@@ -61,8 +46,8 @@ app.post('/contact', function (req, res) {
 
             //Email not sent
             if (error) {
-                req.flash('contactMessage', 'Could not send feedback.');
-                res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:req.flash('contactMessage')});
+                req.flash('contactMessage', 'Could not send feedback. Please try again later.');
+                res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:req.flash('contactMessage'), inputname:req.body.name, inputemail:req.body.email, inputmessage:req.body.usermessage});
             }
 
             //email sent successfully

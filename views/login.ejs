@@ -6,13 +6,14 @@
     	<section>
     		<form action="/login" method="post">
 	     		<h3>Log in below:</h3><br>
-    			Username: <input type="text" name="username"><br><br>
-    			Password: <input type="password" name="password"><br><br><br>
+    			Username: <input type="text" name="username" size="40%"><br><br>
+    			Password: <input type="password" name="password" size="40%"><br><br><br>
     			<input type="submit" value="Submit" class="button" id="login-button">
-    		</form>
+    		</form><br>
     		<% if (message.length > 0) { %>
-    			<br><h4><%= message %> <a href="/forgotpassword">Forgot your password?</a></h4>
+    			<b><%= message %></b>
     		<% } %>
+            <b><a href="/passwordreset">Forgot your password?</a></b>
     	</section>
     </div>
 </div>

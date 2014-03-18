@@ -218,8 +218,12 @@ span.stars span {
     font-size: 11px;
 }
 
-#recaptcha {
+#recaptchacontact {
     width: 80%;
+}
+
+#recaptchasignup {
+    width: 40%;
 }
 
 /*---Footer---*/

@@ -1,24 +1,3 @@
-var Polish = require('../app/models/polish');
-var User = require('../app/models/user');
-var Review = require('../app/models/review');
-var Photo = require('../app/models/photo');
-var UserPhoto = require('../app/models/userphoto');
-var Blog = require('../app/models/blog');
-var BlogComment = require('../app/models/blogcomment');
-var ForumPost = require('../app/models/forumpost');
-var ForumComment = require('../app/models/forumcomment');
-var mongoose = require('mongoose');
-var fs = require('fs');
-var path = require('path');
-var nodemailer = require('nodemailer');
-var sanitizer = require('sanitizer');
-var markdown = require('markdown').markdown;
-var _ = require('lodash');
-var simple_recaptcha = require('simple-recaptcha');
-var pagedown = require("pagedown");
-var safeConverter = pagedown.getSanitizingConverter();
-
-
 module.exports = function(app, passport) {
 
 
@@ -33,7 +12,6 @@ app.get('/error', function(req, res) {
 
 
 };
-
 
 
 //route middleware to make sure a user is logged in

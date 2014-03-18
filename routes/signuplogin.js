@@ -1,23 +1,9 @@
-var Polish = require('../app/models/polish');
-var User = require('../app/models/user');
-var Review = require('../app/models/review');
-var Photo = require('../app/models/photo');
-var UserPhoto = require('../app/models/userphoto');
-var Blog = require('../app/models/blog');
-var BlogComment = require('../app/models/blogcomment');
-var ForumPost = require('../app/models/forumpost');
-var ForumComment = require('../app/models/forumcomment');
-var ResetKey = require('../app/models/resetkey');
 var mongoose = require('mongoose');
-var fs = require('fs');
-var path = require('path');
+var User = require('../app/models/user');
+var ResetKey = require('../app/models/resetkey');
 var nodemailer = require('nodemailer');
 var sanitizer = require('sanitizer');
-var markdown = require('markdown').markdown;
-var _ = require('lodash');
 var simple_recaptcha = require('simple-recaptcha');
-var pagedown = require("pagedown");
-var safeConverter = pagedown.getSanitizingConverter();
 var bcrypt = require("bcrypt-nodejs");
 
 
@@ -26,11 +12,11 @@ module.exports = function(app, passport) {
 
 //sign up
 app.get('/signup', function(req, res) {
-    res.render('signup.ejs', {title: 'Signup - Lacquer Tracker', message: req.flash('signupMessage')});
+    res.render('signup.ejs', {title: 'Signup - Lacquer Tracker', message: req.flash('signupMessage'), email:'', username:''});
 });
 
 app.post('/signup', passport.authenticate('local-signup', {
-    successRedirect: '/profile', //redirect to the secure profile section
+    successReturnToOrRedirect: '/profile',
     failureRedirect: '/signup', //redirect back to the signup page if there is an error
     failureFlash: true //allow flash messages
 }));
@@ -56,22 +42,19 @@ app.post('/login', passport.authenticate('local-login', {
 
 
 //forgot password
-app.get('/forgotpassword', function(req, res) {
-    res.render('forgotpassword.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:''});
+app.get('/passwordreset', function(req, res) {
+    res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:''});
 });
 
-app.post('/forgotpassword', function(req, res) {
+app.post('/passwordreset', function(req, res) {
     User.findOne({username: req.body.username}, function(err, user) {
         if (err) {
-            res.render('forgotpassword.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:req.flash('Error.')});
+            res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error.'});
         } else {
-            console.log(user);
             if (user) {
-                console.log('user exists');
                 if (user.email) {
                     var a = new Date();
                     a.setDate(a.getDate()+1);
-                    console.log('user email exists');
                     var newResetKey = new ResetKey ({
                         username: req.body.username.toLowerCase(),
                         expiredate: a,
@@ -101,23 +84,19 @@ app.post('/forgotpassword', function(req, res) {
 
                         //Email not sent
                         if (error) {
-                            console.log('email not sent');
-                            res.render('forgotpassword.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:req.flash('Error sending e-mail.')});
+                            res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error sending e-mail.'});
                         }
 
                         //email sent successfully
                         else {
-                            console.log('email sent');
-                            res.render('forgotpassword.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:req.flash('E-mail successfully sent.')});
+                            res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'E-mail successfully sent.'});
                         }
                     })
                 } else {
-                    console.log('user email doesnt exist');
-                res.render('forgotpassword.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:req.flash('No e-mail found for this username.')});
+                    res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'No e-mail associated with this username.'});
                 }
             } else {
-                console.log('user doesnt exist');
-                res.render('forgotpassword.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:req.flash('Username not found.')});
+                res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Username not found.'});
             }
         }
     })
@@ -127,12 +106,12 @@ app.post('/forgotpassword', function(req, res) {
 app.get('/reset/:key', function(req, res) {
     ResetKey.findById(req.params.key, function(err, resetkey) {
         if (err) {
-            res.redirect('/error')
+            res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one above.'});
         } else {
             if (new Date(resetkey.expiredate) > new Date()) {
-                res.render('passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: resetkey.username})
+                res.render('passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: resetkey.username, message:''})
             } else {
-                res.redirect('/error')
+                res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
             }
         }
     })
@@ -145,7 +124,7 @@ app.post('/reset/:username', function(req, res) {
             res.redirect('/login');
         });
     } else {
-        res.render('passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: resetkey.username})
+        res.render('passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: req.params.username, message:'Passwords do not match.'})
     }
 });
 

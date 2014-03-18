@@ -19,10 +19,10 @@
         </div>  
         <div id="contact-right_col">
             <form action="/contact" method="post" enctype="multipart/form-data">
-                Name:<br><input type="text" name="name" size="95" required><br><br>
-                Email:<br><input type="text" name="email" size="95" required><br><br>
-                Message:<br><textarea name="message" rows="10" class="contact" required></textarea><br><br>
-                <div id="recaptcha">
+                Name:<br><input type="text" name="name" size="95" <%if (typeof inputname !== "undefined") {%>value="<%=inputname%>" <%}%> required><br><br>
+                Email:<br><input type="text" name="email" size="95" <%if (typeof inputemail !== "undefined") {%>value="<%=inputemail%>" <%}%>required><br><br>
+                Message:<br><textarea name="usermessage" rows="10" class="contact" <%if (typeof inputmessage !== "undefined") {%>value="<%=inputmessage%>" <%}%>required><%if (typeof inputmessage !== "undefined") {%><%=inputmessage%><%}%></textarea><br><br>
+                <div id="recaptchacontact">
                 <script type="text/javascript"
                     src="http://www.google.com/recaptcha/api/challenge?k=6Leqre8SAAAAAPF0aSeJiXTZVodtro9YDxlA-9a_"></script>
                     <noscript>

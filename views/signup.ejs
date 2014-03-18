@@ -1,17 +1,34 @@
 <% include layoutTop %>
 
+<script type="text/javascript">
+    var RecaptchaOptions = {
+    theme : 'clean'
+};
+</script>
+
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
         <form action="/signup" method="post">
-            <h3>Choose a username and password to get started.</h3><br>
-            Username: <input type="text" name="username"><br><br>
-            Password: <input type="password" name="password"><br><br><br>
+            <h3>Fill out the information below to get started.</h3><br>
+            E-mail address: <input type="text" name="email" size="45%" required value=<%=email%>><br><br>
+            Username: <input type="text" name="username" size="50%" required value=<%=username%>><br><br>
+            Password: <input type="password" name="password" size="50%" required><br><br>
+            Confirm Password: <input type="password" size="40%" name="confirm" required><br><br><br>
+            <div id="recaptchasignup">
+                <script type="text/javascript"
+                    src="http://www.google.com/recaptcha/api/challenge?k=6Leqre8SAAAAAPF0aSeJiXTZVodtro9YDxlA-9a_"></script>
+                    <noscript>
+                    <iframe src="http://www.google.com/recaptcha/api/noscript?k=6Leqre8SAAAAAPF0aSeJiXTZVodtro9YDxlA-9a_" height="300" width="500" frameborder="0"></iframe><br>
+                    <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+                    <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
+                    </noscript>
+                </div><br><br><br>
             <input type="submit" value="Submit" class="button" id="login-button">
         </form>
         <% if (message.length > 0) { %>
-            <br><br><h4><%= message %></h4>
+            <br><b><%= message %></b>
         <% } %>        
     </section>
     </div>
