@@ -28,7 +28,7 @@ app.post('/contact', function (req, res) {
                 service: 'Gmail',
                 auth: {
                     user: "lacquertrackermailer@gmail.com",
-                    pass: "testpassword456"
+                    pass: "testpassword123"
                 }
             });
 

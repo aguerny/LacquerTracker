@@ -2,11 +2,15 @@ module.exports = function(app, passport) {
 
 
 app.get('/', function(req, res) {
-res.render('main.ejs', {title: 'Lacquer Tracker'});
+	res.render('main.ejs', {title: 'Lacquer Tracker'});
 });
 
 
 app.get('/error', function(req, res) {
+    res.render('error.ejs', {title: 'Oops! - Lacquer Tracker'});
+});
+
+app.get('/images/:whatever', function(req, res) {
     res.render('error.ejs', {title: 'Oops! - Lacquer Tracker'});
 });
 

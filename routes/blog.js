@@ -17,7 +17,11 @@ app.get('/blog', function(req, res) {
     data = {}
     data.title = 'Blog - Lacquer Tracker';
     Blog.find({}).sort({datefull: -1}).populate('user').exec(function(err, posts) {
-        data.blogposts = posts;
+        var allposts = posts.map(function(x) {
+            x.message = safeConverter.makeHtml(x.message);
+            return x;
+        })
+        data.blogposts = allposts;
         res.render('blog.ejs', data);
     })
 });
@@ -53,7 +57,7 @@ app.post('/blog/add', isLoggedIn, function(req, res) {
     var newBlog = new Blog ({
         user: req.user.id,
         title: sanitizer.sanitize(req.body.posttitle),
-        message: safeConverter.makeHtml(sanitizer.sanitize(req.body.postmessage)),
+        message: sanitizer.sanitize(req.body.postmessage),
         datefull: new Date(),
         date: dateformatted,
     });
@@ -182,6 +186,33 @@ app.get('/blog/:title/:id/remove', isLoggedIn, function(req, res) {
                 res.redirect("/blog/" + req.params.title);
             })
         }
+    })
+});
+
+
+
+//edit blog post
+app.get('/blog/:id/edit', isLoggedIn, function(req, res) {
+    data = {};
+    Blog.findById(req.params.id).exec(function (err, post) {
+        if (post === null) {
+            res.redirect('/error');
+        } else {
+            data.title = post.title + " - Lacquer Tracker";
+            data.postid = post.id;
+            data.posttitle = post.title;
+            data.postmessage = post.message;
+            res.render('blogpostedit.ejs', data);
+        }
+    })
+});
+
+app.post('/blog/:id/edit', isLoggedIn, function(req, res) {
+    Blog.findById(req.params.id, function (err, post){
+        post.title = sanitizer.sanitize(req.body.posttitle);
+        post.message = sanitizer.sanitize(req.body.postmessage);
+        post.save();
+        res.redirect('/blog/' + post.title.replace(/ /g,"_"));
     })
 });
 

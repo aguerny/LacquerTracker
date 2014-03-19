@@ -31,6 +31,8 @@ app.configure(function() {
 	app.set('views', __dirname + '/views');
 	app.engine('html', require('ejs').renderFile);
 
+	app.use(express.static(path.join(__dirname, '/public')));
+	app.use(express.static(__dirname+'/public')); // Catch static files
 	app.use(express.logger('dev')); // log every request to the console
 	app.use(express.cookieParser('lala')); // read cookies (needed for auth)
 	app.use(express.bodyParser({uploadDir:'./public/images/tmp/'})); // get information from HTML forms
@@ -39,7 +41,7 @@ app.configure(function() {
 	app.use(express.json());
 	app.use(express.urlencoded());
 	app.use(express.methodOverride());
-	app.use(express.static(path.join(__dirname, '/public')));
+
 
 	//required for passport
 	app.use(express.session({cookie: {maxAge: 365 * 24 * 60 * 60 * 1000}})); // session secret

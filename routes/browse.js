@@ -20,6 +20,8 @@ app.get('/browse', function(req, res) {
         data.browsetype = req.body.type;
         data.browseindie = req.body.indie;
 
+        data.page = 1;
+
         Polish.find({})
         .sort({dateupdated: -1})
         .limit(10)
@@ -69,6 +71,20 @@ app.post('/browse', function(req, res) {
         data.browseindie = req.body.indie;
 
 
+        if (typeof req.body.browse !== "undefined") {
+            var page = 1;
+            data.page = 1;
+
+        } else if (typeof req.body.nextpage !== "undefined") {
+            var page = parseInt(req.body.page) + 1;
+            data.page = page;
+        
+        } else if (typeof req.body.prevpage !== "undefined") {
+            var page = parseInt(req.body.page) - 1;
+            data.page = page;
+        }
+
+
         var filterOptions = _.transform(req.body, function(result, value, key) {
             result[key] = new RegExp(value.replace(/[^A-Za-z 0-9!'-]/g,''), "i");
         });
@@ -77,7 +93,7 @@ app.post('/browse', function(req, res) {
 
         var polishFilter = _.pick(filterOptions, polishkeys);
 
-        Polish.find(polishFilter).sort('brand').exec(function(err, polishes) {
+        Polish.find(polishFilter).sort('brand').skip((page-1)*50).limit(50).exec(function(err, polishes) {
 
             var returnedpolish = [];
             var statuses = [];
@@ -143,6 +159,11 @@ app.post('/browse', function(req, res) {
             }
         })
     })
+});
+
+
+app.get('/browse/:whatever', function(req, res) {
+    res.redirect('/error');
 });
 
 

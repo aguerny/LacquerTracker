@@ -113,7 +113,7 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
             newUserPhoto.save(function(err) {
                 req.user.photos.push(newUserPhoto.id);
                 req.user.save(function(err) {
-                    res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'Your photo URL is: localhost:3000/images/useruploads/' + req.user.username + "-" + req.files.photo.name.replace(/ /g,"_")});
+                    res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'Your photo URL is: /images/useruploads/' + req.user.username + "-" + req.files.photo.name.replace(/ /g,"_")});
                 })
             })
         }

@@ -6,8 +6,9 @@
     <section>
         <div id="browse-wrap">
         <div id="browse-left_col">
+            <div id="sidebar">
             <h3>Browse by:</h3><br>
-            <form action="browse" method="post">
+            <form action="/browse" method="post" id="browseform">
                 <input type="text" name="keywords" <% if (browsekeywords) { %> value="<%=browsekeywords%>" <% } %>placeholder="Name / Code / Keyword" class="restrict filter">
                 <br><br><br>
                 <select name="brand" class="filter">
@@ -62,8 +63,12 @@
                     <input type="checkbox" name="owned" <% if (browseowned === "on") { %> checked <% } %>>Owned polishes<br><br><br>
                     <input type="checkbox" name="wanted" <% if (browsewanted === "on") { %> checked <% } %>>Wanted polishes<br><br><br>
                 <% } %>
-                <input type="submit" class="button" id="search-button" value="Browse">
+                <input type="submit" class="button" name="browse" value="Browse">
+                <input style="visibility:hidden;" name="page" value="<%=page%>">
+                <input type="submit" style="visibility:hidden;" name="nextpage" value="nextpage" id="nextpage">
+                <input type="submit" style="visibility:hidden;" name="prevpage" value="prevpage" id="prevpage">
             </form>
+            </div>
         </div>
         <div id="browse-right_col">
             <table id="polishbrowse" class="sortable" style="width:100%">
@@ -97,18 +102,52 @@
                     </td></tr>
                 <% } %>
             </table>
-            <!--<p style="text-align:right;"><a href="/browse/<=browsenext%>">Next 100 &#8594;</a></p>-->
-            <p>Can't find the polish you're looking for? <a href="/polishadd">Add it to the database.</a></p>
+            <div style="clear: both;">
+                <% if (polishes.length === 50) { %>
+                    <% if (page > 1) {%><p style="float:right;"><a id="prevlink" href="#">&#8592; Prev </a> | <a id="nextlink" href="#">Next &#8594;</a></p><%} else if (page === 1) {%><p style="float:right;"><a id="nextlink" href="#">Next &#8594;</a></p><%}%>
+                <% } %>
+                <p style="float:left;">Can't find the polish you're looking for? <a href="/polishadd">Add it to the database.</a></p>
+            </div>
         </div>
         </div>
     </section>
     </div>
 </div>
 
-<!--<script>
-$('.restrict').keyup(function() {
-    $(this).val($(this).val().replace(/[^A-Za-z 0-9!,-]/g,''))
+<script>
+$("#nextlink").click(function(){
+   $("#nextpage").trigger('click');
+   return false;
 });
-</script>-->
+</script>
+
+<script>
+$("#prevlink").click(function(){
+   $("#prevpage").trigger('click');
+   return false;
+});
+</script>
+
+<script>
+$(function() {
+
+    var $sidebar   = $("#sidebar"), 
+        $window    = $(window),
+        offset     = $sidebar.offset(),
+        topPadding = 15;
+
+    $window.scroll(function() {
+        if ($window.scrollTop() > offset.top) {
+            $sidebar.stop().animate({
+                marginTop: $window.scrollTop() - offset.top + topPadding
+            });
+        } else {
+            $sidebar.stop().animate({
+                marginTop: 0
+            });
+        }
+    });
+});
+</script>
 
 <% include layoutBottom %>

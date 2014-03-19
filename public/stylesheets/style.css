@@ -226,6 +226,10 @@ span.stars span {
     width: 40%;
 }
 
+.replycomment {
+    background-color: #D8D8D8;
+}
+
 /*---Footer---*/
 
 #footer {padding:20px 0;}
