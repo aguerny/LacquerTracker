@@ -5,10 +5,12 @@
     <div id="container" class="clear">
     <section>
         <% for (i=0; i<blogposts.length; i++) { %>
+        <div class="forumpost">
             <br><a href="/blog/<%= blogposts[i].title.replace(/ /g,"_") %>"><h3><%= blogposts[i].title %></h3></a><br>
             <i>Posted by <a href="/profile/<%=blogposts[i].user.username%>"><%= blogposts[i].user.username %></a> on <%= blogposts[i].date %></i><br><br>
             <p style="white-space: pre;"><%- blogposts[i].message %></p><br><hr><br>
         <% } %>
+        </div>
     </section>
     </div>
 </div>

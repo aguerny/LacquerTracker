@@ -4,9 +4,7 @@ var UserPhoto = require('../app/models/userphoto');
 var ForumPost = require('../app/models/forumpost');
 var ForumComment = require('../app/models/forumcomment');
 var sanitizer = require('sanitizer');
-var markdown = require('markdown').markdown;
-var pagedown = require("pagedown");
-var safeConverter = pagedown.getSanitizingConverter();
+var markdown = require('markdown-css');
 
 
 
@@ -95,7 +93,7 @@ app.get('/forums/:forum/:id', function(req, res) {
             data.postid = post.id;
             data.posttitle = post.title;
             data.postuser = post.user;
-            data.postmessage = safeConverter.makeHtml(post.message);
+            data.postmessage = markdown(post.message);
             data.postdate = post.date;
             data.postforum = post.forum;
             User.populate(post, {path:'comments.user'}, function(err) {
@@ -126,7 +124,7 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
             postid: post.id,
             parentid: req.params.cid,
             user: req.user.id,
-            message: markdown.toHTML(sanitizer.sanitize(req.body.message)),
+            message: markdown(req.body.message),
             datefull: new Date(),
             date: dateformatted,
         })
@@ -165,7 +163,7 @@ app.get('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
                 data.postid = post.id;
                 data.posttitle = post.title;
                 data.postuser = post.user;
-                data.postmessage = post.message;
+                data.postmessage = markdown(post.message);
                 data.postdate = post.date;
                 data.postforum = post.forum;
                 data.comment = comment;
@@ -228,7 +226,7 @@ app.get('/forums/:forum/:id/add', isLoggedIn, function(req, res) {
 app.get('/forums/:forum/:id/:cid/remove', isLoggedIn, function(req, res) {
     ForumComment.findById(req.params.cid, function(err, comment) {
         if (comment.childid.length > 0) {
-            comment.message = markdown.toHTML("_deleted_");
+            comment.message = sanitizer.sanitize(markdown("_deleted_"));
             comment.save(function(err) {
                 res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
             })

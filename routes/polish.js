@@ -5,9 +5,7 @@ var Review = require('../app/models/review');
 var Photo = require('../app/models/photo');
 var UserPhoto = require('../app/models/userphoto');
 var sanitizer = require('sanitizer');
-var markdown = require('markdown').markdown;
-var pagedown = require("pagedown");
-var safeConverter = pagedown.getSanitizingConverter();
+var markdown = require('markdown-css');
 var _ = require('lodash');
 
 module.exports = function(app, passport) {
@@ -29,7 +27,7 @@ app.get('/polish/:brand/:name', function(req, res) {
             data.ptype = polish.type;
             data.pcode = polish.code;
             data.pid = polish.id;
-            data.pdupes = safeConverter.makeHtml(polish.dupes);
+            data.pdupes = markdown(polish.dupes);
             data.linkbrand = polish.brand.replace("%20"," ");
             data.linkname = polish.name.replace("%20"," ");
 
@@ -139,7 +137,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
         //check to see if there's already a polish name and brand in the database
         if (polish) {
             req.flash('addPolishMessage', 'That polish already exists in the database.')
-            res.redirect('/addpolish');
+            res.render('polishadd.ejs', {title: 'Add a Polish - Lacquer Tracker', message : req.flash('addPolishMessage')});
         } else {
             var newPolish = new Polish ({
                 name: sanitizer.sanitize((req.body.name).replace(/[?]/g,"")),

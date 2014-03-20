@@ -115,27 +115,24 @@
 </div>
 
 <script>
-$("#nextlink").click(function(){
-   $("#nextpage").trigger('click');
-   return false;
-});
-</script>
+$(document).ready(function() {
 
-<script>
-$("#prevlink").click(function(){
-   $("#prevpage").trigger('click');
-   return false;
-});
-</script>
+    $("#nextlink").click(function(){
+        $("#nextpage").trigger('click');
+        return false;
+    });
 
-<script>
-$(function() {
+
+    $("#prevlink").click(function(){
+        $("#prevpage").trigger('click');
+        return false;
+    });
+
 
     var $sidebar   = $("#sidebar"), 
         $window    = $(window),
         offset     = $sidebar.offset(),
         topPadding = 15;
-
     $window.scroll(function() {
         if ($window.scrollTop() > offset.top) {
             $sidebar.stop().animate({

@@ -4,9 +4,7 @@ var UserPhoto = require('../app/models/userphoto');
 var Blog = require('../app/models/blog');
 var BlogComment = require('../app/models/blogcomment');
 var sanitizer = require('sanitizer');
-var markdown = require('markdown').markdown;
-var pagedown = require("pagedown");
-var safeConverter = pagedown.getSanitizingConverter();
+var markdown = require('markdown-css');
 
 
 module.exports = function(app, passport) {
@@ -18,7 +16,7 @@ app.get('/blog', function(req, res) {
     data.title = 'Blog - Lacquer Tracker';
     Blog.find({}).sort({datefull: -1}).populate('user').exec(function(err, posts) {
         var allposts = posts.map(function(x) {
-            x.message = safeConverter.makeHtml(x.message);
+            x.message = markdown(x.message);
             return x;
         })
         data.blogposts = allposts;
@@ -63,7 +61,7 @@ app.post('/blog/add', isLoggedIn, function(req, res) {
     });
     newBlog.save(function(err) {
         if (err) throw err;
-else res.redirect('/blog');
+        else res.redirect('/blog');
     })
 });
 
@@ -81,7 +79,7 @@ app.get('/blog/:title', function(req, res) {
             data.postid = blog.id;
             data.posttitle = blog.title;
             data.postuser = blog.user;
-            data.postmessage = safeConverter.makeHtml(blog.message);
+            data.postmessage = markdown(blog.message);
             data.postdate = blog.date;
             User.populate(blog, {path:'comments.user'}, function(err) {
                 data.postcomments = blog.comments;
@@ -122,7 +120,7 @@ app.post('/blog/:title/:id/add', isLoggedIn, function(req, res) {
             blogid: blog.id,
             parentid: req.params.id,
             user: req.user.id,
-            message: safeConverter.makeHtml(sanitizer.sanitize(req.body.message)),
+            message: markdown(sanitizer.sanitize(req.body.message)),
             datefull: new Date(),
             date: dateformatted,
         })
@@ -160,7 +158,7 @@ app.get('/blog/:title/:id/add', isLoggedIn, function(req, res) {
                 data.title = blog.title + " - Lacquer Tracker";
                 data.posttitle = blog.title;
                 data.postuser = blog.user;
-                data.postmessage = blog.message;
+                data.postmessage = markdown(blog.message);
                 data.postdate = blog.date;
                 data.comment = comment;
                 res.render('blogviewreply.ejs', data);

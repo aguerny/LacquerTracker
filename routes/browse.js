@@ -86,24 +86,23 @@ app.post('/browse', function(req, res) {
 
 
         var filterOptions = _.transform(req.body, function(result, value, key) {
-            result[key] = new RegExp(value.replace(/[^A-Za-z 0-9!'-]/g,''), "i");
+            result[key] = new RegExp(value.replace(/[^A-Za-z 0-9!é'-]/g,''), "i");
         });
 
         var polishkeys = _.keys(Polish.schema.paths);
 
         var polishFilter = _.pick(filterOptions, polishkeys);
 
-        Polish.find(polishFilter).sort('brand').skip((page-1)*50).limit(50).exec(function(err, polishes) {
+        var returnedpolish = [];
+        var statuses = [];
 
-            var returnedpolish = [];
-            var statuses = [];
+        if (req.isAuthenticated()) {
 
-            if (req.isAuthenticated()) {
+            data.browseowned = req.body.owned;
+            data.browsewanted = req.body.wanted;
 
-                data.browseowned = req.body.owned;
-                data.browsewanted = req.body.wanted;
-
-                if (req.body.owned === "on" && req.body.wanted === "on") {
+            if (req.body.owned === "on" && req.body.wanted === "on") {
+                Polish.find(polishFilter).sort('brand').exec(function(err, polishes) {
                     for (i=0; i < polishes.length; i++) {
                         if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
                             returnedpolish.push(polishes[i]);
@@ -113,30 +112,39 @@ app.post('/browse', function(req, res) {
                             statuses.push("wanted");
                         }
                     }
+                    data.page = 0;
                     data.polishes = returnedpolish;
                     data.status = statuses;
                     res.render('browse.ejs', data);
-                } else if (req.body.owned === "on") {
+                })
+            } else if (req.body.owned === "on") {
+                Polish.find(polishFilter).sort('brand').exec(function(err, polishes) {
                     for (i=0; i < polishes.length; i++) {
                         if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
                             returnedpolish.push(polishes[i]);
                             statuses.push("owned");
                         }
                     }
+                    data.page = 0;
                     data.polishes = returnedpolish;
                     data.status = statuses;
                     res.render('browse.ejs', data);
-                } else if (req.body.wanted === "on") {
+                })
+            } else if (req.body.wanted === "on") {
+                Polish.find(polishFilter).sort('brand').exec(function(err, polishes) {
                     for (i=0; i < polishes.length; i++) {
                         if (req.user.wantedpolish.indexOf(polishes[i].id) > -1) {
                             returnedpolish.push(polishes[i]);
                             statuses.push("wanted");
                         }
                     }
+                    data.page = 0;
                     data.polishes = returnedpolish;
                     data.status = statuses;
                     res.render('browse.ejs', data);
-                } else {
+                })
+            } else {
+                Polish.find(polishFilter).sort('brand').skip((page-1)*50).limit(50).exec(function(err, polishes) {
                     for (i=0; i < polishes.length; i++) {
                         if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
                             statuses.push("owned");
@@ -150,14 +158,16 @@ app.post('/browse', function(req, res) {
                     data.polishes = returnedpolish;
                     data.status = statuses;
                     res.render('browse.ejs', data);
-                }
-            } else {
+                })
+            }
+        } else {
+            Polish.find(polishFilter).sort('brand').skip((page-1)*50).limit(50).exec(function(err, polishes) {
                 returnedpolish = polishes;
                 data.polishes = returnedpolish;
                 data.status = statuses;
                 res.render('browse.ejs', data);
-            }
-        })
+            })
+        }
     })
 });
 

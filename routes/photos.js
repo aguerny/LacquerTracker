@@ -6,9 +6,7 @@ var UserPhoto = require('../app/models/userphoto');
 var fs = require('fs');
 var path = require('path');
 var sanitizer = require('sanitizer');
-var markdown = require('markdown').markdown;
-var pagedown = require("pagedown");
-var safeConverter = pagedown.getSanitizingConverter();
+var markdown = require('markdown-css');
 
 
 module.exports = function(app, passport) {
@@ -90,7 +88,7 @@ app.get('/photo/remove/:pid', isLoggedIn, function(req, res) {
 app.get('/photo/upload', isLoggedIn, function(req, res) {
     var data = {};
     data.title = 'Upload a Photo - Lacquer Tracker';
-    data.message = "";
+    data.message = "Once the photo upload is complete, copy the URL to include it in a forum post.";
     res.render('photoadduser.ejs', data);
 });
 
@@ -113,7 +111,7 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
             newUserPhoto.save(function(err) {
                 req.user.photos.push(newUserPhoto.id);
                 req.user.save(function(err) {
-                    res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'Your photo URL is: /images/useruploads/' + req.user.username + "-" + req.files.photo.name.replace(/ /g,"_")});
+                    res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is: /images/useruploads/' + req.user.username + "-" + req.files.photo.name.replace(/ /g,"_")});
                 })
             })
         }

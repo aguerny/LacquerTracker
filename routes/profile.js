@@ -5,9 +5,7 @@ var Review = require('../app/models/review');
 var Photo = require('../app/models/photo');
 var UserPhoto = require('../app/models/userphoto');
 var sanitizer = require('sanitizer');
-var markdown = require('markdown').markdown;
-var pagedown = require("pagedown");
-var safeConverter = pagedown.getSanitizingConverter();
+var markdown = require('markdown-css');
 var _ = require('lodash');
 
 
@@ -33,7 +31,7 @@ app.get('/profile/:username', function(req, res) {
             data.opolishes = user.ownedpolish;
             data.wpolishes = user.wantedpolish;
             data.username = user.username;
-            data.about = safeConverter.makeHtml(user.about);
+            data.about = sanitizer.sanitize(markdown(user.about));
             data.profilephoto = user.profilephoto;
             yesphotos = [];
             for (i=0; i < user.photos.length; i++) {

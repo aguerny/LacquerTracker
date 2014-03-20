@@ -19,7 +19,7 @@ mySettings = {
 		{separator:'---------------' },
 		{name:'Ul', openWith:'\n* \n* \n* ' },
 		{separator:'---------------' },
-		{name:'Picture', key:'P', replaceWith:'![alt text]([![Url:!:http://]!])' },
+		{name:'Picture', key:'P', replaceWith:'![]([![Url:!:]!])' },
 		{name:'Link', key:'L', replaceWith:'[link text]([![Url:!:http://]!])' },
 	]
 }

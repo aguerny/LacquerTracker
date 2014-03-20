@@ -16,10 +16,9 @@
     "connect-flash": "*",
     "nodemailer": "*",
     "sanitizer": "*",
-    "markdown": "*",
+    "markdown-css": "*",
     "lodash": "*",
     "simple-recaptcha": "*",
-    "bcrypt-nodejs": "*",
-    "pagedown": "*"
+    "bcrypt-nodejs": "*"
   }
 }

@@ -1,20 +1,12 @@
 <% include layoutTop %>
 
-
-<script>
-$('.restrict').keyup(function() {
-    $(this).val($(this).val().replace(/[^A-Za-z 0-9!,?-()]/g,''))
-});
-</script>
-
-
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
     	<section>
     		<form action="/polishadd" method="post">
 	     		<h3>Add a new polish:</h3><br>
-    			Name: <input type="text" name="name" size="45" class="restrict" required><br><br>
+    			Name: <input type="text" name="name" size="45" required><br><br>
     			Brand: <input type="text" name="brand" size="44" required><br><br>
                 Collection: <input type="text" name="batch" size="40"> <i>Please format like: 2013 Off Shore (Summer)</i><br><br>
                 Code: <input type="text" name="code" size="45"><br><br>
