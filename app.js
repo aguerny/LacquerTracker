@@ -40,7 +40,7 @@ app.configure(function() {
 	app.use(express.methodOverride());
 	app.use(device.capture());
     app.enableViewRouting();
-    app.enableDeviceHelpers()
+    app.enableDeviceHelpers();
 
 
 	//required for passport
