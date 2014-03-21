@@ -1,18 +1,5 @@
 <% include layoutTop %>
 
-<script type="text/javascript">
-function confirm_alert(node) {
-    return confirm("Are you sure you want to permanently delete this?");
-}
-</script>
-
-<script type="text/javascript">
-function AlertIt() {
-var answer = confirm ("Are you sure you want to completely delete this post?")
-if (answer === true) {
-    window.location="/forums/" + postforum + "/" + postid + "/remove";
-</script>
-
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
@@ -25,7 +12,7 @@ if (answer === true) {
             <% if (comment.user.profilephoto) { %>
                 <img class="profilephotocomment" src="<%= comment.user.profilephoto %>">&nbsp;
                     <% } %>
-                <b><a href="/profile/<%= comment.user.username %>"><% if (postuser.username === comment.user.username) {%>*<%}%><%= comment.user.username %><% if (postuser.username === comment.user.username) {%>*<%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= comment.date %>:</font>
+                <b><a href="/profile/<%= comment.user.username %>"><% if (postuser.username === comment.user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= comment.user.username %><% if (postuser.username === comment.user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= comment.date %>:</font>
                     <br>
                     <p style="white-space: pre; padding-left: 3em"><%- comment.message %></p>
             <br><hr><br><br>

@@ -12,11 +12,9 @@ var fs = require('fs');
 var path = require('path');
 var nodemailer = require('nodemailer');
 var sanitizer = require('sanitizer');
-var markdown = require('markdown').markdown;
+var markdown = require('markdown-css');
 var _ = require('lodash');
 var simple_recaptcha = require('simple-recaptcha');
-var pagedown = require("pagedown");
-var safeConverter = pagedown.getSanitizingConverter();
 
 
 

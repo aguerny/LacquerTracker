@@ -42,75 +42,86 @@ module.exports = function(passport) {
 
 			//find a user whose username is the same as the form's username
 			//we are checking to see if the user trying to login already exists
-			User.findOne({ 'username' : username.toLowerCase().replace(/[^A-Za-z0-9]/g,"")}, function(err, user) {
-				//if there are any errors, return the error
+			User.findOne({ 'email' : req.body.email}, function(err, euser) {
 				if (err)
 					return done(err);
 
 				//check to see if there's already a user with that email
-				if (user) {
-					return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
+				if (euser) {
+					return done(null, false, req.flash('signupMessage', 'That email already has an associated account.'));
 				} else {
 
-					if (password === req.body.confirm) {
+					User.findOne({ 'username' : username.toLowerCase().replace(/[^A-Za-z0-9]/g,"")}, function(err, user) {
+						//if there are any errors, return the error
+						if (err)
+							return done(err);
 
-						var privateKey = '6Leqre8SAAAAAOKCKdo2WZdYwBcOfjbEOF3v2G99'; // your private key here
-    					var ip = req.ip;
-    					var challenge = req.body.recaptcha_challenge_field;
-    					var response = req.body.recaptcha_response_field;
+						//check to see if there's already a user with that email
+						if (user) {
+							return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
+						} else {
 
-    					simple_recaptcha(privateKey, ip, challenge, response, function(err) {
-        					
-        					if (err) {
-            					return done(null, false, req.flash('signupMessage', 'Captcha wrong. Try again.'));
-        					
-        					} else {
+							if (password === req.body.confirm) {
 
-								//if there is no user with that username
-								//create the user
-								var newUser = new User();
+								var privateKey = '6Leqre8SAAAAAOKCKdo2WZdYwBcOfjbEOF3v2G99'; // your private key here
+		    					var ip = req.ip;
+		    					var challenge = req.body.recaptcha_challenge_field;
+		    					var response = req.body.recaptcha_response_field;
 
-								//set the user's local credentials
-								newUser.username = sanitizer.sanitize(username.toLowerCase().replace(/[^A-Za-z0-9]/g,""));
-								newUser.password = newUser.generateHash(sanitizer.sanitize(password));
-								newUser.about = "";
-								newUser.email = sanitizer.sanitize(req.body.email);
-								newUser.profilephoto = '/images/blank.png';
+		    					simple_recaptcha(privateKey, ip, challenge, response, function(err) {
+		        					
+		        					if (err) {
+		            					return done(null, false, req.flash('signupMessage', 'Captcha wrong. Try again.'));
+		        					
+		        					} else {
 
-								//save the user
-								newUser.save(function(err) {
-									if (err)
-										throw err;
-									return done(null, newUser);
-								});
+										//if there is no user with that username
+										//create the user
+										var newUser = new User();
+
+										//set the user's local credentials
+										newUser.username = sanitizer.sanitize(username.toLowerCase().replace(/[^A-Za-z0-9]/g,""));
+										newUser.password = newUser.generateHash(sanitizer.sanitize(password));
+										newUser.about = "";
+										newUser.email = sanitizer.sanitize(req.body.email);
+										newUser.profilephoto = '/images/blank.png';
+
+										//save the user
+										newUser.save(function(err) {
+											if (err)
+												throw err;
+											return done(null, newUser);
+										});
 
 
-								//send welcome e-mail
-								var mailOpts, smtpConfig;
-					            smtpConfig = nodemailer.createTransport('SMTP', {
-					                service: 'Gmail',
-					                auth: {
-					                    user: "lacquertrackermailer@gmail.com",
-					                    pass: "testpassword123"
-					                }
-					            });
+										//send welcome e-mail
+										var mailOpts, smtpConfig;
+							            smtpConfig = nodemailer.createTransport('SMTP', {
+							                service: 'Gmail',
+							                auth: {
+							                    user: "lacquertrackermailer@gmail.com",
+							                    pass: "testpassword123"
+							                }
+							            });
 
-					            //construct the email sending module
-					            mailOpts = {
-					                from: "Lacquer Tracker",
-					                to: req.body.email,
-					                //replace it with id you want to send multiple must be separated by ,(comma)
-					                subject: 'Welcome to Lacquer Tracker',
-					                text: "Welcome to Lacquer Tracker! For your records, your username is " + req.body.username + ".\n\nWe can't wait to see you around!\n\n\nLacquer Tracker"
-					            };
+							            //construct the email sending module
+							            mailOpts = {
+							                from: "Lacquer Tracker",
+							                to: req.body.email,
+							                //replace it with id you want to send multiple must be separated by ,(comma)
+							                subject: 'Welcome to Lacquer Tracker',
+							                text: "Welcome to Lacquer Tracker! For your records, your username is " + req.body.username + ".\n\nWe can't wait to see you around!\n\n\nLacquer Tracker"
+							            };
 
-					            //send Email
-					                smtpConfig.sendMail(mailOpts);
+							            //send Email
+							                smtpConfig.sendMail(mailOpts);
+									}
+								})
+							} else {
+								return done(null, false, req.flash('signupMessage', 'Passwords do not match.'));
 							}
-						})
-					} else {
-						return done(null, false, req.flash('signupMessage', 'Passwords do not match.'));
-					}
+						}
+					})
 				}
 			});
 		});

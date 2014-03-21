@@ -1,0 +1,84 @@
+<% include layoutTop %>
+
+<script>
+$.fn.stars = function() {
+    return $(this).each(function() {
+        $(this).html($('<span />').width(Math.max(0, (Math.min(5, parseFloat($(this).html())))) * 16));
+    });
+}
+
+$(function() {
+    $('span.stars').stars();
+});
+</script>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+        <section>
+        <h2><%= pbrand %> - <%= pname %></h2><br><br>
+            <a href="/polishedit/<%= pid %>">Edit information | </a>
+            <% if (status === "owned") { %>
+                Owned (<a href="/removeown/<%= pid %>">remove</a>)
+            <% } else if (status === "wanted") {%>
+                Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a>
+            <% } else { %>
+                <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a>
+            <% } %>
+            <br><div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br><br>
+            <b>Code:</b> <%= pcode %><br><br>
+            <b>Collection:</b> <%= pbatch %><br><br>
+            <b>Color:</b> <%= pcolorcat %><br><br>
+            <b>Type:</b> <%= ptype %><br><br>
+            <br>
+            <a target="_blank" href="http://www.amazon.com/s/?_encoding=UTF8&camp=1789&creative=390957&linkCode=ur2&pageMinusResults=1&suo=1393008765386&tag=lacqutrack-20&url=search-alias%3Daps#/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=<%= linkbrand %>%20<%= linkname %>&sepatfbtf=true&tc=1393008769421">View on Amazon</a><img src="https://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+            <br><br><br><br>
+            <div id=outside>
+                <!-- prev/next links -->
+                    <div style="text-align:center">
+                    <span>(<%= numphotos %>)</span>
+                    <span><a href="/photo/add/<%= pid %>">Add Photo</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                    <script>var j = 0</script>
+                    <% if (numphotos > 0) { %>
+                        <span><a href="/photo/remove/<%= pid %>">Remove Photo</a></span>
+                    <% } %>
+                    <br><span id="prev"><a href="#">Prev Photo</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                    <span id="next"><a href="#">Next Photo</a></span>
+            </div>
+            <br>
+                <!-- slideshow -->
+            <div class="cycle-slideshow" data-cycle-fx=scrollHorz data-cycle-timeout=0 data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-center-horz="true">
+                <% for (i=0; i<allphotos.length; i++) { %>
+                    <img src="<%= allphotos[i].location %>">
+                <% } %>
+            </div>
+        </section>
+    </div>
+    <div id="container" class="clear">
+        <section>
+        <hr><br>
+        <% if (userreview.length > 0 || notes.length > 0 || rating.length > 0) { %>
+            <h5>Your Rating:</h5><br><span class="stars"><%= rating %></span><br><br><br><br>
+            <h5>Your Review:</h5><br><%= userreview %><br><br><br><br>
+            <h5>Your Notes:</h5><br><%= notes %><br><br><br><br>
+            [<i><a href="/review/edit/<%= pid %>">Edit your review</a></i>]
+            <br><br><hr><br><br>
+        <% } else {%>
+        [<i><a href="/review/edit/<%= pid %>">Add a review or personal notes for this polish.</a></i>]
+            <br><br><br><hr><br><br>
+        <% } %>
+        <h5>All User Reviews:</h5><br>
+        <% for (i=0; i<allreviews.length; i++) {%>
+            <% if (allreviews[i].userreview.length > 0) { %>
+                <span class="stars"><%= allreviews[i].rating %></span> - <%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+            <% } %>
+        <% } %><br><br><br><br>
+        <h5>User-Submitted Dupes:</h5>
+        <% if (pdupes.length > 0) { %>
+            <p style="white-space: pre;"><%- pdupes %></p><br><br>
+        <% } %>
+        </section>
+    </div>
+</div>
+
+<% include layoutBottom %>

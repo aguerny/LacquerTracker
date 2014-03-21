@@ -8,15 +8,11 @@ var passport = require('passport');
 var fs = require('fs');
 var nodemailer = require('nodemailer');
 var sanitizer = require('sanitizer');
-var markdown = require('markdown').markdown;
+var markdown = require('markdown-css');
 var _ = require('lodash');
 var simple_recaptcha = require('simple-recaptcha');
-var pagedown = require("pagedown");
-var converter = new pagedown.Converter();
-var safeConverter = pagedown.getSanitizingConverter();
-var pagedown = require("pagedown");
-var safeConverter = pagedown.getSanitizingConverter();
 var bycrypt = require("bcrypt-nodejs");
+device  = require('express-device');
 
 var app = express();
 
@@ -28,8 +24,9 @@ app.configure(function() {
 
 	//set up express
 	app.set('port', process.env.PORT || 3000);
-	app.set('views', __dirname + '/views');
 	app.engine('html', require('ejs').renderFile);
+	app.set('view options', { layout: false });
+	app.set('views', __dirname + '/views');
 
 	app.use(express.static(path.join(__dirname, '/public')));
 	app.use(express.static(__dirname+'/public')); // Catch static files
@@ -41,6 +38,9 @@ app.configure(function() {
 	app.use(express.json());
 	app.use(express.urlencoded());
 	app.use(express.methodOverride());
+	app.use(device.capture());
+    app.enableViewRouting();
+    app.enableDeviceHelpers()
 
 
 	//required for passport

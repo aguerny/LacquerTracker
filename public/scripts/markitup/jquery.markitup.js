@@ -45,7 +45,7 @@
 					previewParser:			false,
 					previewParserPath:		'',
 					previewParserVar:		'data',
-					resizeHandle:			true,
+					resizeHandle:			false,
 					beforeInsert:			'',
 					afterInsert:			'',
 					onEnter:				{},

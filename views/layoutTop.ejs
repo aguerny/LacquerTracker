@@ -3,7 +3,11 @@
 <head>
     <title><%= title %></title>
     <meta charset="iso-8859-1">
-    <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
+    <% if (is_tablet) { %>
+        <link rel="stylesheet" href="/stylesheets/styletablet.css" type="text/css">
+    <% } else { %>
+        <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
+    <% } %>
     <script src="/scripts/sorttable.js"></script>
     <script src="/scripts/colorfinder.js"></script>
     <script src="/scripts/jscolor/jscolor.js"></script>
@@ -15,10 +19,6 @@
         <script type="text/javascript" src="/scripts/markitup/sets/html/set.js"></script>
         <link rel="stylesheet" type="text/css" href="/scripts/markitup/skins/simple/style.css" />
         <link rel="stylesheet" type="text/css" href="/scripts/markitup/sets/html/style.css" />
-    <!--<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jqueryui-editable/css/jqueryui-editable.css" rel="stylesheet"/>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jqueryui-editable/js/jqueryui-editable.min.js"></script>
-        <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
-        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>-->
 </head>
 
 <body>
@@ -48,6 +48,8 @@
 
 <script type="text/javascript" >
    $(document).ready(function() {
-      $(".markItUp").markItUp(mySettings);
+      $(".markItUp").markItUp(mySettings).css({
+        width:100%;
+      });
    });
 </script>

@@ -1,0 +1,65 @@
+<% include layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    	<section>
+    		<form action="/polishadd" method="post">
+	     		<h3>Add a new polish:</h3><br>
+    			Name: <input type="text" name="name" class="fullwidth" required><br><br>
+    			Brand: <input type="text" name="brand" class="fullwidth" required><br><br>
+                Collection: <input type="text" name="batch" class="fullwidth"> <i>Please format like: 2013 Off Shore (Summer)</i><br><br>
+                Code: <input type="text" name="code" class="fullwidth"><br><br>
+                Color: <select name="colorcat">
+                    <option value="">select a color category</option>
+                    <option value="black">black</option>
+                    <option value="blue">blue</option>
+                    <option value="brown">brown</option>
+                    <option value="clear">clear</option>
+                    <option value="gold">gold</option>
+                    <option value="green">green</option>
+                    <option value="grey">grey</option>
+                    <option value="nude">nude</option>
+                    <option value="orange">orange</option>
+                    <option value="pink">pink</option>
+                    <option value="purple">purple</option>
+                    <option value="red">red</option>
+                    <option value="silver">silver</option>
+                    <option value="white">white</option>
+                    <option value="yellow">yellow</option>
+                    </select> and
+                    <input class="color" value="F2F7F7" name="colorhex"><br><br>
+                Type: <select name="type">
+                    <option value="">select a special type</option>
+                    <option value="colorchange">color changing</option>
+                    <option value="crackle">crackle</option>
+                    <option value="creme">creme</option>
+                    <option value="flakie">flakie</option>
+                    <option value="glitter">glitter</option>
+                    <option value="glow">glow in the dark</option>
+                    <option value="holo">holo</option>
+                    <option value="jelly">jelly</option>
+                    <option value="magnetic">magnetic</option>
+                    <option value="neon">neon</option>
+                    <option value="matte">matte</option>
+                    <option value="metallic">metallic</option>
+                    <option value="sheer">sheer</option>
+                    <option value="shimmer">shimmer</option>
+                    <option value="texture">texture</option>
+                    <option value="topbase">top/base coat</option>
+                    </select><br><br>
+                Is this an indie?: <select name="indie">
+                    <option value="off">no</option>
+                    <option value="on">yes</option>
+                    </select><br><br>
+                Dupes:<br><textarea name="dupes" class="fullwidth" rows="5"></textarea><br><br><br><br>
+                <input type="submit" value="Submit" class="button">
+    		</form>
+            <% if (message) { %>
+                <br><h4><%= message %></h4>
+            <% } %>
+    	</section>
+    </div>
+</div>
+
+<% include layoutBottom %>

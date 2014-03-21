@@ -1,0 +1,19 @@
+<% include layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    	<section>
+    		<form action="/photo/add/<%= pid %>" method="post" enctype='multipart/form-data'>
+	     		<h3>Add a Photo:</h3><br>
+    			Polish Name: <input type="text" name="name" value="<%= pname %>" placeholder="<%= pname %>" disabled><br><br>
+    			Polish Brand: <input type="text" value="<%= pbrand %>" name="brand" placeholder="<%= pbrand %>" disabled><br><br>
+                Image for Upload: <input type="file" value="photo" name="photo" required>
+                    </input><br><br>
+                <input type="submit" value="Submit" class="button">
+    		</form>
+    	</section>
+    </div>
+</div>
+
+<% include layoutBottom %>

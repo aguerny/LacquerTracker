@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <title><%= title %></title>
+    <meta charset="iso-8859-1">
+    <link rel="stylesheet" href="/stylesheets/stylemobile.css" type="text/css">
+    <script src="/scripts/sorttable.js"></script>
+    <script src="/scripts/colorfinder.js"></script>
+    <script src="/scripts/jscolor/jscolor.js"></script>
+    <script src="/scripts/jquery.js"></script>
+    <script src="/scripts/cycle2.js"></script>
+    <script src="/scripts/cycle2center.js"></script>
+    <script src="/scripts/collageplus.js"></script>
+    <script src="/scripts/markitup/jquery.markitup.js"></script>
+        <script type="text/javascript" src="/scripts/markitup/sets/html/set.js"></script>
+        <link rel="stylesheet" type="text/css" href="/scripts/markitup/skins/simple/stylephone.css" />
+        <link rel="stylesheet" type="text/css" href="/scripts/markitup/sets/html/style.css" />
+    <!--<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jqueryui-editable/css/jqueryui-editable.css" rel="stylesheet"/>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jqueryui-editable/js/jqueryui-editable.min.js"></script>
+        <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>-->
+</head>
+
+<body>
+
+<!-- header -->
+<div class="wrapper row1">
+    <header id="header" class="clear">
+        <h1>Lacquer Tracker</h1>
+    <nav>
+        <ul>
+            <li><a href="/browse">Browse</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/forums">Forums</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li class="last"><a href="/contact">Contact</a></li>
+        </ul>
+        <select>
+            <option value="" selected="selected">Select</option>
+            <option value="/browse">Browse</option>
+            <option value="/profile">Profile</option>
+            <option value="/forums">Forums</option>
+            <option value="/blog">Blog</option>
+            <option value="/contact">Contact</option>
+        </select>
+    </nav>
+    </header>
+</div>
+
+<script type="text/javascript" >
+   $(document).ready(function() {
+      $(".markItUp").markItUp(mySettings);
+   });
+
+   $("nav select").change(function() {
+        window.location = $(this).find("option:selected").val();
+    });
+</script>

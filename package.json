@@ -19,6 +19,8 @@
     "markdown-css": "*",
     "lodash": "*",
     "simple-recaptcha": "*",
-    "bcrypt-nodejs": "*"
+    "bcrypt-nodejs": "*",
+    "marked": "*",
+    "express-device": "*"
   }
 }

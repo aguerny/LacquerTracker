@@ -12,10 +12,10 @@
     <section>
         <form action="/signup" method="post">
             <h3>Fill out the information below to get started.</h3><br>
-            E-mail address: <input type="text" name="email" size="45%" required value=<%=email%>><br><br>
-            Username: <input type="text" name="username" size="50%" required value=<%=username%>><br><br>
-            Password: <input type="password" name="password" size="50%" required><br><br>
-            Confirm Password: <input type="password" size="40%" name="confirm" required><br><br><br>
+            E-mail address: <input type="email" name="email" style="display:inline-block; width:40%;" required value=<%=email%>><br><br>
+            Username: <input type="text" name="username" style="display:inline-block; width:40%;" required value=<%=username%>><br><br>
+            Password: <input type="password" name="password" style="display:inline-block; width:40%;" required><br><br>
+            Confirm Password: <input type="password" style="display:inline-block; width:40%;" name="confirm" required><br><br><br>
             <div id="recaptchasignup">
                 <script type="text/javascript"
                     src="http://www.google.com/recaptcha/api/challenge?k=6Leqre8SAAAAAPF0aSeJiXTZVodtro9YDxlA-9a_"></script>
@@ -29,7 +29,7 @@
         </form>
         <% if (message.length > 0) { %>
             <br><b><%= message %></b>
-        <% } %>        
+        <% } %>
     </section>
     </div>
 </div>

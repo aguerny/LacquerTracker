@@ -1,0 +1,21 @@
+<% include layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    	<section>
+    		<form action="/login" method="post">
+	     		<h3>Log in below:</h3><br>
+    			Username: <input type="text" name="username" size="100%"><br><br>
+    			Password: <input type="password" name="password" size="100%"><br><br><br>
+    			<input type="submit" value="Submit" class="button" id="login-button">
+    		</form><br>
+    		<% if (message.length > 0) { %>
+    			<b><%= message %></b>
+    		<% } %>
+            <b><a href="/passwordreset">Forgot your password?</a></b>
+    	</section>
+    </div>
+</div>
+
+<% include layoutBottom %>

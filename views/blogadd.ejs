@@ -7,8 +7,8 @@
             <form action="/blog/add" method="post">
                 <% if (user.username === "t" || user.username === "alli" || user.username === "admin") { %>
                     <h3>Add a blog entry:</h3><br>
-                    Title:<br><input type="text" name="posttitle" size="130" required><br><br><br>
-                    Post:<br><textarea type="text" class="markItUp" name="postmessage" cols="60" rows="20" required></textarea><br><br>
+                    Title:<br><input type="text" name="posttitle" class="titleinput" required><br><br><br>
+                    Post:<br><textarea type="text" class="markItUp" name="postmessage" required></textarea><br><br>
                     <input type="submit" value="Submit" class="button">
                 <% } else { %>
                     <b>You are not authorized to access this page.</b>
