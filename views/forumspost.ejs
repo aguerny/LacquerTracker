@@ -29,7 +29,7 @@ function confirm_alert(node) {
                 <div>
                     <img class="profilephotocomment" src="<%= postcomments[i].user.profilephoto %>">&nbsp;<b><a href="/profile/<%= postcomments[i].user.username %>"><% if (postuser.username === postcomments[i].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[i].user.username %><% if (postuser.username === postcomments[i].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[i].date %>:</font>
                     <% if (isAuthenticated()) { %>
-                        <% if (user.username === postcomments[i].user.username || user.username === "alli") { %>
+                        <% if (user.username === postcomments[i].user.username || user.level === "admin") { %>
                             <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[i].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                         <% } %>
                     <% } %>
@@ -48,7 +48,7 @@ function confirm_alert(node) {
                         <div class="replycomment" style="margin-left:4%"><div style="padding-left:1%"><br>
                             <img class="profilephotocomment" src="<%= postcomments[j].user.profilephoto %>">&nbsp;<b><a href="/profile/<%= postcomments[j].user.username %>"><% if (postuser.username === postcomments[j].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[j].user.username %><% if (postuser.username === postcomments[j].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[j].date %>:</font>
                             <% if (isAuthenticated()) { %>
-                                <% if (user.username === postcomments[j].user.username || user.username === "alli") { %>
+                                <% if (user.username === postcomments[j].user.username || user.level === "admin") { %>
                                     <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[j].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                 <% } %>
                             <% } %>
@@ -64,7 +64,7 @@ function confirm_alert(node) {
                                     <br><div style="padding-left:10%">
                                     <img class="profilephotocomment" src="<%= postcomments[k].user.profilephoto %>">&nbsp;<b><a href="/profile/<%= postcomments[k].user.username %>"><% if (postuser.username === postcomments[k].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[k].user.username %><% if (postuser.username === postcomments[k].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[k].date %>:</font>
                                     <% if (isAuthenticated()) { %>
-                                        <% if (user.username === postcomments[k].user.username || user.username === "alli") { %>
+                                        <% if (user.username === postcomments[k].user.username || user.level === "admin") { %>
                                             <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[k].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                         <% } %>
                                     <% } %>
@@ -80,7 +80,7 @@ function confirm_alert(node) {
                                         <br><div class="replycomment" style="margin-left:14%"><div style="padding-left:1%"><br>
                                             <img class="profilephotocomment" src="<%= postcomments[l].user.profilephoto %>">&nbsp;<b><a href="/profile/<%= postcomments[l].user.username %>"><% if (postuser.username === postcomments[l].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[l].user.username %><% if (postuser.username === postcomments[l].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[l].date %>:</font>
                                             <% if (isAuthenticated()) { %>
-                                                <% if (user.username === postcomments[l].user.username || user.username === "alli") { %>
+                                                <% if (user.username === postcomments[l].user.username || user.level === "admin") { %>
                                                     <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[l].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                 <% } %>
                                             <% } %>
@@ -96,7 +96,7 @@ function confirm_alert(node) {
                                             <br><div style="padding-left:20%">
                                             <img class="profilephotocomment" src="<%= postcomments[m].user.profilephoto %>">&nbsp;<b><a href="/profile/<%= postcomments[m].user.username %>"><% if (postuser.username === postcomments[m].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[m].user.username %><% if (postuser.username === postcomments[m].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[m].date %>:</font>
                                             <% if (isAuthenticated()) { %>
-                                                <% if (user.username === postcomments[m].user.username || user.username === "alli") { %>
+                                                <% if (user.username === postcomments[m].user.username || user.level === "admin") { %>
                                                     <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[m].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                 <% } %>
                                             <% } %>
@@ -112,7 +112,7 @@ function confirm_alert(node) {
                                                 <br><div class="replycomment" style="margin-left:24%"><div style="padding-left:1%"><br>
                                                     <img class="profilephotocomment" src="<%= postcomments[n].user.profilephoto %>">&nbsp;<b><a href="/profile/<%= postcomments[n].user.username %>"><% if (postuser.username === postcomments[n].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[n].user.username %><% if (postuser.username === postcomments[n].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[n].date %>:</font>
                                                     <% if (isAuthenticated()) { %>
-                                                        <% if (user.username === postcomments[n].user.username || user.username === "alli") { %>
+                                                        <% if (user.username === postcomments[n].user.username || user.level === "admin") { %>
                                                             <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[n].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                         <% } %>
                                                     <% } %>
@@ -128,7 +128,7 @@ function confirm_alert(node) {
                                                     <br><div style="padding-left:30%">
                                                     <img class="profilephotocomment" src="<%= postcomments[o].user.profilephoto %>">&nbsp;<b><a href="/profile/<%= postcomments[o].user.username %>"><% if (postuser.username === postcomments[o].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[o].user.username %><% if (postuser.username === postcomments[o].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[o].date %>:</font>
                                                     <% if (isAuthenticated()) { %>
-                                                        <% if (user.username === postcomments[o].user.username || user.username === "alli") { %>
+                                                        <% if (user.username === postcomments[o].user.username || user.level === "admin") { %>
                                                             <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[o].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                         <% } %>
                                                     <% } %>
@@ -144,7 +144,7 @@ function confirm_alert(node) {
                                                         <br><div class="replycomment" style="margin-left:34%"><div style="padding-left:1%"><br>
                                                             <img class="profilephotocomment" src="<%= postcomments[p].user.profilephoto %>">&nbsp;<b><a href="/profile/<%= postcomments[p].user.username %>"><% if (postuser.username === postcomments[p].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[p].user.username %><% if (postuser.username === postcomments[p].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[p].date %>:</font>
                                                             <% if (isAuthenticated()) { %>
-                                                                <% if (user.username === postcomments[p].user.username || user.username === "alli") { %>
+                                                                <% if (user.username === postcomments[p].user.username || user.level === "admin") { %>
                                                                     <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[p].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                                 <% } %>
                                                             <% } %>
@@ -160,7 +160,7 @@ function confirm_alert(node) {
                                                             <br><div style="padding-left:30%">
                                                             <img class="profilephotocomment" src="<%= postcomments[q].user.profilephoto %>">&nbsp;<b><a href="/profile/<%= postcomments[q].user.username %>"><% if (postuser.username === postcomments[q].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[q].user.username %><% if (postuser.username === postcomments[q].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[q].date %>:</font>
                                                             <% if (isAuthenticated()) { %>
-                                                                <% if (user.username === postcomments[q].user.username || user.username === "alli") { %>
+                                                                <% if (user.username === postcomments[q].user.username || user.level === "admin") { %>
                                                                     <a href="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[q].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                                 <% } %>
                                                             <% } %>

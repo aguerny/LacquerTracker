@@ -56,8 +56,8 @@
                 Dupes:<br><textarea name="dupes" cols="60" rows="10"></textarea><br><br><br><br>
                 <input type="submit" value="Submit" class="button">
     		</form>
-            <% if (message) { %>
-                <br><h4><%= message %></h4>
+            <% if (typeof message !== "undefined") { %>
+                <br><br><b><%= message %></b>
             <% } %>
     	</section>
     </div>

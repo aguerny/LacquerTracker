@@ -1,5 +1,5 @@
 <% include layoutTop %>
- 
+
 <script type="text/javascript">
     var RecaptchaOptions = {
     theme : 'clean'
@@ -13,10 +13,10 @@
     <section>
         <div id="contact-wrap">
             <div id="contact-left_col">
-                <h4>Let us know you care!</h4>  
+                <h4>Let us know you care!</h4>
                 <p>This site is still in beta and growing everyday.<br><br>Feedback or comments are much appreciated.</p><br>
                 <img id="polish-image2" src="/images/polishheart.jpg"/>
-            </div>  
+            </div>
             <div id="contact-right_col">
                 <form action="/contact" method="post" enctype="multipart/form-data">
                     Name:<br><input type="text" name="name" style="display:block; width:95%;" <%if (typeof inputname !== "undefined") {%>value="<%=inputname%>" <%}%> required><br><br>
@@ -32,13 +32,13 @@
                     </div><br><br>
                     <input type="submit" class="button" value="Submit Feedback"/>
                 </form>
-            <% if (message.length > 0) { %>
-                <br><br><h4><%= message %></h4><br><br>
-            <% } %>  
+            <% if (typeof message !== "undefined") { %>
+                <br><br><br><b><%= message %></b>
+            <% } %>
             </div>
         </div>
     </section>
     </div>
 </div>
-  
+
 <% include layoutBottom %>

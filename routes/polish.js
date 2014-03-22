@@ -1,9 +1,7 @@
-var mongoose = require('mongoose');
 var Polish = require('../app/models/polish');
 var User = require('../app/models/user');
 var Review = require('../app/models/review');
 var Photo = require('../app/models/photo');
-var UserPhoto = require('../app/models/userphoto');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
 var _ = require('lodash');
@@ -129,15 +127,14 @@ app.get('/removewant/:id', isLoggedIn, function(req, res) {
 
 //add polish
 app.get('/polishadd', isLoggedIn, function(req, res) {
-    res.render('polishadd.ejs', {title: 'Add a Polish - Lacquer Tracker', message : req.flash('addPolishMessage')});
+    res.render('polishadd.ejs', {title: 'Add a Polish - Lacquer Tracker'});
 });
 
 app.post('/polishadd', isLoggedIn, function(req, res) {
     Polish.findOne({ name : req.body.name, brand : req.body.brand}, function(err, polish) {
         //check to see if there's already a polish name and brand in the database
         if (polish) {
-            req.flash('addPolishMessage', 'That polish already exists in the database.')
-            res.render('polishadd.ejs', {title: 'Add a Polish - Lacquer Tracker', message : req.flash('addPolishMessage')});
+            res.render('polishadd.ejs', {title: 'Add a Polish - Lacquer Tracker', message: 'That polish already exists in the database.'});
         } else {
             var newPolish = new Polish ({
                 name: sanitizer.sanitize((req.body.name).replace(/[?]/g,"")),
@@ -171,7 +168,6 @@ app.get('/polishedit/:id', isLoggedIn, function(req, res) {
         } else {
             var data = {};
                 data.title = 'Edit a Polish - Lacquer Tracker';
-                data.message = req.flash('editPolishMessage');
                 data.editid = p.id;
                 data.editname = p.name;
                 data.editbrand = p.brand;

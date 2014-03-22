@@ -5,14 +5,7 @@ var http = require('http');
 var path = require('path');
 var mongoose = require('mongoose');
 var passport = require('passport');
-var fs = require('fs');
-var nodemailer = require('nodemailer');
-var sanitizer = require('sanitizer');
-var markdown = require('markdown-css');
-var _ = require('lodash');
-var simple_recaptcha = require('simple-recaptcha');
-var bycrypt = require("bcrypt-nodejs");
-device  = require('express-device');
+var device  = require('express-device');
 
 var app = express();
 

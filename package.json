@@ -12,15 +12,14 @@
     "mongoose": "*",
     "passport": "*",
     "passport-local": "*",
-    "bcrypt-nodejs": "*",
     "connect-flash": "*",
     "nodemailer": "*",
     "sanitizer": "*",
     "markdown-css": "*",
+    "marked": "*",
     "lodash": "*",
     "simple-recaptcha": "*",
     "bcrypt-nodejs": "*",
-    "marked": "*",
     "express-device": "*"
   }
 }

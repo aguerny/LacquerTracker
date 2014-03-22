@@ -1,4 +1,3 @@
-var mongoose = require('mongoose');
 var Polish = require('../app/models/polish');
 var User = require('../app/models/user');
 var _ = require('lodash');
@@ -78,7 +77,7 @@ app.post('/browse', function(req, res) {
         } else if (typeof req.body.nextpage !== "undefined") {
             var page = parseInt(req.body.page) + 1;
             data.page = page;
-        
+
         } else if (typeof req.body.prevpage !== "undefined") {
             var page = parseInt(req.body.page) - 1;
             data.page = page;

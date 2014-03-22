@@ -1,6 +1,4 @@
-var mongoose = require('mongoose');
 var User = require('../app/models/user');
-var UserPhoto = require('../app/models/userphoto');
 var ForumPost = require('../app/models/forumpost');
 var ForumComment = require('../app/models/forumcomment');
 var sanitizer = require('sanitizer');
@@ -129,14 +127,14 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
             date: dateformatted,
         })
         newForumComment.save(function(err) {
-            if (req.user.username !== post.user.username) {
+            if (req.user.username !== post.user.username && post.user.notifications === "on") {
                 //mail notification
                 var mailOpts, smtpConfig;
                 smtpConfig = nodemailer.createTransport('SMTP', {
                     service: 'Gmail',
                     auth: {
                         user: "lacquertrackermailer@gmail.com",
-                        pass: "testpassword"
+                        pass: "testpassword123"
                     }
                 });
 
@@ -145,8 +143,8 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
                     from: "noreply@lacquertracker.com",
                     to: post.user.email,
                     //replace it with id you want to send multiple must be separated by ,(comma)
-                    subject: 'New comment on your post',
-                    text: "Hey " + post.user.username + ",\n\n\n" + req.user.username + " just replied to your forum post " + post.title + "\n\nCome check it out here: http://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nThanks,\nLacquer Tracker",
+                    subject: 'New reply to your post',
+                    text: "Hey " + post.user.username + ",\n\n" + req.user.username + " just replied to your forum post: " + post.title + "\n\nCome check it out here: http://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nThanks,\nLacquer Tracker",
                 };
 
                 //send Email

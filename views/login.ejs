@@ -9,11 +9,11 @@
     			Username: <input type="text" name="username" size="40%"><br><br>
     			Password: <input type="password" name="password" size="40%"><br><br><br>
     			<input type="submit" value="Submit" class="button" id="login-button">
-    		</form><br>
-    		<% if (message.length > 0) { %>
-    			<b><%= message %></b>
-    		<% } %>
-            <b><a href="/passwordreset">Forgot your password?</a></b>
+    		</form>
+            <a href="/passwordreset">Forgot your password?</a>
+            <% if (message.length > 0) { %>
+                <br><br><br><b><%= message %></b>
+            <% } %>
     	</section>
     </div>
 </div>

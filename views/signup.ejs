@@ -11,9 +11,9 @@
     <div id="container" class="clear">
     <section>
         <form action="/signup" method="post">
-            <h3>Fill out the information below to get started.</h3><br>
-            E-mail address: <input type="email" name="email" style="display:inline-block; width:40%;" required value=<%=email%>><br><br>
-            Username: <input type="text" name="username" style="display:inline-block; width:40%;" required value=<%=username%>><br><br>
+            <h3>Fill out the information below to get started.</h3><br><br>
+            E-mail address: <input type="email" name="email" style="display:inline-block; width:40%;" required value="<%=email%>" placeholder="A validation message will be sent to this address."><br><br>
+            Username: <input type="text" name="username" style="display:inline-block; width:40%;" required value="<%=username%>"><br><br>
             Password: <input type="password" name="password" style="display:inline-block; width:40%;" required><br><br>
             Confirm Password: <input type="password" style="display:inline-block; width:40%;" name="confirm" required><br><br><br>
             <div id="recaptchasignup">
@@ -27,7 +27,7 @@
                 </div><br><br><br>
             <input type="submit" value="Submit" class="button" id="login-button">
         </form>
-        <% if (message.length > 0) { %>
+        <% if (typeof message !== "undefined") { %>
             <br><b><%= message %></b>
         <% } %>
     </section>

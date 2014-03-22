@@ -4,11 +4,11 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
-      <form method="post" action="/passwordreset">
-        <h3>Reset Password</h3><br><br>
+      <form method="post" action="/revalidate">
+        <h3>Re-send Validation E-mail</h3><br><br>
         Please enter your username. An e-mail will be sent to the address associated with your account:<br><br>
         <input type="text" name="username" size="50"><br><br>
-        <input type="submit" value="Submit" class="button" id="login-button"></form>
+        <input type="submit" value="Submit" class="button"></form>
         <% if (typeof message !== "undefined") { %>
             <br><b><%= message %></b>
         <% } %>

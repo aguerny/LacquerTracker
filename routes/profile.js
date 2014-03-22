@@ -1,4 +1,3 @@
-var mongoose = require('mongoose');
 var Polish = require('../app/models/polish');
 var User = require('../app/models/user');
 var Review = require('../app/models/review');
@@ -67,6 +66,7 @@ app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
             data.about = user.about;
             yesphotos = [];
             nophotos = [];
+            data.notifications = user.notifications;
             for (i=0; i < user.photos.length; i++) {
                 if (user.photos[i].onprofile === "yes") {
                     yesphotos.push(user.photos[i]);
@@ -91,6 +91,7 @@ app.post('/profile/:username/edit', isLoggedIn, function(req, res) {
         } else {
             user.email = sanitizer.sanitize(req.body.email);
             user.about = sanitizer.sanitize(req.body.about);
+            user.notifications = req.body.notifications;
             user.save(function(err) {
                 res.redirect('/profile/' + req.user.username);
             });

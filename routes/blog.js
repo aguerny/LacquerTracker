@@ -1,6 +1,4 @@
-var mongoose = require('mongoose');
 var User = require('../app/models/user');
-var UserPhoto = require('../app/models/userphoto');
 var Blog = require('../app/models/blog');
 var BlogComment = require('../app/models/blogcomment');
 var sanitizer = require('sanitizer');
@@ -30,7 +28,7 @@ app.get('/blog', function(req, res) {
 
 //add blog entry
 app.get('/blog/add', isLoggedIn, function(req, res) {
-    if (req.user.username === "t" || req.user.username === "alli") {
+    if (req.user.level === "admin") {
         res.render('blogadd.ejs', {title: 'Add a Blog Entry - Lacquer Tracker'});
     } else {
         res.redirect('/error');
@@ -127,14 +125,14 @@ app.post('/blog/:title/:id/add', isLoggedIn, function(req, res) {
         })
         newBlogComment.save(function(err) {
 
-            if (req.user.username !== blog.user.username) {
+            if (req.user.username !== blog.user.username && blog.user.notifications === "on") {
                 //mail notification
                 var mailOpts, smtpConfig;
                 smtpConfig = nodemailer.createTransport('SMTP', {
                     service: 'Gmail',
                     auth: {
                         user: "lacquertrackermailer@gmail.com",
-                        pass: "testpassword"
+                        pass: "testpassword123"
                     }
                 });
 
@@ -143,8 +141,8 @@ app.post('/blog/:title/:id/add', isLoggedIn, function(req, res) {
                     from: "noreply@lacquertracker.com",
                     to: blog.user.email,
                     //replace it with id you want to send multiple must be separated by ,(comma)
-                    subject: 'New comment on your post',
-                    text: "Hey " + blog.user.username + ",\n\n\n" + req.user.username + " just replied to your blog post " + blog.title + ".\n\nCome check it out here: http://www.lacquertracker.com/blog/" + blog.title.replace(/ /g,"_") + "\n\n\nThanks,\nLacquer Tracker",
+                    subject: 'New reply to your blog post',
+                    text: "Hey " + blog.user.username + ",\n\n" + req.user.username + " just replied to your blog post: " + blog.title + "\n\nCome check it out here: http://www.lacquertracker.com/blog/" + blog.title.replace(/ /g,"_") + "\n\n\nThanks,\nLacquer Tracker",
                 };
 
                 //send Email

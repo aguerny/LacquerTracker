@@ -1,4 +1,3 @@
-var mongoose = require('mongoose');
 var Polish = require('../app/models/polish');
 var User = require('../app/models/user');
 var Review = require('../app/models/review');
