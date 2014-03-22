@@ -54,7 +54,7 @@ input, textarea, select{font-size:12px; font-family:Georgia,"Times New Roman",Ti
 
 #header{padding:20px 0;}
 
-#header h1{float:left; margin:7px 0 20px 0; color:black;}
+#header h1{float:left; margin:7px 0 20px 3%; color:black;}
 
 #header nav{display:block; width:100%; margin:0; padding:20px 0; color:#C0BAB6; background-color:#232323; clear:both;}
 #header nav ul{padding:0 20px;}
@@ -63,7 +63,7 @@ input, textarea, select{font-size:12px; font-family:Georgia,"Times New Roman",Ti
 #header nav li a{color:#C0BAB6; background-color:#232323;}
 #header nav li a:hover{color:#10695A; background-color:#232323;}
 
-#logininfo {text-align: right; padding-top: 1.5%; color:#000000;}
+#logininfo {text-align: right; padding-top: 1.5%; padding-right: 3%; color:#000000;}
 #logininfo a{color:#10695A;}
 
 
@@ -128,7 +128,7 @@ table.sortable thead {
     max-width: 100%;
 }
 
-.forumtable {width: 70%;}
+.forumtable {width: 100%;}
 
 .forumtable th {color: #000000;}
 

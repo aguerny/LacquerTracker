@@ -70,16 +70,19 @@ $(function() {
             <br><br><hr><br><br>
         <% } else {%>
         [<i><a href="/review/edit/<%= pid %>">Add a review or personal notes for this polish.</a></i>]
-            <br><br><br><hr><br><br>
         <% } %>
-        <h5>All User Reviews:</h5><br>
-        <% for (i=0; i<allreviews.length; i++) {%>
-            <% if (allreviews[i].userreview.length > 0) { %>
-                <span class="stars"><%= allreviews[i].rating %></span> - <%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+        <% if (allreviews.length > 0) { %>
+            <br><br><br><hr><br><br>
+            <h5>All User Reviews:</h5><br>
+            <% for (i=0; i<allreviews.length; i++) {%>
+                <% if (allreviews[i].userreview.length > 0) { %>
+                    <span class="stars"><%= allreviews[i].rating %></span> - <%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+                <% } %>
             <% } %>
-        <% } %><br><br><br><br>
-        <h5>User-Submitted Dupes:</h5>
+        <% } %>
         <% if (pdupes.length > 0) { %>
+            <br><br><br><br>
+            <h5>User-Submitted Dupes:</h5>
             <p style="white-space: pre;"><%- pdupes %></p><br><br>
         <% } %>
         </section>

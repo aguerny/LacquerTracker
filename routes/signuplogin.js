@@ -66,7 +66,7 @@ app.post('/passwordreset', function(req, res) {
                         service: 'Gmail',
                         auth: {
                             user: "lacquertrackermailer@gmail.com",
-                            pass: "testpassword123"
+                            pass: "testpassword"
                         }
                     });
 

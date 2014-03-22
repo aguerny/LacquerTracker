@@ -5,7 +5,7 @@ var ForumPost = require('../app/models/forumpost');
 var ForumComment = require('../app/models/forumcomment');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
-
+var nodemailer = require('nodemailer');
 
 
 module.exports = function(app, passport) {
@@ -105,7 +105,7 @@ app.get('/forums/:forum/:id', function(req, res) {
 });
 
 app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
-    ForumPost.findById(req.params.id, function (err, post){
+    ForumPost.findById(req.params.id).populate('user').exec(function (err, post){
         var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
         var d = new Date();
         var curr_date = d.getDate();
@@ -129,6 +129,33 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
             date: dateformatted,
         })
         newForumComment.save(function(err) {
+            if (req.user.username !== post.user.username) {
+                //mail notification
+                var mailOpts, smtpConfig;
+                smtpConfig = nodemailer.createTransport('SMTP', {
+                    service: 'Gmail',
+                    auth: {
+                        user: "lacquertrackermailer@gmail.com",
+                        pass: "testpassword"
+                    }
+                });
+
+                //construct the email sending module
+                mailOpts = {
+                    from: "noreply@lacquertracker.com",
+                    to: post.user.email,
+                    //replace it with id you want to send multiple must be separated by ,(comma)
+                    subject: 'New comment on your post',
+                    text: "Hey " + post.user.username + ",\n\n\n" + req.user.username + " just replied to your forum post " + post.title + "\n\nCome check it out here: http://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nThanks,\nLacquer Tracker",
+                };
+
+                //send Email
+                smtpConfig.sendMail(mailOpts, function(err, result) {
+                    if (err) {throw err};
+                    console.log(result);
+                });
+            }
+
             post.dateupdated = dateformatted;
             post.comments.push(newForumComment.id);
             ForumComment.findById(req.params.cid, function(err, parent) {

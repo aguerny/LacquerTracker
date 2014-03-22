@@ -5,6 +5,7 @@ var Blog = require('../app/models/blog');
 var BlogComment = require('../app/models/blogcomment');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
+var nodemailer = require('nodemailer');
 
 
 module.exports = function(app, passport) {
@@ -101,7 +102,7 @@ app.get('/blog/:title/add', isLoggedIn, function(req, res) {
 
 app.post('/blog/:title/:id/add', isLoggedIn, function(req, res) {
     var thistitle = req.params.title.replace(/_/g," ")
-    Blog.findOne({title: thistitle}, function (err, blog){
+    Blog.findOne({title: thistitle}).populate('user').exec(function (err, blog){
         var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
         var d = new Date();
         var curr_date = d.getDate();
@@ -125,6 +126,34 @@ app.post('/blog/:title/:id/add', isLoggedIn, function(req, res) {
             date: dateformatted,
         })
         newBlogComment.save(function(err) {
+
+            if (req.user.username !== blog.user.username) {
+                //mail notification
+                var mailOpts, smtpConfig;
+                smtpConfig = nodemailer.createTransport('SMTP', {
+                    service: 'Gmail',
+                    auth: {
+                        user: "lacquertrackermailer@gmail.com",
+                        pass: "testpassword"
+                    }
+                });
+
+                //construct the email sending module
+                mailOpts = {
+                    from: "noreply@lacquertracker.com",
+                    to: blog.user.email,
+                    //replace it with id you want to send multiple must be separated by ,(comma)
+                    subject: 'New comment on your post',
+                    text: "Hey " + blog.user.username + ",\n\n\n" + req.user.username + " just replied to your blog post " + blog.title + ".\n\nCome check it out here: http://www.lacquertracker.com/blog/" + blog.title.replace(/ /g,"_") + "\n\n\nThanks,\nLacquer Tracker",
+                };
+
+                //send Email
+                smtpConfig.sendMail(mailOpts, function(err, result) {
+                    if (err) {throw err};
+                    console.log(result);
+                });
+            }
+
             blog.comments.push(newBlogComment.id);
             BlogComment.findById(req.params.id, function(err, parent) {
                 if (parent) {

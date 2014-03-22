@@ -46,10 +46,18 @@
     </header>
 </div>
 
-<script type="text/javascript" >
-   $(document).ready(function() {
-      $(".markItUp").markItUp(mySettings).css({
-        width:100%;
-      });
-   });
-</script>
+<% if (is_tablet) { %>
+    <script type="text/javascript" >
+        $(document).ready(function() {
+            $(".markItUp").markItUp(mySettings).css({
+            width:98%;
+        });
+        });
+    </script>
+    <% } else { %>
+        <script type="text/javascript" >
+            $(document).ready(function() {
+                $(".markItUp").markItUp(mySettings);
+            });
+        </script>
+    <% } %>

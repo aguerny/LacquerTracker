@@ -69,10 +69,10 @@ module.exports = function(passport) {
 		    					var response = req.body.recaptcha_response_field;
 
 		    					simple_recaptcha(privateKey, ip, challenge, response, function(err) {
-		        					
+
 		        					if (err) {
 		            					return done(null, false, req.flash('signupMessage', 'Captcha wrong. Try again.'));
-		        					
+
 		        					} else {
 
 										//if there is no user with that username
@@ -100,7 +100,7 @@ module.exports = function(passport) {
 							                service: 'Gmail',
 							                auth: {
 							                    user: "lacquertrackermailer@gmail.com",
-							                    pass: "testpassword123"
+							                    pass: "testpassword"
 							                }
 							            });
 
