@@ -61,7 +61,7 @@ app.post('/signup', function(req, res) {
                                             service: 'Gmail',
                                             auth: {
                                                 user: "lacquertrackermailer@gmail.com",
-                                                pass: "testpassword123"
+                                                pass: "testpassword123!"
                                             }
                                         });
 
@@ -140,7 +140,7 @@ app.post('/revalidate', function(req, res) {
                         service: 'Gmail',
                         auth: {
                             user: "lacquertrackermailer@gmail.com",
-                            pass: "testpassword123"
+                            pass: "testpassword123!"
                         }
                     });
 
@@ -219,7 +219,7 @@ app.post('/passwordreset', function(req, res) {
                         service: 'Gmail',
                         auth: {
                             user: "lacquertrackermailer@gmail.com",
-                            pass: "testpassword123"
+                            pass: "testpassword123!"
                         }
                     });
 

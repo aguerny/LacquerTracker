@@ -47,7 +47,12 @@ $(window).load(function () {
                 <td><%= opolishes[i].batch %></td>
                 <td><%= opolishes[i].colorcat %></td>
                 <td><div id='swatch' style='background-color:<%= opolishes[i].colorhex %>;'>&nbsp;</div></td>
-                <td><%= opolishes[i].type %></td></tr>
+                <td>
+                    <% if (opolishes[i].type === "colorchange") {%>color changing
+                    <%} else if (opolishes[i].type === "topbase") {%>top/base coat
+                    <%} else if (opolishes[i].type === "glow") {%>glow in the dark
+                    <%} else {%><%= opolishes[i].type %><%}%>
+                </td>
             <% } %>
             </table>
         <% } %>
@@ -68,7 +73,12 @@ $(window).load(function () {
                     <td><%= wpolishes[i].batch %></td>
                     <td><%= wpolishes[i].colorcat %></td>
                     <td><div id='swatch' style='background-color:<%= wpolishes[i].colorhex %>;'>&nbsp;</div></td>
-                    <td><%= wpolishes[i].type %></td></tr>
+                    <td>
+                        <% if (wpolishes[i].type === "colorchange") {%>color changing
+                        <%} else if (wpolishes[i].type === "topbase") {%>top/base coat
+                        <%} else if (wpolishes[i].type === "glow") {%>glow in the dark
+                        <%} else {%><%= wpolishes[i].type %><%}%>
+                    </td>
                 <% } %>
                 </table>
         <% } %>

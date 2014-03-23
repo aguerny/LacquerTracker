@@ -31,7 +31,11 @@ $(function() {
                 <b>Code:</b> <%= pcode %><br><br>
                 <b>Collection:</b> <%= pbatch %><br><br>
                 <b>Color:</b> <%= pcolorcat %><br><br>
-                <b>Type:</b> <%= ptype %><br><br>
+                <b>Type:</b>
+                    <% if (ptype === "colorchange") {%>color changing
+                    <%} else if (ptype === "topbase") {%>top/base coat
+                    <%} else if (ptype === "glow") {%>glow in the dark
+                    <%} else {%><%= ptype %><%}%>
                 <br><br><br><br>
                 <a target="_blank" href="http://www.amazon.com/s/?_encoding=UTF8&camp=1789&creative=390957&linkCode=ur2&pageMinusResults=1&suo=1393008765386&tag=lacqutrack-20&url=search-alias%3Daps#/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=<%= linkbrand %>%20<%= linkname %>&sepatfbtf=true&tc=1393008769421">View on Amazon</a><img src="https://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
             </div>
@@ -67,23 +71,24 @@ $(function() {
             <h5>Your Review:</h5><br><%= userreview %><br><br><br><br>
             <h5>Your Notes:</h5><br><%= notes %><br><br><br><br>
             [<i><a href="/review/edit/<%= pid %>">Edit your review</a></i>]
-            <br><br><hr><br><br>
         <% } else {%>
         [<i><a href="/review/edit/<%= pid %>">Add a review or personal notes for this polish.</a></i>]
         <% } %>
-        <% if (allreviews.length > 0) { %>
-            <br><br><br><hr><br><br>
-            <h5>All User Reviews:</h5><br>
-            <% for (i=0; i<allreviews.length; i++) {%>
-                <% if (allreviews[i].userreview.length > 0) { %>
-                    <span class="stars"><%= allreviews[i].rating %></span> - <%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+        <% if (allreviews.length > 0 || pdupes.length > 0) { %>
+        <br><br><hr><br><br>
+            <% if (allreviews.length > 0) { %>
+                <h5>All User Reviews:</h5><br>
+                <% for (i=0; i<allreviews.length; i++) {%>
+                    <% if (allreviews[i].userreview.length > 0) { %>
+                        <span class="stars"><%= allreviews[i].rating %></span> - <%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+                    <% } %>
                 <% } %>
-            <% } %>
-        <% } %>
-        <% if (pdupes.length > 0) { %>
             <br><br><br><br>
-            <h5>User-Submitted Dupes:</h5>
-            <p style="white-space: pre;"><%- pdupes %></p><br><br>
+            <% } %>
+            <% if (pdupes.length > 0) { %>
+                <h5>User-Submitted Dupes:</h5>
+                <p style="white-space: pre;"><%- pdupes %></p><br><br>
+            <% } %>
         <% } %>
         </section>
     </div>
