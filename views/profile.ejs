@@ -7,17 +7,24 @@ $(window).load(function () {
         'allowPartialLastRow' : true,
     });
 });
+
+
+$.fn.stars = function() {
+    return $(this).each(function() {
+        $(this).html($('<span />').width(Math.max(0, (Math.min(5, parseFloat($(this).html())))) * 16));
+    });
+}
+
+$(function() {
+    $('span.stars').stars();
+});
 </script>
 
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
-		<% if (message) { %>
-        	<h4><%= message %></h4>
-    	<% } %>
-
-        <% if (profilephoto) { %>
+		<% if (profilephoto) { %>
             <img class="profilephoto" src="<%= profilephoto %>">
         <% } %>
 
@@ -26,6 +33,8 @@ $(window).load(function () {
             <% if (isAuthenticated()) { %>
                 <% if (user.username === username) { %>
                     - <a href="/profile/<%= username %>/edit">Edit your profile</a>
+                <% } else if (useremail === "on") {%>
+                    - <a href="/email/<%= username %>">Send a message</a>
                 <% } %>
             <% } %>
             <br><br><p style="white-space: pre; padding-left: 3em"><%- about %></p><br><br><br>
@@ -35,12 +44,13 @@ $(window).load(function () {
             <br><br><h4><%= username %>'s Owned Polishes (<%= opolishes.length %>):</h4><br>
             <table id="ownedpolish" class="sortable">
             <col width="22%">
-            <col width="22%">
             <col width="20%">
-            <col width="12%">
-            <col width="12%">
-            <col width="12%">
-                <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Swatch</th><th>Type</th></tr>
+            <col width="18%">
+            <col width="10%">
+            <col width="10%">
+            <col width="10%">
+            <col width="10%">
+                <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Swatch</th><th>Type</th><th>Rating</th></tr>
             <% for(var i=0; i<opolishes.length; i++) {%>
                 <tr><td><a id='tablelink' href='/polish/<%= opolishes[i].brand.replace(/ /g,"_") %>/<%= opolishes[i].name.replace(/ /g,"_") %>'><%= opolishes[i].name %></a></td>
                 <td><%= opolishes[i].brand %></td>
@@ -53,6 +63,10 @@ $(window).load(function () {
                     <%} else if (opolishes[i].type === "glow") {%>glow in the dark
                     <%} else {%><%= opolishes[i].type %><%}%>
                 </td>
+                <td><% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
+                        <span style="display:none"><%= oreviews[i].rating %></span><span class="stars"><%= oreviews[i].rating %></span>
+                    <% } %>
+                </td></tr>
             <% } %>
             </table>
         <% } %>

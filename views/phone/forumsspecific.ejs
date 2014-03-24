@@ -19,10 +19,6 @@
             <% if (forumcat === "offtopic") { %>
                 Off Topic Discussion</h3><br>Anything goes here!<%}%><br><br><a href="/forums/<%= forumcat %>/add">Add a post</a><br><br><br><br>
         <table class="forumtable">
-            <col width="30%">
-            <col width="15%">
-            <col width="15%">
-            <col width="30%">
             <tr><th>Title</th><th>Creator</th><th>Comments</th><th>Updated</th></tr>
             <% for (i=0; i<forumposts.length; i++) { %>
                 <tr><td><a href="/forums/<%= forumcat %>/<%= forumposts[i].id %>"><%= forumposts[i].title %></a></td>

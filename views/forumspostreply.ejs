@@ -14,8 +14,9 @@
                     <% } %>
                 <b><a href="/profile/<%= comment.user.username %>"><% if (postuser.username === comment.user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= comment.user.username %><% if (postuser.username === comment.user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= comment.date %>:</font>
                     <br>
-                    <p style="white-space: pre; padding-left: 3em"><%- comment.message %></p>
-            <br><hr><br><br>
+                    <div style="padding-left:3%">
+                    <p style="white-space: pre;"><%- comment.message %></p>
+                </div><br><hr><br><br>
             <% if (isAuthenticated()) { %>
                 <b><a name="addcomment"><font color="#000000">Add a Comment:</font></b><br><br>
                 <a href="/photo/upload">Upload a photo?</a><br><br>

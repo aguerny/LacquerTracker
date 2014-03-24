@@ -32,6 +32,8 @@ app.get('/profile/:username', function(req, res) {
             data.username = user.username;
             data.about = sanitizer.sanitize(markdown(user.about));
             data.profilephoto = user.profilephoto;
+            data.notifications = user.notifications;
+            data.useremail = user.useremail;
             yesphotos = [];
             for (i=0; i < user.photos.length; i++) {
                 if (user.photos[i].onprofile === "yes") {
@@ -39,7 +41,16 @@ app.get('/profile/:username', function(req, res) {
                 }
             }
             data.photos = _.shuffle(yesphotos);
-            res.render('profile.ejs', data);
+            var oreviews = [];
+            Review.find({user:user.id}, function(err, reviews) {
+                for (i=0; i<reviews.length; i++) {
+                    var thisindex = _.findIndex(user.ownedpolish, {'id':reviews[i].polishid});
+                    oreviews[thisindex] = reviews[i];
+                }
+                data.oreviews = oreviews;
+                console.log(oreviews);
+                res.render('profile.ejs', data);
+            })
         }
     });
 });
@@ -67,6 +78,7 @@ app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
             yesphotos = [];
             nophotos = [];
             data.notifications = user.notifications;
+            data.useremail = user.useremail;
             for (i=0; i < user.photos.length; i++) {
                 if (user.photos[i].onprofile === "yes") {
                     yesphotos.push(user.photos[i]);
@@ -91,7 +103,16 @@ app.post('/profile/:username/edit', isLoggedIn, function(req, res) {
         } else {
             user.email = sanitizer.sanitize(req.body.email);
             user.about = sanitizer.sanitize(req.body.about);
-            user.notifications = req.body.notifications;
+            if (req.body.notifications) {
+                user.notifications = req.body.notifications;
+            } else {
+                user.notifications = "off";
+            }
+            if (req.body.useremail) {
+                user.useremail = req.body.useremail;
+            } else {
+                user.useremail = "off";
+            }
             user.save(function(err) {
                 res.redirect('/profile/' + req.user.username);
             });

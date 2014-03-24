@@ -40,24 +40,14 @@
             <li><a href="/profile">Profile</a></li>
             <li><a href="/forums">Forums</a></li>
             <li><a href="/blog">Blog</a></li>
-            <li class="last"><a href="/contact">Contact</a></li>
+            <li><a href="/contact">Contact</a></li>
         </ul>
     </nav>
     </header>
 </div>
 
-<% if (is_tablet) { %>
-    <script type="text/javascript" >
-        $(document).ready(function() {
-            $(".markItUp").markItUp(mySettings).css({
-            width:98%;
-        });
-        });
-    </script>
-    <% } else { %>
-        <script type="text/javascript" >
-            $(document).ready(function() {
-                $(".markItUp").markItUp(mySettings);
-            });
-        </script>
-    <% } %>
+<script type="text/javascript" >
+    $(document).ready(function() {
+        $(".markItUp").markItUp(mySettings);
+    });
+</script>

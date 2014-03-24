@@ -134,7 +134,7 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
                     service: 'Gmail',
                     auth: {
                         user: "lacquertrackermailer@gmail.com",
-                        pass: "testpassword123!"
+                        pass: "testpassword123"
                     }
                 });
 

@@ -67,10 +67,10 @@ $(function() {
         <section>
         <hr><br><br>
         <% if (userreview.length > 0 || notes.length > 0 || rating.length > 0) { %>
+            [<i><a href="/review/edit/<%= pid %>">Edit your review</a></i>]<br><br><br><br>
             <h5>Your Rating:</h5><br><span class="stars"><%= rating %></span><br><br><br><br>
             <h5>Your Review:</h5><br><%= userreview %><br><br><br><br>
-            <h5>Your Notes:</h5><br><%= notes %><br><br><br><br>
-            [<i><a href="/review/edit/<%= pid %>">Edit your review</a></i>]
+            <h5>Your Notes:</h5><br><%= notes %>
         <% } else {%>
         [<i><a href="/review/edit/<%= pid %>">Add a review or personal notes for this polish.</a></i>]
         <% } %>
@@ -83,7 +83,7 @@ $(function() {
                         <span class="stars"><%= allreviews[i].rating %></span> - <%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
                     <% } %>
                 <% } %>
-            <br><br><br><br>
+            <br><br>
             <% } %>
             <% if (pdupes.length > 0) { %>
                 <h5>User-Submitted Dupes:</h5>

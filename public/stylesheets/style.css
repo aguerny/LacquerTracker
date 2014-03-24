@@ -174,9 +174,10 @@ span.stars span {
 
 .small {font-size: 11px;}
 
-#recaptchacontact {width: 95%;}
 
-#recaptchasignup {width: 70%;}
+#recaptcha_image img {
+    max-width:100%;
+}
 
 .replycomment {background-color: #D8D8D8;}
 

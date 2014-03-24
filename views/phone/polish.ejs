@@ -25,7 +25,7 @@ $(function() {
             <% } else { %>
                 <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a>
             <% } %>
-            <br><div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br><br>
+            <br><br><br><div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br>
             <b>Code:</b> <%= pcode %><br><br>
             <b>Collection:</b> <%= pbatch %><br><br>
             <b>Color:</b> <%= pcolorcat %><br><br>
@@ -37,13 +37,13 @@ $(function() {
                 <!-- prev/next links -->
                     <div style="text-align:center">
                     <span>(<%= numphotos %>)</span>
-                    <span><a href="/photo/add/<%= pid %>">Add Photo</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                    <span><a href="/photo/add/<%= pid %>">Add</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
                     <script>var j = 0</script>
                     <% if (numphotos > 0) { %>
-                        <span><a href="/photo/remove/<%= pid %>">Remove Photo</a></span>
+                        <span><a href="/photo/remove/<%= pid %>">Remove</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
                     <% } %>
-                    <br><span id="prev"><a href="#">Prev Photo</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
-                    <span id="next"><a href="#">Next Photo</a></span>
+                    <span id="prev"><a href="#">Prev</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                    <span id="next"><a href="#">Next</a></span>
             </div>
             <br>
                 <!-- slideshow -->
@@ -58,24 +58,28 @@ $(function() {
         <section>
         <hr><br>
         <% if (userreview.length > 0 || notes.length > 0 || rating.length > 0) { %>
+            [<i><a href="/review/edit/<%= pid %>">Edit your review</a></i>]<br><br><br><br>
             <h5>Your Rating:</h5><br><span class="stars"><%= rating %></span><br><br><br><br>
             <h5>Your Review:</h5><br><%= userreview %><br><br><br><br>
-            <h5>Your Notes:</h5><br><%= notes %><br><br><br><br>
-            [<i><a href="/review/edit/<%= pid %>">Edit your review</a></i>]
-            <br><br><hr><br><br>
+            <h5>Your Notes:</h5><br><%= notes %>
         <% } else {%>
         [<i><a href="/review/edit/<%= pid %>">Add a review or personal notes for this polish.</a></i>]
-            <br><br><br><hr><br><br>
         <% } %>
-        <h5>All User Reviews:</h5><br>
-        <% for (i=0; i<allreviews.length; i++) {%>
-            <% if (allreviews[i].userreview.length > 0) { %>
-                <span class="stars"><%= allreviews[i].rating %></span> - <%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+        <% if (allreviews.length > 0 || pdupes.length > 0) { %>
+        <br><br><hr><br><br>
+            <% if (allreviews.length > 0) { %>
+                <h5>All User Reviews:</h5><br>
+                <% for (i=0; i<allreviews.length; i++) {%>
+                    <% if (allreviews[i].userreview.length > 0) { %>
+                        <span class="stars"><%= allreviews[i].rating %></span> - <%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+                    <% } %>
+                <% } %>
+            <br><br>
             <% } %>
-        <% } %><br><br><br><br>
-        <h5>User-Submitted Dupes:</h5>
-        <% if (pdupes.length > 0) { %>
-            <p style="white-space: pre;"><%- pdupes %></p><br><br>
+            <% if (pdupes.length > 0) { %>
+                <h5>User-Submitted Dupes:</h5>
+                <p style="white-space: pre;"><%- pdupes %></p><br><br>
+            <% } %>
         <% } %>
         </section>
     </div>

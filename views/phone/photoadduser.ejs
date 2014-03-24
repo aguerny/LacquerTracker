@@ -4,6 +4,9 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     	<section>
+            <% if (typeof message !== "undefined") { %>
+            <center><h3><%= message %></h3><br><br></center>
+        <% } %>
     		<form action="/photo/upload" method="post" enctype='multipart/form-data'>
 	     		<h3>Add a Photo:</h3><br>
                 Image for Upload: <input type="file" value="photo" name="photo" required>
@@ -15,9 +18,6 @@
                         </select><br><br><br>
                 <input type="submit" value="Submit" class="button">
     		</form>
-            <% if (message) { %>
-                <br><h4><%= message %></h4>
-            <% } %>
     	</section>
     </div>
 </div>

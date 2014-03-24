@@ -4,6 +4,9 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     	<section>
+        <% if (typeof message !== "undefined") { %>
+            <center><h3><%= message %></h3><br><br></center>
+        <% } %>
     		<form action="/polishadd" method="post">
 	     		<h3>Add a new polish:</h3><br>
     			Name: <input type="text" name="name" class="fullwidth" required><br><br>
@@ -56,9 +59,6 @@
                 Dupes:<br><textarea name="dupes" class="fullwidth" rows="5"></textarea><br><br><br><br>
                 <input type="submit" value="Submit" class="button">
     		</form>
-            <% if (message) { %>
-                <br><h4><%= message %></h4>
-            <% } %>
     	</section>
     </div>
 </div>

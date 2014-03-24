@@ -15,6 +15,7 @@ var userSchema = mongoose.Schema({
 	isvalidated  : Boolean,
 	level        : String,
 	notifications: String,
+	useremail    : String,
 });
 
 
