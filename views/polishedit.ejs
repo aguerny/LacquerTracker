@@ -6,10 +6,10 @@
     	<section>
     		<form action="/polishedit/<%= editid %>" method="post">
 	     		<h3>Edit polish:</h3><br>
-    			Name: <input type="text" name="name" value="<%= editname %>" size="30" readonly="readonly" required><br><br>
-                Brand: <input type="text" name="brand" value="<%= editbrand %>" size="30" readonly="readonly" required><br><br>
-                Collection: <input type="text" name="batch" value="<%= editbatch %>" size="30"> <i>Please format like: 2013 Off Shore (Summer)</i><br><br>
-                Code: <input type="text" name="code" value="<%= editcode %>" size="30" ><br><br>
+    			Name: <input type="text" name="name" value="<%= editname %>" style="width:40%" readonly="readonly" required><br><br>
+                Brand: <input type="text" name="brand" value="<%= editbrand %>" style="width:40%" readonly="readonly" required><br><br>
+                Collection: <input type="text" name="batch" value="<%= editbatch %>" style="width:40%"> <i>Please format like: 2013 Off Shore (Summer)</i><br><br>
+                Code: <input type="text" name="code" value="<%= editcode %>" style="width:40%" ><br><br>
                 Color: <select name="colorcat">
                     <option value="">select a color category</option>
                     <option value="black" <% if (editcolorcat === "black") { %> selected="selected" <%}%>>black</option>
@@ -53,7 +53,7 @@
                     <option value="off"<% if (editindie === "off") { %> selected="selected" <%}%>>no</option>
                     <option value="on"<% if (editindie === "on") { %> selected="selected" <%}%>>yes</option>
                     </select><br><br>
-                Dupes:<br><textarea name="dupes" value="<%= editdupes %>" cols="60" rows="10"><%= editdupes %></textarea><br><br><br><br>
+                Dupes:<br><textarea name="dupes" value="<%= editdupes %>" style="width:40%" rows="10"><%= editdupes %></textarea><br><br><br><br>
                 <input type="submit" value="Submit" class="button">
             </form>
         </section>

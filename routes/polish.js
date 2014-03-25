@@ -123,7 +123,25 @@ app.get('/removewant/:id', isLoggedIn, function(req, res) {
     })
 });
 
+//delete polish
+app.get('/polish/:brand/:name/delete', isLoggedIn, function(req, res) {
+    if (req.user.level !== "admin") {
+        res.redirect('/error')
+    } else if (req.user.level === "admin") {
+        Polish.findOne({brand: req.params.brand.replace(/_/g," "), name:req.params.name.replace(/_/g," ")}, function(err, polish) {
+            if (polish === null) {
+                res.redirect('/error');
+            } else {
+                polish.remove();
+                res.redirect('/browse');
+            }
+        })
+    }
+});
+
+
 ///////////////////////////////////////////////////////////////////////////
+
 
 //add polish
 app.get('/polishadd', isLoggedIn, function(req, res) {
@@ -137,8 +155,8 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
             res.render('polishadd.ejs', {title: 'Add a Polish - Lacquer Tracker', message: 'That polish already exists in the database.'});
         } else {
             var newPolish = new Polish ({
-                name: sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"")),
-                brand: sanitizer.sanitize((req.body.brand).replace(/[?]/g,"").replace(/[&]/g,"")),
+                name: sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"and")),
+                brand: sanitizer.sanitize((req.body.brand).replace(/[?]/g,"").replace(/[&]/g,"and")),
                 batch: sanitizer.sanitize(req.body.batch),
                 colorcat: req.body.colorcat,
                 colorhex: "#" + sanitizer.sanitize(req.body.colorhex),
@@ -188,8 +206,8 @@ app.post('/polishedit/:id', isLoggedIn, function(req, res) {
         if (!p) {
             res.redirect('/error');
         } else {
-            p.name = sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"")),
-            p.brand: sanitizer.sanitize((req.body.brand).replace(/[?]/g,"").replace(/[&]/g,"")),
+            p.name = sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"and")),
+            p.brand = sanitizer.sanitize((req.body.brand).replace(/[?]/g,"").replace(/[&]/g,"and")),
             p.batch = sanitizer.sanitize(req.body.batch);
             p.colorcat = req.body.colorcat;
             p.colorhex = "#" + sanitizer.sanitize(req.body.colorhex);

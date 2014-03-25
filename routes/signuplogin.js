@@ -50,6 +50,7 @@ app.post('/signup', function(req, res) {
                                 newUser.level = "normal";
                                 newUser.notifications = true;
                                 newUser.useremail = true;
+                                newUser.creationdate = new Date();
 
                                 //save the user
                                 newUser.save(function(err) {
@@ -107,7 +108,6 @@ app.post('/signup', function(req, res) {
 app.get('/validate/:id', function(req, res) {
     User.findById(req.params.id, function(err, user) {
         if (err || !user) {
-            console.log(err);
             res.redirect('/error');
         } else if (user) {
             user.isvalidated = true;

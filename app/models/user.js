@@ -1,6 +1,7 @@
 //load the things we need
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
+var autoIncrement = require('mongoose-auto-increment');
 
 //define the schema for our user model
 var userSchema = mongoose.Schema({
@@ -16,8 +17,14 @@ var userSchema = mongoose.Schema({
 	level        : String,
 	notifications: String,
 	useremail    : String,
+	creationdate : String,
 });
 
+userSchema.plugin(autoIncrement.plugin, {
+	model: 'User',
+	field: 'usernumber',
+	startAt: 2,
+});
 
 //methods =========================
 //generating a hash

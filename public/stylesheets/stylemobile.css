@@ -143,7 +143,7 @@ span.stars span {
 .small {font-size: 11px;}
 
 #recaptcha_image img {
-    max-width:98%;
+    width:235px;
 }
 
 .replycomment {background-color: #D8D8D8;}

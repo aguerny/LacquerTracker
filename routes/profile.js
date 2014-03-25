@@ -48,7 +48,6 @@ app.get('/profile/:username', function(req, res) {
                     oreviews[thisindex] = reviews[i];
                 }
                 data.oreviews = oreviews;
-                console.log(oreviews);
                 res.render('profile.ejs', data);
             })
         }

@@ -32,9 +32,9 @@ $(function() {
             <h3 style="display:inline-block"><%= username %>'s Profile</h3>
             <% if (isAuthenticated()) { %>
                 <% if (user.username === username) { %>
-                    - <a href="/profile/<%= username %>/edit">Edit your profile</a>
+                    <br><a href="/profile/<%= username %>/edit">Edit your profile</a>
                 <% } else if (useremail === "on") {%>
-                    - <a href="/email/<%= username %>">Send a message</a>
+                    <br><a href="/email/<%= username %>">Send a message</a>
                 <% } %>
             <% } %>
             <br><br><br><p style="white-space: pre; padding-left: 3em"><%- about %></p>
@@ -63,8 +63,8 @@ $(function() {
                     <%} else if (opolishes[i].type === "glow") {%>glow in the dark
                     <%} else {%><%= opolishes[i].type %><%}%>
                 </td>
-                <td><% if (typeof oreviews[i] !== "undefined" && oreviews[i] > 0) { %>
-                        <span style="display:none"><%= oreviews[i] %></span><span class="stars"><%= oreviews[i] %></span>
+                 <td><% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
+                        <span style="display:none"><%= oreviews[i].rating %></span><span class="stars"><%= oreviews[i].rating %></span>
                     <% } %>
                 </td></tr>
             <% } %>

@@ -148,7 +148,6 @@ app.post('/blog/:title/:id/add', isLoggedIn, function(req, res) {
                 //send Email
                 smtpConfig.sendMail(mailOpts, function(err, result) {
                     if (err) {throw err};
-                    console.log(result);
                 });
             }
 
@@ -199,7 +198,6 @@ app.get('/blog/:title/:id/add', isLoggedIn, function(req, res) {
 //remove blog post comment
 app.get('/blog/:title/:id/remove', isLoggedIn, function(req, res) {
     BlogComment.findById(req.params.id, function(err, comment) {
-        console.log(comment.childid.length);
         if (comment.childid.length > 0) {
             comment.message = "<i>deleted</i>";
             comment.save(function(err) {

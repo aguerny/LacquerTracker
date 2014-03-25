@@ -4,13 +4,15 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var mongoose = require('mongoose');
+var autoIncrement = require('mongoose-auto-increment');
 var passport = require('passport');
 var device  = require('express-device');
 
 var app = express();
 
 //configuration
-mongoose.connect('localhost/test'); // connect to database
+var connection = mongoose.connect('localhost/test'); // connect to database
+autoIncrement.initialize(connection);
 require('./app/passport')(passport); // pass passport for configuration
 
 app.configure(function() {
@@ -35,27 +37,27 @@ app.configure(function() {
     app.enableViewRouting();
     app.enableDeviceHelpers();
 
-
-	//required for passport
 	app.use(express.session({cookie: {maxAge: 365 * 24 * 60 * 60 * 1000}})); // session secret
 	app.use(flash()); // use connect-flash for flash messages stored in session
 	app.use(passport.initialize());
 	app.use(passport.session()); // persistent login sessions
 
 	app.use(function (req, res, next) {
-    res.locals({
-        get user() { // as a getter to delay retrieval until `res.render()`
-            return req.user;
-        },
-        isAuthenticated: function () {
-            return req.user != null;
-        }
-    })
-    	next();
+    	res.locals({
+        	get user() { // as a getter to delay retrieval until `res.render()`
+            	return req.user;
+        	},
+        	isAuthenticated: function () {
+            	return req.user != null;
+        	}
+    	})
+    		next();
 	});
 
-	//other old ones
 	app.use(app.router);
+	app.use(function(req,res){
+   		res.redirect('/error');
+	});
 
 });
 

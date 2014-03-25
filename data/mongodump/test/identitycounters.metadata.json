@@ -1,0 +1,1 @@
+{ "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "test.identitycounters", "name" : "_id_" }, { "v" : 1, "key" : { "field" : 1, "model" : 1 }, "unique" : true, "ns" : "test.identitycounters", "name" : "field_1_model_1", "required" : true, "index" : -1, "background" : true, "safe" : null } ] }

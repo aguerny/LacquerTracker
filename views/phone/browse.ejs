@@ -7,14 +7,14 @@
         <h3>Browse by:</h3><br>
         <form action="/browse" method="post" id="browseform">
             <input type="text" name="keywords" <% if (browsekeywords) { %> value="<%=browsekeywords%>" <% } %>placeholder="Keyword/Code" style="display:inline-block; width:95%;">
-            <br><br><br>
+            <br><br>
             <select name="brand" class="fullwidth">
                 <option value="">All Brands</option>
                 <% for (i=0; i<brands.length; i++) { %>
                 <option value="<%= brands[i] %>" <% if (browsebrand === brands[i]) { %> selected="selected" <% } %>><%= brands[i] %></option>
                 <% } %>
             </select>
-            <br><br><br>
+            <br><br>
             <select name="colorcat" class="fullwidth">
                 <option value="">All Colors</option>
                 <option value="beige" <% if (browsecolorcat === "beige") { %> selected="selected" <% } %>>beige</option>
@@ -34,7 +34,7 @@
                 <option value="white" <% if (browsecolorcat === "white") { %> selected="selected" <% } %>>white</option>
                 <option value="yellow" <% if (browsecolorcat === "yellow") { %> selected="selected" <% } %>>yellow</option>
             </select>
-            <br><br><br>
+            <br><br>
             <select name="type" class="fullwidth">
                 <option value="">All Types</option>
                 <option value="colorchange" <% if (browsetype === "colorchange") { %> selected="selected" <% } %>>color changing</option>
@@ -55,11 +55,11 @@
                 <option value="texture" <% if (browsetype === "texture") { %> selected="selected" <% } %>>texture</option>
                 <option value="topbase" <% if (browsetype === "topbase") { %> selected="selected" <% } %>>top/base coat</option>
             </select>
-            <br><br><br>
-            <input type="checkbox" name="indie" <% if (browseindie === "on") { %> checked <% } %>>Indie polishes<br><br><br>
+            <br><br>
+            <input type="checkbox" name="indie" <% if (browseindie === "on") { %> checked <% } %>>Indie polishes<br><br>
             <% if (isAuthenticated()) { %>
-                <input type="checkbox" name="owned" <% if (browseowned === "on") { %> checked <% } %>>Owned polishes<br><br><br>
-                <input type="checkbox" name="wanted" <% if (browsewanted === "on") { %> checked <% } %>>Wanted polishes<br><br><br>
+                <input type="checkbox" name="owned" <% if (browseowned === "on") { %> checked <% } %>>Owned polishes<br><br>
+                <input type="checkbox" name="wanted" <% if (browsewanted === "on") { %> checked <% } %>>Wanted polishes<br><br>
             <% } %>
             <input type="submit" class="button" name="browse" value="Browse">
             <input style="visibility:hidden;" name="page" value="<%=page%>">
@@ -67,7 +67,7 @@
             <input type="submit" style="visibility:hidden;" name="prevpage" value="prevpage" id="prevpage">
         </form>
 
-        <hr><br><br>
+        <hr><br>
 
             <table id="polishbrowse" class="sortable" style="width:100%">
             <col width="22%">

@@ -150,7 +150,6 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
                 //send Email
                 smtpConfig.sendMail(mailOpts, function(err, result) {
                     if (err) {throw err};
-                    console.log(result);
                 });
             }
 

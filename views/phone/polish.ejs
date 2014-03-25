@@ -17,22 +17,22 @@ $(function() {
     <div id="container" class="clear">
         <section>
         <h2><%= pbrand %> - <%= pname %></h2><br><br>
-            <a href="/polishedit/<%= pid %>">Edit information | </a>
             <% if (status === "owned") { %>
-                Owned (<a href="/removeown/<%= pid %>">remove</a>)
+                Owned (<a href="/removeown/<%= pid %>">remove</a>)<br><br>
             <% } else if (status === "wanted") {%>
-                Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a>
+                Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a><br><br>
             <% } else { %>
-                <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a>
+                <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a><br><br>
             <% } %>
-            <br><br><br><div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br>
+            <a href="/polishedit/<%= pid %>">Edit information</a><br><br>
+            <br><div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br>
             <b>Code:</b> <%= pcode %><br><br>
             <b>Collection:</b> <%= pbatch %><br><br>
             <b>Color:</b> <%= pcolorcat %><br><br>
             <b>Type:</b> <%= ptype %><br><br>
             <br>
             <a target="_blank" href="http://www.amazon.com/s/?_encoding=UTF8&camp=1789&creative=390957&linkCode=ur2&pageMinusResults=1&suo=1393008765386&tag=lacqutrack-20&url=search-alias%3Daps#/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=<%= linkbrand %>%20<%= linkname %>&sepatfbtf=true&tc=1393008769421">View on Amazon</a><img src="https://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-            <br><br><br><br>
+            <br><br><br>
             <div id=outside>
                 <!-- prev/next links -->
                     <div style="text-align:center">

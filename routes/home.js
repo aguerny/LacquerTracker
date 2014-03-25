@@ -10,10 +10,6 @@ app.get('/error', function(req, res) {
     res.render('error.ejs', {title: 'Oops! - Lacquer Tracker'});
 });
 
-app.get('/images/:whatever', function(req, res) {
-    res.render('error.ejs', {title: 'Oops! - Lacquer Tracker'});
-});
-
 
 };
 
