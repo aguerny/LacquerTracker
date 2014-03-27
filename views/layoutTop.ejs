@@ -3,11 +3,8 @@
 <head>
     <title><%= title %></title>
     <meta charset="iso-8859-1">
-    <% if (is_tablet) { %>
-        <link rel="stylesheet" href="/stylesheets/styletablet.css" type="text/css">
-    <% } else { %>
-        <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
-    <% } %>
+    <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
+    <meta name="viewport" content="width=device-width, target-densitydpi=high-dpi" />
     <script src="/scripts/sorttable.js"></script>
     <script src="/scripts/colorfinder.js"></script>
     <script src="/scripts/jscolor/jscolor.js"></script>
@@ -25,24 +22,36 @@
 
 <!-- header -->
 <div class="wrapper row1">
-    <header id="header" class="clear">
-        <h1>Lacquer Tracker</h1>
-        <div id="logininfo">
-            <% if (isAuthenticated()) { %>
-                <p>Hello <%= user.username %> | <a href="/logout">Logout</a></p>
-            <% } else { %>
-                <p><a href="/login">Login</a> or <a href="/signup">Signup</a></p>
-            <% } %>
-        </div>
-    <nav>
-        <ul>
-            <li><a href="/browse">Browse</a></li>
-            <li><a href="/profile">Profile</a></li>
-            <li><a href="/forums">Forums</a></li>
-            <li><a href="/blog">Blog</a></li>
-            <li><a href="/contact">Contact</a></li>
-        </ul>
-    </nav>
+    <header id="header">
+        <div id="biglayout">
+            <h1>Lacquer Tracker</h1>
+            <div id="logininfo">
+                <% if (isAuthenticated()) { %>
+                    <p>Hello <%= user.username %> | <a href="/logout">Logout</a></p>
+                <% } else { %>
+                    <p><a href="/login">Login</a> or <a href="/signup">Signup</a></p>
+                <% } %>
+            </div>
+        <nav>
+            <ul>
+                <li><a href="/browse">Browse</a></li>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/forums">Forums</a></li>
+                <li><a href="/blog">Blog</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div id="smalllayout">
+        <h1><a href="/">Lacquer Tracker</a></h1>
+        <nav id="nav">
+            <a href="/browse">Browse</a> |
+            <a href="/profile">Profile</a> |
+            <a href="/forums">Forums</a> |
+            <a href="/blog">Blog</a> |
+            <a href="/contact">Contact</a>
+        </nav>
+    </div>
     </header>
 </div>
 

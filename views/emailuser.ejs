@@ -12,9 +12,10 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
+    <div id="biglayout">
         <h3>Send message to <%= username %>:</h3><br><i>Be sure to include a reply e-mail if you need a response.</i><br><br><br><br>
             <form action="/email/<%=username%>" method="post">
-                <textarea rows="10" style="width:50%;"type="text" name="emailmessage" required <%if (typeof emailmessage !== "undefined") {%>value="<%=emailmessage%>" <%}%>><%if (typeof emailmessage !== "undefined") {%><%=emailmessage%><%}%></textarea><br><br><br>
+                <textarea rows="10" class="50width" type="text" name="emailmessage" required <%if (typeof emailmessage !== "undefined") {%>value="<%=emailmessage%>" <%}%>><%if (typeof emailmessage !== "undefined") {%><%=emailmessage%><%}%></textarea><br><br><br>
                 <div id="recaptcha_widget" style="display: none;">
                     <div id="recaptcha_image"></div>
                     <span class="recaptcha_only_if_image">Enter the words above:</span>
@@ -40,6 +41,38 @@
             <% if (typeof message !== "undefined") { %>
                 <br><b><%= message %></b>
             <% } %>
+        </div>
+        </div>
+        <div id="smalllayout">
+        <% if (typeof message !== "undefined") { %>
+            <center><h3><%= message %></h3><br><br></center>
+        <% } %>
+        <h3>Send message to <%= username %>:</h3><br><i>Be sure to include a reply e-mail if you need a response.</i><br><br><br>
+            <form action="/email/<%=username%>" method="post">
+                <textarea class="fullwidth" rows="10" type="text" name="emailmessage" required <%if (typeof emailmessage !== "undefined") {%>value="<%=emailmessage%>" <%}%>><%if (typeof emailmessage !== "undefined") {%><%=emailmessage%><%}%></textarea><br><br><br>
+                <div id="recaptcha_widget" style="display: none;">
+                <div id="recaptcha_image"></div>
+                <span class="recaptcha_only_if_image">Enter the words above:</span>
+                <span class="recaptcha_only_if_audio">Enter the numbers you hear:</span>
+                <br><input id="recaptcha_response_field" name="recaptcha_response_field" type="text" class="fullwidth">
+                <br><strong style="font-size: 10px;"><a href="javascript:Recaptcha.reload();">Get another CAPTCHA</a></strong>
+
+                <!--div class="recaptcha_only_if_image"><a href="javascript:Recaptcha.switch_type('audio')">Get an audio CAPTCHA</a></div><br />
+                <div class="recaptcha_only_if_audio"><a href="javascript:Recaptcha.switch_type('image')">Get an image CAPTCHA</a></div><br /><br />
+                <div><a href="javascript:Recaptcha.showhelp()">Help</a><br />
+                </div-->
+
+                <script type="text/javascript" src="http://api.recaptcha.net/challenge?k=6Leqre8SAAAAAPF0aSeJiXTZVodtro9YDxlA-9a_"></script>
+
+                <noscript>
+                <iframe src="http://api.recaptcha.net/noscript?k=k=6Leqre8SAAAAAPF0aSeJiXTZVodtro9YDxlA-9a_" height="200" width="500" frameborder="0"></iframe>
+                <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+                <input type="'hidden'" name="'recaptcha_response_field'" value="'manual_challenge'">
+                </noscript>
+            </div><br><br><br>
+                <input type="submit" value="Submit" class="button">
+            </form>
+        </div>
         </div>
     </section>
     </div>

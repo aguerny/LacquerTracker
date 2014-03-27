@@ -12,6 +12,7 @@ custom_theme_widget: 'recaptcha_widget'
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
+    <div id="biglayout">
         <form action="/signup" method="post">
             <h3>Fill out the information below to get started.</h3><br><br>
             E-mail address: <input type="email" name="email" style="display:inline-block; width:40%;" required value="<%=email%>" placeholder="A validation message will be sent to this address."><br><br>
@@ -43,6 +44,40 @@ custom_theme_widget: 'recaptcha_widget'
         <% if (typeof message !== "undefined") { %>
             <br><b><%= message %></b>
         <% } %>
+        </div>
+        <div id="smalllayout">
+        <% if (typeof message !== "undefined") { %>
+            <center><h3><%= message %></h3><br><br></center>
+        <% } %>
+        <form action="/signup" method="post">
+            <h3>Fill out the information below to get started.</h3><br>
+            E-mail address: <input type="email" name="email" style="display:inline-block; width:100%;" required value=<%=email%>><br><br>
+            Username: <input type="text" name="username" style="display:inline-block; width:100%;" required value=<%=username%>><br><br>
+            Password: <input type="password" name="password" style="display:inline-block; width:100%;" required><br><br>
+            Confirm Password: <input type="password" style="display:inline-block; width:100%;" name="confirm" required><br><br><br>
+            <div id="recaptcha_widget" style="display: none;">
+                <div id="recaptcha_image"></div>
+                <span class="recaptcha_only_if_image">Enter the words above:</span>
+                <span class="recaptcha_only_if_audio">Enter the numbers you hear:</span>
+                <br><input id="recaptcha_response_field" name="recaptcha_response_field" type="text" class="fullwidth">
+                <br><strong style="font-size: 10px;"><a href="javascript:Recaptcha.reload();">Get another CAPTCHA</a></strong>
+
+                <!--div class="recaptcha_only_if_image"><a href="javascript:Recaptcha.switch_type('audio')">Get an audio CAPTCHA</a></div><br />
+                <div class="recaptcha_only_if_audio"><a href="javascript:Recaptcha.switch_type('image')">Get an image CAPTCHA</a></div><br /><br />
+                <div><a href="javascript:Recaptcha.showhelp()">Help</a><br />
+                </div-->
+
+                <script type="text/javascript" src="http://api.recaptcha.net/challenge?k=6Leqre8SAAAAAPF0aSeJiXTZVodtro9YDxlA-9a_"></script>
+
+                <noscript>
+                <iframe src="http://api.recaptcha.net/noscript?k=k=6Leqre8SAAAAAPF0aSeJiXTZVodtro9YDxlA-9a_" height="200" width="500" frameborder="0"></iframe>
+                <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+                <input type="'hidden'" name="'recaptcha_response_field'" value="'manual_challenge'">
+                </noscript>
+            </div><br><br><br>
+            <input type="submit" value="Submit" class="button" id="login-button">
+        </form>
+        </div>
     </section>
     </div>
 </div>

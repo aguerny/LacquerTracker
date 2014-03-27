@@ -6,7 +6,6 @@ var path = require('path');
 var mongoose = require('mongoose');
 var autoIncrement = require('mongoose-auto-increment');
 var passport = require('passport');
-var device  = require('express-device');
 
 var app = express();
 
@@ -33,9 +32,6 @@ app.configure(function() {
 	app.use(express.json());
 	app.use(express.urlencoded());
 	app.use(express.methodOverride());
-	app.use(device.capture());
-    app.enableViewRouting();
-    app.enableDeviceHelpers();
 
 	app.use(express.session({cookie: {maxAge: 365 * 24 * 60 * 60 * 1000}})); // session secret
 	app.use(flash()); // use connect-flash for flash messages stored in session

@@ -24,6 +24,7 @@ $(function() {
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
+        <div id="biglayout">
 		<% if (profilephoto) { %>
             <img class="profilephoto" src="<%= profilephoto %>">
         <% } %>
@@ -97,6 +98,89 @@ $(function() {
                 </table>
         <% } %>
 
+        <% if (photos.length > 0) { %>
+            <br><br><h4><%= username %>'s Photos (<%= photos.length %>):</h4><br>
+            <div class="collage">
+                <% for (i=0; i<photos.length; i++) { %>
+                    <img src="<%= photos[i].location %>">
+                <% } %>
+            </div>
+        <% } %>
+        </div>
+        <div id="smalllayout">
+        <% if (profilephoto) { %>
+            <img class="profilephoto" src="<%= profilephoto %>">
+        <% } %>
+
+        <% if (username.length > 0) { %>
+            <h3 style="display:inline-block"><%= username %>'s Profile</h3>
+            <% if (isAuthenticated()) { %>
+                <% if (user.username === username) { %>
+                    <br><a href="/profile/<%= username %>/edit">Edit your profile</a>
+                <% } else if (useremail === "on") {%>
+                    <br><a href="/email/<%= username %>">Send a message</a>
+                <% } %>
+            <% } %>
+            <br><br><br><p style="white-space: pre; padding-left: 3em"><%- about %></p>
+        <% } %>
+
+        <% if (opolishes.length > 0) { %>
+            <br><br><h4><%= username %>'s Owned Polishes (<%= opolishes.length %>):</h4><br>
+            <table id="ownedpolish" class="sortable">
+            <col width="22%">
+            <col width="20%">
+            <col width="18%">
+            <col width="10%">
+            <col width="10%">
+            <col width="10%">
+            <col width="10%">
+                <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Swatch</th><th>Type</th><th>Rating</th></tr>
+            <% for(var i=0; i<opolishes.length; i++) {%>
+                <tr><td><a id='tablelink' href='/polish/<%= opolishes[i].brand.replace(/ /g,"_") %>/<%= opolishes[i].name.replace(/ /g,"_") %>'><%= opolishes[i].name %></a></td>
+                <td><%= opolishes[i].brand %></td>
+                <td><%= opolishes[i].batch %></td>
+                <td><%= opolishes[i].colorcat %></td>
+                <td><div id='swatch' style='background-color:<%= opolishes[i].colorhex %>;'>&nbsp;</div></td>
+                <td>
+                    <% if (opolishes[i].type === "colorchange") {%>color changing
+                    <%} else if (opolishes[i].type === "topbase") {%>top/base coat
+                    <%} else if (opolishes[i].type === "glow") {%>glow in the dark
+                    <%} else {%><%= opolishes[i].type %><%}%>
+                </td>
+                 <td><% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
+                        <%= oreviews[i].rating %>
+                    <% } %>
+                </td></tr>
+            <% } %>
+            </table>
+        <% } %>
+
+        <% if (wpolishes.length > 0) { %>
+            <br><br><h4><%= username %>'s Wanted Polishes (<%= wpolishes.length %>):</h4><br>
+                <table id="wantedpolish" class="sortable">
+                <col width="22%">
+                <col width="22%">
+                <col width="20%">
+                <col width="12%">
+                <col width="12%">
+                <col width="12%">
+                    <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Swatch</th><th>Type</th></tr>
+                <% for(var i=0; i<wpolishes.length; i++) {%>
+                    <tr><td><a id='tablelink' href='/polish/<%= wpolishes[i].brand.replace(/ /g,"_") %>/<%= wpolishes[i].name.replace(/ /g,"_") %>'><%= wpolishes[i].name %></a></td>
+                    <td><%= wpolishes[i].brand %></td>
+                    <td><%= wpolishes[i].batch %></td>
+                    <td><%= wpolishes[i].colorcat %></td>
+                    <td><div id='swatch' style='background-color:<%= wpolishes[i].colorhex %>;'>&nbsp;</div></td>
+                    <td>
+                        <% if (wpolishes[i].type === "colorchange") {%>color changing
+                        <%} else if (wpolishes[i].type === "topbase") {%>top/base coat
+                        <%} else if (wpolishes[i].type === "glow") {%>glow in the dark
+                        <%} else {%><%= wpolishes[i].type %><%}%>
+                    </td>
+                <% } %>
+                </table>
+        <% } %>
+
 
         <% if (photos.length > 0) { %>
             <br><br><h4><%= username %>'s Photos (<%= photos.length %>):</h4><br>
@@ -106,6 +190,7 @@ $(function() {
                 <% } %>
             </div>
         <% } %>
+        </div>
     </section>
     </div>
 </div>
