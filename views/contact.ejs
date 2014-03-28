@@ -52,6 +52,10 @@ custom_theme_widget: 'recaptcha_widget'
             </div>
         </div>
         </div>
+
+
+
+
         <div id="smalllayout">
         <% if (typeof message !== "undefined") { %>
             <center><h3><%= message %></h3><br><br></center>
@@ -81,10 +85,10 @@ custom_theme_widget: 'recaptcha_widget'
                 <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
                 <input type="'hidden'" name="'recaptcha_response_field'" value="'manual_challenge'">
                 </noscript>
-            </div><br><br>
+            </div><br>
             <input type="submit" class="button" value="Submit Feedback"/>
         </form>
-        <br><br><br><br>
+        <br><br>
         <center><img id="polish-image" src="/images/polishheart.jpg"/></center>
         </div>
     </section>

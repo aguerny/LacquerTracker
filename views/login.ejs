@@ -16,17 +16,21 @@
                 <br><br><br><b><%= message %></b>
             <% } %>
             </div>
+
+
             <div id="smalllayout">
             <% if (typeof message !== "undefined") { %>
-                <center><h3><%= message %></h3><br><br></center>
+                <% if (message.length > 0) { %>
+                    <center><h3><%= message %></h3><br><br></center>
+                <% } %>
             <% } %>
             <form action="/login" method="post">
             <h3>Log in below:</h3><br>
                  Username: <input type="text" name="username" class="fullwidth"><br><br>
-                 Password: <input type="password" name="password" class="fullwidth"><br><br><br>
+                 Password: <input type="password" name="password" class="fullwidth"><br><br>
                  <input type="submit" value="Submit" class="button" id="login-button">
                  </form><br>
-            <b><a href="/passwordreset">Forgot your password?</a></b>
+            <a href="/passwordreset">Forgot your password?</a>
             </div>
     	</section>
     </div>

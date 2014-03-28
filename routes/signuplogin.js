@@ -261,7 +261,7 @@ app.post('/passwordreset', function(req, res) {
 app.get('/reset/:key', function(req, res) {
     ResetKey.findById(req.params.key, function(err, resetkey) {
         if (err) {
-            res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one above.'});
+            res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
         } else {
             if (new Date(resetkey.expiredate) > new Date()) {
                 res.render('passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: resetkey.username})

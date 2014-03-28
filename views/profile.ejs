@@ -107,6 +107,10 @@ $(function() {
             </div>
         <% } %>
         </div>
+
+
+
+
         <div id="smalllayout">
         <% if (profilephoto) { %>
             <img class="profilephoto" src="<%= profilephoto %>">
@@ -116,9 +120,9 @@ $(function() {
             <h3 style="display:inline-block"><%= username %>'s Profile</h3>
             <% if (isAuthenticated()) { %>
                 <% if (user.username === username) { %>
-                    <br><a href="/profile/<%= username %>/edit">Edit your profile</a>
+                    <br><br><a href="/profile/<%= username %>/edit">Edit your profile</a>
                 <% } else if (useremail === "on") {%>
-                    <br><a href="/email/<%= username %>">Send a message</a>
+                    <br><br><a href="/email/<%= username %>">Send a message</a>
                 <% } %>
             <% } %>
             <br><br><br><p style="white-space: pre; padding-left: 3em"><%- about %></p>
@@ -126,14 +130,14 @@ $(function() {
 
         <% if (opolishes.length > 0) { %>
             <br><br><h4><%= username %>'s Owned Polishes (<%= opolishes.length %>):</h4><br>
-            <table id="ownedpolish" class="sortable">
-            <col width="22%">
+            <table id="ownedpolish" class="sortable fullwidth">
+            <col width="24%">
             <col width="20%">
-            <col width="18%">
+            <col width="20%">
             <col width="10%">
+            <col width="8%">
             <col width="10%">
-            <col width="10%">
-            <col width="10%">
+            <col width="8%">
                 <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Swatch</th><th>Type</th><th>Rating</th></tr>
             <% for(var i=0; i<opolishes.length; i++) {%>
                 <tr><td><a id='tablelink' href='/polish/<%= opolishes[i].brand.replace(/ /g,"_") %>/<%= opolishes[i].name.replace(/ /g,"_") %>'><%= opolishes[i].name %></a></td>
@@ -157,12 +161,12 @@ $(function() {
 
         <% if (wpolishes.length > 0) { %>
             <br><br><h4><%= username %>'s Wanted Polishes (<%= wpolishes.length %>):</h4><br>
-                <table id="wantedpolish" class="sortable">
+                <table id="wantedpolish" class="sortable fullwidth">
+                <col width="24%">
                 <col width="22%">
                 <col width="22%">
-                <col width="20%">
                 <col width="12%">
-                <col width="12%">
+                <col width="8%">
                 <col width="12%">
                     <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Swatch</th><th>Type</th></tr>
                 <% for(var i=0; i<wpolishes.length; i++) {%>

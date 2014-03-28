@@ -122,16 +122,6 @@ table.sortable thead {
 
 #tablelink:hover {color:#10695A;}
 
-
-.cycle-slideshow {
-    max-height: 350px;
-}
-
-.cycle-slideshow img {
-    max-height: 100%;
-    max-width: 100%;
-}
-
 .forumtable {width: 80%;}
 
 .forumtable th {color: #000000;}
@@ -192,17 +182,25 @@ span.stars span {
 .45width {width:45%;}
 .44width {width:44%;}
 
+.gallery li img {
+    max-height:400px;
+    max-width: 100%;
+}
+
+.gallery li{display:none; list-style:none;}
+.gallery li:first-child {display:block;}
+
 
 /*---Footer---*/
 
-#footer {box-shadow: 0px 500px 0px 500px #9ED9CF;}
+#footer {box-shadow: 0px 500px 0px 500px #9ED9CF; padding-top:1%;}
 
 }
 
 
 /*--------------------------------------------------------------------*/
 
-@media screen and (max-width: 1374px) and (min-width: 601px) {
+@media screen and (max-width: 1374px) and (min-width: 501px) {
 
 #smalllayout {display:none;}
 
@@ -239,7 +237,7 @@ div.wrapper {display:block; width:100%; margin:0; padding:0; text-align:left;}
 
 /*---General---*/
 
-#header, #container, #footer{display:block; width:100%; margin:0 auto;}
+#header, #container, #footer{display:block; max-width:1350px; margin:0 auto;}
 
 nav ul{margin:0; padding:0; list-style:none;}
 
@@ -326,16 +324,6 @@ table.sortable thead {
 
 #tablelink:hover {color:#10695A;}
 
-
-.cycle-slideshow {
-    max-height: 350px;
-}
-
-.cycle-slideshow img {
-    max-height: 100%;
-    max-width: 100%;
-}
-
 .forumtable {width: 80%;}
 
 .forumtable th {color: #000000;}
@@ -395,16 +383,24 @@ span.stars span {
 .45width {width:45%;}
 .44width {width:44%;}
 
+.gallery li img {
+    max-height:400px;
+    max-width: 100%;
+}
+
+.gallery li{display:none; list-style:none;}
+.gallery li:first-child {display:block;}
+
 
 /*---Footer---*/
 
-#footer {box-shadow: 0px 500px 0px 500px #9ED9CF;}
+#footer {box-shadow: 0px 500px 0px 500px #9ED9CF; padding-top:1%;}
 
 }
 
 /*--------------------------------------------------------------------*/
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 500px) {
 
 
 #biglayout {display:none;}
@@ -499,16 +495,6 @@ table.sortable thead {
 
 #tablelink:hover {color:#10695A;}
 
-
-.cycle-slideshow {
-    max-height: 350px;
-}
-
-.cycle-slideshow img {
-    max-height: 100%;
-    max-width: 100%;
-}
-
 .forumtable {width: 100%;}
 
 .forumtable th {color: #000000;}
@@ -528,8 +514,8 @@ table.sortable thead {
 .forumpost img {max-width:100%; height:auto; width:auto;}
 
 .profilephoto {
-    max-height: 50px;
-    max-width: 50px;
+    max-height: 75px;
+    max-width: 75px;
     position: inline;
     float: right;
 }
@@ -573,8 +559,19 @@ span.stars span {
 .45width {width:98%;}
 .44width {width:98%;}
 
+.slideshow {text-align:center;}
+
+.gallery li img {
+    max-height: 300px;
+    max-width: 98%;
+    vertical-align:middle;
+}
+
+.gallery li{display:none; list-style:none;}
+.gallery li:first-child {display:block;}
+
 /*---Footer---*/
 
-#footer {box-shadow: 0px 500px 0px 500px #9ED9CF;}
+#footer {box-shadow: 0px 500px 0px 500px #9ED9CF; padding-top:1%;}
 
 }

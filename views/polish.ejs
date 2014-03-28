@@ -9,7 +9,7 @@ $.fn.stars = function() {
 
 $(function() {
     $('span.stars').stars();
-});
+});  
 </script>
 
 <!-- content -->
@@ -41,26 +41,23 @@ $(function() {
                 <a target="_blank" href="http://www.amazon.com/s/?_encoding=UTF8&camp=1789&creative=390957&linkCode=ur2&pageMinusResults=1&suo=1393008765386&tag=lacqutrack-20&url=search-alias%3Daps#/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=<%= linkbrand %>%20<%= linkname %>&sepatfbtf=true&tc=1393008769421">View on Amazon</a><img src="https://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
             </div>
             <div id="polish-right_col">
-                <div id=outside>
-                    <!-- prev/next links -->
-                        <div class=center>
-                        <span>(<%= numphotos %>)</span>
-                        <span><a href="/photo/add/<%= pid %>">Add Photo</a></span>
-                            <script>var j = 0</script>
-                            <% if (numphotos > 0) { %>
-                                &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/photo/remove/<%= pid %>">Remove Photo</a></span>
-                            <% } %>
-                            <% if (numphotos > 1) { %>
-                                &nbsp;&nbsp;|&nbsp;&nbsp;
-                                <span id="prev"><a href="#">Prev Photo</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <span id="next"><a href="#">Next Photo</a></span>
-                            <% } %>
-                </div><br>
-                <!-- slideshow -->
-                <div class="cycle-slideshow" data-cycle-fx=scrollHorz data-cycle-timeout=0 data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-center-horz="true">
-                    <% for (i=0; i<allphotos.length; i++) { %>
-                        <img src="<%= allphotos[i].location %>">
-                    <% } %>
+                <div class="slideshow">
+                    <div class="slideButtons">
+                        <span>(<%= numphotos %>)</span>&nbsp;&nbsp;
+                        <span><a href="/photo/add/<%= pid %>">Add</a></span>
+                        <% if (numphotos > 0) { %>
+                            &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/photo/remove/<%= pid %>">Remove</a></span>
+                        <% } %>
+                        <% if (numphotos > 1) { %>
+                            &nbsp;&nbsp;|&nbsp;&nbsp;
+                            <span class="prev"><a href="#">Prev</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                            <span class="next"><a href="#">Next</a></span>
+                        <% } %>
+                    </div>
+                    <div class="gallery">
+                        <% for (i=0; i<allphotos.length; i++) { %>
+                            <li><br><img src="<%= allphotos[i].location %>"></li>
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -99,14 +96,34 @@ $(function() {
 
         <div id="smalllayout">
             <section>
-        <h2><%= pbrand %> - <%= pname %></h2><br><br>
+        <h2><%= pbrand %> - <%= pname %></h2><br>
             <% if (status === "owned") { %>
-                Owned (<a href="/removeown/<%= pid %>">remove</a>)<br><br>
+                Owned (<a href="/removeown/<%= pid %>">remove</a>)<br><br><br>
             <% } else if (status === "wanted") {%>
-                Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a><br><br>
+                Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a><br><br><br>
             <% } else { %>
-                <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a><br><br>
+                <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a><br><br><br>
             <% } %>
+            <div class="slideshow">
+                <div class="slideButtons">
+                    <span>(<%= numphotos %>)</span>&nbsp;&nbsp;
+                    <span><a href="/photo/add/<%= pid %>">Add</a></span>
+                    <% if (numphotos > 0) { %>
+                        &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/photo/remove/<%= pid %>">Remove</a></span>
+                    <% } %>
+                    <% if (numphotos > 1) { %>
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="prev"><a href="#">Prev</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="next"><a href="#">Next</a></span>
+                    <% } %>
+                </div>
+                <div class="gallery">
+                    <% for (i=0; i<allphotos.length; i++) { %>
+                        <li><br><img src="<%= allphotos[i].location %>"></li>
+                    <% } %>
+                </div>
+            </div>
+            <br><br>
             <a href="/polishedit/<%= pid %>">Edit information</a><br><br>
             <br><div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br>
             <b>Code:</b> <%= pcode %><br><br>
@@ -115,31 +132,8 @@ $(function() {
             <b>Type:</b> <%= ptype %><br><br>
             <br>
             <a target="_blank" href="http://www.amazon.com/s/?_encoding=UTF8&camp=1789&creative=390957&linkCode=ur2&pageMinusResults=1&suo=1393008765386&tag=lacqutrack-20&url=search-alias%3Daps#/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=<%= linkbrand %>%20<%= linkname %>&sepatfbtf=true&tc=1393008769421">View on Amazon</a><img src="https://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-            <br><br><br>
-            <div id=outside>
-                <!-- prev/next links -->
-                    <div style="text-align:center">
-                    <span>(<%= numphotos %>)</span>
-                    <span><a href="/photo/add/<%= pid %>">Add</a></span>
-                    <script>var j = 0</script>
-                    <% if (numphotos > 0) { %>
-                        &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/photo/remove/<%= pid %>">Remove</a></span>
-                    <% } %>
-                    <% if (numphotos > 1) { %>
-                        &nbsp;&nbsp;|&nbsp;&nbsp;
-                        <span id="prev"><a href="#">Prev</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
-                        <span id="next"><a href="#">Next</a></span>
-                    <% } %>
-            </div>
             <br>
-                <!-- slideshow -->
-            <div class="cycle-slideshow" data-cycle-fx=scrollHorz data-cycle-timeout=0 data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-center-horz="true">
-                <% for (i=0; i<allphotos.length; i++) { %>
-                    <img src="<%= allphotos[i].location %>">
-                <% } %>
-            </div>
         </section>
-    </div>
     <div id="container" class="clear">
         <section>
         <hr><br>
@@ -164,12 +158,32 @@ $(function() {
             <% } %>
             <% if (pdupes.length > 0) { %>
                 <h5>User-Submitted Dupes:</h5>
-                <p style="white-space: pre;"><%- pdupes %></p><br><br>
+                <p style="white-space: pre;"><%- pdupes %></p>
             <% } %>
         <% } %>
         </div>
         </section>
     </div>
 </div>
+
+
+<script>
+var speed = 100;
+    $(".prev").click(function() {
+        var now = $(this).parent().next("div.gallery").children(":visible"),
+            last = $(this).parent().next("div.gallery").children(":last"),
+            prev = now.prev();
+            prev = prev.index() == -1 ? last : prev;
+        now.fadeOut(speed, function() {prev.fadeIn(speed);});
+    });
+
+    $(".next").click(function() {
+        var now = $(this).parent().next("div.gallery").children(':visible'),
+            first = $(this).parent().next("div.gallery").children(':first'),
+            next = now.next();
+            next = next.index() == -1 ? first : next;
+        now.fadeOut(speed, function() {next.fadeIn(speed);});
+    });
+</script>
 
 <% include layoutBottom %>

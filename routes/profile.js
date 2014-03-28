@@ -21,7 +21,7 @@ app.get('/profile', isLoggedIn, function(req, res) {
 //profile specific
 app.get('/profile/:username', function(req, res) {
     User.findOne({username: req.params.username}).populate('photos').populate('ownedpolish').populate('wantedpolish').exec(function(err, user) {
-        if (!user) {
+        if (!user || user.username==="admin" || user.username==="lacquertracker") {
             res.redirect('/error');
         } else {
             var data = {};

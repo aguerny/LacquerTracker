@@ -80,7 +80,7 @@
             <col width="12%">
             <col width="12%">
             <col width="8%">
-                <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Type</th><th>Info</th></tr>
+                <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Swatch</th><th>Type</th><th>Info</th></tr>
                 <% for(var i=0; i<polishes.length; i++) {%>
                     <tr><td><a id='tablelink' href='/polish/<%= polishes[i].brand.replace(/ /g,"_") %>/<%= polishes[i].name.replace(/ /g,"_") %>'><%= polishes[i].name %></a></td>
                     <td><%= polishes[i].brand %></td>
@@ -114,6 +114,13 @@
         </div>
     </section>
     </div>
+
+
+
+
+
+
+    
     <div id="smalllayout">
         <section>
         <h3>Browse by:</h3><br>
@@ -182,13 +189,13 @@
         <hr><br>
 
             <table id="polishbrowse" class="sortable" style="width:100%">
+            <col width="27%">
             <col width="22%">
-            <col width="22%">
-            <col width="22%">
-            <col width="12%">
-            <col width="12%">
+            <col width="25%">
+            <col width="8%">
             <col width="10%">
-                <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Color</th><th>Type</th><th>Info</th></tr>
+            <col width="8%">
+                <tr><th>Name</th><th>Brand</th><th>Collection</th><th>Swatch</th><th>Type</th><th>Info</th></tr>
                 <% for(var i=0; i<polishes.length; i++) {%>
                     <tr><td><a id='tablelink' href='/polish/<%= polishes[i].brand.replace(/ /g,"_") %>/<%= polishes[i].name.replace(/ /g,"_") %>'><%= polishes[i].name %></a></td>
                     <td><%= polishes[i].brand %></td>
@@ -214,7 +221,7 @@
             </table>
             <div style="clear:both;">
                 <% if (polishes.length === 50) { %>
-                    <% if (page > 1) {%><p style="float:right;"><a id="prevlink" href="#">&#8592; Prev </a> | <a id="nextlink" href="#">Next &#8594;</a></p><%} else if (page === 1) {%><p style="float:right;"><a id="nextlink" href="#">Next &#8594;</a></p><%}%>
+                    <% if (page > 1) {%><p style="float:right;"><a id="prevlinkmobile" href="#">&#8592; Prev </a> | <a id="nextlinkmobile" href="#">Next &#8594;</a></p><%} else if (page === 1) {%><p style="float:right;"><a id="nextlinkmobile" href="#">Next &#8594;</a></p><%}%>
                 <% } %>
                 <p style="float:left;">Can't find the polish you're looking for? <a href="/polishadd">Add it to the database.</a></p>
             </div>
@@ -235,6 +242,17 @@ $(document).ready(function() {
     $("#prevlink").click(function(){
         $("#prevpage").trigger('click');
         return false;
+    });
+
+
+    $('#nextlinkmobile').on('tap', function(e){
+        $("#nextpage").trigger('click');
+        e.preventDefault();
+    });
+
+    $('#prevlinkmobile').on('tap', function(e){
+        $("#prevpage").trigger('click');
+        e.preventDefault();
     });
 
 

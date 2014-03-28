@@ -20,7 +20,6 @@
     "lodash": "*",
     "simple-recaptcha": "*",
     "bcrypt-nodejs": "*",
-    "express-device": "*",
     "mongoose-auto-increment": "*"
   }
 }
