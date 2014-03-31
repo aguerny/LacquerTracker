@@ -21,7 +21,7 @@
                 <b><a name="addcomment"><font color="#000000">Add a Comment:</font></b><br><br>
                 <a href="/photo/upload">Upload a photo?</a><br><br>
                 <form action="/forums/<%= postforum %>/<%= postid %>/<%= replyid %>/add" method="post">
-                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                    <textarea class="markItUp" name="message" required></textarea><br><br>
                     <input type="submit" value="Submit" class="button">
                 </form>
             <% } %>

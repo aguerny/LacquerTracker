@@ -15,32 +15,64 @@ $(function() {
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
-        <div id="biglayout">
         <section>
-        <h2><%= pbrand %> - <%= pname %></h2><br><br>
-        <div id="polish-wrap">
-            <div id="polish-left_col">
-                <a href="/polishedit/<%= pid %>">Edit information | </a>
-                <% if (status === "owned") { %>
-                    Owned (<a href="/removeown/<%= pid %>">remove</a>)
-                <% } else if (status === "wanted") {%>
-                    Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a>
-                <% } else { %>
-                    <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a>
-                <% } %>
-                <br><br><br><div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br><br>
-                <b>Code:</b> <%= pcode %><br><br>
-                <b>Collection:</b> <%= pbatch %><br><br>
-                <b>Color:</b> <%= pcolorcat %><br><br>
-                <b>Type:</b>
-                    <% if (ptype === "colorchange") {%>color changing
-                    <%} else if (ptype === "topbase") {%>top/base coat
-                    <%} else if (ptype === "glow") {%>glow in the dark
-                    <%} else {%><%= ptype %><%}%>
-                <br><br><br><br>
-                <a target="_blank" href="http://www.amazon.com/s/?_encoding=UTF8&camp=1789&creative=390957&linkCode=ur2&pageMinusResults=1&suo=1393008765386&tag=lacqutrack-20&url=search-alias%3Daps#/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=<%= linkbrand %>%20<%= linkname %>&sepatfbtf=true&tc=1393008769421">View on Amazon</a><img src="https://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+            <div>
+                <h2><%= pbrand %> - <%= pname %></h2><br><br>
             </div>
-            <div id="polish-right_col">
+            <div id="biglayout">
+                <div id="polish-wrap">
+                    <div id="polish-left_col">
+                        <a href="/polishedit/<%= pid %>">Edit information | </a>
+                        <% if (status === "owned") { %>
+                            Owned (<a href="/removeown/<%= pid %>">remove</a>)
+                        <% } else if (status === "wanted") {%>
+                            Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a>
+                        <% } else { %>
+                            <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a>
+                        <% } %>
+                        <br><br><br><div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br><br>
+                        <b>Code:</b> <%= pcode %><br><br>
+                        <b>Collection:</b> <%= pbatch %><br><br>
+                        <b>Color:</b> <%= pcolorcat %><br><br>
+                        <b>Type:</b>
+                            <% if (ptype === "colorchange") {%>color changing
+                            <%} else if (ptype === "topbase") {%>top/base coat
+                            <%} else if (ptype === "glow") {%>glow in the dark
+                            <%} else {%><%= ptype %><%}%>
+                        <br><br><br><br>
+                        <a target="_blank" href="http://www.amazon.com/s/?_encoding=UTF8&camp=1789&creative=390957&linkCode=ur2&pageMinusResults=1&suo=1393008765386&tag=lacqutrack-20&url=search-alias%3Daps#/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=<%= linkbrand %>%20<%= linkname %>&sepatfbtf=true&tc=1393008769421">View on Amazon</a><img src="https://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+                    </div>
+                    <div id="polish-right_col">
+                        <div class="slideshow">
+                            <div class="slideButtons">
+                                <span>(<%= numphotos %>)</span>&nbsp;&nbsp;
+                                <span><a href="/photo/add/<%= pid %>">Add</a></span>
+                                <% if (numphotos > 0) { %>
+                                    &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/photo/remove/<%= pid %>">Remove</a></span>
+                                <% } %>
+                                <% if (numphotos > 1) { %>
+                                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                                    <span class="prev"><a href="#">Prev</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                    <span class="next"><a href="#">Next</a></span>
+                                <% } %>
+                            </div>
+                            <div class="gallery">
+                                <% for (i=0; i<allphotos.length; i++) { %>
+                                    <li><br><img src="<%= allphotos[i].location %>"></li>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="smalllayout">
+                <% if (status === "owned") { %>
+                    Owned (<a href="/removeown/<%= pid %>">remove</a>)<br><br><br>
+                <% } else if (status === "wanted") {%>
+                    Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a><br><br><br>
+                <% } else { %>
+                    <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a><br><br><br>
+                <% } %>
                 <div class="slideshow">
                     <div class="slideButtons">
                         <span>(<%= numphotos %>)</span>&nbsp;&nbsp;
@@ -60,108 +92,45 @@ $(function() {
                         <% } %>
                     </div>
                 </div>
+                <br><br>
+                <a href="/polishedit/<%= pid %>">Edit information</a><br><br>
+                <br><div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br>
+                <b>Code:</b> <%= pcode %><br><br>
+                <b>Collection:</b> <%= pbatch %><br><br>
+                <b>Color:</b> <%= pcolorcat %><br><br>
+                <b>Type:</b> <%= ptype %><br><br>
+                <br>
+                <a target="_blank" href="http://www.amazon.com/s/?_encoding=UTF8&camp=1789&creative=390957&linkCode=ur2&pageMinusResults=1&suo=1393008765386&tag=lacqutrack-20&url=search-alias%3Daps#/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=<%= linkbrand %>%20<%= linkname %>&sepatfbtf=true&tc=1393008769421">View on Amazon</a><img src="https://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
             </div>
-        </div>
-        </section>
-    <div id="container" class="clear">
-        <section>
-        <hr><br><br>
-        <% if (userreview.length > 0 || notes.length > 0 || rating.length > 0) { %>
-            [<i><a href="/review/edit/<%= pid %>">Edit your review</a></i>]<br><br><br><br>
-            <h5>Your Rating:</h5><br><span class="stars"><%= rating %></span><br><br><br><br>
-            <h5>Your Review:</h5><br><%= userreview %><br><br><br><br>
-            <h5>Your Notes:</h5><br><%= notes %>
-        <% } else {%>
-        [<i><a href="/review/edit/<%= pid %>">Add a review or personal notes for this polish.</a></i>]
-        <% } %>
-        <% if (allreviews.length > 0 || pdupes.length > 0) { %>
-        <br><br><hr><br><br>
-            <% if (allreviews.length > 0) { %>
-                <h5>All User Reviews:</h5><br>
-                <% for (i=0; i<allreviews.length; i++) {%>
-                    <% if (allreviews[i].userreview.length > 0) { %>
-                        <span class="stars"><%= allreviews[i].rating %></span> - <%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
-                    <% } %>
-                <% } %>
-            <br><br>
-            <% } %>
-            <% if (pdupes.length > 0) { %>
-                <h5>User-Submitted Dupes:</h5>
-                <p style="white-space: pre;"><%- pdupes %></p><br><br>
-            <% } %>
-        <% } %>
-        </div>
-    </div>
-        
-
-        <div id="smalllayout">
+            </section>
+            <div id="container" class="clear">
             <section>
-        <h2><%= pbrand %> - <%= pname %></h2><br>
-            <% if (status === "owned") { %>
-                Owned (<a href="/removeown/<%= pid %>">remove</a>)<br><br><br>
-            <% } else if (status === "wanted") {%>
-                Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a><br><br><br>
-            <% } else { %>
-                <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a><br><br><br>
+            <hr><br>
+            <% if (userreview.length > 0 || notes.length > 0 || rating.length > 0) { %>
+                <i><a href="/review/edit/<%= pid %>">Edit your review</a></i><br><br><br>
+                <h5>Your Rating:</h5><br><span class="stars"><%= rating %></span><br><br><br><br>
+                <h5>Your Review:</h5><br><%= userreview %><br><br><br><br>
+                <h5>Your Notes:</h5><br><%= notes %>
+            <% } else {%>
+            <i><a href="/review/edit/<%= pid %>">Add a review or personal notes for this polish.</a></i>
             <% } %>
-            <div class="slideshow">
-                <div class="slideButtons">
-                    <span>(<%= numphotos %>)</span>&nbsp;&nbsp;
-                    <span><a href="/photo/add/<%= pid %>">Add</a></span>
-                    <% if (numphotos > 0) { %>
-                        &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/photo/remove/<%= pid %>">Remove</a></span>
+            <% if (allreviews.length > 0 || pdupes.length > 0) { %>
+            <br><br><hr><br><br>
+                <% if (allreviews.length > 0) { %>
+                    <h5>All User Reviews:</h5><br>
+                    <% for (i=0; i<allreviews.length; i++) {%>
+                        <% if (allreviews[i].userreview.length > 0) { %>
+                            <span class="stars"><%= allreviews[i].rating %></span> - <%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+                        <% } %>
                     <% } %>
-                    <% if (numphotos > 1) { %>
-                        &nbsp;&nbsp;|&nbsp;&nbsp;
-                        <span class="prev"><a href="#">Prev</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
-                        <span class="next"><a href="#">Next</a></span>
-                    <% } %>
-                </div>
-                <div class="gallery">
-                    <% for (i=0; i<allphotos.length; i++) { %>
-                        <li><br><img src="<%= allphotos[i].location %>"></li>
-                    <% } %>
-                </div>
-            </div>
-            <br><br>
-            <a href="/polishedit/<%= pid %>">Edit information</a><br><br>
-            <br><div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br>
-            <b>Code:</b> <%= pcode %><br><br>
-            <b>Collection:</b> <%= pbatch %><br><br>
-            <b>Color:</b> <%= pcolorcat %><br><br>
-            <b>Type:</b> <%= ptype %><br><br>
-            <br>
-            <a target="_blank" href="http://www.amazon.com/s/?_encoding=UTF8&camp=1789&creative=390957&linkCode=ur2&pageMinusResults=1&suo=1393008765386&tag=lacqutrack-20&url=search-alias%3Daps#/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=<%= linkbrand %>%20<%= linkname %>&sepatfbtf=true&tc=1393008769421">View on Amazon</a><img src="https://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-            <br>
-        </section>
-    <div id="container" class="clear">
-        <section>
-        <hr><br>
-        <% if (userreview.length > 0 || notes.length > 0 || rating.length > 0) { %>
-            [<i><a href="/review/edit/<%= pid %>">Edit your review</a></i>]<br><br><br><br>
-            <h5>Your Rating:</h5><br><span class="stars"><%= rating %></span><br><br><br><br>
-            <h5>Your Review:</h5><br><%= userreview %><br><br><br><br>
-            <h5>Your Notes:</h5><br><%= notes %>
-        <% } else {%>
-        [<i><a href="/review/edit/<%= pid %>">Add a review or personal notes for this polish.</a></i>]
-        <% } %>
-        <% if (allreviews.length > 0 || pdupes.length > 0) { %>
-        <br><br><hr><br><br>
-            <% if (allreviews.length > 0) { %>
-                <h5>All User Reviews:</h5><br>
-                <% for (i=0; i<allreviews.length; i++) {%>
-                    <% if (allreviews[i].userreview.length > 0) { %>
-                        <span class="stars"><%= allreviews[i].rating %></span> - <%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
-                    <% } %>
+                <br><br>
                 <% } %>
-            <br><br>
+                <% if (pdupes.length > 0) { %>
+                    <h5>User-Submitted Dupes:</h5>
+                    <p style="white-space: pre;"><%- pdupes %></p>
+                <% } %>
             <% } %>
-            <% if (pdupes.length > 0) { %>
-                <h5>User-Submitted Dupes:</h5>
-                <p style="white-space: pre;"><%- pdupes %></p>
-            <% } %>
-        <% } %>
-        </div>
+            </div>
         </section>
     </div>
 </div>

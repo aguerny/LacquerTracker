@@ -3,40 +3,31 @@
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
-    	<section>
-        <div id="biglayout">
-    		<form action="/photo/upload" method="post" enctype='multipart/form-data'>
-	     		<h3>Add a Photo:</h3><br>
-                Image for Upload: <input type="file" value="photo" name="photo" required>
-                    </input><br><br>
-                Do you want this image to appear on your profile page?
-                    <select name="onprofile">
-                        <option value="no">no</option>
-                        <option value="yes">yes</option>
-                        </select><br><br><br>
-                <input type="submit" value="Submit" class="button">
-    		</form>
-            <% if (typeof message !== "undefined") { %>
-                <br><br><b><%= message %></b>
-            <% } %>
-            </div>
+        <section>
             <div id="smalllayout">
-            <% if (typeof message !== "undefined") { %>
-            <center><h3><%= message %></h3><br><br></center>
-                    <% } %>
-                 <form action="/photo/upload" method="post" enctype='multipart/form-data'>
-            <h3>Add a Photo:</h3><br>
-                            Image for Upload: <input type="file" value="photo" name="photo" required>
-                                </input><br><br>
-                            Do you want this image to appear on your profile page?
-                                <select name="onprofile">
-                                    <option value="no">no</option>
-                                    <option value="yes">yes</option>
-                                    </select><br><br><br>
-                            <input type="submit" value="Submit" class="button">
-                 </form>
-                 </div>
-    	</section>
+                <% if (typeof message !== "undefined") { %>
+                    <center><h3><%= message %></h3><br><br></center>
+                <% } %>
+            </div>
+            <div>
+                <form action="/photo/upload" method="post" enctype='multipart/form-data'>
+                    <h3>Add a Photo:</h3><br>
+                    Image for Upload: <input type="file" value="photo" name="photo" required>
+                        </input><br><br>
+                    Do you want this image to appear on your profile page?
+                        <select name="onprofile">
+                            <option value="no">no</option>
+                            <option value="yes">yes</option>
+                            </select><br><br><br>
+                    <input type="submit" value="Submit" class="button">
+                </form>
+            </div>
+            <div id="biglayout">
+                <% if (typeof message !== "undefined") { %>
+                    <br><br><b><%= message %></b>
+                <% } %>
+            </div>
+        </section>
     </div>
 </div>
 

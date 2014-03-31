@@ -81,7 +81,7 @@ app.post('/signup', function(req, res) {
 
                                             //Email not sent
                                             if (error) {
-                                                res.render('revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Your account was created, but there was an error sending your validation e-mail. Please try again above.'});
+                                                res.render('revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Your account was created, but there was an error sending your validation e-mail. Please try again.'});
                                             }
 
                                             //email sent successfully
@@ -115,7 +115,7 @@ app.get('/validate/:id', function(req, res) {
                 if (err) {
                     res.redirect('/error');
                 } else {
-                    req.flash('loginMessage', 'Account validated! Please sign in above.');
+                    req.flash('loginMessage', 'Account validated! Please sign in.');
                     res.render('login.ejs', {title: 'Login - Lacquer Tracker', message: req.flash('loginMessage')});
                 }
             })
@@ -135,7 +135,7 @@ app.post('/revalidate', function(req, res) {
         } else {
             if (user) {
                 if (user.isvalidated === true) {
-                    res.render('login.ejs', {title: 'Login - Lacquer Tracker', message:'Your account has already been validated. Please log in above.'});
+                    res.render('login.ejs', {title: 'Login - Lacquer Tracker', message:'Your account has already been validated. Please log in.'});
                 } else {
                     var mailOpts, smtpConfig;
                     smtpConfig = nodemailer.createTransport('SMTP', {

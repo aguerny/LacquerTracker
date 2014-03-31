@@ -26,7 +26,6 @@ app.get('/profile/:username', function(req, res) {
         } else {
             var data = {};
             data.title = 'Profile - Lacquer Tracker';
-            data.message = req.flash('profileMessage');
             data.opolishes = user.ownedpolish;
             data.wpolishes = user.wantedpolish;
             data.username = user.username;
@@ -69,7 +68,6 @@ app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
         User.findOne({username : req.params.username}).populate('photos').exec(function(err, user) {
         var data = {};
             data.title = 'Edit Your Profile - Lacquer Tracker';
-            data.message = req.flash('editProfileMessage');
             data.userid = user.id;
             data.username = user.username;
             data.email = user.email;
@@ -97,8 +95,7 @@ app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
 app.post('/profile/:username/edit', isLoggedIn, function(req, res) {
     User.findOne({username:req.params.username}, function(err, user) {
         if (!user) {
-            req.flash('editProfileMessage', 'Error editing profile.')
-            res.redirect('/polishedit/:username');
+            res.redirect('/error');
         } else {
             user.email = sanitizer.sanitize(req.body.email);
             user.about = sanitizer.sanitize(req.body.about);

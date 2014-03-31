@@ -4,33 +4,28 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     	<section>
-            <div id="biglayout">
-    		<form action="/login" method="post">
-	     		<h3>Log in below:</h3><br>
-    			Username: <input type="text" name="username" style="width:40%;"><br><br>
-    			Password: <input type="password" name="password" style="width:40%;"><br><br><br>
-    			<input type="submit" value="Submit" class="button" id="login-button">
-    		</form>
-            <a href="/passwordreset">Forgot your password?</a>
-            <% if (message.length > 0) { %>
-                <br><br><br><b><%= message %></b>
-            <% } %>
-            </div>
-
-
             <div id="smalllayout">
-            <% if (typeof message !== "undefined") { %>
-                <% if (message.length > 0) { %>
-                    <center><h3><%= message %></h3><br><br></center>
+                <% if (typeof message !== "undefined") { %>
+                    <% if (message.length > 0) { %>
+                        <center><h3><%= message %></h3><br><br></center>
+                    <% } %>
                 <% } %>
-            <% } %>
-            <form action="/login" method="post">
-            <h3>Log in below:</h3><br>
-                 Username: <input type="text" name="username" class="fullwidth"><br><br>
-                 Password: <input type="password" name="password" class="fullwidth"><br><br>
-                 <input type="submit" value="Submit" class="button" id="login-button">
-                 </form><br>
-            <a href="/passwordreset">Forgot your password?</a>
+            </div>
+    		<div>
+                <form action="/login" method="post">
+    	     		<h3>Log in below:</h3><br>
+        			Username: <input type="text" name="username" class="width40"><br><br>
+        			Password: <input type="password" name="password" class="width40"><br><br><br>
+        			<input type="submit" value="Submit" class="button" id="login-button">
+        		</form>
+                <br><a href="/passwordreset">Forgot your password?</a>
+            </div>
+            <div id="biglayout">
+                <% if (typeof message !== "undefined") { %>
+                    <% if (message.length > 0) { %>
+                        <br><br><br><b><%= message %></b>
+                    <% } %>
+                <% } %>
             </div>
     	</section>
     </div>
