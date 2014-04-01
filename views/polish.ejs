@@ -153,6 +153,11 @@ var speed = 100;
             next = next.index() == -1 ? first : next;
         now.fadeOut(speed, function() {next.fadeIn(speed);});
     });
+
+    $('.gallery').touchwipe({
+        wipeLeft: function() {$(".next").trigger('click');},
+        wipeRight: function() { $('.prev').trigger('click');},
+    });
 </script>
 
 <% include layoutBottom %>

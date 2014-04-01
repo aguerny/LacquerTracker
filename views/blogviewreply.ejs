@@ -13,7 +13,7 @@
                     <% } %>
                 <b><a href="/profile/<%= comment.user.username %>"><% if (postuser.username === comment.user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= comment.user.username %><% if (postuser.username === comment.user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= comment.date %>:</font>
                     <br>
-                    <div style="padding-left:3%">
+                    <div>
                     <p style="white-space: pre;"><%- comment.message %></p>
                 </div>
             <br><hr><br><br>

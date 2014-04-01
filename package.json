@@ -7,6 +7,8 @@
   },
   "dependencies": {
     "express": "3.4.8",
+    "readable-stream": "*",
+    "stream-counter": "*",
     "ejs": "*",
     "mongodb": "*",
     "mongoose": "*",

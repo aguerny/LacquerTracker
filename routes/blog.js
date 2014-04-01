@@ -213,6 +213,21 @@ app.get('/blog/:title/:id/remove', isLoggedIn, function(req, res) {
 });
 
 
+//remove blog post comment - admin only
+app.get('/blog/:title/:id/removepermanent', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        BlogComment.findById(req.params.id, function(err, comment) {
+            Blog.find({title: req.params.title}).remove({comments: req.params.id});
+                BlogComment.findByIdAndRemove(req.params.id, function(err) {
+                res.redirect("/blog/" + req.params.title);
+            })
+        })
+    } else {
+        res.redirect('/error');
+    }
+});
+
+
 
 //edit blog post
 app.get('/blog/:id/edit', isLoggedIn, function(req, res) {

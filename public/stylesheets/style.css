@@ -1,6 +1,6 @@
 /*--------------------------ALL DISPLAYS-------------------------------*/
 
-@media screen and (min-width: 1375px), screen and (max-width: 1374px) and (min-width: 601px), screen and (max-width: 600px) {
+@media screen {
 
     html{overflow-y:scroll;} /* Forces a scrollbar when the viewport is larger than the websites content - CSS3 */
 
@@ -76,6 +76,14 @@
     th, td {padding:1%;}
     th {color: #10695A; font-weight:bold; background-color: #D5DEDE;}
 
+    td span, th span {
+        display: block;
+        white-space: pre-wrap;
+        width: 100%;
+        overflow: hidden;
+        font-size: 100%;
+    }
+
 
     /*---Footer---*/
 
@@ -87,7 +95,7 @@
 
 /*--------------------------LARGE AND MEDIUM DISPLAYS-------------------------------*/
 
-@media screen and (min-width: 1375px), screen and (max-width: 1374px) and (min-width: 601px) {
+@media screen and (min-width: 1200px), screen and (max-width: 1199px) and (min-width: 600px) {
 
     /* ---Wrappers---*/
 
@@ -101,7 +109,7 @@
 
     /*---General---*/
 
-    #header, #container, #footer{display:block; max-width:1350px; margin:0 auto;}
+    #header, #container, #footer{display:block; max-width:1250px; margin:0 auto;}
 
     #smalllayout {display:none;}
 
@@ -151,7 +159,7 @@
 
     #polish-image2 {width:80%; margin: 0 0 4% 0;}
 
-    .forumtable {width: 100%; max-width:1050px;}
+    .forumtable {width: 100%; max-width:950px;}
 
     .userphotosmall {
         max-height: 200px;
@@ -184,6 +192,14 @@
     .width53 {display:inline-block; width:53%;}
     .width80 {display:inline-block; width:80%;}
 
+    .browsetable th.name {width:22%;}
+    .browsetable th.brand {width:20%;}
+    .browsetable th.collection {width:20%;}
+    .browsetable th.color {width:10%;}
+    .browsetable th.swatch {width:8%;}
+    .browsetable th.type {width:12%;}
+    .browsetable th.info {width:8%;}
+
     .ownedtable th.name {width:22%;}
     .ownedtable th.brand {width:20%;}
     .ownedtable th.collection {width:18%;}
@@ -212,27 +228,27 @@
 
 /*--------------------------LARGE DISPLAYS-------------------------------*/
 
-@media screen and (min-width: 1375px) {
+@media screen and (min-width: 1200px) {
 
     #header h1{float:left; margin:7px 0 20px 0; color:black;}
-    #logininfo {text-align: right; padding-top: 1.5%; color:#000000;}
+    #logininfo {text-align: right; padding-top: 1.5%; margin-right: 0; color:#000000;}
 
 }
 
 
 /*--------------------------MEDIUM DISPLAYS-------------------------------*/
 
-@media screen and (max-width: 1374px) and (min-width: 601px) {
+@media screen and (max-width: 1199px) and (min-width: 600px) {
 
-    #header h1{float:left; margin:7px 0 20px 2%; color:black;}
-    #logininfo {text-align: right; padding-top: 1.5%; padding-right: 2%; color:#000000;}
+    #header h1{float:left; margin:7px 0 20px .5%; color:black;}
+    #logininfo {text-align: right; padding-top: 1.5%; padding-right: .5%; color:#000000;}
 
 }
 
 
 /*--------------------------SMALL DISPLAYS-------------------------------*/
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 599px) {
 
     /* ---Wrappers---*/
 
@@ -264,8 +280,12 @@
     /*---Header---*/
 
     #header h1, nav, nav a{text-align:center; margin:6px 0 6px 0; color:black; list-style:none;}
+    #header h1 {text-align:left; margin-left:1%;}
 
     #header nav, #header nav a {background-color:#232323; color:#C0BAB6; padding: 2px 0 2px 0;}
+
+    #logininfo {font-size:12px; position:absolute; top:0; right:0; float:right; margin-right:1%;}
+    #logininfo a{color:#10695A;}
 
     /*---Main Content---*/
 
@@ -298,8 +318,15 @@
         position: inline;
     }
 
+    #recaptcha_image {
+        max-width:100%;
+    }
     #recaptcha_image img {
-        width:235px;
+        max-width:98%;
+    }
+
+    #recaptcha_image textarea {
+        max-width:98%;
     }
 
     .width50 {display:inline-block; width:98%;}
@@ -309,12 +336,20 @@
     .width53 {display:inline-block; width:98%;}
     .width80 {display:inline-block; width:98%;}
 
-    .ownedtable th.name {width:22%;}
-    .ownedtable th.brand {width:20%;}
+    .browsetable th.name {width:20%;}
+    .browsetable th.brand {width:18%;}
+    .browsetable th.collection {width:20%;}
+    .browsetable th.color {width:12%;}
+    .browsetable th.swatch {width:8%;}
+    .browsetable th.type {width:12%;}
+    .browsetable th.info {width:10%;}
+
+    .ownedtable th.name {width:20%;}
+    .ownedtable th.brand {width:18%;}
     .ownedtable th.collection {width:20%;}
-    .ownedtable th.color {width:10%;}
+    .ownedtable th.color {width:12%;}
     .ownedtable th.swatch {width:8%;}
-    .ownedtable th.type {width:12%;}
+    .ownedtable th.type {width:14%;}
     .ownedtable th.rating {width:8%;}
 
     .wantedtable th.name {width:24%;}

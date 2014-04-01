@@ -53,20 +53,21 @@ $(function() {
             <% if (opolishes.length > 0) { %>
                 <br><br><h4><%= username %>'s Owned Polishes (<%= opolishes.length %>):</h4><br>
                 <table id="ownedpolish" class="sortable ownedtable">
-                    <tr><th class="name">Name</th><th class="brand">Brand</th><th class="collection">Collection</th><th class="color">Color</th><th class="swatch">Swatch</th><th class="type">Type</th><th class="rating">Rating</th></tr>
+                    <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="color"><span>Color</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><th class="rating"><span>Rating</span></th></tr>
                 <% for(var i=0; i<opolishes.length; i++) {%>
-                    <tr><td><a id='tablelink' href='/polish/<%= opolishes[i].brand.replace(/ /g,"_") %>/<%= opolishes[i].name.replace(/ /g,"_") %>'><%= opolishes[i].name %></a></td>
-                    <td><%= opolishes[i].brand %></td>
-                    <td><%= opolishes[i].batch %></td>
-                    <td><%= opolishes[i].colorcat %></td>
+                    <tr><td><a id='tablelink' href='/polish/<%= opolishes[i].brand.replace(/ /g,"_") %>/<%= opolishes[i].name.replace(/ /g,"_") %>'><span><%= opolishes[i].name %></span></a></td>
+                    <td><span><%= opolishes[i].brand %></span></td>
+                    <td><span><%= opolishes[i].batch %></span></td>
+                    <td><span><%= opolishes[i].colorcat %></span></td>
                     <td><div id='swatch' style='background-color:<%= opolishes[i].colorhex %>;'>&nbsp;</div></td>
                     <td>
-                        <% if (opolishes[i].type === "topbase") {%>top/base coat
-                        <%} else if (opolishes[i].type === "glow") {%>glow in the dark
-                        <%} else {%><%= opolishes[i].type %><%}%>
+                        <% if (opolishes[i].type === "topbase") {%><span>top/base coat</span>
+                        <%} else if (opolishes[i].type === "glow") {%><span>glow in the dark</span>
+                        <%} else {%><span><%= opolishes[i].type %></span><%}%>
                     </td>
                     <td><% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
-                            <span style="display:none"><%= oreviews[i].rating %></span><span class="stars"><%= oreviews[i].rating %></span>
+                            <div id="smalllayout"><span><%= oreviews[i].rating%></span></div>
+                            <div id="biglayout"><span style="display:none"><%= oreviews[i].rating %></span><span class="stars"><%= oreviews[i].rating %></span></div>
                         <% } %>
                     </td></tr>
                 <% } %>
@@ -76,17 +77,17 @@ $(function() {
             <% if (wpolishes.length > 0) { %>
                 <br><br><h4><%= username %>'s Wanted Polishes (<%= wpolishes.length %>):</h4><br>
                     <table id="wantedpolish" class="sortable wantedtable">
-                        <tr><th class="name">Name</th><th class="brand">Brand</th><th class="collection">Collection</th><th class="color">Color</th><th class="swatch">Swatch</th><th class="type">Type</th></tr>
+                        <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="color"><span>Color</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th></tr>
                     <% for(var i=0; i<wpolishes.length; i++) {%>
-                        <tr><td><a id='tablelink' href='/polish/<%= wpolishes[i].brand.replace(/ /g,"_") %>/<%= wpolishes[i].name.replace(/ /g,"_") %>'><%= wpolishes[i].name %></a></td>
-                        <td><%= wpolishes[i].brand %></td>
-                        <td><%= wpolishes[i].batch %></td>
-                        <td><%= wpolishes[i].colorcat %></td>
+                        <tr><td><a id='tablelink' href='/polish/<%= wpolishes[i].brand.replace(/ /g,"_") %>/<%= wpolishes[i].name.replace(/ /g,"_") %>'><span><%= wpolishes[i].name %></span></a></td>
+                        <td><span><%= wpolishes[i].brand %></span></td>
+                        <td><span><%= wpolishes[i].batch %></span></td>
+                        <td><span><%= wpolishes[i].colorcat %></span></td>
                         <td><div id='swatch' style='background-color:<%= wpolishes[i].colorhex %>;'>&nbsp;</div></td>
                         <td>
-                            <% if (wpolishes[i].type === "topbase") {%>top/base coat
-                            <%} else if (wpolishes[i].type === "glow") {%>glow in the dark
-                            <%} else {%><%= wpolishes[i].type %><%}%>
+                            <% if (wpolishes[i].type === "topbase") {%><span>top/base coat</span>
+                            <%} else if (wpolishes[i].type === "glow") {%><span>glow in the dark</span>
+                            <%} else {%><span><%= wpolishes[i].type %></span><%}%>
                         </td>
                     <% } %>
                     </table>
@@ -104,5 +105,18 @@ $(function() {
     </section>
     </div>
 </div>
+
+<script>
+$(function() {
+  $('td span').each(function() {
+    var fontSize = 100;
+    while (this.scrollWidth > $(this).width() && fontSize > 0) {
+      // adjust the font-size 5% at a time
+      fontSize -= 5;
+      $(this).css('font-size', fontSize + '%');
+    }
+  });
+});
+</script>
 
 <% include layoutBottom %>

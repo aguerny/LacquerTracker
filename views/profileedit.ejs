@@ -4,17 +4,22 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     	<section>
-            <div>
+            <div id="biglayout">
                 <form action="/profile/<%= username %>/edit" method="post">
                     <h3>Edit your profile:</h3><br><br>
-            </div>
-            <div id="biglayout">
                     <a href="/photo/profile">Upload or change your avatar</a> | <a href="/photo/upload">Add a photo to your profile</a><br><br><br>
+                    Email: <i>(This is only visible to you.)</i><br><input type="text" name="email" value="<%= email %>" class="width40"><br><br>
+                    <input type="checkbox" name="notifications" <% if (notifications === "on") { %> checked <% } %>>Receive e-mail notifications for new comments on your posts?<br><br>
+                    <input type="checkbox" name="useremail" <% if (useremail === "on") { %> checked <% } %>>Allow users to send you e-mail? (Your e-mail address will not be visible.)<br><br><br><br>
+                    All about you: <i>(Tell us about yourself! How did you get into nail polish? What are your other hobbies?)</i><br><textarea class="markItUp" type="text" name="about" value="<%= about %>"><%= about %></textarea><br><br>
+                    <input type="submit" value="Submit" class="button">
+                </form>
             </div>
             <div id="smalllayout">
+                <form action="/profile/<%= username %>/edit" method="post">
+                    <h3>Edit your profile:</h3><br><br>
                     <a href="/photo/profile">Upload or change your avatar</a><br><br><a href="/photo/upload">Add a photo to your profile</a><br><br><br>
-            </div>
-                    Email: <i>(This is only visible to you.)</i><br><input type="text" name="email" value="<%= email %>" size="63"><br><br>
+                    Email: <i>(This is only visible to you.)</i><br><input type="text" name="email" value="<%= email %>" class="width40"><br><br>
                     <input type="checkbox" name="notifications" <% if (notifications === "on") { %> checked <% } %>>Receive e-mail notifications for new comments on your posts?<br><br>
                     <input type="checkbox" name="useremail" <% if (useremail === "on") { %> checked <% } %>>Allow users to send you e-mail? (Your e-mail address will not be visible.)<br><br><br><br>
                     All about you: <i>(Tell us about yourself! How did you get into nail polish? What are your other hobbies?)</i><br><textarea class="markItUp" type="text" name="about" value="<%= about %>"><%= about %></textarea><br><br>

@@ -264,6 +264,20 @@ app.get('/forums/:forum/:id/:cid/remove', isLoggedIn, function(req, res) {
 });
 
 
+app.get('/forums/:forum/:id/:cid/removepermanent', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        ForumComment.findById(req.params.cid, function(err, comment) {
+            ForumPost.findById(req.params.id).remove({comments: req.params.cid});
+            ForumComment.findByIdAndRemove(req.params.cid, function(err) {
+                res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
+            })
+        })
+    } else {
+        res.redirect('/error');
+    }
+});
+
+
 app.get('/forums/:forum/:id/remove', isLoggedIn, function(req, res) {
     ForumPost.findByIdAndRemove(req.params.id, function(err) {
         ForumComment.find({parentid : req.params.id}).remove();

@@ -18,23 +18,36 @@
                 Tutorials</h3><br>Post nail art tutorials or link to great ones you've found elsewhere.<%}%>
             <% if (forumcat === "offtopic") { %>
                 Off Topic Discussion</h3><br>Anything goes here!<%}%>
-        | <a href="/forums/<%= forumcat %>/add">Add a post</a><br><br><br><br>
+        <br><br><a href="/forums/<%= forumcat %>/add">Add a post</a><br><br><br><br>
         <table class="forumtable">
-            <col width="40%">
+            <col width="35%">
             <col width="20%">
-            <col width="15%">
+            <col width="20%">
             <col width="25%">
-            <tr><th>Post Title</th><th>Started By</th><th>Comments</th><th>Last Updated</th></tr>
+            <tr><th><span>Post Title</span></th><th><span>Started By</span></th><th><span>Comments</span></th><th><span>Last Updated</span></th></tr>
             <% for (i=0; i<forumposts.length; i++) { %>
-                <tr><td><a href="/forums/<%= forumcat %>/<%= forumposts[i].id %>"><%= forumposts[i].title %></a></td>
-                <td><a href='/profile/<%= forumposts[i].user.username %>'><%= forumposts[i].user.username %></a></td>
-                <td><% if (forumposts[i].comments.length === 1) {%><%= forumposts[i].comments.length %> Reply<%} else {%><%= forumposts[i].comments.length %> Replies<%}%></td>
-                <td><%= forumposts[i].dateupdated %></td></tr>
+                <tr><td><a href="/forums/<%= forumcat %>/<%= forumposts[i].id %>"><span><%= forumposts[i].title %></span></a></td>
+                <td><a href='/profile/<%= forumposts[i].user.username %>'><span><%= forumposts[i].user.username %></span></a></td>
+                <td><% if (forumposts[i].comments.length === 1) {%><span><%= forumposts[i].comments.length %> Reply</span><%} else {%><span><%= forumposts[i].comments.length %> Replies</span><%}%></td>
+                <td><span><%= forumposts[i].dateupdated %></span></td></tr>
             <% } %>
         </table>
         </center>
     </section>
     </div>
 </div>
+
+<script>
+$(function() {
+    $('td span').each(function() {
+        var fontSize = 100;
+        while (this.scrollWidth > $(this).width() && fontSize > 0) {
+            // adjust the font-size 5% at a time
+            fontSize -= 5;
+            $(this).css('font-size', fontSize + '%');
+        }
+    });
+});
+</script>
 
 <% include layoutBottom %>
