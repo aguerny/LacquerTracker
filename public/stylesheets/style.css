@@ -109,7 +109,7 @@
 
     /*---General---*/
 
-    #header, #container, #footer{display:block; max-width:1250px; margin:0 auto;}
+    #header, #container, #footer{display:block; max-width:1200px; margin:0 auto;}
 
     #smalllayout {display:none;}
 

@@ -22,6 +22,8 @@
     "lodash": "*",
     "simple-recaptcha": "*",
     "bcrypt-nodejs": "*",
-    "mongoose-auto-increment": "*"
+    "mongoose-auto-increment": "*",
+    "domain": "*",
+    "imagemagick": "*"
   }
 }
