@@ -32,7 +32,7 @@ app.configure(function() {
 	app.use(express.session({cookie: {maxAge: 365 * 24 * 60 * 60 * 1000}})); // session secret
 	app.use(flash()); // use connect-flash for flash messages stored in session
 	app.use(passport.initialize());
-	app.use(passport.session()); // persistent login sessions
+	app.use(passport.session('lalala')); // persistent login sessions
 
 	app.use(function (req, res, next) {
     	res.locals({
@@ -109,7 +109,7 @@ if (cluster.isMaster) {
         	res.setHeader('content-type', 'text/plain');
         	res.end('Oops, there was a problem!\n');
       	} catch (er2) {
-        
+
         // oh well, not much we can do at this point.
         console.error('Error sending 500!', er2.stack);
       	}
