@@ -18,6 +18,7 @@ var userSchema = mongoose.Schema({
 	notifications: String,
 	useremail    : String,
 	creationdate : String,
+	country      : String,
 });
 
 userSchema.plugin(autoIncrement.plugin, {

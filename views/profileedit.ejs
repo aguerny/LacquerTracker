@@ -10,7 +10,260 @@
                     <a href="/photo/profile">Upload or change your avatar</a> | <a href="/photo/upload">Add a photo to your profile</a><br><br><br>
                     Email: <i>(This is only visible to you.)</i><br><input type="text" name="email" value="<%= email %>" class="width40"><br><br>
                     <input type="checkbox" name="notifications" <% if (notifications === "on") { %> checked <% } %>>Receive e-mail notifications for new comments on your posts?<br><br>
-                    <input type="checkbox" name="useremail" <% if (useremail === "on") { %> checked <% } %>>Allow users to send you e-mail? (Your e-mail address will not be visible.)<br><br><br><br>
+                    <input type="checkbox" name="useremail" <% if (useremail === "on") { %> checked <% } %>>Allow users to send you e-mail? (Your e-mail address will not be visible.)<br><br><br>
+                    <select name="country" class="width40">
+                        <option value="">Choose your country for personalized information.</option>
+                        <option value="AFG" <% if (country === "AFG") { %> selected='selected' <%}%>>Afghanistan</option>
+                        <option value="ALA" <% if (country === "ALA") { %> selected='selected' <%}%>>Åland Islands</option>
+                        <option value="ALB" <% if (country === "ALB") { %> selected='selected' <%}%>>Albania</option>
+                        <option value="DZA" <% if (country === "DZA") { %> selected='selected' <%}%>>Algeria</option>
+                        <option value="ASM" <% if (country === "ASM") { %> selected='selected' <%}%>>American Samoa</option>
+                        <option value="AND" <% if (country === "AND") { %> selected='selected' <%}%>>Andorra</option>
+                        <option value="AGO" <% if (country === "AGO") { %> selected='selected' <%}%>>Angola</option>
+                        <option value="AIA" <% if (country === "AIA") { %> selected='selected' <%}%>>Anguilla</option>
+                        <option value="ATA" <% if (country === "ATA") { %> selected='selected' <%}%>>Antarctica</option>
+                        <option value="ATG" <% if (country === "ATG") { %> selected='selected' <%}%>>Antigua and Barbuda</option>
+                        <option value="ARG" <% if (country === "ARG") { %> selected='selected' <%}%>>Argentina</option>
+                        <option value="ARM" <% if (country === "ARM") { %> selected='selected' <%}%>>Armenia</option>
+                        <option value="ABW" <% if (country === "ABW") { %> selected='selected' <%}%>>Aruba</option>
+                        <option value="AUS" <% if (country === "AUS") { %> selected='selected' <%}%>>Australia</option>
+                        <option value="AUT" <% if (country === "AUT") { %> selected='selected' <%}%>>Austria</option>
+                        <option value="AZE" <% if (country === "AZE") { %> selected='selected' <%}%>>Azerbaijan</option>
+                        <option value="BHS" <% if (country === "BHS") { %> selected='selected' <%}%>>Bahamas</option>
+                        <option value="BHR" <% if (country === "BHR") { %> selected='selected' <%}%>>Bahrain</option>
+                        <option value="BGD" <% if (country === "BGD") { %> selected='selected' <%}%>>Bangladesh</option>
+                        <option value="BRB" <% if (country === "BRB") { %> selected='selected' <%}%>>Barbados</option>
+                        <option value="BLR" <% if (country === "BLR") { %> selected='selected' <%}%>>Belarus</option>
+                        <option value="BEL" <% if (country === "BEL") { %> selected='selected' <%}%>>Belgium</option>
+                        <option value="BLZ" <% if (country === "BLZ") { %> selected='selected' <%}%>>Belize</option>
+                        <option value="BEN" <% if (country === "BEN") { %> selected='selected' <%}%>>Benin</option>
+                        <option value="BMU" <% if (country === "BMU") { %> selected='selected' <%}%>>Bermuda</option>
+                        <option value="BTN" <% if (country === "BTN") { %> selected='selected' <%}%>>Bhutan</option>
+                        <option value="BOL" <% if (country === "BOL") { %> selected='selected' <%}%>>Bolivia, Plurinational State of</option>
+                        <option value="BES" <% if (country === "BES") { %> selected='selected' <%}%>>Bonaire, Sint Eustatius and Saba</option>
+                        <option value="BIH" <% if (country === "BIH") { %> selected='selected' <%}%>>Bosnia and Herzegovina</option>
+                        <option value="BWA" <% if (country === "BWA") { %> selected='selected' <%}%>>Botswana</option>
+                        <option value="BVT" <% if (country === "BVT") { %> selected='selected' <%}%>>Bouvet Island</option>
+                        <option value="BRA" <% if (country === "BRA") { %> selected='selected' <%}%>>Brazil</option>
+                        <option value="IOT" <% if (country === "IOT") { %> selected='selected' <%}%>>British Indian Ocean Territory</option>
+                        <option value="BRN" <% if (country === "BRN") { %> selected='selected' <%}%>>Brunei Darussalam</option>
+                        <option value="BGR" <% if (country === "BGR") { %> selected='selected' <%}%>>Bulgaria</option>
+                        <option value="BFA" <% if (country === "BFA") { %> selected='selected' <%}%>>Burkina Faso</option>
+                        <option value="BDI" <% if (country === "BDI") { %> selected='selected' <%}%>>Burundi</option>
+                        <option value="KHM" <% if (country === "KHM") { %> selected='selected' <%}%>>Cambodia</option>
+                        <option value="CMR" <% if (country === "CMR") { %> selected='selected' <%}%>>Cameroon</option>
+                        <option value="CAN" <% if (country === "CAN") { %> selected='selected' <%}%>>Canada</option>
+                        <option value="CPV" <% if (country === "CPV") { %> selected='selected' <%}%>>Cape Verde</option>
+                        <option value="CYM" <% if (country === "CYM") { %> selected='selected' <%}%>>Cayman Islands</option>
+                        <option value="CAF" <% if (country === "CAF") { %> selected='selected' <%}%>>Central African Republic</option>
+                        <option value="TCD" <% if (country === "TCD") { %> selected='selected' <%}%>>Chad</option>
+                        <option value="CHL" <% if (country === "CHL") { %> selected='selected' <%}%>>Chile</option>
+                        <option value="CHN" <% if (country === "CHN") { %> selected='selected' <%}%>>China</option>
+                        <option value="CXR" <% if (country === "CXR") { %> selected='selected' <%}%>>Christmas Island</option>
+                        <option value="CCK" <% if (country === "CCK") { %> selected='selected' <%}%>>Cocos (Keeling) Islands</option>
+                        <option value="COL" <% if (country === "COL") { %> selected='selected' <%}%>>Colombia</option>
+                        <option value="COM" <% if (country === "COM") { %> selected='selected' <%}%>>Comoros</option>
+                        <option value="COG" <% if (country === "COG") { %> selected='selected' <%}%>>Congo</option>
+                        <option value="COD" <% if (country === "COD") { %> selected='selected' <%}%>>Congo, the Democratic Republic of the</option>
+                        <option value="COK" <% if (country === "COK") { %> selected='selected' <%}%>>Cook Islands</option>
+                        <option value="CRI" <% if (country === "CRI") { %> selected='selected' <%}%>>Costa Rica</option>
+                        <option value="CIV" <% if (country === "CIV") { %> selected='selected' <%}%>>Côte d'Ivoire</option>
+                        <option value="HRV" <% if (country === "HRV") { %> selected='selected' <%}%>>Croatia</option>
+                        <option value="CUB" <% if (country === "CUB") { %> selected='selected' <%}%>>Cuba</option>
+                        <option value="CUW" <% if (country === "CUW") { %> selected='selected' <%}%>>Curaçao</option>
+                        <option value="CYP" <% if (country === "CYP") { %> selected='selected' <%}%>>Cyprus</option>
+                        <option value="CZE" <% if (country === "CZE") { %> selected='selected' <%}%>>Czech Republic</option>
+                        <option value="DNK" <% if (country === "DNK") { %> selected='selected' <%}%>>Denmark</option>
+                        <option value="DJI" <% if (country === "DJI") { %> selected='selected' <%}%>>Djibouti</option>
+                        <option value="DMA" <% if (country === "DMA") { %> selected='selected' <%}%>>Dominica</option>
+                        <option value="DOM" <% if (country === "DOM") { %> selected='selected' <%}%>>Dominican Republic</option>
+                        <option value="ECU" <% if (country === "ECU") { %> selected='selected' <%}%>>Ecuador</option>
+                        <option value="EGY" <% if (country === "EGY") { %> selected='selected' <%}%>>Egypt</option>
+                        <option value="SLV" <% if (country === "SLV") { %> selected='selected' <%}%>>El Salvador</option>
+                        <option value="GNQ" <% if (country === "GNQ") { %> selected='selected' <%}%>>Equatorial Guinea</option>
+                        <option value="ERI" <% if (country === "ERI") { %> selected='selected' <%}%>>Eritrea</option>
+                        <option value="EST" <% if (country === "EST") { %> selected='selected' <%}%>>Estonia</option>
+                        <option value="ETH" <% if (country === "ETH") { %> selected='selected' <%}%>>Ethiopia</option>
+                        <option value="FLK" <% if (country === "FLK") { %> selected='selected' <%}%>>Falkland Islands (Malvinas)</option>
+                        <option value="FRO" <% if (country === "FRO") { %> selected='selected' <%}%>>Faroe Islands</option>
+                        <option value="FJI" <% if (country === "FJI") { %> selected='selected' <%}%>>Fiji</option>
+                        <option value="FIN" <% if (country === "FIN") { %> selected='selected' <%}%>>Finland</option>
+                        <option value="FRA" <% if (country === "FRA") { %> selected='selected' <%}%>>France</option>
+                        <option value="GUF" <% if (country === "GUF") { %> selected='selected' <%}%>>French Guiana</option>
+                        <option value="PYF" <% if (country === "PYF") { %> selected='selected' <%}%>>French Polynesia</option>
+                        <option value="ATF" <% if (country === "ATF") { %> selected='selected' <%}%>>French Southern Territories</option>
+                        <option value="GAB" <% if (country === "GAB") { %> selected='selected' <%}%>>Gabon</option>
+                        <option value="GMB" <% if (country === "GMB") { %> selected='selected' <%}%>>Gambia</option>
+                        <option value="GEO" <% if (country === "GEO") { %> selected='selected' <%}%>>Georgia</option>
+                        <option value="DEU" <% if (country === "DEU") { %> selected='selected' <%}%>>Germany</option>
+                        <option value="GHA" <% if (country === "GHA") { %> selected='selected' <%}%>>Ghana</option>
+                        <option value="GIB" <% if (country === "GIB") { %> selected='selected' <%}%>>Gibraltar</option>
+                        <option value="GRC" <% if (country === "GRC") { %> selected='selected' <%}%>>Greece</option>
+                        <option value="GRL" <% if (country === "GRL") { %> selected='selected' <%}%>>Greenland</option>
+                        <option value="GRD" <% if (country === "GRD") { %> selected='selected' <%}%>>Grenada</option>
+                        <option value="GLP" <% if (country === "GLP") { %> selected='selected' <%}%>>Guadeloupe</option>
+                        <option value="GUM" <% if (country === "GUM") { %> selected='selected' <%}%>>Guam</option>
+                        <option value="GTM" <% if (country === "GTM") { %> selected='selected' <%}%>>Guatemala</option>
+                        <option value="GGY" <% if (country === "GGY") { %> selected='selected' <%}%>>Guernsey</option>
+                        <option value="GIN" <% if (country === "GIN") { %> selected='selected' <%}%>>Guinea</option>
+                        <option value="GNB" <% if (country === "GNB") { %> selected='selected' <%}%>>Guinea-Bissau</option>
+                        <option value="GUY" <% if (country === "GUY") { %> selected='selected' <%}%>>Guyana</option>
+                        <option value="HTI" <% if (country === "HTI") { %> selected='selected' <%}%>>Haiti</option>
+                        <option value="HMD" <% if (country === "HMD") { %> selected='selected' <%}%>>Heard Island and McDonald Islands</option>
+                        <option value="VAT" <% if (country === "VAT") { %> selected='selected' <%}%>>Holy See (Vatican City State)</option>
+                        <option value="HND" <% if (country === "HND") { %> selected='selected' <%}%>>Honduras</option>
+                        <option value="HKG" <% if (country === "HKG") { %> selected='selected' <%}%>>Hong Kong</option>
+                        <option value="HUN" <% if (country === "HUN") { %> selected='selected' <%}%>>Hungary</option>
+                        <option value="ISL" <% if (country === "ISL") { %> selected='selected' <%}%>>Iceland</option>
+                        <option value="IND" <% if (country === "IND") { %> selected='selected' <%}%>>India</option>
+                        <option value="IDN" <% if (country === "IDN") { %> selected='selected' <%}%>>Indonesia</option>
+                        <option value="IRN" <% if (country === "IRN") { %> selected='selected' <%}%>>Iran, Islamic Republic of</option>
+                        <option value="IRQ" <% if (country === "IRQ") { %> selected='selected' <%}%>>Iraq</option>
+                        <option value="IRL" <% if (country === "IRL") { %> selected='selected' <%}%>>Ireland</option>
+                        <option value="IMN" <% if (country === "IMN") { %> selected='selected' <%}%>>Isle of Man</option>
+                        <option value="ISR" <% if (country === "ISR") { %> selected='selected' <%}%>>Israel</option>
+                        <option value="ITA" <% if (country === "ITA") { %> selected='selected' <%}%>>Italy</option>
+                        <option value="JAM" <% if (country === "JAM") { %> selected='selected' <%}%>>Jamaica</option>
+                        <option value="JPN" <% if (country === "JPN") { %> selected='selected' <%}%>>Japan</option>
+                        <option value="JEY" <% if (country === "JEY") { %> selected='selected' <%}%>>Jersey</option>
+                        <option value="JOR" <% if (country === "JOR") { %> selected='selected' <%}%>>Jordan</option>
+                        <option value="KAZ" <% if (country === "KAZ") { %> selected='selected' <%}%>>Kazakhstan</option>
+                        <option value="KEN" <% if (country === "KEN") { %> selected='selected' <%}%>>Kenya</option>
+                        <option value="KIR" <% if (country === "KIR") { %> selected='selected' <%}%>>Kiribati</option>
+                        <option value="PRK" <% if (country === "PRK") { %> selected='selected' <%}%>>Korea, Democratic People's Republic of</option>
+                        <option value="KOR" <% if (country === "KOR") { %> selected='selected' <%}%>>Korea, Republic of</option>
+                        <option value="KWT" <% if (country === "KWT") { %> selected='selected' <%}%>>Kuwait</option>
+                        <option value="KGZ" <% if (country === "KGZ") { %> selected='selected' <%}%>>Kyrgyzstan</option>
+                        <option value="LAO" <% if (country === "LAO") { %> selected='selected' <%}%>>Lao People's Democratic Republic</option>
+                        <option value="LVA" <% if (country === "LVA") { %> selected='selected' <%}%>>Latvia</option>
+                        <option value="LBN" <% if (country === "LBN") { %> selected='selected' <%}%>>Lebanon</option>
+                        <option value="LSO" <% if (country === "LSO") { %> selected='selected' <%}%>>Lesotho</option>
+                        <option value="LBR" <% if (country === "LBR") { %> selected='selected' <%}%>>Liberia</option>
+                        <option value="LBY" <% if (country === "LBY") { %> selected='selected' <%}%>>Libya</option>
+                        <option value="LIE" <% if (country === "LIE") { %> selected='selected' <%}%>>Liechtenstein</option>
+                        <option value="LTU" <% if (country === "LTU") { %> selected='selected' <%}%>>Lithuania</option>
+                        <option value="LUX" <% if (country === "LUX") { %> selected='selected' <%}%>>Luxembourg</option>
+                        <option value="MAC" <% if (country === "MAC") { %> selected='selected' <%}%>>Macao</option>
+                        <option value="MKD" <% if (country === "MKD") { %> selected='selected' <%}%>>Macedonia, the former Yugoslav Republic of</option>
+                        <option value="MDG" <% if (country === "MDG") { %> selected='selected' <%}%>>Madagascar</option>
+                        <option value="MWI" <% if (country === "MWI") { %> selected='selected' <%}%>>Malawi</option>
+                        <option value="MYS" <% if (country === "MYS") { %> selected='selected' <%}%>>Malaysia</option>
+                        <option value="MDV" <% if (country === "MDV") { %> selected='selected' <%}%>>Maldives</option>
+                        <option value="MLI" <% if (country === "MLI") { %> selected='selected' <%}%>>Mali</option>
+                        <option value="MLT" <% if (country === "MLT") { %> selected='selected' <%}%>>Malta</option>
+                        <option value="MHL" <% if (country === "MHL") { %> selected='selected' <%}%>>Marshall Islands</option>
+                        <option value="MTQ" <% if (country === "MTQ") { %> selected='selected' <%}%>>Martinique</option>
+                        <option value="MRT" <% if (country === "MRT") { %> selected='selected' <%}%>>Mauritania</option>
+                        <option value="MUS" <% if (country === "MUS") { %> selected='selected' <%}%>>Mauritius</option>
+                        <option value="MYT" <% if (country === "MYT") { %> selected='selected' <%}%>>Mayotte</option>
+                        <option value="MEX" <% if (country === "MEX") { %> selected='selected' <%}%>>Mexico</option>
+                        <option value="FSM" <% if (country === "FSM") { %> selected='selected' <%}%>>Micronesia, Federated States of</option>
+                        <option value="MDA" <% if (country === "MDA") { %> selected='selected' <%}%>>Moldova, Republic of</option>
+                        <option value="MCO" <% if (country === "MCO") { %> selected='selected' <%}%>>Monaco</option>
+                        <option value="MNG" <% if (country === "MNG") { %> selected='selected' <%}%>>Mongolia</option>
+                        <option value="MNE" <% if (country === "MNE") { %> selected='selected' <%}%>>Montenegro</option>
+                        <option value="MSR" <% if (country === "MSR") { %> selected='selected' <%}%>>Montserrat</option>
+                        <option value="MAR" <% if (country === "MAR") { %> selected='selected' <%}%>>Morocco</option>
+                        <option value="MOZ" <% if (country === "MOZ") { %> selected='selected' <%}%>>Mozambique</option>
+                        <option value="MMR" <% if (country === "MMR") { %> selected='selected' <%}%>>Myanmar</option>
+                        <option value="NAM" <% if (country === "NAM") { %> selected='selected' <%}%>>Namibia</option>
+                        <option value="NRU" <% if (country === "NRU") { %> selected='selected' <%}%>>Nauru</option>
+                        <option value="NPL" <% if (country === "NPL") { %> selected='selected' <%}%>>Nepal</option>
+                        <option value="NLD" <% if (country === "NLD") { %> selected='selected' <%}%>>Netherlands</option>
+                        <option value="NCL" <% if (country === "NCL") { %> selected='selected' <%}%>>New Caledonia</option>
+                        <option value="NZL" <% if (country === "NZL") { %> selected='selected' <%}%>>New Zealand</option>
+                        <option value="NIC" <% if (country === "NIC") { %> selected='selected' <%}%>>Nicaragua</option>
+                        <option value="NER" <% if (country === "NER") { %> selected='selected' <%}%>>Niger</option>
+                        <option value="NGA" <% if (country === "NGA") { %> selected='selected' <%}%>>Nigeria</option>
+                        <option value="NIU" <% if (country === "NIU") { %> selected='selected' <%}%>>Niue</option>
+                        <option value="NFK" <% if (country === "NFK") { %> selected='selected' <%}%>>Norfolk Island</option>
+                        <option value="MNP" <% if (country === "MNP") { %> selected='selected' <%}%>>Northern Mariana Islands</option>
+                        <option value="NOR" <% if (country === "NOR") { %> selected='selected' <%}%>>Norway</option>
+                        <option value="OMN" <% if (country === "OMN") { %> selected='selected' <%}%>>Oman</option>
+                        <option value="PAK" <% if (country === "PAK") { %> selected='selected' <%}%>>Pakistan</option>
+                        <option value="PLW" <% if (country === "PLW") { %> selected='selected' <%}%>>Palau</option>
+                        <option value="PSE" <% if (country === "PSE") { %> selected='selected' <%}%>>Palestinian Territory, Occupied</option>
+                        <option value="PAN" <% if (country === "PAN") { %> selected='selected' <%}%>>Panama</option>
+                        <option value="PNG" <% if (country === "PNG") { %> selected='selected' <%}%>>Papua New Guinea</option>
+                        <option value="PRY" <% if (country === "PRY") { %> selected='selected' <%}%>>Paraguay</option>
+                        <option value="PER" <% if (country === "PER") { %> selected='selected' <%}%>>Peru</option>
+                        <option value="PHL" <% if (country === "PHL") { %> selected='selected' <%}%>>Philippines</option>
+                        <option value="PCN" <% if (country === "PCN") { %> selected='selected' <%}%>>Pitcairn</option>
+                        <option value="POL" <% if (country === "POL") { %> selected='selected' <%}%>>Poland</option>
+                        <option value="PRT" <% if (country === "PRT") { %> selected='selected' <%}%>>Portugal</option>
+                        <option value="PRI" <% if (country === "PRI") { %> selected='selected' <%}%>>Puerto Rico</option>
+                        <option value="QAT" <% if (country === "QAT") { %> selected='selected' <%}%>>Qatar</option>
+                        <option value="REU" <% if (country === "REU") { %> selected='selected' <%}%>>Réunion</option>
+                        <option value="ROU" <% if (country === "ROU") { %> selected='selected' <%}%>>Romania</option>
+                        <option value="RUS" <% if (country === "RUS") { %> selected='selected' <%}%>>Russian Federation</option>
+                        <option value="RWA" <% if (country === "RWA") { %> selected='selected' <%}%>>Rwanda</option>
+                        <option value="BLM" <% if (country === "BLM") { %> selected='selected' <%}%>>Saint Barthélemy</option>
+                        <option value="SHN" <% if (country === "SHN") { %> selected='selected' <%}%>>Saint Helena, Ascension and Tristan da Cunha</option>
+                        <option value="KNA" <% if (country === "KNA") { %> selected='selected' <%}%>>Saint Kitts and Nevis</option>
+                        <option value="LCA" <% if (country === "LCA") { %> selected='selected' <%}%>>Saint Lucia</option>
+                        <option value="MAF" <% if (country === "MAF") { %> selected='selected' <%}%>>Saint Martin (French part)</option>
+                        <option value="SPM" <% if (country === "SPM") { %> selected='selected' <%}%>>Saint Pierre and Miquelon</option>
+                        <option value="VCT" <% if (country === "VCT") { %> selected='selected' <%}%>>Saint Vincent and the Grenadines</option>
+                        <option value="WSM" <% if (country === "WSM") { %> selected='selected' <%}%>>Samoa</option>
+                        <option value="SMR" <% if (country === "SMR") { %> selected='selected' <%}%>>San Marino</option>
+                        <option value="STP" <% if (country === "STP") { %> selected='selected' <%}%>>Sao Tome and Principe</option>
+                        <option value="SAU" <% if (country === "SAU") { %> selected='selected' <%}%>>Saudi Arabia</option>
+                        <option value="SEN" <% if (country === "SEN") { %> selected='selected' <%}%>>Senegal</option>
+                        <option value="SRB" <% if (country === "SRB") { %> selected='selected' <%}%>>Serbia</option>
+                        <option value="SYC" <% if (country === "SYC") { %> selected='selected' <%}%>>Seychelles</option>
+                        <option value="SLE" <% if (country === "SLE") { %> selected='selected' <%}%>>Sierra Leone</option>
+                        <option value="SGP" <% if (country === "SGP") { %> selected='selected' <%}%>>Singapore</option>
+                        <option value="SXM" <% if (country === "SXM") { %> selected='selected' <%}%>>Sint Maarten (Dutch part)</option>
+                        <option value="SVK" <% if (country === "SVK") { %> selected='selected' <%}%>>Slovakia</option>
+                        <option value="SVN" <% if (country === "SVN") { %> selected='selected' <%}%>>Slovenia</option>
+                        <option value="SLB" <% if (country === "SLB") { %> selected='selected' <%}%>>Solomon Islands</option>
+                        <option value="SOM" <% if (country === "SOM") { %> selected='selected' <%}%>>Somalia</option>
+                        <option value="ZAF" <% if (country === "ZAF") { %> selected='selected' <%}%>>South Africa</option>
+                        <option value="SGS" <% if (country === "SGS") { %> selected='selected' <%}%>>South Georgia and the South Sandwich Islands</option>
+                        <option value="SSD" <% if (country === "SSD") { %> selected='selected' <%}%>>South Sudan</option>
+                        <option value="ESP" <% if (country === "ESP") { %> selected='selected' <%}%>>Spain</option>
+                        <option value="LKA" <% if (country === "LKA") { %> selected='selected' <%}%>>Sri Lanka</option>
+                        <option value="SDN" <% if (country === "SDN") { %> selected='selected' <%}%>>Sudan</option>
+                        <option value="SUR" <% if (country === "SUR") { %> selected='selected' <%}%>>Suriname</option>
+                        <option value="SJM" <% if (country === "SJM") { %> selected='selected' <%}%>>Svalbard and Jan Mayen</option>
+                        <option value="SWZ" <% if (country === "SWZ") { %> selected='selected' <%}%>>Swaziland</option>
+                        <option value="SWE" <% if (country === "SWE") { %> selected='selected' <%}%>>Sweden</option>
+                        <option value="CHE" <% if (country === "CHE") { %> selected='selected' <%}%>>Switzerland</option>
+                        <option value="SYR" <% if (country === "SYR") { %> selected='selected' <%}%>>Syrian Arab Republic</option>
+                        <option value="TWN" <% if (country === "TWN") { %> selected='selected' <%}%>>Taiwan, Province of China</option>
+                        <option value="TJK" <% if (country === "TJK") { %> selected='selected' <%}%>>Tajikistan</option>
+                        <option value="TZA" <% if (country === "TZA") { %> selected='selected' <%}%>>Tanzania, United Republic of</option>
+                        <option value="THA" <% if (country === "THA") { %> selected='selected' <%}%>>Thailand</option>
+                        <option value="TLS" <% if (country === "TLS") { %> selected='selected' <%}%>>Timor-Leste</option>
+                        <option value="TGO" <% if (country === "TGO") { %> selected='selected' <%}%>>Togo</option>
+                        <option value="TKL" <% if (country === "TKL") { %> selected='selected' <%}%>>Tokelau</option>
+                        <option value="TON" <% if (country === "TON") { %> selected='selected' <%}%>>Tonga</option>
+                        <option value="TTO" <% if (country === "TTO") { %> selected='selected' <%}%>>Trinidad and Tobago</option>
+                        <option value="TUN" <% if (country === "TUN") { %> selected='selected' <%}%>>Tunisia</option>
+                        <option value="TUR" <% if (country === "TUR") { %> selected='selected' <%}%>>Turkey</option>
+                        <option value="TKM" <% if (country === "TKM") { %> selected='selected' <%}%>>Turkmenistan</option>
+                        <option value="TCA" <% if (country === "TCA") { %> selected='selected' <%}%>>Turks and Caicos Islands</option>
+                        <option value="TUV" <% if (country === "TUV") { %> selected='selected' <%}%>>Tuvalu</option>
+                        <option value="UGA" <% if (country === "UGA") { %> selected='selected' <%}%>>Uganda</option>
+                        <option value="UKR" <% if (country === "UKR") { %> selected='selected' <%}%>>Ukraine</option>
+                        <option value="ARE" <% if (country === "ARE") { %> selected='selected' <%}%>>United Arab Emirates</option>
+                        <option value="GBR" <% if (country === "GBR") { %> selected='selected' <%}%>>United Kingdom</option>
+                        <option value="USA" <% if (country === "USA") { %> selected='selected' <%}%>>United States</option>
+                        <option value="UMI" <% if (country === "UMI") { %> selected='selected' <%}%>>United States Minor Outlying Islands</option>
+                        <option value="URY" <% if (country === "URY") { %> selected='selected' <%}%>>Uruguay</option>
+                        <option value="UZB" <% if (country === "UZB") { %> selected='selected' <%}%>>Uzbekistan</option>
+                        <option value="VUT" <% if (country === "VUT") { %> selected='selected' <%}%>>Vanuatu</option>
+                        <option value="VEN" <% if (country === "VEN") { %> selected='selected' <%}%>>Venezuela, Bolivarian Republic of</option>
+                        <option value="VNM" <% if (country === "VNM") { %> selected='selected' <%}%>>Viet Nam</option>
+                        <option value="VGB" <% if (country === "VGB") { %> selected='selected' <%}%>>Virgin Islands, British</option>
+                        <option value="VIR" <% if (country === "VIR") { %> selected='selected' <%}%>>Virgin Islands, U.S.</option>
+                        <option value="WLF" <% if (country === "WLF") { %> selected='selected' <%}%>>Wallis and Futuna</option>
+                        <option value="ESH" <% if (country === "ESH") { %> selected='selected' <%}%>>Western Sahara</option>
+                        <option value="YEM" <% if (country === "YEM") { %> selected='selected' <%}%>>Yemen</option>
+                        <option value="ZMB" <% if (country === "ZMB") { %> selected='selected' <%}%>>Zambia</option>
+                        <option value="ZWE" <% if (country === "ZWE") { %> selected='selected' <%}%>>Zimbabwe</option>
+                    </select>
+                    <br><br><br>
                     All about you: <i>(Tell us about yourself! How did you get into nail polish? What are your other hobbies?)</i><br><textarea class="markItUp" type="text" name="about" value="<%= about %>"><%= about %></textarea><br><br>
                     <input type="submit" value="Submit" class="button">
                 </form>
@@ -21,7 +274,260 @@
                     <a href="/photo/profile">Upload or change your avatar</a><br><br><a href="/photo/upload">Add a photo to your profile</a><br><br><br>
                     Email: <i>(This is only visible to you.)</i><br><input type="text" name="email" value="<%= email %>" class="width40"><br><br>
                     <input type="checkbox" name="notifications" <% if (notifications === "on") { %> checked <% } %>>Receive e-mail notifications for new comments on your posts?<br><br>
-                    <input type="checkbox" name="useremail" <% if (useremail === "on") { %> checked <% } %>>Allow users to send you e-mail? (Your e-mail address will not be visible.)<br><br><br><br>
+                    <input type="checkbox" name="useremail" <% if (useremail === "on") { %> checked <% } %>>Allow users to send you e-mail? (Your e-mail address will not be visible.)<br><br><br>
+                    <select name="country" class="width40">
+                        <option value="">Choose your country</option>
+                        <option value="AFG" <% if (country === "AFG") { %> selected='selected' <%}%>>Afghanistan</option>
+                        <option value="ALA" <% if (country === "ALA") { %> selected='selected' <%}%>>Åland Islands</option>
+                        <option value="ALB" <% if (country === "ALB") { %> selected='selected' <%}%>>Albania</option>
+                        <option value="DZA" <% if (country === "DZA") { %> selected='selected' <%}%>>Algeria</option>
+                        <option value="ASM" <% if (country === "ASM") { %> selected='selected' <%}%>>American Samoa</option>
+                        <option value="AND" <% if (country === "AND") { %> selected='selected' <%}%>>Andorra</option>
+                        <option value="AGO" <% if (country === "AGO") { %> selected='selected' <%}%>>Angola</option>
+                        <option value="AIA" <% if (country === "AIA") { %> selected='selected' <%}%>>Anguilla</option>
+                        <option value="ATA" <% if (country === "ATA") { %> selected='selected' <%}%>>Antarctica</option>
+                        <option value="ATG" <% if (country === "ATG") { %> selected='selected' <%}%>>Antigua and Barbuda</option>
+                        <option value="ARG" <% if (country === "ARG") { %> selected='selected' <%}%>>Argentina</option>
+                        <option value="ARM" <% if (country === "ARM") { %> selected='selected' <%}%>>Armenia</option>
+                        <option value="ABW" <% if (country === "ABW") { %> selected='selected' <%}%>>Aruba</option>
+                        <option value="AUS" <% if (country === "AUS") { %> selected='selected' <%}%>>Australia</option>
+                        <option value="AUT" <% if (country === "AUT") { %> selected='selected' <%}%>>Austria</option>
+                        <option value="AZE" <% if (country === "AZE") { %> selected='selected' <%}%>>Azerbaijan</option>
+                        <option value="BHS" <% if (country === "BHS") { %> selected='selected' <%}%>>Bahamas</option>
+                        <option value="BHR" <% if (country === "BHR") { %> selected='selected' <%}%>>Bahrain</option>
+                        <option value="BGD" <% if (country === "BGD") { %> selected='selected' <%}%>>Bangladesh</option>
+                        <option value="BRB" <% if (country === "BRB") { %> selected='selected' <%}%>>Barbados</option>
+                        <option value="BLR" <% if (country === "BLR") { %> selected='selected' <%}%>>Belarus</option>
+                        <option value="BEL" <% if (country === "BEL") { %> selected='selected' <%}%>>Belgium</option>
+                        <option value="BLZ" <% if (country === "BLZ") { %> selected='selected' <%}%>>Belize</option>
+                        <option value="BEN" <% if (country === "BEN") { %> selected='selected' <%}%>>Benin</option>
+                        <option value="BMU" <% if (country === "BMU") { %> selected='selected' <%}%>>Bermuda</option>
+                        <option value="BTN" <% if (country === "BTN") { %> selected='selected' <%}%>>Bhutan</option>
+                        <option value="BOL" <% if (country === "BOL") { %> selected='selected' <%}%>>Bolivia, Plurinational State of</option>
+                        <option value="BES" <% if (country === "BES") { %> selected='selected' <%}%>>Bonaire, Sint Eustatius and Saba</option>
+                        <option value="BIH" <% if (country === "BIH") { %> selected='selected' <%}%>>Bosnia and Herzegovina</option>
+                        <option value="BWA" <% if (country === "BWA") { %> selected='selected' <%}%>>Botswana</option>
+                        <option value="BVT" <% if (country === "BVT") { %> selected='selected' <%}%>>Bouvet Island</option>
+                        <option value="BRA" <% if (country === "BRA") { %> selected='selected' <%}%>>Brazil</option>
+                        <option value="IOT" <% if (country === "IOT") { %> selected='selected' <%}%>>British Indian Ocean Territory</option>
+                        <option value="BRN" <% if (country === "BRN") { %> selected='selected' <%}%>>Brunei Darussalam</option>
+                        <option value="BGR" <% if (country === "BGR") { %> selected='selected' <%}%>>Bulgaria</option>
+                        <option value="BFA" <% if (country === "BFA") { %> selected='selected' <%}%>>Burkina Faso</option>
+                        <option value="BDI" <% if (country === "BDI") { %> selected='selected' <%}%>>Burundi</option>
+                        <option value="KHM" <% if (country === "KHM") { %> selected='selected' <%}%>>Cambodia</option>
+                        <option value="CMR" <% if (country === "CMR") { %> selected='selected' <%}%>>Cameroon</option>
+                        <option value="CAN" <% if (country === "CAN") { %> selected='selected' <%}%>>Canada</option>
+                        <option value="CPV" <% if (country === "CPV") { %> selected='selected' <%}%>>Cape Verde</option>
+                        <option value="CYM" <% if (country === "CYM") { %> selected='selected' <%}%>>Cayman Islands</option>
+                        <option value="CAF" <% if (country === "CAF") { %> selected='selected' <%}%>>Central African Republic</option>
+                        <option value="TCD" <% if (country === "TCD") { %> selected='selected' <%}%>>Chad</option>
+                        <option value="CHL" <% if (country === "CHL") { %> selected='selected' <%}%>>Chile</option>
+                        <option value="CHN" <% if (country === "CHN") { %> selected='selected' <%}%>>China</option>
+                        <option value="CXR" <% if (country === "CXR") { %> selected='selected' <%}%>>Christmas Island</option>
+                        <option value="CCK" <% if (country === "CCK") { %> selected='selected' <%}%>>Cocos (Keeling) Islands</option>
+                        <option value="COL" <% if (country === "COL") { %> selected='selected' <%}%>>Colombia</option>
+                        <option value="COM" <% if (country === "COM") { %> selected='selected' <%}%>>Comoros</option>
+                        <option value="COG" <% if (country === "COG") { %> selected='selected' <%}%>>Congo</option>
+                        <option value="COD" <% if (country === "COD") { %> selected='selected' <%}%>>Congo, the Democratic Republic of the</option>
+                        <option value="COK" <% if (country === "COK") { %> selected='selected' <%}%>>Cook Islands</option>
+                        <option value="CRI" <% if (country === "CRI") { %> selected='selected' <%}%>>Costa Rica</option>
+                        <option value="CIV" <% if (country === "CIV") { %> selected='selected' <%}%>>Côte d'Ivoire</option>
+                        <option value="HRV" <% if (country === "HRV") { %> selected='selected' <%}%>>Croatia</option>
+                        <option value="CUB" <% if (country === "CUB") { %> selected='selected' <%}%>>Cuba</option>
+                        <option value="CUW" <% if (country === "CUW") { %> selected='selected' <%}%>>Curaçao</option>
+                        <option value="CYP" <% if (country === "CYP") { %> selected='selected' <%}%>>Cyprus</option>
+                        <option value="CZE" <% if (country === "CZE") { %> selected='selected' <%}%>>Czech Republic</option>
+                        <option value="DNK" <% if (country === "DNK") { %> selected='selected' <%}%>>Denmark</option>
+                        <option value="DJI" <% if (country === "DJI") { %> selected='selected' <%}%>>Djibouti</option>
+                        <option value="DMA" <% if (country === "DMA") { %> selected='selected' <%}%>>Dominica</option>
+                        <option value="DOM" <% if (country === "DOM") { %> selected='selected' <%}%>>Dominican Republic</option>
+                        <option value="ECU" <% if (country === "ECU") { %> selected='selected' <%}%>>Ecuador</option>
+                        <option value="EGY" <% if (country === "EGY") { %> selected='selected' <%}%>>Egypt</option>
+                        <option value="SLV" <% if (country === "SLV") { %> selected='selected' <%}%>>El Salvador</option>
+                        <option value="GNQ" <% if (country === "GNQ") { %> selected='selected' <%}%>>Equatorial Guinea</option>
+                        <option value="ERI" <% if (country === "ERI") { %> selected='selected' <%}%>>Eritrea</option>
+                        <option value="EST" <% if (country === "EST") { %> selected='selected' <%}%>>Estonia</option>
+                        <option value="ETH" <% if (country === "ETH") { %> selected='selected' <%}%>>Ethiopia</option>
+                        <option value="FLK" <% if (country === "FLK") { %> selected='selected' <%}%>>Falkland Islands (Malvinas)</option>
+                        <option value="FRO" <% if (country === "FRO") { %> selected='selected' <%}%>>Faroe Islands</option>
+                        <option value="FJI" <% if (country === "FJI") { %> selected='selected' <%}%>>Fiji</option>
+                        <option value="FIN" <% if (country === "FIN") { %> selected='selected' <%}%>>Finland</option>
+                        <option value="FRA" <% if (country === "FRA") { %> selected='selected' <%}%>>France</option>
+                        <option value="GUF" <% if (country === "GUF") { %> selected='selected' <%}%>>French Guiana</option>
+                        <option value="PYF" <% if (country === "PYF") { %> selected='selected' <%}%>>French Polynesia</option>
+                        <option value="ATF" <% if (country === "ATF") { %> selected='selected' <%}%>>French Southern Territories</option>
+                        <option value="GAB" <% if (country === "GAB") { %> selected='selected' <%}%>>Gabon</option>
+                        <option value="GMB" <% if (country === "GMB") { %> selected='selected' <%}%>>Gambia</option>
+                        <option value="GEO" <% if (country === "GEO") { %> selected='selected' <%}%>>Georgia</option>
+                        <option value="DEU" <% if (country === "DEU") { %> selected='selected' <%}%>>Germany</option>
+                        <option value="GHA" <% if (country === "GHA") { %> selected='selected' <%}%>>Ghana</option>
+                        <option value="GIB" <% if (country === "GIB") { %> selected='selected' <%}%>>Gibraltar</option>
+                        <option value="GRC" <% if (country === "GRC") { %> selected='selected' <%}%>>Greece</option>
+                        <option value="GRL" <% if (country === "GRL") { %> selected='selected' <%}%>>Greenland</option>
+                        <option value="GRD" <% if (country === "GRD") { %> selected='selected' <%}%>>Grenada</option>
+                        <option value="GLP" <% if (country === "GLP") { %> selected='selected' <%}%>>Guadeloupe</option>
+                        <option value="GUM" <% if (country === "GUM") { %> selected='selected' <%}%>>Guam</option>
+                        <option value="GTM" <% if (country === "GTM") { %> selected='selected' <%}%>>Guatemala</option>
+                        <option value="GGY" <% if (country === "GGY") { %> selected='selected' <%}%>>Guernsey</option>
+                        <option value="GIN" <% if (country === "GIN") { %> selected='selected' <%}%>>Guinea</option>
+                        <option value="GNB" <% if (country === "GNB") { %> selected='selected' <%}%>>Guinea-Bissau</option>
+                        <option value="GUY" <% if (country === "GUY") { %> selected='selected' <%}%>>Guyana</option>
+                        <option value="HTI" <% if (country === "HTI") { %> selected='selected' <%}%>>Haiti</option>
+                        <option value="HMD" <% if (country === "HMD") { %> selected='selected' <%}%>>Heard Island and McDonald Islands</option>
+                        <option value="VAT" <% if (country === "VAT") { %> selected='selected' <%}%>>Holy See (Vatican City State)</option>
+                        <option value="HND" <% if (country === "HND") { %> selected='selected' <%}%>>Honduras</option>
+                        <option value="HKG" <% if (country === "HKG") { %> selected='selected' <%}%>>Hong Kong</option>
+                        <option value="HUN" <% if (country === "HUN") { %> selected='selected' <%}%>>Hungary</option>
+                        <option value="ISL" <% if (country === "ISL") { %> selected='selected' <%}%>>Iceland</option>
+                        <option value="IND" <% if (country === "IND") { %> selected='selected' <%}%>>India</option>
+                        <option value="IDN" <% if (country === "IDN") { %> selected='selected' <%}%>>Indonesia</option>
+                        <option value="IRN" <% if (country === "IRN") { %> selected='selected' <%}%>>Iran, Islamic Republic of</option>
+                        <option value="IRQ" <% if (country === "IRQ") { %> selected='selected' <%}%>>Iraq</option>
+                        <option value="IRL" <% if (country === "IRL") { %> selected='selected' <%}%>>Ireland</option>
+                        <option value="IMN" <% if (country === "IMN") { %> selected='selected' <%}%>>Isle of Man</option>
+                        <option value="ISR" <% if (country === "ISR") { %> selected='selected' <%}%>>Israel</option>
+                        <option value="ITA" <% if (country === "ITA") { %> selected='selected' <%}%>>Italy</option>
+                        <option value="JAM" <% if (country === "JAM") { %> selected='selected' <%}%>>Jamaica</option>
+                        <option value="JPN" <% if (country === "JPN") { %> selected='selected' <%}%>>Japan</option>
+                        <option value="JEY" <% if (country === "JEY") { %> selected='selected' <%}%>>Jersey</option>
+                        <option value="JOR" <% if (country === "JOR") { %> selected='selected' <%}%>>Jordan</option>
+                        <option value="KAZ" <% if (country === "KAZ") { %> selected='selected' <%}%>>Kazakhstan</option>
+                        <option value="KEN" <% if (country === "KEN") { %> selected='selected' <%}%>>Kenya</option>
+                        <option value="KIR" <% if (country === "KIR") { %> selected='selected' <%}%>>Kiribati</option>
+                        <option value="PRK" <% if (country === "PRK") { %> selected='selected' <%}%>>Korea, Democratic People's Republic of</option>
+                        <option value="KOR" <% if (country === "KOR") { %> selected='selected' <%}%>>Korea, Republic of</option>
+                        <option value="KWT" <% if (country === "KWT") { %> selected='selected' <%}%>>Kuwait</option>
+                        <option value="KGZ" <% if (country === "KGZ") { %> selected='selected' <%}%>>Kyrgyzstan</option>
+                        <option value="LAO" <% if (country === "LAO") { %> selected='selected' <%}%>>Lao People's Democratic Republic</option>
+                        <option value="LVA" <% if (country === "LVA") { %> selected='selected' <%}%>>Latvia</option>
+                        <option value="LBN" <% if (country === "LBN") { %> selected='selected' <%}%>>Lebanon</option>
+                        <option value="LSO" <% if (country === "LSO") { %> selected='selected' <%}%>>Lesotho</option>
+                        <option value="LBR" <% if (country === "LBR") { %> selected='selected' <%}%>>Liberia</option>
+                        <option value="LBY" <% if (country === "LBY") { %> selected='selected' <%}%>>Libya</option>
+                        <option value="LIE" <% if (country === "LIE") { %> selected='selected' <%}%>>Liechtenstein</option>
+                        <option value="LTU" <% if (country === "LTU") { %> selected='selected' <%}%>>Lithuania</option>
+                        <option value="LUX" <% if (country === "LUX") { %> selected='selected' <%}%>>Luxembourg</option>
+                        <option value="MAC" <% if (country === "MAC") { %> selected='selected' <%}%>>Macao</option>
+                        <option value="MKD" <% if (country === "MKD") { %> selected='selected' <%}%>>Macedonia, the former Yugoslav Republic of</option>
+                        <option value="MDG" <% if (country === "MDG") { %> selected='selected' <%}%>>Madagascar</option>
+                        <option value="MWI" <% if (country === "MWI") { %> selected='selected' <%}%>>Malawi</option>
+                        <option value="MYS" <% if (country === "MYS") { %> selected='selected' <%}%>>Malaysia</option>
+                        <option value="MDV" <% if (country === "MDV") { %> selected='selected' <%}%>>Maldives</option>
+                        <option value="MLI" <% if (country === "MLI") { %> selected='selected' <%}%>>Mali</option>
+                        <option value="MLT" <% if (country === "MLT") { %> selected='selected' <%}%>>Malta</option>
+                        <option value="MHL" <% if (country === "MHL") { %> selected='selected' <%}%>>Marshall Islands</option>
+                        <option value="MTQ" <% if (country === "MTQ") { %> selected='selected' <%}%>>Martinique</option>
+                        <option value="MRT" <% if (country === "MRT") { %> selected='selected' <%}%>>Mauritania</option>
+                        <option value="MUS" <% if (country === "MUS") { %> selected='selected' <%}%>>Mauritius</option>
+                        <option value="MYT" <% if (country === "MYT") { %> selected='selected' <%}%>>Mayotte</option>
+                        <option value="MEX" <% if (country === "MEX") { %> selected='selected' <%}%>>Mexico</option>
+                        <option value="FSM" <% if (country === "FSM") { %> selected='selected' <%}%>>Micronesia, Federated States of</option>
+                        <option value="MDA" <% if (country === "MDA") { %> selected='selected' <%}%>>Moldova, Republic of</option>
+                        <option value="MCO" <% if (country === "MCO") { %> selected='selected' <%}%>>Monaco</option>
+                        <option value="MNG" <% if (country === "MNG") { %> selected='selected' <%}%>>Mongolia</option>
+                        <option value="MNE" <% if (country === "MNE") { %> selected='selected' <%}%>>Montenegro</option>
+                        <option value="MSR" <% if (country === "MSR") { %> selected='selected' <%}%>>Montserrat</option>
+                        <option value="MAR" <% if (country === "MAR") { %> selected='selected' <%}%>>Morocco</option>
+                        <option value="MOZ" <% if (country === "MOZ") { %> selected='selected' <%}%>>Mozambique</option>
+                        <option value="MMR" <% if (country === "MMR") { %> selected='selected' <%}%>>Myanmar</option>
+                        <option value="NAM" <% if (country === "NAM") { %> selected='selected' <%}%>>Namibia</option>
+                        <option value="NRU" <% if (country === "NRU") { %> selected='selected' <%}%>>Nauru</option>
+                        <option value="NPL" <% if (country === "NPL") { %> selected='selected' <%}%>>Nepal</option>
+                        <option value="NLD" <% if (country === "NLD") { %> selected='selected' <%}%>>Netherlands</option>
+                        <option value="NCL" <% if (country === "NCL") { %> selected='selected' <%}%>>New Caledonia</option>
+                        <option value="NZL" <% if (country === "NZL") { %> selected='selected' <%}%>>New Zealand</option>
+                        <option value="NIC" <% if (country === "NIC") { %> selected='selected' <%}%>>Nicaragua</option>
+                        <option value="NER" <% if (country === "NER") { %> selected='selected' <%}%>>Niger</option>
+                        <option value="NGA" <% if (country === "NGA") { %> selected='selected' <%}%>>Nigeria</option>
+                        <option value="NIU" <% if (country === "NIU") { %> selected='selected' <%}%>>Niue</option>
+                        <option value="NFK" <% if (country === "NFK") { %> selected='selected' <%}%>>Norfolk Island</option>
+                        <option value="MNP" <% if (country === "MNP") { %> selected='selected' <%}%>>Northern Mariana Islands</option>
+                        <option value="NOR" <% if (country === "NOR") { %> selected='selected' <%}%>>Norway</option>
+                        <option value="OMN" <% if (country === "OMN") { %> selected='selected' <%}%>>Oman</option>
+                        <option value="PAK" <% if (country === "PAK") { %> selected='selected' <%}%>>Pakistan</option>
+                        <option value="PLW" <% if (country === "PLW") { %> selected='selected' <%}%>>Palau</option>
+                        <option value="PSE" <% if (country === "PSE") { %> selected='selected' <%}%>>Palestinian Territory, Occupied</option>
+                        <option value="PAN" <% if (country === "PAN") { %> selected='selected' <%}%>>Panama</option>
+                        <option value="PNG" <% if (country === "PNG") { %> selected='selected' <%}%>>Papua New Guinea</option>
+                        <option value="PRY" <% if (country === "PRY") { %> selected='selected' <%}%>>Paraguay</option>
+                        <option value="PER" <% if (country === "PER") { %> selected='selected' <%}%>>Peru</option>
+                        <option value="PHL" <% if (country === "PHL") { %> selected='selected' <%}%>>Philippines</option>
+                        <option value="PCN" <% if (country === "PCN") { %> selected='selected' <%}%>>Pitcairn</option>
+                        <option value="POL" <% if (country === "POL") { %> selected='selected' <%}%>>Poland</option>
+                        <option value="PRT" <% if (country === "PRT") { %> selected='selected' <%}%>>Portugal</option>
+                        <option value="PRI" <% if (country === "PRI") { %> selected='selected' <%}%>>Puerto Rico</option>
+                        <option value="QAT" <% if (country === "QAT") { %> selected='selected' <%}%>>Qatar</option>
+                        <option value="REU" <% if (country === "REU") { %> selected='selected' <%}%>>Réunion</option>
+                        <option value="ROU" <% if (country === "ROU") { %> selected='selected' <%}%>>Romania</option>
+                        <option value="RUS" <% if (country === "RUS") { %> selected='selected' <%}%>>Russian Federation</option>
+                        <option value="RWA" <% if (country === "RWA") { %> selected='selected' <%}%>>Rwanda</option>
+                        <option value="BLM" <% if (country === "BLM") { %> selected='selected' <%}%>>Saint Barthélemy</option>
+                        <option value="SHN" <% if (country === "SHN") { %> selected='selected' <%}%>>Saint Helena, Ascension and Tristan da Cunha</option>
+                        <option value="KNA" <% if (country === "KNA") { %> selected='selected' <%}%>>Saint Kitts and Nevis</option>
+                        <option value="LCA" <% if (country === "LCA") { %> selected='selected' <%}%>>Saint Lucia</option>
+                        <option value="MAF" <% if (country === "MAF") { %> selected='selected' <%}%>>Saint Martin (French part)</option>
+                        <option value="SPM" <% if (country === "SPM") { %> selected='selected' <%}%>>Saint Pierre and Miquelon</option>
+                        <option value="VCT" <% if (country === "VCT") { %> selected='selected' <%}%>>Saint Vincent and the Grenadines</option>
+                        <option value="WSM" <% if (country === "WSM") { %> selected='selected' <%}%>>Samoa</option>
+                        <option value="SMR" <% if (country === "SMR") { %> selected='selected' <%}%>>San Marino</option>
+                        <option value="STP" <% if (country === "STP") { %> selected='selected' <%}%>>Sao Tome and Principe</option>
+                        <option value="SAU" <% if (country === "SAU") { %> selected='selected' <%}%>>Saudi Arabia</option>
+                        <option value="SEN" <% if (country === "SEN") { %> selected='selected' <%}%>>Senegal</option>
+                        <option value="SRB" <% if (country === "SRB") { %> selected='selected' <%}%>>Serbia</option>
+                        <option value="SYC" <% if (country === "SYC") { %> selected='selected' <%}%>>Seychelles</option>
+                        <option value="SLE" <% if (country === "SLE") { %> selected='selected' <%}%>>Sierra Leone</option>
+                        <option value="SGP" <% if (country === "SGP") { %> selected='selected' <%}%>>Singapore</option>
+                        <option value="SXM" <% if (country === "SXM") { %> selected='selected' <%}%>>Sint Maarten (Dutch part)</option>
+                        <option value="SVK" <% if (country === "SVK") { %> selected='selected' <%}%>>Slovakia</option>
+                        <option value="SVN" <% if (country === "SVN") { %> selected='selected' <%}%>>Slovenia</option>
+                        <option value="SLB" <% if (country === "SLB") { %> selected='selected' <%}%>>Solomon Islands</option>
+                        <option value="SOM" <% if (country === "SOM") { %> selected='selected' <%}%>>Somalia</option>
+                        <option value="ZAF" <% if (country === "ZAF") { %> selected='selected' <%}%>>South Africa</option>
+                        <option value="SGS" <% if (country === "SGS") { %> selected='selected' <%}%>>South Georgia and the South Sandwich Islands</option>
+                        <option value="SSD" <% if (country === "SSD") { %> selected='selected' <%}%>>South Sudan</option>
+                        <option value="ESP" <% if (country === "ESP") { %> selected='selected' <%}%>>Spain</option>
+                        <option value="LKA" <% if (country === "LKA") { %> selected='selected' <%}%>>Sri Lanka</option>
+                        <option value="SDN" <% if (country === "SDN") { %> selected='selected' <%}%>>Sudan</option>
+                        <option value="SUR" <% if (country === "SUR") { %> selected='selected' <%}%>>Suriname</option>
+                        <option value="SJM" <% if (country === "SJM") { %> selected='selected' <%}%>>Svalbard and Jan Mayen</option>
+                        <option value="SWZ" <% if (country === "SWZ") { %> selected='selected' <%}%>>Swaziland</option>
+                        <option value="SWE" <% if (country === "SWE") { %> selected='selected' <%}%>>Sweden</option>
+                        <option value="CHE" <% if (country === "CHE") { %> selected='selected' <%}%>>Switzerland</option>
+                        <option value="SYR" <% if (country === "SYR") { %> selected='selected' <%}%>>Syrian Arab Republic</option>
+                        <option value="TWN" <% if (country === "TWN") { %> selected='selected' <%}%>>Taiwan, Province of China</option>
+                        <option value="TJK" <% if (country === "TJK") { %> selected='selected' <%}%>>Tajikistan</option>
+                        <option value="TZA" <% if (country === "TZA") { %> selected='selected' <%}%>>Tanzania, United Republic of</option>
+                        <option value="THA" <% if (country === "THA") { %> selected='selected' <%}%>>Thailand</option>
+                        <option value="TLS" <% if (country === "TLS") { %> selected='selected' <%}%>>Timor-Leste</option>
+                        <option value="TGO" <% if (country === "TGO") { %> selected='selected' <%}%>>Togo</option>
+                        <option value="TKL" <% if (country === "TKL") { %> selected='selected' <%}%>>Tokelau</option>
+                        <option value="TON" <% if (country === "TON") { %> selected='selected' <%}%>>Tonga</option>
+                        <option value="TTO" <% if (country === "TTO") { %> selected='selected' <%}%>>Trinidad and Tobago</option>
+                        <option value="TUN" <% if (country === "TUN") { %> selected='selected' <%}%>>Tunisia</option>
+                        <option value="TUR" <% if (country === "TUR") { %> selected='selected' <%}%>>Turkey</option>
+                        <option value="TKM" <% if (country === "TKM") { %> selected='selected' <%}%>>Turkmenistan</option>
+                        <option value="TCA" <% if (country === "TCA") { %> selected='selected' <%}%>>Turks and Caicos Islands</option>
+                        <option value="TUV" <% if (country === "TUV") { %> selected='selected' <%}%>>Tuvalu</option>
+                        <option value="UGA" <% if (country === "UGA") { %> selected='selected' <%}%>>Uganda</option>
+                        <option value="UKR" <% if (country === "UKR") { %> selected='selected' <%}%>>Ukraine</option>
+                        <option value="ARE" <% if (country === "ARE") { %> selected='selected' <%}%>>United Arab Emirates</option>
+                        <option value="GBR" <% if (country === "GBR") { %> selected='selected' <%}%>>United Kingdom</option>
+                        <option value="USA" <% if (country === "USA") { %> selected='selected' <%}%>>United States</option>
+                        <option value="UMI" <% if (country === "UMI") { %> selected='selected' <%}%>>United States Minor Outlying Islands</option>
+                        <option value="URY" <% if (country === "URY") { %> selected='selected' <%}%>>Uruguay</option>
+                        <option value="UZB" <% if (country === "UZB") { %> selected='selected' <%}%>>Uzbekistan</option>
+                        <option value="VUT" <% if (country === "VUT") { %> selected='selected' <%}%>>Vanuatu</option>
+                        <option value="VEN" <% if (country === "VEN") { %> selected='selected' <%}%>>Venezuela, Bolivarian Republic of</option>
+                        <option value="VNM" <% if (country === "VNM") { %> selected='selected' <%}%>>Viet Nam</option>
+                        <option value="VGB" <% if (country === "VGB") { %> selected='selected' <%}%>>Virgin Islands, British</option>
+                        <option value="VIR" <% if (country === "VIR") { %> selected='selected' <%}%>>Virgin Islands, U.S.</option>
+                        <option value="WLF" <% if (country === "WLF") { %> selected='selected' <%}%>>Wallis and Futuna</option>
+                        <option value="ESH" <% if (country === "ESH") { %> selected='selected' <%}%>>Western Sahara</option>
+                        <option value="YEM" <% if (country === "YEM") { %> selected='selected' <%}%>>Yemen</option>
+                        <option value="ZMB" <% if (country === "ZMB") { %> selected='selected' <%}%>>Zambia</option>
+                        <option value="ZWE" <% if (country === "ZWE") { %> selected='selected' <%}%>>Zimbabwe</option>
+                    </select>
+                    <br><br><br>
                     All about you: <i>(Tell us about yourself! How did you get into nail polish? What are your other hobbies?)</i><br><textarea class="markItUp" type="text" name="about" value="<%= about %>"><%= about %></textarea><br><br>
                     <input type="submit" value="Submit" class="button">
                 </form>

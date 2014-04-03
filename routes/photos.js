@@ -136,7 +136,7 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
                             fs.unlink(req.files.photo.path, function() {
                                 newUserPhoto.location = './public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
                                 newUserPhoto.save(function(err) {
-                                    res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is: /images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext});
+                                    res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is: http://www.lacquertracker.com/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext});
                                 })
                             })
                         }
@@ -149,7 +149,7 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
                             fs.unlink(req.files.photo.path, function() {
                                 newUserPhoto.location = './public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
                                 newUserPhoto.save(function(err) {
-                                    res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is: /images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext});
+                                    res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is: http://www.lacquertracker.com/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext});
                                 })
                             })
                         }

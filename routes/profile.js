@@ -76,6 +76,7 @@ app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
             nophotos = [];
             data.notifications = user.notifications;
             data.useremail = user.useremail;
+            data.country = user.country;
             for (i=0; i < user.photos.length; i++) {
                 if (user.photos[i].onprofile === "yes") {
                     yesphotos.push(user.photos[i]);
@@ -99,6 +100,7 @@ app.post('/profile/:username/edit', isLoggedIn, function(req, res) {
         } else {
             user.email = sanitizer.sanitize(req.body.email);
             user.about = sanitizer.sanitize(req.body.about);
+            user.country = req.body.country;
             if (req.body.notifications) {
                 user.notifications = req.body.notifications;
             } else {

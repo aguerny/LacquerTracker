@@ -51,6 +51,7 @@ app.post('/signup', function(req, res) {
                                 newUser.notifications = true;
                                 newUser.useremail = true;
                                 newUser.creationdate = new Date();
+                                newUser.country = "";
 
                                 //save the user
                                 newUser.save(function(err) {
