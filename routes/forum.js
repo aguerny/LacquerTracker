@@ -62,7 +62,7 @@ app.post('/forums/:forum/add', isLoggedIn, function(req, res) {
 
 //view specific forum
 app.get('/forums/:forum', function(req, res) {
-    if (req.params.forum === "intro" || req.params.forum === "general" || req.params.forum === "notd" || req.params.forum === "contests" || req.params.forum === "tutorials" || req.params.forum === "offtopic") {
+    if (req.params.forum === "intro" || req.params.forum === "general" || req.params.forum === "notd" || req.params.forum === "contests" || req.params.forum === "tutorials" || req.params.forum === "offtopic" || req.params.forum === "lt") {
         data = {}
         data.title = req.params.forum + ' - Lacquer Tracker';
         data.forumcat = req.params.forum;

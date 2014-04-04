@@ -22,6 +22,15 @@ app.configure(function() {
 
     app.enable('trust proxy');
 
+    app.use(function (req, res, next) {
+    	if ('/robots.txt' == req.url) {
+        	res.type('text/plain')
+        	res.send("User-agent: *\nDisallow: /addwant\nDisallow: /addown\nDisallow: /admin");
+    	} else {
+        	next();
+    	}
+	});
+
 	app.use(express.static(__dirname+'/public')); // Catch static files
 	app.use(express.logger('dev')); // log every request to the console
 	app.use(express.cookieParser('lala')); // read cookies (needed for auth)

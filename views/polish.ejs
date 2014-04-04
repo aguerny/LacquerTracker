@@ -154,7 +154,7 @@ var speed = 100;
         now.fadeOut(speed, function() {next.fadeIn(speed);});
     });
 
-    $(".gallery").touchwipe({
+    $(".slideshow").touchwipe({
         wipeLeft: function() {$(".next").trigger('click');},
         wipeRight: function() {$(".prev").trigger('click');},
         preventDefaultEvents: false
