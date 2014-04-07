@@ -4,7 +4,7 @@ var Photo = require('../app/models/photo');
 var UserPhoto = require('../app/models/userphoto');
 var fs = require('fs');
 var path = require('path');
-var im = require('imagemagick');
+var gm = require('gm').subClass({ imageMagick: true });
 
 
 module.exports = function(app, passport) {
@@ -37,13 +37,9 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
         newPhoto.save(function(err) {
             p.dateupdated = new Date();
             p.save();
-            im.identify(req.files.photo.path, function(err, features) {
-                if (features.width > 800) {
-                    im.resize({
-                        srcPath: req.files.photo.path,
-                        dstPath: path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ext),
-                        width: 800
-                    }, function(err, stdout, stderr) {
+            gm(req.files.photo.path).size(function(err, value) {
+                if (value.width > 600) {
+                    gm(req.files.photo.path).resize(600).write(path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ext), function (err) {
                         if (err) {
                             res.redirect('/error');
                         } else {
@@ -73,7 +69,6 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
         })
     })
 });
-
 
 
 //remove polish photo
@@ -123,13 +118,9 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
     newUserPhoto.save(function(err) {
         req.user.photos.push(newUserPhoto.id);
         req.user.save(function(err) {
-            im.identify(req.files.photo.path, function(err, features) {
-                if (features.width > 800) {
-                    im.resize({
-                        srcPath: req.files.photo.path,
-                        dstPath: path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext),
-                        width: 800
-                    }, function(err, stdout, stderr) {
+            gm(req.files.photo.path).size(function(err, value) {
+                if (value.width > 600) {
+                    gm(req.files.photo.path).resize(600).write(path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function (err) {
                         if (err) {
                             res.redirect('/error');
                         } else {
@@ -174,11 +165,7 @@ app.post('/photo/profile', isLoggedIn, function(req, res) {
     var ext = path.extname(req.files.photo.name);
     var tempPath = req.files.photo.path;
     var targetPath = path.resolve('./public/images/profilephotos/' + req.user.username + ext);
-    im.resize({
-        srcPath: tempPath,
-        dstPath: targetPath,
-        width: 200
-    }, function(err, stdout, stderr) {
+    gm(tempPath).resize(200, 200).write(targetPath, function (err) {
         if (err) {
             res.redirect('/error');
         } else {

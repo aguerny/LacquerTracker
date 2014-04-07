@@ -23,7 +23,6 @@
     "simple-recaptcha": "*",
     "bcrypt-nodejs": "*",
     "mongoose-auto-increment": "*",
-    "domain": "*",
-    "imagemagick": "*"
+    "gm": "*"
   }
 }

@@ -84,6 +84,11 @@
         font-size: 100%;
     }
 
+    #preview {
+        float:middle;
+        margin-bottom: 2%;
+    }
+
 
     /*---Footer---*/
 
@@ -153,6 +158,10 @@
     #polish-left_col {float:left; width:30%; text-align:left;}
     #polish-right_col {float:right; width:70%; text-align: center; margin-top: -2%;}
 
+    #photo-wrap {width:100%; float:center; margin-bottom:0 auto;}
+    #photo-left_col {float:left; width:40%; text-align:left; margin-bottom:2%;}
+    #photo-right_col {float:right; width:60%; text-align: center; margin-top: -2%;}
+
     .button {color:#FFFFFF; background-color:#10695A; border:none; margin: 0 0 2% 0; padding: .25%;}
 
     #polish-image {margin:0 0 4% 0; float:right; width:40%; vertical-align:middle; clear:right;}
@@ -191,6 +200,7 @@
     .width44 {display:inline-block; width:44%;}
     .width53 {display:inline-block; width:53%;}
     .width80 {display:inline-block; width:80%;}
+    .width98 {display:inline-block; width:98%;}
 
     .browsetable th.name {width:22%;}
     .browsetable th.brand {width:20%;}
@@ -335,6 +345,7 @@
     .width44 {display:inline-block; width:98%;}
     .width53 {display:inline-block; width:98%;}
     .width80 {display:inline-block; width:98%;}
+    .width98 {display:inline-block; width:98%;}
 
     .browsetable th.name {width:20%;}
     .browsetable th.brand {width:18%;}

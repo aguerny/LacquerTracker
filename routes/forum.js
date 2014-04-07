@@ -102,6 +102,8 @@ app.get('/forums/:forum/:id', function(req, res) {
     })
 });
 
+
+//reply to specific comment
 app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
     ForumPost.findById(req.params.id).populate('user').exec(function (err, post){
         var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
@@ -199,18 +201,22 @@ app.get('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
 
 
 //edit forum post
-app.get('/forums/:forum/:id/edit', function(req, res) {
+app.get('/forums/:forum/:id/edit', isLoggedIn, function(req, res) {
     data = {};
     ForumPost.findById(req.params.id).exec(function (err, post) {
         if (post === null) {
             res.redirect('/error');
         } else {
-            data.title = post.title + " - Lacquer Tracker";
-            data.postid = post.id;
-            data.posttitle = post.title;
-            data.postmessage = post.message;
-            data.postforum = post.forum;
-            res.render('forumspostedit.ejs', data);
+            if (post.user === req.user.id) {
+                data.title = post.title + " - Lacquer Tracker";
+                data.postid = post.id;
+                data.posttitle = post.title;
+                data.postmessage = post.message;
+                data.postforum = post.forum;
+                res.render('forumspostedit.ejs', data);
+            } else {
+                res.redirect('/error');
+            }
         }
     })
 });
@@ -231,12 +237,16 @@ app.post('/forums/:forum/:id/edit', isLoggedIn, function(req, res) {
         var dateformatted = m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
 
     ForumPost.findById(req.params.id, function (err, post){
-        post.forum = req.body.forum;
-        post.title = sanitizer.sanitize(req.body.posttitle);
-        post.message = sanitizer.sanitize(req.body.postmessage);
-        post.dateupdated = dateformatted;
-        post.save();
-        res.redirect('/forums/' + post.forum + '/' + post.id)
+        if (post.user == req.user.id) {
+            post.forum = req.body.forum;
+            post.title = sanitizer.sanitize(req.body.posttitle);
+            post.message = sanitizer.sanitize(req.body.postmessage);
+            post.dateupdated = dateformatted;
+            post.save();
+            res.redirect('/forums/' + post.forum + '/' + post.id);
+        } else {
+            res.redirect('/error');
+        }
     })
 });
 
@@ -247,23 +257,29 @@ app.get('/forums/:forum/:id/add', isLoggedIn, function(req, res) {
 });
 
 
+//remove comment
 app.get('/forums/:forum/:id/:cid/remove', isLoggedIn, function(req, res) {
     ForumComment.findById(req.params.cid, function(err, comment) {
-        if (comment.childid.length > 0) {
-            comment.message = sanitizer.sanitize(markdown("_deleted_"));
-            comment.save(function(err) {
-                res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
-            })
+        if (comment.user == req.user.id || req.user.level === "admin") {
+            if (comment.childid.length > 0) {
+                comment.message = sanitizer.sanitize(markdown("_deleted_"));
+                comment.save(function(err) {
+                    res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
+                })
+            } else {
+                ForumPost.findById(req.params.id).remove({comments: req.params.cid});
+                    ForumComment.findByIdAndRemove(req.params.cid, function(err) {
+                    res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
+                })
+            }
         } else {
-            ForumPost.findById(req.params.id).remove({comments: req.params.cid});
-                ForumComment.findByIdAndRemove(req.params.cid, function(err) {
-                res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
-            })
+            res.redirect('/error');
         }
     })
 });
 
 
+//admin remove comment -- admin only
 app.get('/forums/:forum/:id/:cid/removepermanent', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
         ForumComment.findById(req.params.cid, function(err, comment) {
@@ -278,11 +294,18 @@ app.get('/forums/:forum/:id/:cid/removepermanent', isLoggedIn, function(req, res
 });
 
 
+//remove forum post
 app.get('/forums/:forum/:id/remove', isLoggedIn, function(req, res) {
-    ForumPost.findByIdAndRemove(req.params.id, function(err) {
-        ForumComment.find({parentid : req.params.id}).remove();
-        res.redirect('/forums/' + req.params.forum);
-    })
+    ForumPost.findById(req.params.id, function(err, post) {
+        if (post.user == req.user.id || req.user.level === "admin") {
+            ForumPost.findByIdAndRemove(req.params.id, function(err) {
+                ForumComment.find({parentid : req.params.id}).remove();
+                res.redirect('/forums/' + req.params.forum);
+            })
+        } else {
+            res.redirect('/error');
+        }
+    })   
 });
 
 

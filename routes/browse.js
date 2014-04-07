@@ -85,7 +85,7 @@ app.post('/browse', function(req, res) {
 
 
         var filterOptions = _.transform(req.body, function(result, value, key) {
-            result[key] = new RegExp(value.replace(/[^A-Za-z 0-9!é'-]/g,''), "i");
+            result[key] = new RegExp(value.replace(/[^A-Za-z 0-9!é'.-]/g,''), "i");
         });
 
         var polishkeys = _.keys(Polish.schema.paths);
@@ -168,11 +168,6 @@ app.post('/browse', function(req, res) {
             })
         }
     })
-});
-
-
-app.get('/browse/:whatever', function(req, res) {
-    res.redirect('/error');
 });
 
 

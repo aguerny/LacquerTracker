@@ -154,10 +154,14 @@ var speed = 100;
         now.fadeOut(speed, function() {next.fadeIn(speed);});
     });
 
-    $(".slideshow").touchwipe({
-        wipeLeft: function() {$(".next").trigger('click');},
-        wipeRight: function() {$(".prev").trigger('click');},
-        preventDefaultEvents: false
+    $(document).on("pageinit", ".gallery", function(){   
+        $(".gallery").on("swipeleft", function() {
+            $(".next").trigger('click');
+        });
+
+        $(".gallery").on("swiperight", function() {
+            $(".prev").trigger('click');
+        });
     });
 </script>
 

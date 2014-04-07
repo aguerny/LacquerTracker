@@ -37,31 +37,35 @@ app.get('/blog/add', isLoggedIn, function(req, res) {
 
 
 app.post('/blog/add', isLoggedIn, function(req, res) {
-    var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
-    var d = new Date();
-    var curr_date = d.getDate();
-    var curr_month = d.getMonth();
-    var curr_year = d.getFullYear();
-    var curr_day = d.getDay();
-    var curr_hour = d.getHours();
-    var curr_min = d.getMinutes();
-    if (curr_min < 10) {curr_min = "0" + curr_min;}
-    var suffix = "am";
-    if (curr_hour >= 12) {suffix = "pm"; curr_hour = curr_hour - 12;}
-    if (curr_hour == 0) {curr_hour = 12;}
-    var dateformatted = m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
+    if (req.user.level === "admin") {
+        var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
+        var d = new Date();
+        var curr_date = d.getDate();
+        var curr_month = d.getMonth();
+        var curr_year = d.getFullYear();
+        var curr_day = d.getDay();
+        var curr_hour = d.getHours();
+        var curr_min = d.getMinutes();
+        if (curr_min < 10) {curr_min = "0" + curr_min;}
+        var suffix = "am";
+        if (curr_hour >= 12) {suffix = "pm"; curr_hour = curr_hour - 12;}
+        if (curr_hour == 0) {curr_hour = 12;}
+        var dateformatted = m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
 
-    var newBlog = new Blog ({
-        user: req.user.id,
-        title: sanitizer.sanitize(req.body.posttitle),
-        message: sanitizer.sanitize(req.body.postmessage),
-        datefull: new Date(),
-        date: dateformatted,
-    });
-    newBlog.save(function(err) {
-        if (err) throw err;
-        else res.redirect('/blog');
-    })
+        var newBlog = new Blog ({
+            user: req.user.id,
+            title: sanitizer.sanitize(req.body.posttitle),
+            message: sanitizer.sanitize(req.body.postmessage),
+            datefull: new Date(),
+            date: dateformatted,
+        });
+        newBlog.save(function(err) {
+            if (err) throw err;
+            else res.redirect('/blog');
+        })
+    } else {
+        res.redirect('/error');
+    }
 });
 
 
@@ -198,16 +202,20 @@ app.get('/blog/:title/:id/add', isLoggedIn, function(req, res) {
 //remove blog post comment
 app.get('/blog/:title/:id/remove', isLoggedIn, function(req, res) {
     BlogComment.findById(req.params.id, function(err, comment) {
-        if (comment.childid.length > 0) {
-            comment.message = "<i>deleted</i>";
-            comment.save(function(err) {
-                res.redirect("/blog/" + req.params.title);
-            })
+        if (comment.user == req.user.id || req.user.level === "admin") {
+            if (comment.childid.length > 0) {
+                comment.message = "<i>deleted</i>";
+                comment.save(function(err) {
+                    res.redirect("/blog/" + req.params.title);
+                })
+            } else {
+                Blog.find({title: req.params.title}).remove({comments: req.params.id});
+                    BlogComment.findByIdAndRemove(req.params.id, function(err) {
+                    res.redirect("/blog/" + req.params.title);
+                })
+            }
         } else {
-            Blog.find({title: req.params.title}).remove({comments: req.params.id});
-                BlogComment.findByIdAndRemove(req.params.id, function(err) {
-                res.redirect("/blog/" + req.params.title);
-            })
+            res.redirect('/error');
         }
     })
 });
@@ -233,24 +241,32 @@ app.get('/blog/:title/:id/removepermanent', isLoggedIn, function(req, res) {
 app.get('/blog/:id/edit', isLoggedIn, function(req, res) {
     data = {};
     Blog.findById(req.params.id).exec(function (err, post) {
-        if (post === null) {
-            res.redirect('/error');
+        if (post.user == req.user.id) {
+            if (post === null) {
+                res.redirect('/error');
+            } else {
+                data.title = post.title + " - Lacquer Tracker";
+                data.postid = post.id;
+                data.posttitle = post.title;
+                data.postmessage = post.message;
+                res.render('blogpostedit.ejs', data);
+            }
         } else {
-            data.title = post.title + " - Lacquer Tracker";
-            data.postid = post.id;
-            data.posttitle = post.title;
-            data.postmessage = post.message;
-            res.render('blogpostedit.ejs', data);
-        }
+            res.redirect('/error');
+        }       
     })
 });
 
 app.post('/blog/:id/edit', isLoggedIn, function(req, res) {
     Blog.findById(req.params.id, function (err, post){
-        post.title = sanitizer.sanitize(req.body.posttitle);
-        post.message = sanitizer.sanitize(req.body.postmessage);
-        post.save();
-        res.redirect('/blog/' + post.title.replace(/ /g,"_"));
+        if (post.user == req.user.id) {
+            post.title = sanitizer.sanitize(req.body.posttitle);
+            post.message = sanitizer.sanitize(req.body.postmessage);
+            post.save();
+            res.redirect('/blog/' + post.title.replace(/ /g,"_"));
+        } else {
+            res.redirect('/error');
+        }
     })
 });
 

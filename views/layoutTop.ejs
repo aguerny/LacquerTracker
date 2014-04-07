@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, target-densitydpi=high-dpi" />
     <script src="/scripts/jquery.js"></script>
     <script src="/scripts/jquery.mobile.custom.min.js"></script>
-    <script src="/scripts/jquery.touchwipe.js"></script>
+    <!--<script src="/scripts/jcrop/js/jquery.Jcrop.min.js"></script>
+    <link rel="stylesheet" href="/scripts/jcrop/css/jquery.Jcrop.css" type="text/css" />-->
     <script src="/scripts/sorttable.js"></script>
     <script src="/scripts/colorfinder.js"></script>
     <script src="/scripts/jscolor/jscolor.js"></script>
@@ -28,42 +29,36 @@
 <!-- header -->
 <div class="wrapper row1">
     <header id="header">
-        <div id="biglayout">
+        <div>
             <h1>Lacquer Tracker</h1>
             <div id="logininfo">
                 <% if (isAuthenticated()) { %>
                     <p>Hello <%= user.username %> | <a href="/logout">Logout</a></p>
                 <% } else { %>
-                    <p><a href="/login">Login</a> or <a href="/signup">Signup</a></p>
-                <% } %>
-            </div>
-        <nav>
-            <ul>
-                <li><a href="/browse">Browse</a></li>
-                <li><a href="/profile">Profile</a></li>
-                <li><a href="/forums">Forums</a></li>
-                <li><a href="/blog">Blog</a></li>
-                <li><a href="/contact">Contact</a></li>
-            </ul>
-        </nav>
-    </div>
-    <div id="smalllayout">
-        <h1>Lacquer Tracker</h1>
-        <div id="logininfo">
-                <% if (isAuthenticated()) { %>
-                    <p><%= user.username %> | <a href="/logout">Logout</a></p>
-                <% } else { %>
                     <p><a href="/login">Login</a> | <a href="/signup">Signup</a></p>
                 <% } %>
+            </div>
         </div>
-        <nav id="nav">
-            <a href="/browse">Browse</a> |
-            <a href="/profile">Profile</a> |
-            <a href="/forums">Forums</a> |
-            <a href="/blog">Blog</a> |
-            <a href="/contact">Contact</a>
-        </nav>
-    </div>
+        <div id="biglayout">
+            <nav>
+                <ul>
+                    <li><a href="/browse">Browse</a></li>
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/forums">Forums</a></li>
+                    <li><a href="/blog">Blog</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div id="smalllayout">
+            <nav id="nav">
+                <a href="/browse">Browse</a> |
+                <a href="/profile">Profile</a> |
+                <a href="/forums">Forums</a> |
+                <a href="/blog">Blog</a> |
+                <a href="/contact">Contact</a>
+            </nav>
+        </div>
     </header>
 </div>
 

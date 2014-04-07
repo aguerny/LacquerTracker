@@ -7,8 +7,8 @@
             <div>
         		<form action="/polishedit/<%= editid %>" method="post">
     	     		<h3>Edit polish:</h3><br><br>
-        			Name: <input type="text" name="name" value="<%= editname %>" class="width45" readonly="readonly" required><br><br><br>
-                    Brand: <input type="text" name="brand" value="<%= editbrand %>" class="width45" readonly="readonly" required><br><br><br>
+        			Name: <input type="text" name="name" value="<%= editname %>" class="width45" <% if (isAuthenticated()) { if (user.level !== "admin") { %> readonly="readonly" <% } } %> required><br><br><br>
+                    Brand: <input type="text" name="brand" value="<%= editbrand %>" class="width45" <% if (isAuthenticated()) { if (user.level !== "admin") { %> readonly="readonly" <% } } %> required><br><br><br>
                     Collection: <input type="text" name="batch" value="<%= editbatch %>" class="width44"><br><i>Please format like: 2013 Off Shore (Summer)</i><br><br><br>
                     Code: <input type="text" name="code" value="<%= editcode %>" class="width45"><br><br><br>
                     Color: <select name="colorcat">
