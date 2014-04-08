@@ -52,6 +52,7 @@ app.post('/signup', function(req, res) {
                                 newUser.useremail = true;
                                 newUser.creationdate = new Date();
                                 newUser.country = "";
+                                newUser.timezone = "America/New_York";
 
                                 //save the user
                                 newUser.save(function(err) {

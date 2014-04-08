@@ -19,6 +19,7 @@ var userSchema = mongoose.Schema({
 	useremail    : String,
 	creationdate : String,
 	country      : String,
+	timezone     : String,
 });
 
 userSchema.plugin(autoIncrement.plugin, {

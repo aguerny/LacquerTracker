@@ -7,7 +7,6 @@ var forumpostSchema = mongoose.Schema({
 	user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
 	title: String,
 	message: String,
-	datefull: Date,
 	date: String,
 	dateupdated: String,
 	forum: String,

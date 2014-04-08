@@ -1,5 +1,5 @@
 var User = require('../app/models/user');
-
+var moment = require('moment-timezone');
 
 module.exports = function(app, passport) {
 
@@ -8,6 +8,10 @@ module.exports = function(app, passport) {
 app.get('/admin/users', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
         User.find({}).sort('usernumber').exec(function(err, users) {
+            var users = users.map(function(x) {
+                x.creationdate = moment(x.creationdate).tz("America/New_York").format('MMM D YYYY, h:mm a');
+                return x;
+            })
             res.render('adminusers.ejs', {title: 'All Users - Lacquer Tracker', allusers: users});
         })
     } else {

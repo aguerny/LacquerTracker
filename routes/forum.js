@@ -4,7 +4,7 @@ var ForumComment = require('../app/models/forumcomment');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
 var nodemailer = require('nodemailer');
-
+var moment = require('moment-timezone');
 
 module.exports = function(app, passport) {
 
@@ -28,28 +28,13 @@ app.get('/forums/:forum/add', isLoggedIn, function(req, res) {
 });
 
 app.post('/forums/:forum/add', isLoggedIn, function(req, res) {
-    var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
-    var d = new Date();
-    var curr_date = d.getDate();
-    var curr_month = d.getMonth();
-    var curr_year = d.getFullYear();
-    var curr_day = d.getDay();
-    var curr_hour = d.getHours();
-    var curr_min = d.getMinutes();
-    if (curr_min < 10) {curr_min = "0" + curr_min;}
-    var suffix = "am";
-    if (curr_hour >= 12) {suffix = "pm"; curr_hour = curr_hour - 12;}
-    if (curr_hour == 0) {curr_hour = 12;}
-    var dateformatted = m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
-
     var newForumPost = new ForumPost ({
         user: req.user.id,
         username: req.user.username,
         title: sanitizer.sanitize(req.body.posttitle),
         message: sanitizer.sanitize(req.body.postmessage),
-        datefull: new Date(),
-        dateupdated: dateformatted,
-        date: dateformatted,
+        date: new Date(),
+        dateupdated: new Date(),
         forum: req.body.forum,
     });
     newForumPost.save(function(err) {
@@ -66,9 +51,17 @@ app.get('/forums/:forum', function(req, res) {
         data = {}
         data.title = req.params.forum + ' - Lacquer Tracker';
         data.forumcat = req.params.forum;
-        ForumPost.find({forum: req.params.forum}).sort({dateupdated: -1}).populate('comments').populate('user').exec(function(err, posts) {
+        ForumPost.find({forum: req.params.forum}).sort({date: -1}).populate('comments').populate('user').exec(function(err, posts) {
             User.populate(posts, {path:'comments.user'}, function(err) {
-                data.forumposts = posts;
+                var allposts = posts.map(function(x) {
+                    if (req.isAuthenticated()) {
+                        x.dateupdated = moment(x.dateupdated).tz(req.user.timezone).calendar();
+                    } else {
+                        x.dateupdated = moment(x.dateupdated).tz("America/New_York").calendar();
+                    }
+                    return x;
+                })
+                data.forumposts = allposts;
                 res.render('forumsspecific.ejs', data);
             })
         })
@@ -84,7 +77,7 @@ app.get('/forums/:forum', function(req, res) {
 app.get('/forums/:forum/:id', function(req, res) {
     data = {};
     ForumPost.findById(req.params.id).populate('comments').populate('user').exec(function (err, post) {
-        if (post === null) {
+        if (post === null || post === undefined) {
             res.redirect('/error');
         } else {
             data.title = post.title + " - Lacquer Tracker";
@@ -92,10 +85,22 @@ app.get('/forums/:forum/:id', function(req, res) {
             data.posttitle = post.title;
             data.postuser = post.user;
             data.postmessage = markdown(post.message);
-            data.postdate = post.date;
+            if (req.isAuthenticated()) {
+                data.postdate = moment(post.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
+            } else {
+                data.postdate = moment(post.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
+            }
             data.postforum = post.forum;
             User.populate(post, {path:'comments.user'}, function(err) {
-                data.postcomments = post.comments;
+                var allcomments = post.comments.map(function(x) {
+                    if (req.isAuthenticated()) {
+                        x.date = moment(x.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
+                    } else {
+                        x.date = moment(x.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
+                    }
+                    return x;
+                })
+                data.postcomments = allcomments;
                 res.render('forumspost.ejs', data);
             })
         }
@@ -106,27 +111,12 @@ app.get('/forums/:forum/:id', function(req, res) {
 //reply to specific comment
 app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
     ForumPost.findById(req.params.id).populate('user').exec(function (err, post){
-        var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
-        var d = new Date();
-        var curr_date = d.getDate();
-        var curr_month = d.getMonth();
-        var curr_year = d.getFullYear();
-        var curr_day = d.getDay();
-        var curr_hour = d.getHours();
-        var curr_min = d.getMinutes();
-        if (curr_min < 10) {curr_min = "0" + curr_min;}
-        var suffix = "am";
-        if (curr_hour >= 12) {suffix = "pm"; curr_hour = curr_hour - 12;}
-        if (curr_hour == 0) {curr_hour = 12;}
-        var dateformatted = m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
-
         var newForumComment = new ForumComment ({
             postid: post.id,
             parentid: req.params.cid,
             user: req.user.id,
             message: markdown(req.body.message),
-            datefull: new Date(),
-            date: dateformatted,
+            date: new Date(),
         })
         newForumComment.save(function(err) {
             if (req.user.username !== post.user.username && post.user.notifications === "on") {
@@ -155,7 +145,7 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
                 });
             }
 
-            post.dateupdated = dateformatted;
+            post.dateupdated = new Date();
             post.comments.push(newForumComment.id);
             ForumComment.findById(req.params.cid, function(err, parent) {
                 if (parent) {
@@ -180,22 +170,32 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
 app.get('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
     data = {};
     ForumPost.findById(req.params.id).populate('user').exec(function (err, post) {
-        ForumComment.findById(req.params.cid).populate('user').exec(function(err, comment) {
-            if (comment === null) {
-                res.redirect('/error');
-            } else {
-                data.replyid = req.params.cid;
-                data.title = post.title + " - Lacquer Tracker";
-                data.postid = post.id;
-                data.posttitle = post.title;
-                data.postuser = post.user;
-                data.postmessage = markdown(post.message);
-                data.postdate = post.date;
-                data.postforum = post.forum;
-                data.comment = comment;
-                res.render('forumspostreply.ejs', data);
-            }
-        })
+        if (post === null || post === undefined) {
+            res.redirect('/error');
+        } else {
+            ForumComment.findById(req.params.cid).populate('user').exec(function(err, comment) {
+                if (comment === null || comment === undefined) {
+                    res.redirect('/error');
+                } else {
+                    data.replyid = req.params.cid;
+                    data.title = post.title + " - Lacquer Tracker";
+                    data.postid = post.id;
+                    data.posttitle = post.title;
+                    data.postuser = post.user;
+                    data.postmessage = markdown(post.message);
+                    data.postforum = post.forum;
+                    if (req.isAuthenticated()) {
+                        data.postdate = moment(post.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
+                        comment.date = moment(comment.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
+                    } else {
+                        data.postdate = moment(post.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
+                        comment.date = moment(comment.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
+                    }
+                    data.comment = comment;
+                    res.render('forumspostreply.ejs', data);
+                }
+            })
+        }
     })
 });
 
@@ -204,10 +204,10 @@ app.get('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
 app.get('/forums/:forum/:id/edit', isLoggedIn, function(req, res) {
     data = {};
     ForumPost.findById(req.params.id).exec(function (err, post) {
-        if (post === null) {
+        if (post === null || post === undefined) {
             res.redirect('/error');
         } else {
-            if (post.user === req.user.id) {
+            if (post.user == req.user.id) {
                 data.title = post.title + " - Lacquer Tracker";
                 data.postid = post.id;
                 data.posttitle = post.title;
@@ -222,26 +222,12 @@ app.get('/forums/:forum/:id/edit', isLoggedIn, function(req, res) {
 });
 
 app.post('/forums/:forum/:id/edit', isLoggedIn, function(req, res) {
-    var m_names = new Array("Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec");
-        var d = new Date();
-        var curr_date = d.getDate();
-        var curr_month = d.getMonth();
-        var curr_year = d.getFullYear();
-        var curr_day = d.getDay();
-        var curr_hour = d.getHours();
-        var curr_min = d.getMinutes();
-        if (curr_min < 10) {curr_min = "0" + curr_min;}
-        var suffix = "am";
-        if (curr_hour >= 12) {suffix = "pm"; curr_hour = curr_hour - 12;}
-        if (curr_hour == 0) {curr_hour = 12;}
-        var dateformatted = m_names[curr_month] + " " + curr_date + " " + curr_year + ", " + curr_hour + ":" + curr_min + " " + suffix;
-
     ForumPost.findById(req.params.id, function (err, post){
         if (post.user == req.user.id) {
             post.forum = req.body.forum;
             post.title = sanitizer.sanitize(req.body.posttitle);
             post.message = sanitizer.sanitize(req.body.postmessage);
-            post.dateupdated = dateformatted;
+            post.dateupdated = new Date();
             post.save();
             res.redirect('/forums/' + post.forum + '/' + post.id);
         } else {
@@ -260,20 +246,24 @@ app.get('/forums/:forum/:id/add', isLoggedIn, function(req, res) {
 //remove comment
 app.get('/forums/:forum/:id/:cid/remove', isLoggedIn, function(req, res) {
     ForumComment.findById(req.params.cid, function(err, comment) {
-        if (comment.user == req.user.id || req.user.level === "admin") {
-            if (comment.childid.length > 0) {
-                comment.message = sanitizer.sanitize(markdown("_deleted_"));
-                comment.save(function(err) {
-                    res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
-                })
-            } else {
-                ForumPost.findById(req.params.id).remove({comments: req.params.cid});
-                    ForumComment.findByIdAndRemove(req.params.cid, function(err) {
-                    res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
-                })
-            }
-        } else {
+        if (comment === null || comment === undefined) {
             res.redirect('/error');
+        } else {
+            if (comment.user == req.user.id || req.user.level === "admin") {
+                if (comment.childid.length > 0) {
+                    comment.message = sanitizer.sanitize(markdown("_deleted_"));
+                    comment.save(function(err) {
+                        res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
+                    })
+                } else {
+                    ForumPost.findById(req.params.id).remove({comments: req.params.cid});
+                        ForumComment.findByIdAndRemove(req.params.cid, function(err) {
+                        res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
+                    })
+                }
+            } else {
+                res.redirect('/error');
+            }
         }
     })
 });
@@ -283,10 +273,14 @@ app.get('/forums/:forum/:id/:cid/remove', isLoggedIn, function(req, res) {
 app.get('/forums/:forum/:id/:cid/removepermanent', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
         ForumComment.findById(req.params.cid, function(err, comment) {
-            ForumPost.findById(req.params.id).remove({comments: req.params.cid});
-            ForumComment.findByIdAndRemove(req.params.cid, function(err) {
-                res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
-            })
+            if (comment === null || comment === undefined) {
+                res.redirect('/error');
+            } else {
+                ForumPost.findById(req.params.id).remove({comments: req.params.cid});
+                ForumComment.findByIdAndRemove(req.params.cid, function(err) {
+                    res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
+                })
+            }
         })
     } else {
         res.redirect('/error');
@@ -297,13 +291,17 @@ app.get('/forums/:forum/:id/:cid/removepermanent', isLoggedIn, function(req, res
 //remove forum post
 app.get('/forums/:forum/:id/remove', isLoggedIn, function(req, res) {
     ForumPost.findById(req.params.id, function(err, post) {
-        if (post.user == req.user.id || req.user.level === "admin") {
-            ForumPost.findByIdAndRemove(req.params.id, function(err) {
-                ForumComment.find({parentid : req.params.id}).remove();
-                res.redirect('/forums/' + req.params.forum);
-            })
-        } else {
+        if (post === null || post === undefined) {
             res.redirect('/error');
+        } else {
+            if (post.user == req.user.id || req.user.level === "admin") {
+                ForumPost.findByIdAndRemove(req.params.id, function(err) {
+                    ForumComment.find({parentid : req.params.id}).remove();
+                    res.redirect('/forums/' + req.params.forum);
+                })
+            } else {
+                res.redirect('/error');
+            }
         }
     })   
 });

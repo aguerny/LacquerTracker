@@ -154,13 +154,13 @@ var speed = 100;
         now.fadeOut(speed, function() {next.fadeIn(speed);});
     });
 
-    $(document).on("pageinit", ".gallery", function(){   
+    $(document).on("pageinit", function(){   
         $(".gallery").on("swipeleft", function() {
-            $(".next").trigger('click');
+            $(this).parent().children(".next").trigger('click');
         });
 
         $(".gallery").on("swiperight", function() {
-            $(".prev").trigger('click');
+            $(this).parent().children(".prev").trigger('click');
         });
     });
 </script>

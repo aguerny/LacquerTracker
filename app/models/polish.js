@@ -13,7 +13,7 @@ var polishSchema = mongoose.Schema({
     indie: String,
     code: String,
     keywords: String,
-    dateupdated: Date,
+    dateupdated: String,
     dupes: String,
 });
 

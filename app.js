@@ -25,38 +25,7 @@ app.configure(function() {
     app.use(function (req, res, next) {
     	if ('/robots.txt' == req.url) {
         	res.type('text/plain')
-        	res.send("User-agent: *
-				\nDisallow: /admin
-				\nDisallow: /blog/add
-				\nDisallow: /blog/*/add
-				\nDisallow: /blog/*/*/add
-				\nDisallow: /blog/*/*/remove
-				\nDisallow: /blog/*/*/removepermanent
-				\nDisallow: /blog/*/edit
-				\nDisallow: /email
-				\nDisallow: /forums/*/add
-				\nDisallow: /forums/*/*/*/add
-				\nDisallow: /forums/*/*/edit
-				\nDisallow: /forums/*/*/add
-				\nDisallow: /forums/*/*/*/remove
-				\nDisallow: /forums/*/*/*/removepermanent
-				\nDisallow: /forums/*/*/remove
-				\nDisallow: /photo
-				\nDisallow: /addown
-				\nDisallow: /addwant
-				\nDisallow: /removeown
-				\nDisallow: /removewant
-				\nDisallow: /polish/*/*/delete
-				\nDisallow: /profile/edit
-				\nDisallow: /profile/*/edit
-				\nDisallow: /profile/*/*/remove
-				\nDisallow: /profile/*/*/add
-				\nDisallow: /profile/*/*/delete
-				\nDisallow: /review
-				\nDisallow: /validate
-				\nDisallow: /revalidate
-				\nDisallow: /reset
-				\nDisallow: /logout");
+        	res.send("User-agent: *\nDisallow: /admin\nDisallow: /blog/add\nDisallow: /blog/*/add\nDisallow: /blog/*/*/add\nDisallow: /blog/*/*/remove\nDisallow: /blog/*/*/removepermanent\nDisallow: /blog/*/edit\nDisallow: /email\nDisallow: /forums/*/add\nDisallow: /forums/*/*/*/add\nDisallow: /forums/*/*/edit\nDisallow: /forums/*/*/add\nDisallow: /forums/*/*/*/remove\nDisallow: /forums/*/*/*/removepermanent\nDisallow: /forums/*/*/remove\nDisallow: /photo\nDisallow: /addown\nDisallow: /addwant\nDisallow: /removeown\nDisallow: /removewant\nDisallow: /polish/*/*/delete\nDisallow: /profile/edit\nDisallow: /profile/*/edit\nDisallow: /profile/*/*/remove\nDisallow: /profile/*/*/add\nDisallow: /profile/*/*/delete\nDisallow: /review\nDisallow: /validate\nDisallow: /revalidate\nDisallow: /reset\nDisallow: /logout");
     	} else {
         	next();
     	}

@@ -74,13 +74,17 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
 //remove polish photo
 app.get('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
     Photo.findById(req.params.id).exec(function(err, photo) {
-        fs.unlink('./public' + photo.location, function(err) {
-            if (err) throw err;
-        })
-        photo.remove();
-    Polish.findById(req.params.pid, function(err, p) {
-            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-    })
+        if (photo === null || photo === undefined) {
+            res.redirect('/error');
+        } else {
+            fs.unlink('./public' + photo.location, function(err) {
+                if (err) throw err;
+            })
+            photo.remove();
+            Polish.findById(req.params.pid, function(err, p) {
+                res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+            })
+        }
     });
 });
 

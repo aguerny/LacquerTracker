@@ -77,6 +77,7 @@ app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
             data.notifications = user.notifications;
             data.useremail = user.useremail;
             data.country = user.country;
+            data.timezone = user.timezone;
             for (i=0; i < user.photos.length; i++) {
                 if (user.photos[i].onprofile === "yes") {
                     yesphotos.push(user.photos[i]);
@@ -101,6 +102,7 @@ app.post('/profile/:username/edit', isLoggedIn, function(req, res) {
             user.email = sanitizer.sanitize(req.body.email);
             user.about = sanitizer.sanitize(req.body.about);
             user.country = req.body.country;
+            user.timezone = req.body.timezone;
             if (req.body.notifications) {
                 user.notifications = req.body.notifications;
             } else {
@@ -120,27 +122,39 @@ app.post('/profile/:username/edit', isLoggedIn, function(req, res) {
 
 
 app.get('/profile/:username/:id/remove', isLoggedIn, function(req, res) {
-    UserPhoto.findById(req.params.id, function(err, photo) {
-        photo.onprofile = "no";
-        photo.save();
-        res.redirect('/profile/' + req.user.username);
-    })
+    if (req.user.username == req.params.username) {
+        UserPhoto.findById(req.params.id, function(err, photo) {
+            photo.onprofile = "no";
+            photo.save();
+            res.redirect('/profile/' + req.user.username + '/edit');
+        })
+    } else {
+        res.redirect('/error');
+    }
 });
 
 
 app.get('/profile/:username/:id/add', isLoggedIn, function(req, res) {
-    UserPhoto.findById(req.params.id, function(err, photo) {
-        photo.onprofile = "yes";
-        photo.save();
-        res.redirect('/profile/' + req.user.username);
-    })
+    if (req.user.username == req.params.username) {
+        UserPhoto.findById(req.params.id, function(err, photo) {
+            photo.onprofile = "yes";
+            photo.save();
+            res.redirect('/profile/' + req.user.username + '/edit');
+        })
+    } else {
+        res.redirect('/error');
+    }
 });
 
 
 app.get('/profile/:username/:id/delete', isLoggedIn, function(req, res) {
-    req.user.photos.remove(req.params.id);
-    req.user.save();
-    res.redirect('/profile/' + req.user.username);
+    if (req.user.username == req.params.username) {
+        req.user.photos.remove(req.params.id);
+        req.user.save();
+        res.redirect('/profile/' + req.user.username + '/edit');
+    } else {
+        res.redirect('/error');
+    }
 });
 
 
