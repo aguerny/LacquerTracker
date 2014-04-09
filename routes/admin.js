@@ -9,7 +9,7 @@ app.get('/admin/users', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
         User.find({}).sort('usernumber').exec(function(err, users) {
             var users = users.map(function(x) {
-                x.creationdate = moment(x.creationdate).tz("America/New_York").format('MMM D YYYY, h:mm a');
+                x.creationdate = moment(x.creationdate).tz("America/New_York").format('M-D-YY, h:mm a');
                 return x;
             })
             res.render('adminusers.ejs', {title: 'All Users - Lacquer Tracker', allusers: users});

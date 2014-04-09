@@ -55,7 +55,7 @@ module.exports = function(passport) {
 
 			//if user has not validated yet
 			if (user.isvalidated === false) {
-				return done(null, false, req.flash('loginMessage', 'Your account has not yet been validated. Please check your email or have another code sent to you at: http://lacquertracker.com/revalidate'));
+				return done(null, false, req.flash('loginMessage', 'Your account has not yet been validated. Please check your email or have another code sent to you at: http://www.lacquertracker.com/revalidate'));
 			} else {
 				return done(null, user);
 			}

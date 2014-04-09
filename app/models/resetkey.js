@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 //define the schema for our blog post model
 var resetkeySchema = mongoose.Schema({
 	username: String,
-	expiredate: String,
+	expiredate: Date,
 });
 
 

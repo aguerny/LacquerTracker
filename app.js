@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var autoIncrement = require('mongoose-auto-increment');
 var passport = require('passport');
 var d = require('domain').create();
+var fs = require('fs');
 
 var app = express();
 
@@ -25,7 +26,7 @@ app.configure(function() {
     app.use(function (req, res, next) {
     	if ('/robots.txt' == req.url) {
         	res.type('text/plain')
-        	res.send("User-agent: *\nDisallow: /admin\nDisallow: /blog/add\nDisallow: /blog/*/add\nDisallow: /blog/*/*/add\nDisallow: /blog/*/*/remove\nDisallow: /blog/*/*/removepermanent\nDisallow: /blog/*/edit\nDisallow: /email\nDisallow: /forums/*/add\nDisallow: /forums/*/*/*/add\nDisallow: /forums/*/*/edit\nDisallow: /forums/*/*/add\nDisallow: /forums/*/*/*/remove\nDisallow: /forums/*/*/*/removepermanent\nDisallow: /forums/*/*/remove\nDisallow: /photo\nDisallow: /addown\nDisallow: /addwant\nDisallow: /removeown\nDisallow: /removewant\nDisallow: /polish/*/*/delete\nDisallow: /profile/edit\nDisallow: /profile/*/edit\nDisallow: /profile/*/*/remove\nDisallow: /profile/*/*/add\nDisallow: /profile/*/*/delete\nDisallow: /review\nDisallow: /validate\nDisallow: /revalidate\nDisallow: /reset\nDisallow: /logout");
+        	res.send("User-agent: *\nDisallow: /admin\nDisallow: /blog/add\nDisallow: /blog/*/add\nDisallow: /blog/*/*/add\nDisallow: /blog/*/*/remove\nDisallow: /blog/*/*/removepermanent\nDisallow: /blog/*/edit\nDisallow: /email\nDisallow: /forums/*/add\nDisallow: /forums/*/*/*/add\nDisallow: /forums/*/*/edit\nDisallow: /forums/*/*/add\nDisallow: /forums/*/*/*/remove\nDisallow: /forums/*/*/*/removepermanent\nDisallow: /forums/*/*/remove\nDisallow: /photo\nDisallow: /addown\nDisallow: /addwant\nDisallow: /removeown\nDisallow: /removewant\nDisallow: /polish/*/*/delete\nDisallow: /profile/edit\nDisallow: /profile/*/edit\nDisallow: /profile/*/*/remove\nDisallow: /profile/*/*/add\nDisallow: /profile/*/*/delete\nDisallow: /review\nDisallow: /validate\nDisallow: /revalidate\nDisallow: /reset\nDisallow: /logout\nDisallow: /scripts\nDisallow: /stylesheets");
     	} else {
         	next();
     	}
@@ -33,6 +34,7 @@ app.configure(function() {
 
 	app.use(express.static(__dirname+'/public')); // Catch static files
 	app.use(express.logger('dev')); // log every request to the console
+	/*app.use(express.logger({format: 'dev', stream: fs.createWriteStream('app.log', {'flags': 'w'})}));*/
 	app.use(express.cookieParser('lala')); // read cookies (needed for auth)
 	app.use(express.bodyParser({uploadDir:'./public/images/tmp/'})); // get information from HTML forms
 	app.use(express.favicon('./public/images/lt.png'));

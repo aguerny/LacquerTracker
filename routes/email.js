@@ -37,36 +37,26 @@ app.post('/email/:username', isLoggedIn, function(req, res) {
                     res.render('emailuser.ejs', {title: 'Send Message - Lacquer Tracker', message: 'Captcha wrong. Try again.', emailmessage:req.body.emailmessage, username:user.username});
                 } else {
                     //send e-mail
-                    var mailOpts, smtpConfig;
-                    smtpConfig = nodemailer.createTransport('SMTP', {
-                        service: 'Gmail',
-                        auth: {
-                            user: "lacquertrackermailer@gmail.com",
-                            pass: "testpassword"
-                        }
+                    var transport = nodemailer.createTransport('sendmail', {
+                        path: "/usr/sbin/sendmail",
                     });
 
-                    //construct the email sending module
-                    mailOpts = {
-                        from: "noreply@lacquertracker.com",
+                    var mailOptions = {
+                        from: "polishrobot@lacquertracker.com",
                         to: user.email,
-                        //replace it with id you want to send multiple must be separated by ,(comma)
                         subject: 'Message from ' + req.user.username,
                         text: "Hey " + user.username + ",\n\n" + req.user.username + " has sent you the following message:\n\n" + sanitizer.sanitize(req.body.emailmessage) + "\n\nThanks,\nLacquer Tracker",
-                    };
+                    }
 
-                    //send Email
-                    smtpConfig.sendMail(mailOpts, function (error, response) {
-
-                        //Email not sent
+                    transport.sendMail(mailOptions, function(error, response) {
                         if (error) {
+                            console.log(error);
                             res.render('emailuser.ejs', {title: 'Send Message - Lacquer Tracker', message:'Error sending message. Please try again later.', emailmessage:req.body.emailmessage, username:user.username});
-                        }
-
-                        //email sent successfully
-                        else {
+                        } else {
                             res.render('emailuser.ejs', {title: 'Send Message - Lacquer Tracker', message: 'Success! Message sent.', username:user.username});
                         }
+
+                        transport.close();
                     });
                 }
             })

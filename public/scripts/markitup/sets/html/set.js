@@ -16,7 +16,9 @@ mySettings = {
 	markupSet: [
 		{name:'Bold', key:'B', openWith:'**', closeWith:'**' },
 		{name:'Italic', key:'I', openWith:'*', closeWith:'*' },
+		{name:'Stroke', key:'S', openWith:'~~', closeWith:'~~' },
 		{separator:'---------------' },
+		{name:'New Paragraph', openWith:'<br>' },
 		{name:'Ul', openWith:'\n* \n* \n* ' },
 		{separator:'---------------' },
 		{name:'Picture', key:'P', replaceWith:'![]([![Url:!:]!])' },

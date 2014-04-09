@@ -21,36 +21,26 @@ app.post('/contact', function (req, res) {
         if (err) {
             res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Captcha wrong. Try again.', inputname:req.body.name, inputemail:req.body.email, inputmessage:req.body.usermessage});
         } else {
-            var mailOpts, smtpConfig;
-            smtpConfig = nodemailer.createTransport('SMTP', {
-                service: 'Gmail',
-                auth: {
-                    user: "lacquertrackermailer@gmail.com",
-                    pass: "testpassword"
-                }
+            var transport = nodemailer.createTransport('sendmail', {
+                path: "/usr/sbin/sendmail",
             });
 
-            //construct the email sending module
-            mailOpts = {
-                from: sanitizer.sanitize(req.body.name) + sanitizer.sanitize(req.body.email),
-                to: 'alligiveaway@gmail.com',
-                //replace it with id you want to send multiple must be separated by ,(comma)
+            var mailOptions = {
+                from: "polishrobot@lacquertracker.com",
+                to: 'lacquertrackermailer@gmail.com',
                 subject: 'Contact Form Submission',
                 text: "Message from " + sanitizer.sanitize(req.body.name) + " - " + sanitizer.sanitize(req.body.email) + ":\n\n\n" + sanitizer.sanitize(req.body.usermessage)
-            };
-
-            //send Email
-                smtpConfig.sendMail(mailOpts, function (error, response) {
-
-            //Email not sent
-            if (error) {
-                res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Could not send feedback. Please try again later.', inputname:req.body.name, inputemail:req.body.email, inputmessage:req.body.usermessage});
             }
 
-            //email sent successfully
-            else {
-                res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Feedback successfully sent!'});
-            }
+            transport.sendMail(mailOptions, function(error, response) {
+                if (error) {
+                    console.log(error);
+                    res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Could not send feedback. Please try again later.', inputname:req.body.name, inputemail:req.body.email, inputmessage:req.body.usermessage});
+                } else {
+                    res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Feedback successfully sent!'});
+                }
+
+                transport.close();
             });
         }
     })

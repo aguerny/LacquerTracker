@@ -54,7 +54,7 @@ app.get('/forums/:forum', function(req, res) {
         ForumPost.find({forum: req.params.forum}).sort({date: -1}).populate('comments').populate('user').exec(function(err, posts) {
             User.populate(posts, {path:'comments.user'}, function(err) {
                 var allposts = posts.map(function(x) {
-                    if (req.isAuthenticated()) {
+                    if (req.isAuthenticated() && req.user.timezone.length > 0) {
                         x.dateupdated = moment(x.dateupdated).tz(req.user.timezone).calendar();
                     } else {
                         x.dateupdated = moment(x.dateupdated).tz("America/New_York").calendar();
@@ -85,7 +85,7 @@ app.get('/forums/:forum/:id', function(req, res) {
             data.posttitle = post.title;
             data.postuser = post.user;
             data.postmessage = markdown(post.message);
-            if (req.isAuthenticated()) {
+            if (req.isAuthenticated() && req.user.timezone.length > 0) {
                 data.postdate = moment(post.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
             } else {
                 data.postdate = moment(post.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
@@ -93,7 +93,7 @@ app.get('/forums/:forum/:id', function(req, res) {
             data.postforum = post.forum;
             User.populate(post, {path:'comments.user'}, function(err) {
                 var allcomments = post.comments.map(function(x) {
-                    if (req.isAuthenticated()) {
+                    if (req.isAuthenticated() && req.user.timezone.length > 0) {
                         x.date = moment(x.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
                     } else {
                         x.date = moment(x.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
@@ -121,27 +121,23 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
         newForumComment.save(function(err) {
             if (req.user.username !== post.user.username && post.user.notifications === "on") {
                 //mail notification
-                var mailOpts, smtpConfig;
-                smtpConfig = nodemailer.createTransport('SMTP', {
-                    service: 'Gmail',
-                    auth: {
-                        user: "lacquertrackermailer@gmail.com",
-                        pass: "testpassword"
-                    }
+                var transport = nodemailer.createTransport('sendmail', {
+                    path: "/usr/sbin/sendmail",
                 });
 
-                //construct the email sending module
-                mailOpts = {
-                    from: "noreply@lacquertracker.com",
+                var mailOptions = {
+                    from: "polishrobot@lacquertracker.com",
                     to: post.user.email,
-                    //replace it with id you want to send multiple must be separated by ,(comma)
                     subject: 'New reply to your post',
                     text: "Hey " + post.user.username + ",\n\n" + req.user.username + " just replied to your forum post: " + post.title + "\n\nCome check it out here: http://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nThanks,\nLacquer Tracker",
-                };
+                }
 
-                //send Email
-                smtpConfig.sendMail(mailOpts, function(err, result) {
-                    if (err) {throw err};
+                transport.sendMail(mailOptions, function(error, response) {
+                    if (error) {
+                        console.log(error);
+                    }
+
+                    transport.close();
                 });
             }
 
@@ -184,7 +180,7 @@ app.get('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
                     data.postuser = post.user;
                     data.postmessage = markdown(post.message);
                     data.postforum = post.forum;
-                    if (req.isAuthenticated()) {
+                    if (req.isAuthenticated() && req.user.timezone.length > 0) {
                         data.postdate = moment(post.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
                         comment.date = moment(comment.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
                     } else {

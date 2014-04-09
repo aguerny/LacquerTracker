@@ -52,7 +52,7 @@ app.post('/signup', function(req, res) {
                                 newUser.useremail = true;
                                 newUser.creationdate = new Date();
                                 newUser.country = "";
-                                newUser.timezone = "America/New_York";
+                                newUser.timezone = "";
 
                                 //save the user
                                 newUser.save(function(err) {
@@ -60,36 +60,27 @@ app.post('/signup', function(req, res) {
                                         res.render('signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Error saving account. Please try again.', email:req.body.email, username:req.body.username});
                                     } else {
                                         //send validation e-mail
-                                        var mailOpts, smtpConfig;
-                                        smtpConfig = nodemailer.createTransport('SMTP', {
-                                            service: 'Gmail',
-                                            auth: {
-                                                user: "lacquertrackermailer@gmail.com",
-                                                pass: "testpassword"
-                                            }
+                                        var transport = nodemailer.createTransport('sendmail', {
+                                            path: "/usr/sbin/sendmail",
                                         });
 
-                                        //construct the email sending module
-                                        mailOpts = {
-                                            from: "Lacquer Tracker",
+                                        var mailOptions = {
+                                            from: "polishrobot@lacquertracker.com",
                                             to: newUser.email,
-                                            //replace it with id you want to send multiple must be separated by ,(comma)
                                             subject: 'Welcome to Lacquer Tracker',
                                             text: "Hey " + newUser.username + ",\n\nWelcome to Lacquer Tracker! Please visit the link below to validate your account and get started.\n\nhttp://www.lacquertracker.com/validate/" + newUser.id + "\n\n\nThanks,\nLacquer Tracker",
-                                        };
+                                        }
 
-                                        //send Email
-                                        smtpConfig.sendMail(mailOpts, function (error, response) {
-
-                                            //Email not sent
+                                        transport.sendMail(mailOptions, function(error, response) {
                                             if (error) {
+                                                console.log(error);
                                                 res.render('revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Your account was created, but there was an error sending your validation e-mail. Please try again.'});
                                             }
-
-                                            //email sent successfully
                                             else {
-                                                res.render('signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Success! Please check your e-mail to validate your new account.', email:'', username:''});
+                                                res.render('signup.ejs', {title: 'Signup - Lacquer Tracker', message: "Success! Please check your e-mail to validate your new account. (It might be in your spam folder.)", email:'', username:''});
                                             }
+
+                                            transport.close();
                                         });
                                     }
                                 })
@@ -139,37 +130,28 @@ app.post('/revalidate', function(req, res) {
                 if (user.isvalidated === true) {
                     res.render('login.ejs', {title: 'Login - Lacquer Tracker', message:'Your account has already been validated. Please log in.'});
                 } else {
-                    var mailOpts, smtpConfig;
-                    smtpConfig = nodemailer.createTransport('SMTP', {
-                        service: 'Gmail',
-                        auth: {
-                            user: "lacquertrackermailer@gmail.com",
-                            pass: "testpassword"
-                        }
+                    var transport = nodemailer.createTransport('sendmail', {
+                        path: "/usr/sbin/sendmail",
                     });
 
-                    //construct the email sending module
-                    mailOpts = {
-                        from: "Lacquer Tracker",
+                    var mailOptions = {
+                        from: "polishrobot@lacquertracker.com",
                         to: user.email,
-                        //replace it with id you want to send multiple must be separated by ,(comma)
                         subject: 'Validation E-mail',
                         text: "Hey " + user.username + ",\n\nLost your welcome e-mail? No worries! Please visit the link below to validate your account and get started.\n\nhttp://www.lacquertracker.com/validate/" + user.id + "\n\n\nThanks,\nLacquer Tracker",
-                    };
+                    }
 
-                    //send Email
-                    smtpConfig.sendMail(mailOpts, function (error, response) {
-
-                        //Email not sent
+                    transport.sendMail(mailOptions, function(error, response) {
                         if (error) {
+                            console.log(error);
                             res.render('revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Error sending e-mail. Please try again later.'});
                         }
-
-                        //email sent successfully
                         else {
                             res.render('revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'E-mail successfully sent.'});
                         }
-                    })
+
+                        transport.close();
+                    });
                 }
             } else {
                 res.render('revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Username not found.'});
@@ -188,7 +170,7 @@ app.get('/login', function(req, res) {
 });
 
 app.post('/login', passport.authenticate('local-login', {
-    successReturnToOrRedirect: '/browse',
+    successReturnToOrRedirect: '/profile',
     failureRedirect: '/login',
     failureFlash: true
 }));
@@ -218,37 +200,29 @@ app.post('/passwordreset', function(req, res) {
                     })
                     newResetKey.save();
 
-                    var mailOpts, smtpConfig;
-                    smtpConfig = nodemailer.createTransport('SMTP', {
-                        service: 'Gmail',
-                        auth: {
-                            user: "lacquertrackermailer@gmail.com",
-                            pass: "testpassword"
-                        }
+                    //send email
+                    var transport = nodemailer.createTransport('sendmail', {
+                        path: "/usr/sbin/sendmail",
                     });
 
-                    //construct the email sending module
-                    mailOpts = {
-                        from: 'lacquertrackermailer@gmail.com',
+                    var mailOptions = {
+                        from: "polishrobot@lacquertracker.com",
                         to: user.email,
-                        //replace it with id you want to send multiple must be separated by ,(comma)
                         subject: 'Password Reset',
                         text: "Hey " + user.username + ",\n\nYour reset password link is: http://www.lacquertracker.com/reset/" + newResetKey.id + "\n\nYou have 24 hours until this key expires.\n\n\nThanks,\nLacquer Tracker",
-                    };
+                    }
 
-                    //send Email
-                        smtpConfig.sendMail(mailOpts, function (error, response) {
-
-                        //Email not sent
+                    transport.sendMail(mailOptions, function(error, response) {
                         if (error) {
+                            console.log(error);
                             res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error sending e-mail. Please try again later.'});
                         }
-
-                        //email sent successfully
                         else {
                             res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'E-mail successfully sent.'});
                         }
-                    })
+
+                        transport.close();
+                    });
                 } else {
                     res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'No e-mail address associated with this username.'});
                 }

@@ -17,7 +17,7 @@ app.get('/blog', function(req, res) {
     Blog.find({}).sort({date: -1}).populate('user').exec(function(err, posts) {
         var allposts = posts.map(function(x) {
             x.message = markdown(x.message);
-            if (req.isAuthenticated()) {
+            if (req.isAuthenticated() && req.user.timezone.length > 0) {
                 x.date = moment(x.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
             } else {
                 x.date = moment(x.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
@@ -74,14 +74,14 @@ app.get('/blog/:title', function(req, res) {
             data.posttitle = blog.title;
             data.postuser = blog.user;
             data.postmessage = markdown(blog.message);
-            if (req.isAuthenticated()) {
+            if (req.isAuthenticated() && req.user.timezone.length > 0) {
                 data.postdate = moment(blog.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
             } else {
                 data.postdate = moment(blog.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
             }
             User.populate(blog, {path:'comments.user'}, function(err) {
                 var allcomments = blog.comments.map(function(x) {
-                    if (req.isAuthenticated()) {
+                    if (req.isAuthenticated() && req.user.timezone.length > 0) {
                         x.date = moment(x.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
                     } else {
                         x.date = moment(x.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
@@ -119,27 +119,24 @@ app.post('/blog/:title/:id/add', isLoggedIn, function(req, res) {
 
             if (req.user.username !== blog.user.username && blog.user.notifications === "on") {
                 //mail notification
-                var mailOpts, smtpConfig;
-                smtpConfig = nodemailer.createTransport('SMTP', {
-                    service: 'Gmail',
-                    auth: {
-                        user: "lacquertrackermailer@gmail.com",
-                        pass: "testpassword"
-                    }
+                var transport = nodemailer.createTransport('sendmail', {
+                    path: "/usr/sbin/sendmail",
                 });
 
-                //construct the email sending module
-                mailOpts = {
-                    from: "noreply@lacquertracker.com",
+                var mailOptions = {
+                    from: "polishrobot@lacquertracker.com",
                     to: blog.user.email,
-                    //replace it with id you want to send multiple must be separated by ,(comma)
                     subject: 'New reply to your blog post',
                     text: "Hey " + blog.user.username + ",\n\n" + req.user.username + " just replied to your blog post: " + blog.title + "\n\nCome check it out here: http://www.lacquertracker.com/blog/" + blog.title.replace(/ /g,"_") + "\n\n\nThanks,\nLacquer Tracker",
-                };
+                }
 
-                //send Email
-                smtpConfig.sendMail(mailOpts, function(err, result) {
-                    if (err) {throw err};
+                transport.sendMail(mailOptions, function(error, response) {
+                    if (error) {
+                        console.log(error);
+                        res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error sending e-mail. Please try again later.'});
+                    }
+
+                    transport.close();
                 });
             }
 
@@ -177,7 +174,7 @@ app.get('/blog/:title/:id/add', isLoggedIn, function(req, res) {
                 data.posttitle = blog.title;
                 data.postuser = blog.user;
                 data.postmessage = markdown(blog.message);
-                if (req.isAuthenticated()) {
+                if (req.isAuthenticated() && req.user.timezone.length > 0) {
                     data.postdate = moment(blog.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
                     comment.date = moment(comment.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
                 } else {

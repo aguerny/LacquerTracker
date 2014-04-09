@@ -2,7 +2,7 @@ var Polish = require('../app/models/polish');
 var User = require('../app/models/user');
 var Photo = require('../app/models/photo');
 var UserPhoto = require('../app/models/userphoto');
-var fs = require('fs');
+var fs = require('node-fs');
 var path = require('path');
 var gm = require('gm').subClass({ imageMagick: true });
 
