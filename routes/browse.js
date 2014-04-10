@@ -13,11 +13,11 @@ app.get('/browse', function(req, res) {
         data = {};
         data.title = 'Browse - Lacquer Tracker';
         data.brands = allbrands;
-        data.browsekeywords = req.body.keywords;
-        data.browsebrand = req.body.brand;
-        data.browsecolorcat = req.body.colorcat;
-        data.browsetype = req.body.type;
-        data.browseindie = req.body.indie;
+        data.browsekeywords = '';
+        data.browsebrand = '';
+        data.browsecolorcat = '';
+        data.browsetype = '';
+        data.browseindie = '';
 
         data.page = 1;
 

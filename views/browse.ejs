@@ -10,7 +10,7 @@
                 <div id="sidebar">
                 <h3>Browse by:</h3><br>
                 <form action="/browse" method="post" id="browseform">
-                    <input type="text" name="keywords" <% if (browsekeywords) { %> value="<%=browsekeywords%>" <% } %>placeholder="Keyword/Code" class="width80">
+                    <input type="text" name="keywords" <% if (browsekeywords.length > 0) { %> value="<%=browsekeywords%>" <% } %>placeholder="Keyword/Code" class="width80">
                     <br><br><br>
                     <select name="brand" class="width80">
                         <option value="">All Brands</option>

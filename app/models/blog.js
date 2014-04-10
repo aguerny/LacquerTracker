@@ -8,6 +8,7 @@ var blogSchema = mongoose.Schema({
     title: String,
     message: String,
     date: String,
+    datesort: Date,
     comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'BlogComment'}],
 });
 

@@ -25,6 +25,7 @@ app.get('/polish/:brand/:name', function(req, res) {
             data.ptype = polish.type;
             data.pcode = polish.code;
             data.pid = polish.id;
+            data.pindie = polish.indie;
             data.pdupes = markdown(polish.dupes);
             data.linkbrand = polish.brand.replace("%20"," ");
             data.linkname = polish.name.replace("%20"," ");

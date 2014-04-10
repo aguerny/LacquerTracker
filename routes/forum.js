@@ -35,6 +35,7 @@ app.post('/forums/:forum/add', isLoggedIn, function(req, res) {
         message: sanitizer.sanitize(req.body.postmessage),
         date: new Date(),
         dateupdated: new Date(),
+        dateupdatedsort: new Date(),
         forum: req.body.forum,
     });
     newForumPost.save(function(err) {
@@ -51,7 +52,7 @@ app.get('/forums/:forum', function(req, res) {
         data = {}
         data.title = req.params.forum + ' - Lacquer Tracker';
         data.forumcat = req.params.forum;
-        ForumPost.find({forum: req.params.forum}).sort({date: -1}).populate('comments').populate('user').exec(function(err, posts) {
+        ForumPost.find({forum: req.params.forum}).sort({dateupdatedsort: -1}).populate('comments').populate('user').exec(function(err, posts) {
             User.populate(posts, {path:'comments.user'}, function(err) {
                 var allposts = posts.map(function(x) {
                     if (req.isAuthenticated() && req.user.timezone.length > 0) {
@@ -142,6 +143,7 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
             }
 
             post.dateupdated = new Date();
+            post.dateupdatedsort = new Date();
             post.comments.push(newForumComment.id);
             ForumComment.findById(req.params.cid, function(err, parent) {
                 if (parent) {
@@ -224,6 +226,7 @@ app.post('/forums/:forum/:id/edit', isLoggedIn, function(req, res) {
             post.title = sanitizer.sanitize(req.body.posttitle);
             post.message = sanitizer.sanitize(req.body.postmessage);
             post.dateupdated = new Date();
+            post.dateupdatedsort = new Date();
             post.save();
             res.redirect('/forums/' + post.forum + '/' + post.id);
         } else {

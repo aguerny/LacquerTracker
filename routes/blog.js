@@ -14,7 +14,7 @@ module.exports = function(app, passport) {
 app.get('/blog', function(req, res) {
     data = {}
     data.title = 'Blog - Lacquer Tracker';
-    Blog.find({}).sort({date: -1}).populate('user').exec(function(err, posts) {
+    Blog.find({}).sort({datesort: -1}).populate('user').exec(function(err, posts) {
         var allposts = posts.map(function(x) {
             x.message = markdown(x.message);
             if (req.isAuthenticated() && req.user.timezone.length > 0) {
@@ -49,6 +49,7 @@ app.post('/blog/add', isLoggedIn, function(req, res) {
             title: sanitizer.sanitize(req.body.posttitle),
             message: sanitizer.sanitize(req.body.postmessage),
             date: new Date(),
+            datesort: new Date(),
         });
         newBlog.save(function(err) {
             if (err) throw err;

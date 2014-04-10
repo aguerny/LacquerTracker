@@ -11,9 +11,9 @@ var fs = require('fs');
 var app = express();
 
 //configuration
-var connection = mongoose.connect('localhost/test'); // connect to database
+var connection = mongoose.connect('localhost/lacquertracker'); // connect to database
 autoIncrement.initialize(connection);
-require('./app/passport')(passport); // pass passport for configuration
+require(__dirname+'/app/passport')(passport); // pass passport for configuration
 
 app.configure(function() {
 
@@ -36,8 +36,8 @@ app.configure(function() {
 	app.use(express.logger('dev')); // log every request to the console
 	/*app.use(express.logger({format: 'dev', stream: fs.createWriteStream('app.log', {'flags': 'w'})}));*/
 	app.use(express.cookieParser('lala')); // read cookies (needed for auth)
-	app.use(express.bodyParser({uploadDir:'./public/images/tmp/'})); // get information from HTML forms
-	app.use(express.favicon('./public/images/lt.png'));
+	app.use(express.bodyParser({uploadDir:__dirname+'/public/images/tmp/'})); // get information from HTML forms
+	app.use(express.favicon(__dirname+'/public/images/lt.png'));
 	app.use(express.json());
 	app.use(express.urlencoded());
 	app.use(express.methodOverride());
@@ -76,7 +76,7 @@ if ('development' == app.get('env')) {
 
 
 //routes
-require('./routes/index.js')(app, passport); // load our routes and pass in our app and fully configured passport
+require(__dirname+'/routes/index.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 
 //launch

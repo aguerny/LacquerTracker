@@ -45,7 +45,7 @@ app.post('/signup', function(req, res) {
                                 newUser.password = newUser.generateHash(sanitizer.sanitize(req.body.password));
                                 newUser.about = "";
                                 newUser.email = sanitizer.sanitize(req.body.email);
-                                newUser.profilephoto = '/images/blank.png';
+                                newUser.profilephoto = '';
                                 newUser.isvalidated = false;
                                 newUser.level = "normal";
                                 newUser.notifications = true;
@@ -147,7 +147,7 @@ app.post('/revalidate', function(req, res) {
                             res.render('revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Error sending e-mail. Please try again later.'});
                         }
                         else {
-                            res.render('revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'E-mail successfully sent.'});
+                            res.render('revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'E-mail successfully sent. (It might be in your spam folder if you do not see it!)'});
                         }
 
                         transport.close();
