@@ -21,7 +21,7 @@ app.get('/polish/:brand/:name', function(req, res) {
             data.pbrand = polish.brand;
             data.pbatch = polish.batch;
             data.pcolorcat = polish.colorcat;
-            data.pcolorhex = polish.colorhex;
+            data.pswatch = polish.swatch;
             data.ptype = polish.type;
             data.pcode = polish.code;
             data.pid = polish.id;
@@ -38,7 +38,6 @@ app.get('/polish/:brand/:name', function(req, res) {
                     var allphotos = photo.map(function(x) {
                         return x;
                     })
-                    /*data.j = 1;*/
                     data.allphotos = _.shuffle(allphotos);
                     data.numphotos = photo.length;
                 }
@@ -156,17 +155,17 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
             res.render('polishadd.ejs', {title: 'Add a Polish - Lacquer Tracker', message: 'That polish already exists in the database.'});
         } else {
             var newPolish = new Polish ({
-                name: sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"and")),
-                brand: sanitizer.sanitize((req.body.brand).replace(/[?]/g,"").replace(/[&]/g,"and")),
+                name: sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
+                brand: sanitizer.sanitize((req.body.brand).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
                 batch: sanitizer.sanitize(req.body.batch),
                 colorcat: req.body.colorcat,
-                colorhex: "#" + sanitizer.sanitize(req.body.colorhex),
                 type: req.body.type,
                 indie: req.body.indie,
                 code: sanitizer.sanitize(req.body.code),
-                keywords: sanitizer.sanitize(req.body.name) + " " + sanitizer.sanitize(req.body.brand) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
+                keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
                 dateupdated: new Date(),
                 dupes: sanitizer.sanitize(req.body.dupes),
+                swatch: '',
             });
             newPolish.save(function(err) {
                 res.redirect('/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"));;
@@ -192,7 +191,6 @@ app.get('/polishedit/:id', isLoggedIn, function(req, res) {
                 data.editbrand = p.brand;
                 data.editbatch = p.batch;
                 data.editcolorcat = p.colorcat;
-                data.editcolorhex = p.colorhex;
                 data.edittype = p.type;
                 data.editindie = p.indie;
                 data.editcode = p.code;
@@ -207,15 +205,14 @@ app.post('/polishedit/:id', isLoggedIn, function(req, res) {
         if (!p) {
             res.redirect('/error');
         } else {
-            p.name = sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"and")),
-            p.brand = sanitizer.sanitize((req.body.brand).replace(/[?]/g,"").replace(/[&]/g,"and")),
+            p.name = sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
+            p.brand = sanitizer.sanitize((req.body.brand).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
             p.batch = sanitizer.sanitize(req.body.batch);
             p.colorcat = req.body.colorcat;
-            p.colorhex = "#" + sanitizer.sanitize(req.body.colorhex);
             p.type = req.body.type;
             p.indie = req.body.indie;
             p.code = sanitizer.sanitize(req.body.code);
-            p.keywords = sanitizer.sanitize(req.body.name) + " " + sanitizer.sanitize(req.body.brand) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
+            p.keywords = sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
             p.dateupdated = new Date();
             p.dupes = sanitizer.sanitize(req.body.dupes);
             p.save(function(err) {

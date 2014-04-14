@@ -8,13 +8,14 @@ var polishSchema = mongoose.Schema({
     brand: String,
     name: String,
     colorcat: String,
-    colorhex: String,
     type: String,
     indie: String,
     code: String,
     keywords: String,
     dateupdated: Date,
     dupes: String,
+    photos: [{type: mongoose.Schema.Types.ObjectId, ref: 'Photo'}],
+    swatch: String,
 });
 
 

@@ -7,17 +7,6 @@ $(window).load(function () {
         'allowPartialLastRow' : true,
     });
 });
-
-
-$.fn.stars = function() {
-    return $(this).each(function() {
-        $(this).html($('<span />').width(Math.max(0, (Math.min(5, parseFloat($(this).html())))) * 16));
-    });
-}
-
-$(function() {
-    $('span.stars').stars();
-});
 </script>
 
 <!-- content -->
@@ -58,16 +47,24 @@ $(function() {
                     <tr><td><a id='tablelink' href='/polish/<%= opolishes[i].brand.replace(/ /g,"_") %>/<%= opolishes[i].name.replace(/ /g,"_") %>'><span><%= opolishes[i].name %></span></a></td>
                     <td><span><%= opolishes[i].brand %></span></td>
                     <td><span><%= opolishes[i].batch %></span></td>
-                    <td><span><%= opolishes[i].colorcat %></span></td>
-                    <td><div id='swatch' style='background-color:<%= opolishes[i].colorhex %>;'>&nbsp;</div></td>
+                    <td class="colorcat"><p><%= opolishes[i].colorcat %></p>
+                        <% if (opolishes[i].colorcat.length > 0) {%>
+                            <img src="/images/colors/<%= opolishes[i].colorcat %>.png"/>
+                        <%}%>
+                    </td>
+                    <td class="tableswatch"><% if (opolishes[i].swatch.length > 0) {%>
+                            <img src="<%=opolishes[i].swatch%>"/>
+                        <%} else {%>
+                            &nbsp;
+                        <%}%>
+                    </td>
                     <td>
                         <% if (opolishes[i].type === "topbase") {%><span>top/base coat</span>
                         <%} else if (opolishes[i].type === "glow") {%><span>glow in the dark</span>
                         <%} else {%><span><%= opolishes[i].type %></span><%}%>
                     </td>
                     <td><% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
-                            <div id="smalllayout"><span><%= oreviews[i].rating%></span></div>
-                            <div id="biglayout"><span style="display:none"><%= oreviews[i].rating %></span><span class="stars"><%= oreviews[i].rating %></span></div>
+                            <img class="starrating" src="/images/stars/<%=oreviews[i].rating%>star.png"/>
                         <% } %>
                     </td></tr>
                 <% } %>
@@ -82,9 +79,17 @@ $(function() {
                         <tr><td><a id='tablelink' href='/polish/<%= wpolishes[i].brand.replace(/ /g,"_") %>/<%= wpolishes[i].name.replace(/ /g,"_") %>'><span><%= wpolishes[i].name %></span></a></td>
                         <td><span><%= wpolishes[i].brand %></span></td>
                         <td><span><%= wpolishes[i].batch %></span></td>
-                        <td><span><%= wpolishes[i].colorcat %></span></td>
-                        <td><div id='swatch' style='background-color:<%= wpolishes[i].colorhex %>;'>&nbsp;</div></td>
-                        <td>
+                        <td class="colorcat"><p><%= wpolishes[i].colorcat %></p>
+                            <% if (wpolishes[i].colorcat.length > 0) {%>
+                                <img src="/images/colors/<%= wpolishes[i].colorcat %>.png"/>
+                            <%}%>
+                        </td>
+                        <td class="tableswatch"><% if (wpolishes[i].swatch.length > 0) {%>
+                                <img src="<%=wpolishes[i].swatch%>"/>
+                            <%} else {%>
+                                &nbsp;
+                            <%}%>
+                        </td>
                             <% if (wpolishes[i].type === "topbase") {%><span>top/base coat</span>
                             <%} else if (wpolishes[i].type === "glow") {%><span>glow in the dark</span>
                             <%} else {%><span><%= wpolishes[i].type %></span><%}%>
@@ -108,7 +113,7 @@ $(function() {
 
 <script>
 $(function() {
-  $('td span').each(function() {
+  $('span').each(function() {
     var fontSize = 100;
     while (this.scrollWidth > $(this).width() && fontSize > 0) {
       // adjust the font-size 5% at a time

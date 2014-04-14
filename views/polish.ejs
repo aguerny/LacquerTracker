@@ -30,7 +30,11 @@ $(function() {
                         <% } else { %>
                             <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a>
                         <% } %>
-                        <br><br><br><div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br><br>
+                        <br><br><br>
+                        <% if (pswatch.length > 0) {%>
+                            <img class="polishswatch" src="<%=pswatch%>"/><br><br>
+                        <%}%>
+                        <br>
                         <b>Code:</b> <%= pcode %><br><br>
                         <b>Collection:</b> <%= pbatch %><br><br>
                         <b>Color:</b> <%= pcolorcat %><br><br>
@@ -95,7 +99,11 @@ $(function() {
                 </div>
                 <br><br>
                 <a href="/polishedit/<%= pid %>">Edit information</a><br><br>
-                <br><div id="swatchsmall" style="background-color:<%= pcolorhex %>">&nbsp;</div><br>
+                <br>
+                <% if (pswatch.length > 0) {%>
+                    <img class="polishswatch" src="<%=pswatch%>"/><br><br>
+                <%}%>
+                <br>
                 <b>Code:</b> <%= pcode %><br><br>
                 <b>Collection:</b> <%= pbatch %><br><br>
                 <b>Color:</b> <%= pcolorcat %><br><br>

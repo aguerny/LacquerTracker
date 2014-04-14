@@ -9,11 +9,17 @@
                     <form action="/photo/add/<%= pid %>" method="post" enctype='multipart/form-data'>
                         <h3>Add a Photo:</h3><br>
                         Polish Name: <input type="text" name="name" value="<%= pname %>" placeholder="<%= pname %>" disabled><br><br>
-                        Polish Brand: <input type="text" value="<%= pbrand %>" name="brand" placeholder="<%= pbrand %>" disabled><br><br>
-                        Image for Upload: <input type="file" value="photo" name="photo" id="upimg" required>
-                        <br><br>
+                        Polish Brand: <input type="text" value="<%= pbrand %>" name="brand" placeholder="<%= pbrand %>" disabled><br><br><br>
+                        Image for Upload: <input type="file" value="photo" name="photo" class="width50" required><br><br>
                         <input type="submit" value="Submit" class="button">
                     </form>
+                    <!-- <br><b>OR</b><br><br>
+                    <form action="/photo/addurl/<%= pid %>" method="post">
+                        Add from URL: <input name="url" class="width50" required><br><br>
+                        <input type="submit" value="Submit" class="button">
+                    </form> -->
+                    <br><br><br>
+                    <b>Want to change the swatch thumbnail instead? <a href="/swatch/add/<%= pid %>">Click here.</a>
                 </div>
             <div id="photo-right_col">
                 <div id="smalllayout"><br><hr></div>

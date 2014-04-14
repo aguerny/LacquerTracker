@@ -5,6 +5,8 @@ var UserPhoto = require('../app/models/userphoto');
 var fs = require('node-fs');
 var path = require('path');
 var gm = require('gm').subClass({ imageMagick: true });
+var http = require('http');
+var request = require('request');
 
 
 module.exports = function(app, passport) {
@@ -36,6 +38,7 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
         })
         newPhoto.save(function(err) {
             p.dateupdated = new Date();
+            p.photos = newPhoto.id;
             p.save();
             gm(req.files.photo.path).size(function(err, value) {
                 if (value.width > 600) {
@@ -71,6 +74,62 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
 });
 
 
+
+/*//add polish photo from URL
+app.post('/photo/addurl/:id', isLoggedIn, function(req, res) {
+    var download = function(uri, filename, callback){
+        request.head(uri, function(err, res, body){
+            request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+        });
+    };
+
+    download(req.params.url, "/images/tmp/"+req.user.username+".jpg", function(){
+        Polish.findById(req.params.id, function(err, p) {
+            var newPhoto = new Photo ({
+                polishid: p.id,
+                userid: req.user.id,
+                location: '',
+            })
+            newPhoto.save(function(err) {
+                p.dateupdated = new Date();
+                p.photos = newPhoto.id;
+                p.save();
+                    gm("/images/tmp/"+req.user.username+".jpg").size(function(err, value) {
+                        if (value.width > 600) {
+                            gm("/images/tmp/"+req.user.username+".jpg").resize(600).write(path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ".jpg"), function (err) {
+                                if (err) {
+                                    res.redirect('/error');
+                                } else {
+                                    fs.unlink("/images/tmp/"+req.user.username+".jpg", function() {
+                                        newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ".jpg";
+                                        newPhoto.save(function(err) {
+                                            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                        })
+                                    })
+                                }
+                            })
+                        } else {
+                            fs.rename("/images/tmp/"+req.user.username+".jpg", path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ".jpg"), function(err) {
+                                if (err) {
+                                    res.redirect('/error');
+                                } else {
+                                    fs.unlink("/images/tmp/"+req.user.username+".jpg", function() {
+                                        newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ".jpg";
+                                        newPhoto.save(function(err) {
+                                            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                        })
+                                    })
+                                }
+                            })
+                        }
+                    })
+                })
+            })
+        })
+});*/
+
+
+
 //remove polish photo
 app.get('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
     Photo.findById(req.params.id).exec(function(err, photo) {
@@ -82,7 +141,10 @@ app.get('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
             })
             photo.remove();
             Polish.findById(req.params.pid, function(err, p) {
-                res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                p.photos.remove(req.params.id);
+                p.save(function(err) {
+                    res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                });
             })
         }
     });

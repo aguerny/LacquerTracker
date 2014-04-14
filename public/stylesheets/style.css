@@ -31,32 +31,35 @@
     legend{display:none;}
     input, textarea, select{font-size:12px; font-family:Georgia,"Times New Roman",Times,serif;}
 
-    span.stars, span.stars span {
-        display: inline-block;
-        background: url(/images/stars.png) 0 -16px repeat-x;
-        width: 80px;
-        height: 16px;
+    td img {
+        max-width:100%;
+        text-align:center;
     }
 
-    span.stars span {background-position: 0 0;}
-
     .replycomment {background-color: #D8D8D8;}
+
+    .starrating {max-width:100%;}
 
     .collage {padding: 10px;}
 
     .collage img{vertical-align:bottom;}
 
-    #swatch {
-        height: 95%;
-        width: 95%;
+    .polishswatch {
+        height: 50px;
+        width: 50px;
         border-radius: 50%;
     }
 
-    #swatchsmall {
-        height: 30px;
-        width: 75px;
+    .tableswatch, .tableswatch img {
+        max-width:100%;
+        max-height: 50px;
         border-radius: 50%;
+        text-align:center;
     }
+
+    .colorcat {text-align:center;}
+    .colorcat p {display:none;}
+    .colorcat img {height:35px;}
 
     #tablelink {color:#000000;}
 
@@ -205,8 +208,8 @@
     .browsetable th.name {width:22%;}
     .browsetable th.brand {width:20%;}
     .browsetable th.collection {width:20%;}
-    .browsetable th.color {width:10%;}
-    .browsetable th.swatch {width:8%;}
+    .browsetable th.color {width:8%;}
+    .browsetable th.swatch {width:12%;}
     .browsetable th.type {width:12%;}
     .browsetable th.info {width:8%;}
 
@@ -350,24 +353,24 @@
     .browsetable th.name {width:20%;}
     .browsetable th.brand {width:18%;}
     .browsetable th.collection {width:20%;}
-    .browsetable th.color {width:12%;}
-    .browsetable th.swatch {width:8%;}
-    .browsetable th.type {width:12%;}
+    .browsetable th.color {width:8%;}
+    .browsetable th.swatch {width:10%;}
+    .browsetable th.type {width:14%;}
     .browsetable th.info {width:10%;}
 
     .ownedtable th.name {width:20%;}
     .ownedtable th.brand {width:18%;}
     .ownedtable th.collection {width:20%;}
-    .ownedtable th.color {width:12%;}
-    .ownedtable th.swatch {width:8%;}
+    .ownedtable th.color {width:8%;}
+    .ownedtable th.swatch {width:12%;}
     .ownedtable th.type {width:14%;}
     .ownedtable th.rating {width:8%;}
 
     .wantedtable th.name {width:24%;}
     .wantedtable th.brand {width:22%;}
     .wantedtable th.collection {width:22%;}
-    .wantedtable th.color {width:12%;}
-    .wantedtable th.swatch {width:8%;}
+    .wantedtable th.color {width:8%;}
+    .wantedtable th.swatch {width:12%;}
     .wantedtable th.type {width:12%;}
 
     #contact-left_col {text-align:center;}

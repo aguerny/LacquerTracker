@@ -147,8 +147,17 @@
                         <tr><td><a id='tablelink' href='/polish/<%= polishes[i].brand.replace(/ /g,"_") %>/<%= polishes[i].name.replace(/ /g,"_") %>'><span><%= polishes[i].name %></span></a></td>
                         <td><span><%= polishes[i].brand %></span></td>
                         <td><span><%= polishes[i].batch %></span></td>
-                        <td><span><%= polishes[i].colorcat %></span></td>
-                        <td><div id='swatch' style='background-color:<%= polishes[i].colorhex %>;'>&nbsp;</div></td>
+                        <td class="colorcat"><p><%= polishes[i].colorcat %></p>
+                            <% if (polishes[i].colorcat.length > 0) {%>
+                                <img src="/images/colors/<%= polishes[i].colorcat %>.png"/>
+                            <%}%>
+                        </td>
+                        <td class="tableswatch"><% if (polishes[i].swatch.length > 0) {%>
+                                <img src="<%=polishes[i].swatch%>"/>
+                            <%} else {%>
+                                &nbsp;
+                            <%}%>
+                        </td>
                         <td>
                             <% if (polishes[i].type === "topbase") {%><span>top/base coat</span>
                             <%} else if (polishes[i].type === "glow") {%><span>glow in the dark</span>
@@ -232,7 +241,7 @@ $(document).ready(function() {
 
 
     $(function() {
-        $('td span').each(function() {
+        $('span').each(function() {
             var fontSize = 100;
             while (this.scrollWidth > $(this).width() && fontSize > 0) {
                 // adjust the font-size 5% at a time
