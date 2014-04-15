@@ -49,20 +49,58 @@ app.post('/swatch/crop/:id', isLoggedIn, function(req, res) {
     gm(path.resolve('./public/' + req.body.location))
         .crop(req.body.w, req.body.h, req.body.x, req.body.y)
         .write(path.resolve('./public/' + req.body.location), function (err) {
-            gm(path.resolve('./public/' + req.body.location)).resize(300).write(path.resolve('./public/' + req.body.location)), function (err) {
-            if (err) {
-                res.redirect('/error');
-            } else {
-                Polish.findById(req.params.id, function(err, p) {
-                    p.swatch = req.body.location;
-                    p.save(function(err) {
-                        res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+            gm(path.resolve('./public/' + req.body.location)).resize(200).write(path.resolve('./public/' + req.body.location), function (err) {
+                if (err) {
+                    res.redirect('/error');
+                } else {
+                    Polish.findById(req.params.id, function(err, p) {
+                        p.swatch = req.body.location;
+                        p.save(function(err) {
+                            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                        })
                     })
-                })
-            }
+                }
+            })
+        })
+})
+
+
+
+//swatch from photo already uploaded
+app.get('/photo/swatch/:pid/:id', isLoggedIn, function(req, res) {
+    Photo.findById(req.params.id, function(err, photo) {
+        if (err) {
+            res.redirect('/error');
+        } else if (photo.length < 1) {
+            res.redirect('/error');
+        } else {
+            var data = {};
+                data.title = 'Add a Swatch - Lacquer Tracker';
+                data.photo = photo;
+            res.render('swatchedit.ejs', data);
         }
     })
-})
+});
+
+
+app.post('/swatch/edit/:pid/:id', isLoggedIn, function(req, res) {
+    Polish.findById(req.params.pid, function (err, polish) {
+        gm(path.resolve('./public/' + req.body.location))
+            .crop(req.body.w, req.body.h, req.body.x, req.body.y)
+            .resize(200)
+            .write(path.resolve('./public/images/swatches/' + req.params.pid + '.jpg'), function (err) {
+                if (err) {
+                    res.redirect('/error');
+                } else {
+                    polish.swatch = '/images/swatches/' + polish.id + '.jpg';
+                    polish.save(function(err) {
+                        res.redirect('/polish/' + polish.brand.replace(/ /g,"_") + "/" + polish.name.replace(/ /g,"_"));
+                    })
+                }
+            })
+    })
+});
+
 
 
 };

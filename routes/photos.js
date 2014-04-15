@@ -7,6 +7,12 @@ var path = require('path');
 var gm = require('gm').subClass({ imageMagick: true });
 var http = require('http');
 var request = require('request');
+var download = function(uri, filename, callback){
+    request.head(uri, function(err, res, body){
+        var ext = res.headers['content-type'];
+        request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+    });
+};
 
 
 module.exports = function(app, passport) {
@@ -38,7 +44,7 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
         })
         newPhoto.save(function(err) {
             p.dateupdated = new Date();
-            p.photos = newPhoto.id;
+            p.photos.push(newPhoto.id);
             p.save();
             gm(req.files.photo.path).size(function(err, value) {
                 if (value.width > 600) {
@@ -75,58 +81,42 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
 
 
 
-/*//add polish photo from URL
+//add polish photo from URL
 app.post('/photo/addurl/:id', isLoggedIn, function(req, res) {
-    var download = function(uri, filename, callback){
-        request.head(uri, function(err, res, body){
-            request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-        });
-    };
-
-    download(req.params.url, "/images/tmp/"+req.user.username+".jpg", function(){
-        Polish.findById(req.params.id, function(err, p) {
-            var newPhoto = new Photo ({
-                polishid: p.id,
-                userid: req.user.id,
-                location: '',
-            })
-            newPhoto.save(function(err) {
-                p.dateupdated = new Date();
-                p.photos = newPhoto.id;
-                p.save();
-                    gm("/images/tmp/"+req.user.username+".jpg").size(function(err, value) {
-                        if (value.width > 600) {
-                            gm("/images/tmp/"+req.user.username+".jpg").resize(600).write(path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ".jpg"), function (err) {
-                                if (err) {
-                                    res.redirect('/error');
-                                } else {
-                                    fs.unlink("/images/tmp/"+req.user.username+".jpg", function() {
-                                        newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ".jpg";
-                                        newPhoto.save(function(err) {
-                                            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                                        })
-                                    })
-                                }
-                            })
-                        } else {
-                            fs.rename("/images/tmp/"+req.user.username+".jpg", path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ".jpg"), function(err) {
-                                if (err) {
-                                    res.redirect('/error');
-                                } else {
-                                    fs.unlink("/images/tmp/"+req.user.username+".jpg", function() {
-                                        newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ".jpg";
-                                        newPhoto.save(function(err) {
-                                            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                                        })
-                                    })
-                                }
-                            })
-                        }
-                    })
+    Polish.findById(req.params.id, function(err, p) {
+        var newPhoto = new Photo ({
+            polishid: p.id,
+            userid: req.user.id,
+            location: '',
+        })
+        newPhoto.save(function(err) {
+            p.dateupdated = new Date();
+            p.photos.push(newPhoto.id);
+            p.save();
+            download(req.body.url, path.resolve('./public/images/polish/' + req.params.id + '-' + newPhoto.id + '.jpg'), function(err) {
+                gm(path.resolve('./public/images/polish/' + req.params.id + '-' + newPhoto.id + '.jpg')).size(function(err, value) {
+                    if (value.width > 600) {
+                        gm(path.resolve('./public/images/polish/' + req.params.id + '-' + newPhoto.id + '.jpg')).resize(600).write(path.resolve('./public/images/polish/' + req.params.id + '-' + newPhoto.id + ext), function (err) {
+                            if (err) {
+                                res.redirect('/error');
+                            } else {
+                                newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + '.jpg';
+                                newPhoto.save(function(err) {
+                                    res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                })
+                            }
+                        })
+                    } else {
+                        newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + '.jpg';
+                        newPhoto.save(function(err) {
+                            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                        })
+                    }
                 })
             })
         })
-});*/
+    })
+});
 
 
 
@@ -151,7 +141,7 @@ app.get('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
 });
 
 
-app.get('/photo/remove/:pid', isLoggedIn, function(req, res) {
+app.get('/photo/edit/:pid', isLoggedIn, function(req, res) {
     data = {};
     data.title = 'Remove Polish Photos - Lacquer Tracker';
     Photo.find({polishid: req.params.pid}, function(err, photo) {
@@ -159,7 +149,7 @@ app.get('/photo/remove/:pid', isLoggedIn, function(req, res) {
         Polish.findById(req.params.pid, function(err, p) {
             data.urlbrand = p.brand.replace(/ /g,"_");
             data.urlname = p.name.replace(/ /g,"_");
-            res.render('photoremove.ejs', data)
+            res.render('photoedit.ejs', data)
         })
     })
 });
@@ -169,7 +159,6 @@ app.get('/photo/remove/:pid', isLoggedIn, function(req, res) {
 app.get('/photo/upload', isLoggedIn, function(req, res) {
     var data = {};
     data.title = 'Upload a Photo - Lacquer Tracker';
-    data.message = "Once the photo upload is complete, copy the URL to include it in a forum post.";
     res.render('photoadduser.ejs', data);
 });
 
@@ -193,7 +182,7 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
                             fs.unlink(req.files.photo.path, function() {
                                 newUserPhoto.location = './public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
                                 newUserPhoto.save(function(err) {
-                                    res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is: http://www.lacquertracker.com/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext});
+                                    res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext});
                                 })
                             })
                         }
@@ -206,13 +195,58 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
                             fs.unlink(req.files.photo.path, function() {
                                 newUserPhoto.location = './public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
                                 newUserPhoto.save(function(err) {
-                                    res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is: http://www.lacquertracker.com/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext});
+                                    res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext});
                                 })
                             })
                         }
                     })
                 }
             })
+        })
+    })
+});
+
+
+app.post('/photo/uploadurl', isLoggedIn, function(req, res) {
+    var newUserPhoto = new UserPhoto ({
+        userid: req.user.id,
+        onprofile: req.body.onprofile,
+        location: '',
+    })
+    newUserPhoto.save(function(err) {
+        req.user.photos.push(newUserPhoto.id);
+        req.user.save(function(err) {
+        download(req.body.url, path.resolve('./public/images/tmp/' + req.user.username + '.jpg'), function(err) {
+            gm(path.resolve('./public/images/tmp/' + req.user.username + '.jpg')).size(function(err, value) {
+                if (value.width > 600) {
+                    gm(path.resolve('./public/images/tmp/' + req.user.username + '.jpg')).resize(600).write(path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + '.jpg'), function (err) {
+                        if (err) {
+                            res.redirect('/error');
+                        } else {
+                            fs.unlink(path.resolve('./public/images/tmp/' + req.user.username + '.jpg'), function() {
+                                newUserPhoto.location = './public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + '.jpg';
+                                newUserPhoto.save(function(err) {
+                                    res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + '.jpg'});
+                                })
+                            })
+                        }
+                    })
+                } else {
+                    fs.rename(path.resolve('./public/images/tmp/' + req.user.username + '.jpg'), path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + '.jpg'), function(err) {
+                        if (err) {
+                            res.redirect('/error');
+                        } else {
+                            fs.unlink(path.resolve('./public/images/tmp/' + req.user.username + '.jpg'), function() {
+                                newUserPhoto.location = './public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + '.jpg';
+                                newUserPhoto.save(function(err) {
+                                    res.render('photoadduser.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + '.jpg'});
+                                })
+                            })
+                        }
+                    })
+                }
+            })
+        })
         })
     })
 });
@@ -243,6 +277,27 @@ app.post('/photo/profile', isLoggedIn, function(req, res) {
                 res.redirect('/profile/' + req.user.username);
             })
         }
+    })
+});
+
+
+app.post('/photo/profileurl', isLoggedIn, function(req, res) {
+    var tempPath = path.resolve('./public/images/tmp/'+req.user.username);
+    var targetPath = path.resolve('./public/images/profilephotos/' + req.user.username + '.jpg');
+    download(req.body.url, tempPath, function(err) {
+        gm(tempPath).resize(200,200).write(targetPath, function(err) {
+            if (err) {
+                res.redirect('/error');
+            } else {
+                fs.unlink(tempPath, function() {
+                    if (err) throw err;
+                })
+                req.user.profilephoto = '/images/profilephotos/' + req.user.username + '.jpg',
+                req.user.save(function(err) {
+                    res.redirect('/profile/' + req.user.username);
+                })
+            }
+        })
     })
 });
 

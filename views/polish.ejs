@@ -9,7 +9,7 @@ $.fn.stars = function() {
 
 $(function() {
     $('span.stars').stars();
-});  
+});
 </script>
 
 <!-- content -->
@@ -53,7 +53,7 @@ $(function() {
                                 <span>(<%= numphotos %>)</span>&nbsp;&nbsp;
                                 <span><a href="/photo/add/<%= pid %>">Add</a></span>
                                 <% if (numphotos > 0) { %>
-                                    &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/photo/remove/<%= pid %>">Remove</a></span>
+                                    &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/photo/edit/<%= pid %>">Edit</a></span>
                                 <% } %>
                                 <% if (numphotos > 1) { %>
                                     &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -83,7 +83,7 @@ $(function() {
                         <span>(<%= numphotos %>)</span>&nbsp;&nbsp;
                         <span><a href="/photo/add/<%= pid %>">Add</a></span>
                         <% if (numphotos > 0) { %>
-                            &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/photo/remove/<%= pid %>">Remove</a></span>
+                            &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/photo/edit/<%= pid %>">Edit</a></span>
                         <% } %>
                         <% if (numphotos > 1) { %>
                             &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -168,7 +168,7 @@ var speed = 100;
         now.fadeOut(speed, function() {next.fadeIn(speed);});
     });
 
-    $(document).on("pageinit", function(){   
+    $(document).on("pageinit", function(){
         $(".gallery").on("swipeleft", function() {
             $(this).parent().children(".next").trigger('click');
         });

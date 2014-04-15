@@ -8,8 +8,13 @@
                 <div id="photo-left_col">
                     <form action="/photo/profile" method="post" enctype='multipart/form-data'>
                     <h3>Upload a Profile Photo:</h3><br>
-                    Image for Upload: <input type="file" value="photo" name="photo" id="upimg" required>
+                    Upload Image: <input type="file" value="photo" name="photo" id="upimg" required>
                     <br><br>
+                    <input type="submit" value="Submit" class="button">
+                </form>
+                <br><b>OR</b><br><br>
+                <form action="/photo/profileurl" method="post">
+                    Add from URL: <input name="url" id="upimg" class="width50" required><br><br>
                     <input type="submit" value="Submit" class="button">
                 </form>
                 </div>

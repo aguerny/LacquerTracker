@@ -24,6 +24,7 @@
     "passport": "*",
     "passport-local": "*",
     "readable-stream": "*",
+    "request": "*",
     "sanitizer": "*",
     "simple-recaptcha": "*",
     "stream-counter": "*"

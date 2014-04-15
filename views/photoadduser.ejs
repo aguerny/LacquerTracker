@@ -7,14 +7,15 @@
             <div id="photo-wrap">
                 <div id="photo-left_col">
                     <div id="smalllayout">
-                        <% if (typeof message !== "undefined") { %>
-                            <center><h3><%= message %></h3><br><br></center>
+                        <% if (typeof message !== "undefined" && typeof url !== "undefined") { %>
+                            <center><h3><%= message %></h3><br><br>
+                            <input type="text" id="clipboard_text" class="width80" value="<%=url%>"/><br></center>
                         <% } %>
                     </div>
                     <div>
                         <form action="/photo/upload" method="post" enctype='multipart/form-data'>
                             <h3>Add a Photo:</h3><br>
-                            Image for Upload: <input type="file" value="photo" name="photo" id="upimg" required>
+                            Upload Image: <input type="file" value="photo" name="photo" id="upimg" required>
                                 </input><br><br>
                             Do you want this image to appear on your profile page?
                                 <select name="onprofile">
@@ -23,10 +24,21 @@
                                     </select><br><br><br>
                             <input type="submit" value="Submit" class="button">
                         </form>
+                        <br><b>OR</b><br><br>
+                            <form action="/photo/uploadurl" method="post">
+                                Add from URL: <input name="url" id="upimg" class="width50" required><br><br>
+                                Do you want this image to appear on your profile page?
+                                <select name="onprofile">
+                                    <option value="no">no</option>
+                                    <option value="yes">yes</option>
+                                    </select><br><br><br>
+                                <input type="submit" value="Submit" class="button">
+                            </form>
                     </div>
                     <div id="biglayout">
-                        <% if (typeof message !== "undefined") { %>
-                            <br><br><b><%= message %></b>
+                        <% if (typeof message !== "undefined" && typeof url !== "undefined") { %>
+                            <br><br><b><%= message %></b><br><br>
+                            <input type="text" id="clipboard_text" class="width80" value="<%=url%>"/>
                         <% } %>
                     </div>
                 </div>
