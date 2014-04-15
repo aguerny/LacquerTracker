@@ -1,0 +1,45 @@
+<% include ../layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+        <section>
+            <div>
+                <form action="/swatch/edit/<%= photo.polishid %>/<%= photo.id %>" method="post" enctype='multipart/form-data'>
+                    <h3>Crop a small area for the swatch:</h3><br>
+                    <img class="swatchphoto" src="<%= photo.location %>" id="jcrop_target" /><br><br>
+                    <input id="x" type="text" name="x" style="display:none">
+                    <input id="y" type="text" name="y" style="display:none">
+                    <input id="w" type="text" name="w" style="display:none">
+                    <input id="h" type="text" name="h" style="display:none">
+                    <input name="location" style="display:none" value="<%= photo.location %>">
+                    <input name="ext" style="display:none" value="<%= ext %>">
+                    <input type="submit" value="Submit" class="button">
+                </form>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script language="Javascript">
+    $(function(){ $('#jcrop_target').Jcrop(); });
+
+    $(function(){
+        $('#jcrop_target').Jcrop({
+            onChange: showCoords,
+            onSelect: showCoords,
+            aspectRatio: 1
+        });
+    });
+
+    function showCoords(c)
+    {
+        $('#x').val(c.x);
+        $('#y').val(c.y);
+        $('#w').val(c.w);
+        $('#h').val(c.h);
+    };
+
+</script>
+
+<% include ../layoutBottom %>

@@ -1,0 +1,64 @@
+<% include ../layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    	<section>
+            <div>
+        		<form action="/polishedit/<%= editid %>" method="post">
+    	     		<h3>Edit polish:</h3><br><br>
+        			Name: <input type="text" name="name" value="<%= editname %>" class="width45" <% if (isAuthenticated()) { if (user.level !== "admin") { %> readonly="readonly" <% } } %> required><br><br><br>
+                    Brand: <input type="text" name="brand" value="<%= editbrand %>" class="width45" <% if (isAuthenticated()) { if (user.level !== "admin") { %> readonly="readonly" <% } } %> required><br><br><br>
+                    Collection: <input type="text" name="batch" value="<%= editbatch %>" class="width44"><br><i>Please format like: 2013 Off Shore (Summer)</i><br><br><br>
+                    Code: <input type="text" name="code" value="<%= editcode %>" class="width45"><br><br><br>
+                    Color: <select name="colorcat">
+                        <option value="">select a color category</option>
+                        <option value="black" <% if (editcolorcat === "black") { %> selected="selected" <%}%>>black</option>
+                        <option value="blue" <% if (editcolorcat === "blue") { %> selected="selected" <%}%>>blue</option>
+                        <option value="brown" <% if (editcolorcat === "brown") { %> selected="selected" <%}%>>brown</option>
+                        <option value="clear" <% if (editcolorcat === "clear") { %> selected="selected" <%}%>>clear</option>
+                        <option value="gold" <% if (editcolorcat === "gold") { %> selected="selected" <%}%>>gold</option>
+                        <option value="green" <% if (editcolorcat === "green") { %> selected="selected" <%}%>>green</option>
+                        <option value="grey" <% if (editcolorcat === "grey") { %> selected="selected" <%}%>>grey</option>
+                        <option value="nude" <% if (editcolorcat === "nude") { %> selected="selected" <%}%>>nude</option>
+                        <option value="orange" <% if (editcolorcat === "orange") { %> selected="selected" <%}%>>orange</option>
+                        <option value="pink" <% if (editcolorcat === "pink") { %> selected="selected" <%}%>>pink</option>
+                        <option value="purple" <% if (editcolorcat === "purple") { %> selected="selected" <%}%>>purple</option>
+                        <option value="red" <% if (editcolorcat === "red") { %> selected="selected" <%}%>>red</option>
+                        <option value="silver" <% if (editcolorcat === "silver") { %> selected="selected" <%}%>>silver</option>
+                        <option value="white" <% if (editcolorcat === "white") { %> selected="selected" <%}%>>white</option>
+                        <option value="yellow" <% if (editcolorcat === "yellow") { %> selected="selected" <%}%>>yellow</option>
+                        </select>
+                        <br><br><br>
+                    Types:<br><ul>
+                    <input type="checkbox" name="type" value="crackle" <% if (edittype.indexOf("crackle") !== -1) { %> selected="selected" <%}%>>crackle<br>
+                    <input type="checkbox" name="type" value="creme" <% if (edittype.indexOf("creme") !== -1) { %> selected="selected" <%}%>>creme<br>
+                    <input type="checkbox" name="type" value="flakie" <% if (edittype.indexOf("flakie") !== -1) { %> selected="selected" <%}%>>flakie<br>
+                    <input type="checkbox" name="type" value="glitter" <% if (edittype.indexOf("glitter") !== -1) { %> selected="selected" <%}%>>glitter<br>
+                    <input type="checkbox" name="type" value="glow" <% if (edittype.indexOf("glow") !== -1) { %> selected="selected" <%}%>>glow<br>
+                    <input type="checkbox" name="type" value="holo" <% if (edittype.indexOf("holo") !== -1) { %> selected="selected" <%}%>>holo<br>
+                    <input type="checkbox" name="type" value="jelly" <% if (edittype.indexOf("jelly") !== -1) { %> selected="selected" <%}%>>jelly<br>
+                    <input type="checkbox" name="type" value="magnetic" <% if (edittype.indexOf("magnetic") !== -1) { %> selected="selected" <%}%>>magnetic<br>
+                    <input type="checkbox" name="type" value="matte" <% if (edittype.indexOf("matte") !== -1) { %> selected="selected" <%}%>>matte<br>
+                    <input type="checkbox" name="type" value="metallic" <% if (edittype.indexOf("metallic") !== -1) { %> selected="selected" <%}%>>metallic<br>
+                    <input type="checkbox" name="type" value="neon" <% if (edittype.indexOf("neon") !== -1) { %> selected="selected" <%}%>>neon<br>
+                    <input type="checkbox" name="type" value="sheer" <% if (edittype.indexOf("sheer") !== -1) { %> selected="selected" <%}%>>sheer<br>
+                    <input type="checkbox" name="type" value="shimmer" <% if (edittype.indexOf("shimmer") !== -1) { %> selected="selected" <%}%>>shimmer<br>
+                    <input type="checkbox" name="type" value="striper" <% if (edittype.indexOf("striper") !== -1) { %> selected="selected" <%}%>>striper<br>
+                    <input type="checkbox" name="type" value="texture" <% if (edittype.indexOf("texture") !== -1) { %> selected="selected" <%}%>>texture<br>
+                    <input type="checkbox" name="type" value="thermal" <% if (edittype.indexOf("thermal") !== -1) { %> selected="selected" <%}%>>thermal<br>
+                    <input type="checkbox" name="type" value="top/base" <% if (edittype.indexOf("top/base") !== -1) { %> selected="selected" <%}%>>top/base</ul>
+                    <br><br><br>
+                    Is this an indie?: <select name="indie" selected="<%= editindie %>">
+                        <option value="off"<% if (editindie === "off") { %> selected="selected" <%}%>>no</option>
+                        <option value="on"<% if (editindie === "on") { %> selected="selected" <%}%>>yes</option>
+                        </select><br><br><br>
+                    Dupes:<br><textarea name="dupes" value="<%= editdupes %>" class="width45" rows="10"><%= editdupes %></textarea><br><br><br><br>
+                    <input type="submit" value="Submit" class="button">
+                </form>
+            </div>
+        </section>
+    </div>
+</div>
+
+<% include ../layoutBottom %>

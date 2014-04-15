@@ -14,7 +14,7 @@ app.get('/admin/users', isLoggedIn, function(req, res) {
                 x.creationdate = moment(x.creationdate).tz("America/New_York").format('M-D-YY, h:mm a');
                 return x;
             })
-            res.render('adminusers.ejs', {title: 'All Users - Lacquer Tracker', allusers: users});
+            res.render('admin/users.ejs', {title: 'All Users - Lacquer Tracker', allusers: users});
         })
     } else {
         res.redirect('/error');

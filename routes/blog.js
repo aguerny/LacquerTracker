@@ -25,7 +25,7 @@ app.get('/blog', function(req, res) {
             return x;
         })
         data.blogposts = allposts;
-        res.render('blog.ejs', data);
+        res.render('blog/blog.ejs', data);
     })
 });
 
@@ -35,7 +35,7 @@ app.get('/blog', function(req, res) {
 //add blog entry
 app.get('/blog/add', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
-        res.render('blogadd.ejs', {title: 'Add a Blog Entry - Lacquer Tracker'});
+        res.render('blog/add.ejs', {title: 'Add a Blog Entry - Lacquer Tracker'});
     } else {
         res.redirect('/error');
     }
@@ -90,7 +90,7 @@ app.get('/blog/:title', function(req, res) {
                     return x;
                 })
                 data.postcomments = allcomments;
-                res.render('blogview.ejs', data);
+                res.render('blog/view.ejs', data);
             })
         }
     })
@@ -132,11 +132,6 @@ app.post('/blog/:title/:id/add', isLoggedIn, function(req, res) {
                 }
 
                 transport.sendMail(mailOptions, function(error, response) {
-                    if (error) {
-                        console.log(error);
-                        res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error sending e-mail. Please try again later.'});
-                    }
-
                     transport.close();
                 });
             }
@@ -183,7 +178,7 @@ app.get('/blog/:title/:id/add', isLoggedIn, function(req, res) {
                     comment.date = moment(comment.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
                 }
                 data.comment = comment;
-                res.render('blogviewreply.ejs', data);
+                res.render('blog/reply.ejs', data);
             }
         })
     })
@@ -264,7 +259,7 @@ app.get('/blog/:id/edit', isLoggedIn, function(req, res) {
                 data.postid = post.id;
                 data.posttitle = post.title;
                 data.postmessage = post.message;
-                res.render('blogpostedit.ejs', data);
+                res.render('blog/edit.ejs', data);
             } else {
                 res.redirect('/error');
             }

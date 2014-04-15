@@ -66,7 +66,7 @@ app.get('/polish/:brand/:name', function(req, res) {
 
                     Review.find({polishid:polish.id}).populate('user').exec(function(err, r) {
                         data.allreviews = r;
-                        res.render('polish.ejs', data);
+                        res.render('polish/polish.ejs', data);
                     })
 
                     })
@@ -77,7 +77,7 @@ app.get('/polish/:brand/:name', function(req, res) {
                     data.status = "none";
                     Review.find({polishid:polish.id}).populate('user').exec(function(err, r) {
                         data.allreviews = r;
-                        res.render('polish.ejs', data);
+                        res.render('polish/polish.ejs', data);
                     })
                 }
             })
@@ -145,21 +145,20 @@ app.get('/polish/:brand/:name/delete', isLoggedIn, function(req, res) {
 
 //add polish
 app.get('/polishadd', isLoggedIn, function(req, res) {
-    res.render('polishadd.ejs', {title: 'Add a Polish - Lacquer Tracker'});
+    res.render('polish/add.ejs', {title: 'Add a Polish - Lacquer Tracker'});
 });
 
 app.post('/polishadd', isLoggedIn, function(req, res) {
     Polish.findOne({ name : req.body.name, brand : req.body.brand}, function(err, polish) {
         //check to see if there's already a polish name and brand in the database
         if (polish) {
-            res.render('polishadd.ejs', {title: 'Add a Polish - Lacquer Tracker', message: 'That polish already exists in the database.'});
+            res.render('polish/add.ejs', {title: 'Add a Polish - Lacquer Tracker', message: 'That polish already exists in the database.'});
         } else {
             var newPolish = new Polish ({
                 name: sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
                 brand: sanitizer.sanitize((req.body.brand).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
                 batch: sanitizer.sanitize(req.body.batch),
                 colorcat: req.body.colorcat,
-                type: req.body.type,
                 indie: req.body.indie,
                 code: sanitizer.sanitize(req.body.code),
                 keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
@@ -168,7 +167,14 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                 swatch: '',
             });
             newPolish.save(function(err) {
-                res.redirect('/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"));;
+                if (req.body.type !== undefined) {
+                    newPolish.type = req.body.type;
+                } else {
+                    newPolish.type = '';
+                }
+                newPolish.save(function(err) {
+                    res.redirect('/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"));;
+                })
             });
         }
     });
@@ -195,7 +201,7 @@ app.get('/polishedit/:id', isLoggedIn, function(req, res) {
                 data.editindie = p.indie;
                 data.editcode = p.code;
                 data.editdupes = p.dupes;
-            res.render('polishedit.ejs', data);
+            res.render('polish/edit.ejs', data);
         }
     });
 });
@@ -209,7 +215,11 @@ app.post('/polishedit/:id', isLoggedIn, function(req, res) {
             p.brand = sanitizer.sanitize((req.body.brand).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
             p.batch = sanitizer.sanitize(req.body.batch);
             p.colorcat = req.body.colorcat;
-            p.type = req.body.type;
+            if (req.body.type !== undefined) {
+                p.type = req.body.type;
+            } else {
+                p.type = '';
+            }
             p.indie = req.body.indie;
             p.code = sanitizer.sanitize(req.body.code);
             p.keywords = sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),

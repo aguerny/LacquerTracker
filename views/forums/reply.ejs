@@ -1,0 +1,33 @@
+<% include ../layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
+        <div class="forumpost">
+        <a href="/forums/<%= postforum %>">&#8592; Back to Forum</a><br><br>
+        <h2><%= posttitle %></h2><br>
+            <i>Posted by <a href="/profile/<%= postuser.username%>"><%= postuser.username %></a> on <%= postdate %></i><br><br><br>
+            <p style="white-space: pre;"><%- postmessage %></p><br><br><hr><br><br>
+            <% if (comment.user.profilephoto) { %>
+                <img class="profilephotocomment" src="<%= comment.user.profilephoto %>">&nbsp;
+                    <% } %>
+                <b><a href="/profile/<%= comment.user.username %>"><% if (postuser.username === comment.user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= comment.user.username %><% if (postuser.username === comment.user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= comment.date %>:</font>
+                    <br>
+                    <div>
+                    <p style="white-space: pre;"><%- comment.message %></p>
+                </div><br><hr><br><br>
+            <% if (isAuthenticated()) { %>
+                <b><a name="addcomment"><font color="#000000">Add a Comment:</font></b><br><br>
+                <a href="/photo/upload">Upload a photo?</a><br><br>
+                <form action="/forums/<%= postforum %>/<%= postid %>/<%= replyid %>/add" method="post">
+                    <textarea class="markItUp" name="message" required></textarea><br><br>
+                    <input type="submit" value="Submit" class="button">
+                </form>
+            <% } %>
+            </div>
+    </section>
+    </div>
+</div>
+
+<% include ../layoutBottom %>

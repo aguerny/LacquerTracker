@@ -45,7 +45,7 @@
                         <option value="creme" <% if (browsetype === "creme") { %> selected="selected" <% } %>>creme</option>
                         <option value="flakie" <% if (browsetype === "flakie") { %> selected="selected" <% } %>>flakie</option>
                         <option value="glitter" <% if (browsetype === "glitter") { %> selected="selected" <% } %>>glitter</option>
-                        <option value="glow" <% if (browsetype === "glow") { %> selected="selected" <% } %>>glow in the dark</option>
+                        <option value="glow" <% if (browsetype === "glow") { %> selected="selected" <% } %>>glow</option>
                         <option value="holo" <% if (browsetype === "holo") { %> selected="selected" <% } %>>holo</option>
                         <option value="jelly" <% if (browsetype === "jelly") { %> selected="selected" <% } %>>jelly</option>
                         <option value="magnetic" <% if (browsetype === "magnetic") { %> selected="selected" <% } %>>magnetic</option>
@@ -57,7 +57,7 @@
                         <option value="striper" <% if (browsetype === "striper") { %> selected="selected" <% } %>>striper</option>
                         <option value="texture" <% if (browsetype === "texture") { %> selected="selected" <% } %>>texture</option>
                         <option value="thermal" <% if (browsetype === "thermal") { %> selected="selected" <% } %>>thermal</option>
-                        <option value="topbase" <% if (browsetype === "topbase") { %> selected="selected" <% } %>>top/base coat</option>
+                        <option value="top/base" <% if (browsetype === "top/base") { %> selected="selected" <% } %>>top/base</option>
                     </select>
                     <br><br><br>
                     <input type="checkbox" name="indie" <% if (browseindie === "on") { %> checked <% } %>>Indie polishes<br><br><br>
@@ -111,7 +111,7 @@
                             <option value="creme" <% if (browsetype === "creme") { %> selected="selected" <% } %>>creme</option>
                             <option value="flakie" <% if (browsetype === "flakie") { %> selected="selected" <% } %>>flakie</option>
                             <option value="glitter" <% if (browsetype === "glitter") { %> selected="selected" <% } %>>glitter</option>
-                            <option value="glow" <% if (browsetype === "glow") { %> selected="selected" <% } %>>glow in the dark</option>
+                            <option value="glow" <% if (browsetype === "glow") { %> selected="selected" <% } %>>glow</option>
                             <option value="holo" <% if (browsetype === "holo") { %> selected="selected" <% } %>>holo</option>
                             <option value="jelly" <% if (browsetype === "jelly") { %> selected="selected" <% } %>>jelly</option>
                             <option value="magnetic" <% if (browsetype === "magnetic") { %> selected="selected" <% } %>>magnetic</option>
@@ -123,7 +123,7 @@
                             <option value="striper" <% if (browsetype === "striper") { %> selected="selected" <% } %>>striper</option>
                             <option value="texture" <% if (browsetype === "texture") { %> selected="selected" <% } %>>texture</option>
                             <option value="thermal" <% if (browsetype === "thermal") { %> selected="selected" <% } %>>thermal</option>
-                            <option value="topbase" <% if (browsetype === "topbase") { %> selected="selected" <% } %>>top/base coat</option>
+                            <option value="top/base" <% if (browsetype === "top/base") { %> selected="selected" <% } %>>top/base</option>
                         </select>
                         <br><br><br>
                         <input type="checkbox" name="indie" <% if (browseindie === "on") { %> checked <% } %>>Indie polishes<br><br><br>
@@ -159,25 +159,13 @@
                             <%}%>
                         </td>
                         <td>
-                            <% if (polishes[i].type === "topbase") {%><span>top/base coat</span>
-                            <%} else if (polishes[i].type === "glow") {%><span>glow in the dark</span>
-                            <%} else {%><span><%= polishes[i].type %></span><%}%>
+                            <span><%= polishes[i].type.replace(/,/g,", ") %></span>
                         </td>
                         <td><% if (isAuthenticated()) { %>
                                 <% if (status[i] === "owned") { %>
-                                    <div id="biglayout">
-                                        <span>Owned</span>
-                                    </div>
-                                    <div id="smalllayout">
-                                        <span>Own</span>
-                                    </div>
+                                    <center><span>&#10004;</span></center>
                                 <% } else if (status[i] === "wanted") { %>
-                                    <div id="biglayout">
-                                        <span>Wanted</span>
-                                    </div>
-                                    <div id="smalllayout">
-                                        <span>Want</span>
-                                    </div>
+                                    <center><span>&#10084;</span></center>
                                 <% } %>
                             <% } else { %>
                                 <span>&nbsp;</span>

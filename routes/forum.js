@@ -13,7 +13,7 @@ module.exports = function(app, passport) {
 app.get('/forums', function(req, res) {
     data = {}
     data.title = 'Forums - Lacquer Tracker';
-    res.render('forums.ejs', data);
+    res.render('forums/forums.ejs', data);
 });
 
 
@@ -24,7 +24,7 @@ app.get('/forums/:forum/add', isLoggedIn, function(req, res) {
     data = {}
     data.title = 'Add a Discussion Post - Lacquer Tracker';
     data.forumcat = req.params.forum;
-    res.render('forumsadd.ejs', data);
+    res.render('forums/add.ejs', data);
 });
 
 app.post('/forums/:forum/add', isLoggedIn, function(req, res) {
@@ -63,7 +63,7 @@ app.get('/forums/:forum', function(req, res) {
                     return x;
                 })
                 data.forumposts = allposts;
-                res.render('forumsspecific.ejs', data);
+                res.render('forums/oneforum.ejs', data);
             })
         })
     } else {
@@ -102,7 +102,7 @@ app.get('/forums/:forum/:id', function(req, res) {
                     return x;
                 })
                 data.postcomments = allcomments;
-                res.render('forumspost.ejs', data);
+                res.render('forums/view.ejs', data);
             })
         }
     })
@@ -134,10 +134,6 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
                 }
 
                 transport.sendMail(mailOptions, function(error, response) {
-                    if (error) {
-                        console.log(error);
-                    }
-
                     transport.close();
                 });
             }
@@ -190,7 +186,7 @@ app.get('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
                         comment.date = moment(comment.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
                     }
                     data.comment = comment;
-                    res.render('forumspostreply.ejs', data);
+                    res.render('forums/reply.ejs', data);
                 }
             })
         }
@@ -211,7 +207,7 @@ app.get('/forums/:forum/:id/edit', isLoggedIn, function(req, res) {
                 data.posttitle = post.title;
                 data.postmessage = post.message;
                 data.postforum = post.forum;
-                res.render('forumspostedit.ejs', data);
+                res.render('forums/edit.ejs', data);
             } else {
                 res.redirect('/error');
             }

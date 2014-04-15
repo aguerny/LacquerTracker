@@ -5,12 +5,19 @@ var UserPhoto = require('../app/models/userphoto');
 var fs = require('fs');
 var path = require('path');
 var gm = require('gm').subClass({ imageMagick: true });
+var http = require('http');
+var request = require('request');
+var download = function(uri, filename, callback){
+    request.head(uri, function(err, res, body){
+        request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+    });
+};
 
 
 module.exports = function(app, passport) {
 
 
-//polish photo
+//add swatch
 app.get('/swatch/add/:id', isLoggedIn, function(req, res) {
     Polish.findById(req.params.id, function(err, p) {
         if (p === null) {
@@ -21,48 +28,74 @@ app.get('/swatch/add/:id', isLoggedIn, function(req, res) {
                 data.pname = p.name;
                 data.pbrand = p.brand;
                 data.pid = p.id;
-            res.render('swatchupload.ejs', data);
+            res.render('swatch/upload.ejs', data);
     }
     })
 });
 
+//from file
 app.post('/swatch/add/:id', isLoggedIn, function(req, res) {
     var ext = path.extname(req.files.photo.name);
-    var data = {};
-    data.title = 'Add a Swatch - Lacquer Tracker';
-    data.pid = req.params.id;
-    data.location = '/images/swatches/' + req.params.id + ext;
-    fs.rename(req.files.photo.path, path.resolve('./public/images/swatches/' + req.params.id + ext), function(err) {
+    var tempPath = path.resolve('./public/images/tmp/' + req.user.username + ext);
+    fs.rename(req.files.photo.path, tempPath, function (err) {
+        var data = {};
+        data.title = 'Add a Swatch - Lacquer Tracker';
+        data.pid = req.params.id;
+        data.ext = ext;
+        data.location = '/images/tmp/' + req.user.username + ext;
+        console.log(req.files.photo.path);
+        res.render('swatch/crop.ejs', data);    
+    }) 
+});
+
+
+
+//from url
+app.post('/swatch/addurl/:id', isLoggedIn, function(req, res) {
+    var ext = path.extname(req.body.url);
+    var tempPath = path.resolve('./public/images/tmp/' + req.user.username + ext);
+    download(req.body.url, tempPath, function(err) {
         if (err) {
             res.redirect('/error');
         } else {
-            fs.unlink(req.files.photo.path, function() {
-                res.render('swatchcrop.ejs', data);
+            var data = {};
+            data.title = 'Add a Swatch - Lacquer Tracker';
+            data.pid = req.params.id;
+            data.ext = ext;
+            data.location = '/images/tmp/' + req.user.username + ext;
+            res.render('swatch/crop.ejs', data);
+        }
+    })
+});
 
+
+//crop happens here
+app.post('/swatch/crop/:id', isLoggedIn, function(req, res) {
+    gm(path.resolve('./public/' +req.body.location))
+    .crop(req.body.w, req.body.h, req.body.x, req.body.y)
+    .resize(200)
+    .write(path.resolve('./public/images/swatches/' + req.params.id + req.body.ext), function (err) {
+        if (err) {
+            fs.unlink(path.resolve('./public/' +req.body.location), function(err) {
+                res.redirect('/error');
+            })
+        } else {
+            fs.unlink(path.resolve('./public/' +req.body.location), function(err) {
+                Polish.findById(req.params.id, function(err, p) {
+                    p.dateupdated = new Date();
+                    p.swatch = '/images/swatches/' + req.params.id + req.body.ext;
+                    p.save(function(err) {
+                        res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                    })
+                })
             })
         }
     })
 });
 
 
-app.post('/swatch/crop/:id', isLoggedIn, function(req, res) {
-    gm(path.resolve('./public/' + req.body.location))
-        .crop(req.body.w, req.body.h, req.body.x, req.body.y)
-        .write(path.resolve('./public/' + req.body.location), function (err) {
-            gm(path.resolve('./public/' + req.body.location)).resize(200).write(path.resolve('./public/' + req.body.location), function (err) {
-                if (err) {
-                    res.redirect('/error');
-                } else {
-                    Polish.findById(req.params.id, function(err, p) {
-                        p.swatch = req.body.location;
-                        p.save(function(err) {
-                            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                        })
-                    })
-                }
-            })
-        })
-})
+
+
 
 
 
@@ -74,10 +107,12 @@ app.get('/photo/swatch/:pid/:id', isLoggedIn, function(req, res) {
         } else if (photo.length < 1) {
             res.redirect('/error');
         } else {
+            var ext = path.extname(photo.location);
             var data = {};
                 data.title = 'Add a Swatch - Lacquer Tracker';
                 data.photo = photo;
-            res.render('swatchedit.ejs', data);
+                data.ext = ext;
+            res.render('swatch/edit.ejs', data);
         }
     })
 });
@@ -88,11 +123,12 @@ app.post('/swatch/edit/:pid/:id', isLoggedIn, function(req, res) {
         gm(path.resolve('./public/' + req.body.location))
             .crop(req.body.w, req.body.h, req.body.x, req.body.y)
             .resize(200)
-            .write(path.resolve('./public/images/swatches/' + req.params.pid + '.jpg'), function (err) {
+            .write(path.resolve('./public/images/swatches/' + req.params.pid + req.body.ext), function (err) {
                 if (err) {
                     res.redirect('/error');
                 } else {
-                    polish.swatch = '/images/swatches/' + polish.id + '.jpg';
+                    polish.dateupdated = new Date();
+                    polish.swatch = '/images/swatches/' + polish.id + req.body.ext;
                     polish.save(function(err) {
                         res.redirect('/polish/' + polish.brand.replace(/ /g,"_") + "/" + polish.name.replace(/ /g,"_"));
                     })

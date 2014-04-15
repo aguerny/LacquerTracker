@@ -1,0 +1,59 @@
+<% include ../layoutTop %>
+
+<script type= "text/javascript">
+var RecaptchaOptions = {
+theme: 'custom',
+lang: 'en',
+custom_theme_widget: 'recaptcha_widget'
+};
+</script>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
+        <div id="smalllayout">
+            <% if (typeof message !== "undefined") { %>
+                <center><h3><%= message %></h3><br><br></center>
+            <% } %>
+        </div>
+        <div>
+            <form action="/signup" method="post">
+                <h3>Fill out the information below to get started.</h3><br><br>
+                E-mail address: <input type="email" name="email" class="width40" required value="<%=email%>" placeholder="A validation message will be sent."><br><br>
+                Username: <input type="text" name="username" class="width44" required value="<%=username%>"><br><br>
+                Password: <input type="password" name="password" class="width44" required><br><br>
+                Confirm Password: <input type="password" class="width40" name="confirm" required><br><br><br>
+                <div id="recaptcha_widget" style="display: none;">
+                    <div id="recaptcha_image"></div>
+                    <span class="recaptcha_only_if_image">Enter the words above:</span>
+                    <span class="recaptcha_only_if_audio">Enter the numbers you hear:</span>
+                    <br><input id="recaptcha_response_field" name="recaptcha_response_field" type="text" class="width40">
+                    <br><strong style="font-size: 10px;"><a href="javascript:Recaptcha.reload();">Get another CAPTCHA</a></strong>
+
+                    <!--div class="recaptcha_only_if_image"><a href="javascript:Recaptcha.switch_type('audio')">Get an audio CAPTCHA</a></div><br />
+                    <div class="recaptcha_only_if_audio"><a href="javascript:Recaptcha.switch_type('image')">Get an image CAPTCHA</a></div><br /><br />
+                    <div><a href="javascript:Recaptcha.showhelp()">Help</a><br />
+                    </div-->
+
+                    <script type="text/javascript" src="http://api.recaptcha.net/challenge?k=6Leqre8SAAAAAPF0aSeJiXTZVodtro9YDxlA-9a_"></script>
+
+                    <noscript>
+                    <iframe src="http://api.recaptcha.net/noscript?k=k=6Leqre8SAAAAAPF0aSeJiXTZVodtro9YDxlA-9a_" height="200" width="500" frameborder="0"></iframe>
+                    <textarea name="recaptcha_challenge_field" rows="3" class="width50"></textarea>
+                    <input type="'hidden'" name="'recaptcha_response_field'" value="'manual_challenge'">
+                    </noscript>
+                </div><br><br><br>
+                <input type="submit" value="Submit" class="button" id="login-button">
+            </form>
+        </div>
+        <div id="biglayout">
+            <% if (typeof message !== "undefined") { %>
+                <br><b><%= message %></b>
+            <% } %>
+        </div>
+    </section>
+    </div>
+</div>
+
+<% include ../layoutBottom %>

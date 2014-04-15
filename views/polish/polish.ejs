@@ -1,0 +1,164 @@
+<% include ../layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+        <section>
+            <div>
+                <h2><%= pbrand %> - <%= pname %></h2><br><br>
+            </div>
+            <div id="biglayout">
+                <div id="polish-wrap">
+                    <div id="polish-left_col">
+                        <a href="/polishedit/<%= pid %>">Edit information | </a>
+                        <% if (status === "owned") { %>
+                            Owned (<a href="/removeown/<%= pid %>">remove</a>)
+                        <% } else if (status === "wanted") {%>
+                            Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a>
+                        <% } else { %>
+                            <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a>
+                        <% } %>
+                        <br><br><br>
+                        <% if (pswatch.length > 0) {%>
+                            <img class="polishswatch" src="<%=pswatch%>"/><br><br>
+                        <%}%>
+                        <br>
+                        <b>Code:</b> <%= pcode %><br><br>
+                        <b>Collection:</b> <%= pbatch %><br><br>
+                        <b>Color:</b> <%= pcolorcat %><br><br>
+                        <b>Type:</b>
+                            <%= ptype.replace(/,/g,", ") %>
+                        <br><br><b>Indie:</b> <%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%>
+                        <br><br><br><br>
+                        <a target="_blank" href="http://www.amazon.com/gp/search?ie=UTF8&camp=1789&creative=9325&index=aps&keywords=<%= linkbrand %>%20<%= linkname %>&linkCode=ur2&tag=lacqutrack-20">View on Amazon</a><img src="http://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+                    </div>
+                    <div id="polish-right_col">
+                        <div class="slideshow">
+                            <div class="slideButtons">
+                                <span>(<%= numphotos %>)</span>&nbsp;&nbsp;
+                                <span><a href="/photo/add/<%= pid %>">Add</a></span>
+                                <% if (numphotos > 0) { %>
+                                    &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/photo/edit/<%= pid %>">Edit</a></span>
+                                <% } %>
+                                <% if (numphotos > 1) { %>
+                                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                                    <span class="prev"><a href="#">Prev</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                    <span class="next"><a href="#">Next</a></span>
+                                <% } %>
+                            </div>
+                            <div class="gallery">
+                                <% for (i=0; i<allphotos.length; i++) { %>
+                                    <li><br><img src="<%= allphotos[i].location %>"></li>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="smalllayout">
+                <% if (status === "owned") { %>
+                    Owned (<a href="/removeown/<%= pid %>">remove</a>)<br><br><br>
+                <% } else if (status === "wanted") {%>
+                    Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a><br><br><br>
+                <% } else { %>
+                    <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a><br><br><br>
+                <% } %>
+                <div class="slideshow">
+                    <div class="slideButtons">
+                        <span>(<%= numphotos %>)</span>&nbsp;&nbsp;
+                        <span><a href="/photo/add/<%= pid %>">Add</a></span>
+                        <% if (numphotos > 0) { %>
+                            &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/photo/edit/<%= pid %>">Edit</a></span>
+                        <% } %>
+                        <% if (numphotos > 1) { %>
+                            &nbsp;&nbsp;|&nbsp;&nbsp;
+                            <span class="prev"><a href="#">Prev</a></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                            <span class="next"><a href="#">Next</a></span>
+                        <% } %>
+                    </div>
+                    <div class="gallery">
+                        <% for (i=0; i<allphotos.length; i++) { %>
+                            <li><br><img src="<%= allphotos[i].location %>"></li>
+                        <% } %>
+                    </div>
+                </div>
+                <br><br>
+                <a href="/polishedit/<%= pid %>">Edit information</a><br><br>
+                <br>
+                <% if (pswatch.length > 0) {%>
+                    <img class="polishswatch" src="<%=pswatch%>"/><br><br>
+                <%}%>
+                <br>
+                <b>Code:</b> <%= pcode %><br><br>
+                <b>Collection:</b> <%= pbatch %><br><br>
+                <b>Color:</b> <%= pcolorcat %><br><br>
+                <b>Type:</b>
+                    <%= ptype.replace(/,/g,", ") %>
+                <br><br><b>Indie:</b> <%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%><br><br>
+                <br>
+                <a target="_blank" href="http://www.amazon.com/s/?_encoding=UTF8&camp=1789&creative=390957&linkCode=ur2&pageMinusResults=1&suo=1393008765386&tag=lacqutrack-20&url=search-alias%3Daps#/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=<%= linkbrand %>%20<%= linkname %>&sepatfbtf=true&tc=1393008769421">View on Amazon</a><img src="https://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+            </div>
+            </section>
+            <div id="container" class="clear">
+            <section>
+            <hr><br>
+            <% if (userreview.length > 0 || notes.length > 0 || rating.length > 0) { %>
+                <i><a href="/review/edit/<%= pid %>">Edit your review</a></i><br><br><br>
+                <h5>Your Rating:</h5><br><%if (rating >= 1) {%><img src="/images/stars/<%=rating%>star.png"/><%} else {%>&nbsp;<%}%><br><br><br><br>
+                <h5>Your Review:</h5><br><%= userreview %><br><br><br><br>
+                <h5>Your Notes:</h5><br><%= notes %>
+            <% } else {%>
+            <i><a href="/review/edit/<%= pid %>">Add a review or personal notes for this polish.</a></i>
+            <% } %>
+            <% if (allreviews.length > 0 || pdupes.length > 0) { %>
+            <br><br><hr><br><br>
+                <% if (allreviews.length > 0) { %>
+                    <h5>All User Reviews:</h5><br>
+                    <% for (i=0; i<allreviews.length; i++) {%>
+                        <% if (allreviews[i].userreview.length > 0) { %>
+                            <%if (rating >= 1) {%><img src="/images/stars/<%=allreviews[i].rating%>star.png"/> - <%}%><%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+                        <% } %>
+                    <% } %>
+                <br><br>
+                <% } %>
+                <% if (pdupes.length > 0) { %>
+                    <h5>User-Submitted Dupes:</h5>
+                    <p style="white-space: pre;"><%- pdupes %></p>
+                <% } %>
+            <% } %>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+<script>
+var speed = 100;
+    $(".prev").click(function() {
+        var now = $(this).parent().next("div.gallery").children(":visible"),
+            last = $(this).parent().next("div.gallery").children(":last"),
+            prev = now.prev();
+            prev = prev.index() == -1 ? last : prev;
+        now.fadeOut(speed, function() {prev.fadeIn(speed);});
+    });
+
+    $(".next").click(function() {
+        var now = $(this).parent().next("div.gallery").children(':visible'),
+            first = $(this).parent().next("div.gallery").children(':first'),
+            next = now.next();
+            next = next.index() == -1 ? first : next;
+        now.fadeOut(speed, function() {next.fadeIn(speed);});
+    });
+
+    $(document).on("pageinit", function(){
+        $(".gallery").on("swipeleft", function() {
+            $(this).parent().children(".next").trigger('click');
+        });
+
+        $(".gallery").on("swiperight", function() {
+            $(this).parent().children(".prev").trigger('click');
+        });
+    });
+</script>
+
+<% include ../layoutBottom %>

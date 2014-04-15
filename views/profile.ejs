@@ -59,9 +59,7 @@ $(window).load(function () {
                         <%}%>
                     </td>
                     <td>
-                        <% if (opolishes[i].type === "topbase") {%><span>top/base coat</span>
-                        <%} else if (opolishes[i].type === "glow") {%><span>glow in the dark</span>
-                        <%} else {%><span><%= opolishes[i].type %></span><%}%>
+                        <span><%= opolishes[i].type %></span>
                     </td>
                     <td><% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
                             <img class="starrating" src="/images/stars/<%=oreviews[i].rating%>star.png"/>
@@ -82,6 +80,8 @@ $(window).load(function () {
                         <td class="colorcat"><p><%= wpolishes[i].colorcat %></p>
                             <% if (wpolishes[i].colorcat.length > 0) {%>
                                 <img src="/images/colors/<%= wpolishes[i].colorcat %>.png"/>
+                            <%} else {%>
+                                &nbsp;
                             <%}%>
                         </td>
                         <td class="tableswatch"><% if (wpolishes[i].swatch.length > 0) {%>
@@ -90,9 +90,8 @@ $(window).load(function () {
                                 &nbsp;
                             <%}%>
                         </td>
-                            <% if (wpolishes[i].type === "topbase") {%><span>top/base coat</span>
-                            <%} else if (wpolishes[i].type === "glow") {%><span>glow in the dark</span>
-                            <%} else {%><span><%= wpolishes[i].type %></span><%}%>
+                        <td>
+                            <span><%= wpolishes[i].type %></span>
                         </td>
                     <% } %>
                     </table>

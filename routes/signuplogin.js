@@ -11,7 +11,7 @@ module.exports = function(app, passport) {
 
 //sign up
 app.get('/signup', function(req, res) {
-    res.render('signup.ejs', {title: 'Signup - Lacquer Tracker', email:'', username:''});
+    res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', email:'', username:''});
 });
 
 app.post('/signup', function(req, res) {
@@ -19,13 +19,13 @@ app.post('/signup', function(req, res) {
         if (err) {
             res.redirect('/error');
         } else if (euser) {
-            res.render('signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'That email already has an associated account.', email:'', username:''});
+            res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'That email already has an associated account.', email:'', username:''});
         } else {
             User.findOne({ 'username' : req.body.username.toLowerCase().replace(/[^A-Za-z0-9]/g,"")}, function(err, user) {
                 if (err) {
                     res.redirect('/error');
                 } else if (user) {
-                    res.render('signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'That username is already taken.', email:req.body.email, username:''});
+                    res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'That username is already taken.', email:req.body.email, username:''});
                 } else {
                     if (req.body.password === req.body.confirm) {
                         var privateKey = '6Leqre8SAAAAAOKCKdo2WZdYwBcOfjbEOF3v2G99'; // your private key here
@@ -35,7 +35,7 @@ app.post('/signup', function(req, res) {
 
                         simple_recaptcha(privateKey, ip, challenge, response, function(err) {
                             if (err) {
-                                res.render('signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:req.body.email, username:req.body.username});
+                                res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:req.body.email, username:req.body.username});
                             } else {
                                 //create the user
                                 var newUser = new User();
@@ -57,7 +57,7 @@ app.post('/signup', function(req, res) {
                                 //save the user
                                 newUser.save(function(err) {
                                     if (err) {
-                                        res.render('signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Error saving account. Please try again.', email:req.body.email, username:req.body.username});
+                                        res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Error saving account. Please try again.', email:req.body.email, username:req.body.username});
                                     } else {
                                         //send validation e-mail
                                         var transport = nodemailer.createTransport('sendmail', {
@@ -74,10 +74,10 @@ app.post('/signup', function(req, res) {
                                         transport.sendMail(mailOptions, function(error, response) {
                                             if (error) {
                                                 console.log(error);
-                                                res.render('revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Your account was created, but there was an error sending your validation e-mail. Please try again.'});
+                                                res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Your account was created, but there was an error sending your validation e-mail. Please try again.'});
                                             }
                                             else {
-                                                res.render('signup.ejs', {title: 'Signup - Lacquer Tracker', message: "Success! Please check your e-mail to validate your new account. (It might be in your spam folder.)", email:'', username:''});
+                                                res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: "Success! Please check your e-mail to validate your new account. (It might be in your spam folder.)", email:'', username:''});
                                             }
 
                                             transport.close();
@@ -87,7 +87,7 @@ app.post('/signup', function(req, res) {
                             }
                         })
                     } else {
-                        res.render('signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Passwords do not match.', email:req.body.email, username:req.body.username});
+                        res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Passwords do not match.', email:req.body.email, username:req.body.username});
                     }
                 }
             })
@@ -109,7 +109,7 @@ app.get('/validate/:id', function(req, res) {
                     res.redirect('/error');
                 } else {
                     req.flash('loginMessage', 'Account validated! Please sign in.');
-                    res.render('login.ejs', {title: 'Login - Lacquer Tracker', message: req.flash('loginMessage')});
+                    res.render('account/login.ejs', {title: 'Login - Lacquer Tracker', message: req.flash('loginMessage')});
                 }
             })
         }
@@ -118,17 +118,17 @@ app.get('/validate/:id', function(req, res) {
 
 
 app.get('/revalidate', function(req, res) {
-    res.render('revalidate.ejs', {title:'Resend Validation E-mail - Lacquer Tracker'});
+    res.render('account/revalidate.ejs', {title:'Resend Validation E-mail - Lacquer Tracker'});
 });
 
 app.post('/revalidate', function(req, res) {
     User.findOne({username: req.body.username}, function(err, user) {
         if (err) {
-            res.render('revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Error. Please try again later.'});
+            res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Error. Please try again later.'});
         } else {
             if (user) {
                 if (user.isvalidated === true) {
-                    res.render('login.ejs', {title: 'Login - Lacquer Tracker', message:'Your account has already been validated. Please log in.'});
+                    res.render('account/login.ejs', {title: 'Login - Lacquer Tracker', message:'Your account has already been validated. Please log in.'});
                 } else {
                     var transport = nodemailer.createTransport('sendmail', {
                         path: "/usr/sbin/sendmail",
@@ -144,17 +144,17 @@ app.post('/revalidate', function(req, res) {
                     transport.sendMail(mailOptions, function(error, response) {
                         if (error) {
                             console.log(error);
-                            res.render('revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Error sending e-mail. Please try again later.'});
+                            res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Error sending e-mail. Please try again later.'});
                         }
                         else {
-                            res.render('revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'E-mail successfully sent. (It might be in your spam folder if you do not see it!)'});
+                            res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'E-mail successfully sent. (It might be in your spam folder if you do not see it!)'});
                         }
 
                         transport.close();
                     });
                 }
             } else {
-                res.render('revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Username not found.'});
+                res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Username not found.'});
             }
         }
     })
@@ -166,7 +166,7 @@ app.post('/revalidate', function(req, res) {
 
 //log in
 app.get('/login', function(req, res) {
-    res.render('login.ejs', {title: 'Login - Lacquer Tracker', message: req.flash('loginMessage')});
+    res.render('account/login.ejs', {title: 'Login - Lacquer Tracker', message: req.flash('loginMessage')});
 });
 
 app.post('/login', passport.authenticate('local-login', {
@@ -182,13 +182,13 @@ app.post('/login', passport.authenticate('local-login', {
 
 //forgot password
 app.get('/passwordreset', function(req, res) {
-    res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker'});
+    res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker'});
 });
 
 app.post('/passwordreset', function(req, res) {
     User.findOne({username: req.body.username}, function(err, user) {
         if (err) {
-            res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Unknown error. Please try again later.'});
+            res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Unknown error. Please try again later.'});
         } else {
             if (user) {
                 if (user.email) {
@@ -215,19 +215,19 @@ app.post('/passwordreset', function(req, res) {
                     transport.sendMail(mailOptions, function(error, response) {
                         if (error) {
                             console.log(error);
-                            res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error sending e-mail. Please try again later.'});
+                            res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error sending e-mail. Please try again later.'});
                         }
                         else {
-                            res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'E-mail successfully sent.'});
+                            res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'E-mail successfully sent.'});
                         }
 
                         transport.close();
                     });
                 } else {
-                    res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'No e-mail address associated with this username.'});
+                    res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'No e-mail address associated with this username.'});
                 }
             } else {
-                res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Username not found.'});
+                res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Username not found.'});
             }
         }
     })
@@ -237,12 +237,12 @@ app.post('/passwordreset', function(req, res) {
 app.get('/reset/:key', function(req, res) {
     ResetKey.findById(req.params.key, function(err, resetkey) {
         if (err) {
-            res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
+            res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
         } else {
             if (new Date(resetkey.expiredate) > new Date()) {
-                res.render('passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: resetkey.username})
+                res.render('account/passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: resetkey.username})
             } else {
-                res.render('passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
+                res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
             }
         }
     })
@@ -255,7 +255,7 @@ app.post('/reset/:username', function(req, res) {
             res.redirect('/login');
         });
     } else {
-        res.render('passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: req.params.username, message:'Passwords do not match.'})
+        res.render('account/passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: req.params.username, message:'Passwords do not match.'})
     }
 });
 
