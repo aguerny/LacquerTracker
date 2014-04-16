@@ -92,9 +92,6 @@
         margin-bottom: 2%;
     }
 
-    .swatchphoto {max-width:800px;}
-
-
     /*---Footer---*/
 
     #footer {box-shadow: 0px 500px 0px 500px #9ED9CF; padding-top:1%;}
@@ -237,6 +234,8 @@
 
     .gallery li{display:none; list-style:none;}
     .gallery li:first-child {display:block;}
+
+    .swatchphoto {max-width:800px;}
 
 }
 
@@ -391,5 +390,7 @@
 
     .gallery li{display:none; list-style:none;}
     .gallery li:first-child {display:block;}
+
+    .swatchphoto {max-width:100%;}
 
 }

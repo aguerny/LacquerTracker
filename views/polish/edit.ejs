@@ -30,25 +30,25 @@
                         <option value="yellow" <% if (editcolorcat === "yellow") { %> selected="selected" <%}%>>yellow</option>
                         </select>
                         <br><br><br>
-                    Types:<br><ul>
-                    <input type="checkbox" name="type" value="crackle" <% if (edittype.indexOf("crackle") !== -1) { %> selected="selected" <%}%>>crackle<br>
-                    <input type="checkbox" name="type" value="creme" <% if (edittype.indexOf("creme") !== -1) { %> selected="selected" <%}%>>creme<br>
-                    <input type="checkbox" name="type" value="flakie" <% if (edittype.indexOf("flakie") !== -1) { %> selected="selected" <%}%>>flakie<br>
-                    <input type="checkbox" name="type" value="glitter" <% if (edittype.indexOf("glitter") !== -1) { %> selected="selected" <%}%>>glitter<br>
-                    <input type="checkbox" name="type" value="glow" <% if (edittype.indexOf("glow") !== -1) { %> selected="selected" <%}%>>glow<br>
-                    <input type="checkbox" name="type" value="holo" <% if (edittype.indexOf("holo") !== -1) { %> selected="selected" <%}%>>holo<br>
-                    <input type="checkbox" name="type" value="jelly" <% if (edittype.indexOf("jelly") !== -1) { %> selected="selected" <%}%>>jelly<br>
-                    <input type="checkbox" name="type" value="magnetic" <% if (edittype.indexOf("magnetic") !== -1) { %> selected="selected" <%}%>>magnetic<br>
-                    <input type="checkbox" name="type" value="matte" <% if (edittype.indexOf("matte") !== -1) { %> selected="selected" <%}%>>matte<br>
-                    <input type="checkbox" name="type" value="metallic" <% if (edittype.indexOf("metallic") !== -1) { %> selected="selected" <%}%>>metallic<br>
-                    <input type="checkbox" name="type" value="neon" <% if (edittype.indexOf("neon") !== -1) { %> selected="selected" <%}%>>neon<br>
-                    <input type="checkbox" name="type" value="sheer" <% if (edittype.indexOf("sheer") !== -1) { %> selected="selected" <%}%>>sheer<br>
-                    <input type="checkbox" name="type" value="shimmer" <% if (edittype.indexOf("shimmer") !== -1) { %> selected="selected" <%}%>>shimmer<br>
-                    <input type="checkbox" name="type" value="striper" <% if (edittype.indexOf("striper") !== -1) { %> selected="selected" <%}%>>striper<br>
-                    <input type="checkbox" name="type" value="texture" <% if (edittype.indexOf("texture") !== -1) { %> selected="selected" <%}%>>texture<br>
-                    <input type="checkbox" name="type" value="thermal" <% if (edittype.indexOf("thermal") !== -1) { %> selected="selected" <%}%>>thermal<br>
-                    <input type="checkbox" name="type" value="top/base" <% if (edittype.indexOf("top/base") !== -1) { %> selected="selected" <%}%>>top/base</ul>
-                    <br><br><br>
+                    Types:<ul>
+                    <input type="checkbox" name="type" value="crackle" <% if (edittype.indexOf("crackle") !== -1) { %> checked <%}%>>crackle<br>
+                    <input type="checkbox" name="type" value="creme" <% if (edittype.indexOf("creme") !== -1) { %> checked <%}%>>creme<br>
+                    <input type="checkbox" name="type" value="flakie" <% if (edittype.indexOf("flakie") !== -1) { %> checked <%}%>>flakie<br>
+                    <input type="checkbox" name="type" value="glitter" <% if (edittype.indexOf("glitter") !== -1) { %> checked <%}%>>glitter<br>
+                    <input type="checkbox" name="type" value="glow" <% if (edittype.indexOf("glow") !== -1) { %> checked <%}%>>glow<br>
+                    <input type="checkbox" name="type" value="holo" <% if (edittype.indexOf("holo") !== -1) { %> checked <%}%>>holo<br>
+                    <input type="checkbox" name="type" value="jelly" <% if (edittype.indexOf("jelly") !== -1) { %> checked <%}%>>jelly<br>
+                    <input type="checkbox" name="type" value="magnetic" <% if (edittype.indexOf("magnetic") !== -1) { %> checked <%}%>>magnetic<br>
+                    <input type="checkbox" name="type" value="matte" <% if (edittype.indexOf("matte") !== -1) { %> checked <%}%>>matte<br>
+                    <input type="checkbox" name="type" value="metallic" <% if (edittype.indexOf("metallic") !== -1) { %> checked <%}%>>metallic<br>
+                    <input type="checkbox" name="type" value="neon" <% if (edittype.indexOf("neon") !== -1) { %> checked <%}%>>neon<br>
+                    <input type="checkbox" name="type" value="sheer" <% if (edittype.indexOf("sheer") !== -1) { %> checked <%}%>>sheer<br>
+                    <input type="checkbox" name="type" value="shimmer" <% if (edittype.indexOf("shimmer") !== -1) { %> checked <%}%>>shimmer<br>
+                    <input type="checkbox" name="type" value="striper" <% if (edittype.indexOf("striper") !== -1) { %> checked <%}%>>striper<br>
+                    <input type="checkbox" name="type" value="texture" <% if (edittype.indexOf("texture") !== -1) { %> checked <%}%>>texture<br>
+                    <input type="checkbox" name="type" value="thermal" <% if (edittype.indexOf("thermal") !== -1) { %> checked <%}%>>thermal<br>
+                    <input type="checkbox" name="type" value="top/base" <% if (edittype.indexOf("top/base") !== -1) { %> checked <%}%>>top/base</ul>
+                    <br><br>
                     Is this an indie?: <select name="indie" selected="<%= editindie %>">
                         <option value="off"<% if (editindie === "off") { %> selected="selected" <%}%>>no</option>
                         <option value="on"<% if (editindie === "on") { %> selected="selected" <%}%>>yes</option>
