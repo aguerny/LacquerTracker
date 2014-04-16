@@ -22,7 +22,11 @@
 </div>
 
 <script language="Javascript">
-    $(function(){ $('#jcrop_target').Jcrop(); });
+    if (document.documentElement.clientWidth < 600 ) {
+        $(function(){ $('#jcrop_target').Jcrop({boxWidth:300}); });
+    } else {
+        $(function(){ $('#jcrop_target').Jcrop({boxWidth:600}); });
+    }
 
     $(function(){
         $('#jcrop_target').Jcrop({

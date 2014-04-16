@@ -235,7 +235,7 @@
     .gallery li{display:none; list-style:none;}
     .gallery li:first-child {display:block;}
 
-    .swatchphoto {max-width:800px;}
+    .swatchphoto {max-width:600px;}
 
 }
 
@@ -391,6 +391,6 @@
     .gallery li{display:none; list-style:none;}
     .gallery li:first-child {display:block;}
 
-    .swatchphoto {max-width:100%;}
+    .swatchphoto {max-width:300px;}
 
 }
