@@ -7,7 +7,7 @@
             <div>
                 <form action="/swatch/edit/<%= photo.polishid %>/<%= photo.id %>" method="post" enctype='multipart/form-data'>
                     <h3>Crop a small area for the swatch:</h3><br>
-                    <img class="swatchphoto" src="<%= photo.location %>" id="jcrop_target" /><br><br>
+                    <img src="<%= location %>" id="jcrop_target" /><br><br>
                     <input id="x" type="text" name="x" style="display:none">
                     <input id="y" type="text" name="y" style="display:none">
                     <input id="w" type="text" name="w" style="display:none">
@@ -22,19 +22,40 @@
 </div>
 
 <script language="Javascript">
-    if (document.documentElement.clientWidth < 600 ) {
-        $(function(){ $('#jcrop_target').Jcrop({boxWidth:300}); });
-    } else {
-        $(function(){ $('#jcrop_target').Jcrop({boxWidth:600}); });
+$(window).load(function() {
+    // media query event handler
+    if (matchMedia) {
+        var mq = window.matchMedia("(min-width: 600px)");
+        mq.addListener(WidthChange);
+        WidthChange(mq);
     }
 
-    $(function(){
-        $('#jcrop_target').Jcrop({
-            onChange: showCoords,
-            onSelect: showCoords,
-            aspectRatio: 1
-        });
-    });
+    // media query change
+    function WidthChange(mq) {
+
+        if (mq.matches) {
+            // window width is at least 600px
+            $(function(){
+                $('#jcrop_target').Jcrop({
+                    boxWidth: 550,
+                    onChange: showCoords,
+                    onSelect: showCoords,
+                    aspectRatio: 1
+                });
+            });
+        }
+        else {
+            $(function(){
+                $('#jcrop_target').Jcrop({
+                    boxWidth: 300,
+                    onChange: showCoords,
+                    onSelect: showCoords,
+                    aspectRatio: 1
+                });
+            });
+        }
+
+    }
 
     function showCoords(c)
     {
@@ -43,7 +64,7 @@
         $('#w').val(c.w);
         $('#h').val(c.h);
     };
-
+});
 </script>
 
 <% include ../layoutBottom %>

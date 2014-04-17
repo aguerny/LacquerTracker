@@ -18,6 +18,7 @@ app.get('/browse', function(req, res) {
         data.browsecolorcat = '';
         data.browsetype = '';
         data.browseindie = '';
+        data.recent = true;
 
         data.page = 1;
 
@@ -70,6 +71,8 @@ app.post('/browse', function(req, res) {
         data.browsecolorcat = req.body.colorcat;
         data.browsetype = req.body.type;
         data.browseindie = req.body.indie;
+
+        data.recent = false;
 
 
         if (typeof req.body.browse !== "undefined") {

@@ -111,13 +111,14 @@ app.get('/photo/swatch/:pid/:id', isLoggedIn, function(req, res) {
             var data = {};
                 data.title = 'Add a Swatch - Lacquer Tracker';
                 data.photo = photo;
+                data.location = photo.location;
                 data.ext = ext;
             res.render('swatch/edit.ejs', data);
         }
     })
 });
 
-
+//crop happens here
 app.post('/swatch/edit/:pid/:id', isLoggedIn, function(req, res) {
     Polish.findById(req.params.pid, function (err, polish) {
         gm(path.resolve('./public/' + req.body.location))

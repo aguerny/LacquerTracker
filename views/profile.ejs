@@ -61,8 +61,14 @@ $(window).load(function () {
                     <td>
                         <span><%= opolishes[i].type %></span>
                     </td>
-                    <td><% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
-                            <img class="starrating" src="/images/stars/<%=oreviews[i].rating%>star.png"/>
+                    <td>
+                        <% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
+                            <div id="biglayout">
+                                <span style="display:none;"><%=oreviews[i].rating%></span><img class="starrating" src="/images/stars/<%=oreviews[i].rating%>star.png"/>
+                            </div>
+                            <div id="smalllayout">
+                                <span><%=oreviews[i].rating%></span>
+                            </div>
                         <% } %>
                     </td></tr>
                 <% } %>

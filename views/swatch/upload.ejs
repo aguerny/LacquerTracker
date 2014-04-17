@@ -8,12 +8,12 @@
                 <form action="/swatch/add/<%= pid %>" method="post" enctype='multipart/form-data'>
                     <h3>Choose a photo to crop into swatch:</h3><br>
                     Polish Name: <input type="text" name="name" value="<%= pname %>" placeholder="<%= pname %>" disabled><br><br>
-                    Polish Brand: <input type="text" value="<%= pbrand %>" name="brand" placeholder="<%= pbrand %>" disabled><br><br><br><br>
+                    Polish Brand: <input type="text" value="<%= pbrand %>" name="brand" placeholder="<%= pbrand %>" disabled><br><br>
                     Upload Image: <input type="file" value="photo" name="photo" required>
                     <br><br>
                     <input type="submit" value="Submit" class="button">
                 </form>
-                    <br><br><b>OR</b><br><br><br>
+                    <br><b>OR</b><br><br><br>
                 <form action="/swatch/addurl/<%= pid %>" method="post">
                         Add from URL: <input name="url" class="width40" required><br><br>
                         <input type="submit" value="Submit" class="button">

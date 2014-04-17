@@ -1,7 +1,5 @@
 var User = require('../app/models/user');
 var moment = require('moment-timezone');
-var Photo = require('../app/models/photo');
-var Polish = require('../app/models/polish');
 
 module.exports = function(app, passport) {
 
@@ -20,7 +18,6 @@ app.get('/admin/users', isLoggedIn, function(req, res) {
         res.redirect('/error');
     }
 });
-
 
 };
 

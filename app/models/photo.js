@@ -7,6 +7,8 @@ var photoSchema = mongoose.Schema({
 	polishid: String,
 	userid: String,
     location: String,
+    creditname: String,
+    creditlink: String,
 });
 
 

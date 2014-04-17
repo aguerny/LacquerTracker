@@ -32,7 +32,6 @@ app.get('/polish/:brand/:name', function(req, res) {
 
             Photo.find({polishid : polish.id}, function(err, photo) {
                 if (photo.length < 1) {
-                    data.allphotos = [{location:'/images/questionmark.png'}];
                     data.numphotos = 0;
                 } else {
                     var allphotos = photo.map(function(x) {
@@ -103,6 +102,21 @@ app.get('/addwant/:id', isLoggedIn, function(req, res) {
     Polish.findById(req.params.id, function(err, p) {
         res.redirect('/polish/' + p.brand.replace(/ /g,"_") + '/' + p.name.replace(/ /g,"_"))
     })
+});
+
+//add own polish browse
+app.get('/addownbrowse/:id', isLoggedIn, function(req, res) {
+    req.user.wantedpolish.remove(req.params.id);
+    req.user.ownedpolish.addToSet(req.params.id);
+    req.user.save();
+    res.redirect('/browse');
+});
+
+//add wishlist polish browse
+app.get('/addwantbrowse/:id', isLoggedIn, function(req, res) {
+    req.user.wantedpolish.addToSet(req.params.id);
+    req.user.save();
+    res.redirect('/browse');
 });
 
 //remove owned polish

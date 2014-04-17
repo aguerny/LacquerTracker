@@ -4,6 +4,7 @@ var Photo = require('../app/models/photo');
 var UserPhoto = require('../app/models/userphoto');
 var fs = require('node-fs');
 var path = require('path');
+var sanitizer = require('sanitizer');
 var gm = require('gm').subClass({ imageMagick: true });
 var http = require('http');
 var request = require('request');
@@ -42,6 +43,8 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
             polishid: p.id,
             userid: req.user.id,
             location: '',
+            creditname: sanitizer.sanitize(req.body.creditname),
+            creditlink: sanitizer.sanitize(req.body.creditlink),
         })
         newPhoto.save(function(err) {
             p.dateupdated = new Date();
@@ -109,6 +112,8 @@ app.post('/photo/addurl/:id', isLoggedIn, function(req, res) {
             polishid: p.id,
             userid: req.user.id,
             location: '',
+            creditname: sanitizer.sanitize(req.body.creditname),
+            creditlink: sanitizer.sanitize(req.body.creditlink),
         })
         newPhoto.save(function(err) {
             var targetPath = path.resolve('./public/images/polish/' + req.params.id + '-' + newPhoto.id + ext);
@@ -153,7 +158,7 @@ app.post('/photo/addurl/:id', isLoggedIn, function(req, res) {
                             newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
                             newPhoto.save(function(err) {
                                 res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                            })
+                           })
                         }
                     })
                 }

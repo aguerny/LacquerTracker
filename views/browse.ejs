@@ -141,6 +141,7 @@
                 </div>
             </div>
             <div id="browse-right_col">
+                <% if (recent === true) { %><h4>Recently Updated:</h3><br><%}%>
                 <table id="polishbrowse" class="sortable browsetable" style="width:100%">
                     <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="color"><span>Color</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><th class="info"><span>Info</span></th></tr>
                     <% for(var i=0; i<polishes.length; i++) {%>
@@ -166,9 +167,25 @@
                                     <center><span>&#10004;</span></center>
                                 <% } else if (status[i] === "wanted") { %>
                                     <center><span>&#10084;</span></center>
+                                <% } else {%>
+                                    <div id="biglayout">
+                                        <center><div class="hoverholder">+</div>
+                                        <div class="hovermenu"><a title="Add ownership" href="/addownbrowse/<%= polishes[i].id %>">&#10004;</a> | <a title="Add to wishlist" href="/addwantbrowse/<%= polishes[i].id %>">&#10084;</a></div></center>
+                                    </div>
+                                    <div id="smalllayout">
+                                        <center><div class="hoverholder">+</div>
+                                        <div class="hovermenu"><a title="Add ownership" href="/addownbrowse/<%= polishes[i].id %>">&#10004;</a>|<a title="Add to wishlist" href="/addwantbrowse/<%= polishes[i].id %>">&#10084;</a></div></center>
+                                    </div>
                                 <% } %>
                             <% } else { %>
-                                <span>&nbsp;</span>
+                                <div id="biglayout">
+                                    <center><div class="hoverholder">+</div>
+                                    <div class="hovermenu"><a title="Add ownership" href="/addownbrowse/<%= polishes[i].id %>">&#10004;</a> | <a title="Add to wishlist" href="/addwantbrowse/<%= polishes[i].id %>">&#10084;</a></div></center>
+                                </div>
+                                <div id="smalllayout">
+                                    <center><div class="hoverholder">+</div>
+                                    <div class="hovermenu"><a title="Add ownership" href="/addownbrowse/<%= polishes[i].id %>">&#10004;</a>|<a title="Add to wishlist" href="/addwantbrowse/<%= polishes[i].id %>">&#10084;</a></div></center>
+                                </div>
                             <% } %>
                         </td></tr>
                     <% } %>
