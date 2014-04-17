@@ -92,7 +92,7 @@
                             <li><br><img src="/images/questionmark.png"><br></li>
                         <% } else { %>
                             <% for (i=0; i<allphotos.length; i++) { %>
-                                <li><br><img src="<%= allphotos[i].location %>">
+                                <li><br><img src="<%= allphotos[i].location %>"><br>
                                 <% if (allphotos[i].creditlink.length > 0) { %>
                                     <br>Credit: <a href="<%=allphotos[i].creditlink%>" target="_blank"><%if (allphotos[i].creditname.length > 0) {%><%=allphotos[i].creditname%><%} else {%>link<%}%></a></li>
                                 <%} else if (allphotos[i].creditname.length > 0) { %>
