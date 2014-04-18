@@ -204,6 +204,40 @@ app.get('/photo/edit/:pid', isLoggedIn, function(req, res) {
 });
 
 
+//edit polish photo credit
+app.get('/photo/edit/:pid/:id', isLoggedIn, function(req, res) {
+    Photo.findById(req.params.id).exec(function(err, photo) {
+        if (photo === null || photo === undefined) {
+            res.redirect('/error');
+        } else {
+            data = {};
+            data.title = 'Edit Photo Credit - Lacquer Tracker';
+            data.photo = photo;
+            res.render('photos/polisheditcredit.ejs', data);
+        }
+    });
+});
+
+app.post('/photo/edit/:pid/:id', isLoggedIn, function(req, res) {
+    Photo.findById(req.params.id).exec(function(err, photo) {
+        if (photo === null || photo === undefined) {
+            res.redirect('/error');
+        } else {
+            photo.creditname = sanitizer.sanitize(req.body.creditname);
+            photo.creditlink = sanitizer.sanitize(req.body.creditlink);
+            photo.save(function(err) {
+                Polish.findById(req.params.pid, function(err, p) {
+                    p.dateupdated = new Date();
+                    p.save(function(err) {
+                        res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                    });
+                });
+            })
+        }
+    })
+});
+
+
 
 
 //forum photo upload

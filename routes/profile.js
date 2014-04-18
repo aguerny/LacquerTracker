@@ -26,8 +26,8 @@ app.get('/profile/:username', function(req, res) {
         } else {
             var data = {};
             data.title = 'Profile - Lacquer Tracker';
-            data.opolishes = user.ownedpolish;
-            data.wpolishes = user.wantedpolish;
+            data.opolishes = _.sortBy(user.ownedpolish, ['brand', 'name']);
+            data.wpolishes = _.sortBy(user.wantedpolish, ['brand', 'name']);
             data.username = user.username;
             data.about = sanitizer.sanitize(markdown(user.about));
             data.profilephoto = user.profilephoto;

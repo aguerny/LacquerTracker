@@ -59,7 +59,7 @@ $(window).load(function () {
                         <%}%>
                     </td>
                     <td>
-                        <span><%= opolishes[i].type %></span>
+                        <span><%= opolishes[i].type.replace(/,/g,", ") %></span>
                     </td>
                     <td>
                         <% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
@@ -97,7 +97,7 @@ $(window).load(function () {
                             <%}%>
                         </td>
                         <td>
-                            <span><%= wpolishes[i].type %></span>
+                            <span><%= wpolishes[i].type.replace(/,/g,", ") %></span>
                         </td>
                     <% } %>
                     </table>
@@ -127,11 +127,6 @@ $(function() {
     }
   });
 });
-
-window.onload = function() {
-    (document.getElementsByTagName( 'th' )[8]).click();
-    (document.getElementsByTagName( 'th' )[1]).click();
-};
 </script>
 
 <% include layoutBottom %>

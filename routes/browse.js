@@ -106,7 +106,7 @@ app.post('/browse', function(req, res) {
             data.browsewanted = req.body.wanted;
 
             if (req.body.owned === "on" && req.body.wanted === "on") {
-                Polish.find(polishFilter).sort('brand').exec(function(err, polishes) {
+                Polish.find(polishFilter).sort('brand name').exec(function(err, polishes) {
                     for (i=0; i < polishes.length; i++) {
                         if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
                             returnedpolish.push(polishes[i]);
@@ -122,7 +122,7 @@ app.post('/browse', function(req, res) {
                     res.render('browse.ejs', data);
                 })
             } else if (req.body.owned === "on") {
-                Polish.find(polishFilter).sort('brand').exec(function(err, polishes) {
+                Polish.find(polishFilter).sort('brand name').exec(function(err, polishes) {
                     for (i=0; i < polishes.length; i++) {
                         if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
                             returnedpolish.push(polishes[i]);
@@ -135,7 +135,7 @@ app.post('/browse', function(req, res) {
                     res.render('browse.ejs', data);
                 })
             } else if (req.body.wanted === "on") {
-                Polish.find(polishFilter).sort('brand').exec(function(err, polishes) {
+                Polish.find(polishFilter).sort('brand name').exec(function(err, polishes) {
                     for (i=0; i < polishes.length; i++) {
                         if (req.user.wantedpolish.indexOf(polishes[i].id) > -1) {
                             returnedpolish.push(polishes[i]);
@@ -148,7 +148,7 @@ app.post('/browse', function(req, res) {
                     res.render('browse.ejs', data);
                 })
             } else {
-                Polish.find(polishFilter).sort('brand').skip((page-1)*50).limit(50).exec(function(err, polishes) {
+                Polish.find(polishFilter).sort('brand name').skip((page-1)*50).limit(50).exec(function(err, polishes) {
                     for (i=0; i < polishes.length; i++) {
                         if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
                             statuses.push("owned");
@@ -165,7 +165,7 @@ app.post('/browse', function(req, res) {
                 })
             }
         } else {
-            Polish.find(polishFilter).sort('brand').skip((page-1)*50).limit(50).exec(function(err, polishes) {
+            Polish.find(polishFilter).sort('brand name').skip((page-1)*50).limit(50).exec(function(err, polishes) {
                 returnedpolish = polishes;
                 data.polishes = returnedpolish;
                 data.status = statuses;

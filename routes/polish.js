@@ -91,7 +91,10 @@ app.get('/addown/:id', isLoggedIn, function(req, res) {
     req.user.ownedpolish.addToSet(req.params.id);
     req.user.save();
     Polish.findById(req.params.id, function(err, p) {
-        res.redirect('/polish/' + p.brand.replace(/ /g,"_") + '/' + p.name.replace(/ /g,"_"))
+        p.dateupdated = new Date();
+        p.save(function(err) {
+            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + '/' + p.name.replace(/ /g,"_"));
+        })
     })
 });
 
@@ -100,23 +103,37 @@ app.get('/addwant/:id', isLoggedIn, function(req, res) {
     req.user.wantedpolish.addToSet(req.params.id);
     req.user.save();
     Polish.findById(req.params.id, function(err, p) {
-        res.redirect('/polish/' + p.brand.replace(/ /g,"_") + '/' + p.name.replace(/ /g,"_"))
+        p.dateupdated = new Date();
+        p.save(function(err) {
+            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + '/' + p.name.replace(/ /g,"_"));
+        })
     })
 });
+
 
 //add own polish browse
 app.get('/addownbrowse/:id', isLoggedIn, function(req, res) {
     req.user.wantedpolish.remove(req.params.id);
     req.user.ownedpolish.addToSet(req.params.id);
     req.user.save();
-    res.redirect('/browse');
+    Polish.findById(req.params.id, function(err, p) {
+        p.dateupdated = new Date();
+        p.save(function(err) {
+            res.redirect('/browse');
+        })
+    })
 });
 
 //add wishlist polish browse
 app.get('/addwantbrowse/:id', isLoggedIn, function(req, res) {
     req.user.wantedpolish.addToSet(req.params.id);
     req.user.save();
-    res.redirect('/browse');
+    Polish.findById(req.params.id, function(err, p) {
+        p.dateupdated = new Date();
+        p.save(function(err) {
+            res.redirect('/browse');
+        })
+    })
 });
 
 //remove owned polish
