@@ -241,6 +241,8 @@
     .gallery li{display:none; list-style:none;}
     .gallery li:first-child {display:block;}
 
+    .staradjust {margin-top:-.5%;}
+
 }
 
 
@@ -396,5 +398,7 @@
     .gallery li:first-child {display:block;}
 
     .hovermenu {font-size:11px;}
+
+    .staradjust {margin-top:-1.5%;}
 
 }

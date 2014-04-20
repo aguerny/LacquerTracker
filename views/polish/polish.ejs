@@ -138,7 +138,7 @@
                     <h5>All User Reviews:</h5><br>
                     <% for (i=0; i<allreviews.length; i++) {%>
                         <% if (allreviews[i].userreview.length > 0) { %>
-                            <%if (allreviews[i].rating >= 1) {%><img src="/images/stars/<%=allreviews[i].rating%>star.png"/> - <%}%><%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+                            <%if (allreviews[i].rating >= 1) {%><img class="staradjust" src="/images/stars/<%=allreviews[i].rating%>star.png"/> - <%}%><%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
                         <% } %>
                     <% } %>
                 <br><br>
