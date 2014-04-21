@@ -118,38 +118,60 @@ app.post('/blog/:title/:id/add', isLoggedIn, function(req, res) {
         })
         newBlogComment.save(function(err) {
 
-            if (req.user.username !== blog.user.username && blog.user.notifications === "on") {
-                //mail notification
-                var transport = nodemailer.createTransport('sendmail', {
-                    path: "/usr/sbin/sendmail",
-                });
+            BlogComment.findById(req.params.id).populate('user').exec(function(err, comment) {
+                if (comment !== null) {
+                    if (req.user.username !== comment.user.username && comment.user.notifications === "on" && comment.user.username !== blog.user.username) {
+                        //mail notification
+                        var transport = nodemailer.createTransport('sendmail', {
+                            path: "/usr/sbin/sendmail",
+                        });
 
-                var mailOptions = {
-                    from: "polishrobot@lacquertracker.com",
-                    to: blog.user.email,
-                    subject: 'New reply to your blog post',
-                    text: "Hey " + blog.user.username + ",\n\n" + req.user.username + " just replied to your blog post: " + blog.title + "\n\nCome check it out here: http://www.lacquertracker.com/blog/" + blog.title.replace(/ /g,"_") + "\n\n\nThanks,\nLacquer Tracker",
+                        var mailOptions = {
+                            from: "polishrobot@lacquertracker.com",
+                            to: comment.user.email,
+                            subject: 'New reply to your blog comment',
+                            text: "Hey " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on blog post: " + blog.title + "\n\nCome check it out here: http://www.lacquertracker.com/blog/" + blog.title.replace(/ /g,"_") + "\n\n\nThanks,\nLacquer Tracker",
+                        }
+
+                        transport.sendMail(mailOptions, function(error, response) {
+                            transport.close();
+                        });
+                    }
                 }
 
-                transport.sendMail(mailOptions, function(error, response) {
-                    transport.close();
-                });
-            }
+                if (req.user.username !== blog.user.username && blog.user.notifications === "on") {
+                    //mail notification
+                    var transport = nodemailer.createTransport('sendmail', {
+                        path: "/usr/sbin/sendmail",
+                    });
 
-            blog.comments.push(newBlogComment.id);
-            BlogComment.findById(req.params.id, function(err, parent) {
-                if (parent) {
-                    parent.childid.push(newBlogComment.id);
-                    blog.save(function(err) {
-                        parent.save(function(err) {
+                    var mailOptions = {
+                        from: "polishrobot@lacquertracker.com",
+                        to: blog.user.email,
+                        subject: 'New reply to your blog post',
+                        text: "Hey " + blog.user.username + ",\n\n" + req.user.username + " just replied to your blog post: " + blog.title + "\n\nCome check it out here: http://www.lacquertracker.com/blog/" + blog.title.replace(/ /g,"_") + "\n\n\nThanks,\nLacquer Tracker",
+                    }
+
+                    transport.sendMail(mailOptions, function(error, response) {
+                        transport.close();
+                    });
+                }
+
+                blog.comments.push(newBlogComment.id);
+                BlogComment.findById(req.params.id, function(err, parent) {
+                    if (parent) {
+                        parent.childid.push(newBlogComment.id);
+                        blog.save(function(err) {
+                            parent.save(function(err) {
+                                res.redirect('/blog/' + blog.title)
+                            })
+                        })
+                    } else {
+                        blog.save(function(err) {
                             res.redirect('/blog/' + blog.title)
                         })
-                    })
-                } else {
-                    blog.save(function(err) {
-                        res.redirect('/blog/' + blog.title)
-                    })
-                }
+                    }
+                })
             })
         })
     })

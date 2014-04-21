@@ -120,40 +120,62 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
             date: new Date(),
         })
         newForumComment.save(function(err) {
-            if (req.user.username !== post.user.username && post.user.notifications === "on") {
-                //mail notification
-                var transport = nodemailer.createTransport('sendmail', {
-                    path: "/usr/sbin/sendmail",
-                });
+            ForumComment.findById(req.params.cid).populate('user').exec(function(err, comment) {
+                if (comment !== null) {
+                    if (req.user.username !== comment.user.username && comment.user.notifications === "on" && comment.user.username !== post.user.username) {
+                        //mail notification
+                        var transport = nodemailer.createTransport('sendmail', {
+                            path: "/usr/sbin/sendmail",
+                        });
 
-                var mailOptions = {
-                    from: "polishrobot@lacquertracker.com",
-                    to: post.user.email,
-                    subject: 'New reply to your post',
-                    text: "Hey " + post.user.username + ",\n\n" + req.user.username + " just replied to your forum post: " + post.title + "\n\nCome check it out here: http://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nThanks,\nLacquer Tracker",
+                        var mailOptions = {
+                            from: "polishrobot@lacquertracker.com",
+                            to: comment.user.email,
+                            subject: 'New reply to your forum comment',
+                            text: "Hey " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on forum post: " + post.title + "\n\nCome check it out here: http://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nThanks,\nLacquer Tracker",
+                        }
+
+                        transport.sendMail(mailOptions, function(error, response) {
+                            transport.close();
+                        });
+                    }
                 }
 
-                transport.sendMail(mailOptions, function(error, response) {
-                    transport.close();
-                });
-            }
+                if (req.user.username !== post.user.username && post.user.notifications === "on") {
+                    //mail notification
+                    var transport = nodemailer.createTransport('sendmail', {
+                        path: "/usr/sbin/sendmail",
+                    });
 
-            post.dateupdated = new Date();
-            post.dateupdatedsort = new Date();
-            post.comments.push(newForumComment.id);
-            ForumComment.findById(req.params.cid, function(err, parent) {
-                if (parent) {
-                    parent.childid.push(newForumComment.id);
-                    post.save(function(err) {
-                        parent.save(function(err) {
+                    var mailOptions = {
+                        from: "polishrobot@lacquertracker.com",
+                        to: post.user.email,
+                        subject: 'New reply to your post',
+                        text: "Hey " + post.user.username + ",\n\n" + req.user.username + " just replied to your forum post: " + post.title + "\n\nCome check it out here: http://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nThanks,\nLacquer Tracker",
+                    }
+
+                    transport.sendMail(mailOptions, function(error, response) {
+                        transport.close();
+                    });
+                }
+
+                post.dateupdated = new Date();
+                post.dateupdatedsort = new Date();
+                post.comments.push(newForumComment.id);
+                ForumComment.findById(req.params.cid, function(err, parent) {
+                    if (parent) {
+                        parent.childid.push(newForumComment.id);
+                        post.save(function(err) {
+                            parent.save(function(err) {
+                                res.redirect('/forums/' + post.forum + '/' + post.id)
+                            })
+                        })
+                    } else {
+                        post.save(function(err) {
                             res.redirect('/forums/' + post.forum + '/' + post.id)
                         })
-                    })
-                } else {
-                    post.save(function(err) {
-                        res.redirect('/forums/' + post.forum + '/' + post.id)
-                    })
-                }
+                    }
+                })
             })
         })
     })

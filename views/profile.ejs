@@ -14,7 +14,9 @@ $(window).load(function () {
     <div id="container" class="clear">
     <section>
         <div>
-            <img class="profilephoto" src="<%= profilephoto %>">
+            <% if (profilephoto.length > 0) { %>
+                <img class="profilephoto" src="<%= profilephoto %>">
+            <% } %>
         </div>
         <div id="biglayout">
             <h3 style="display:inline-block"><%= username %>'s Profile</h3>

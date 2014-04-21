@@ -42,7 +42,9 @@
                     <select name="type" class="width80">
                         <option value="">All Types</option>
                         <option value="crackle" <% if (browsetype === "crackle") { %> selected="selected" <% } %>>crackle</option>
+                        <option value="crelly" <% if (browsetype === "crelly") { %> selected="selected" <% } %>>crelly</option>
                         <option value="creme" <% if (browsetype === "creme") { %> selected="selected" <% } %>>creme</option>
+                        <option value="duochrome" <% if (browsetype === "duochrome") { %> selected="selected" <% } %>>duochrome</option>
                         <option value="flakie" <% if (browsetype === "flakie") { %> selected="selected" <% } %>>flakie</option>
                         <option value="glitter" <% if (browsetype === "glitter") { %> selected="selected" <% } %>>glitter</option>
                         <option value="glow" <% if (browsetype === "glow") { %> selected="selected" <% } %>>glow</option>
@@ -58,6 +60,7 @@
                         <option value="texture" <% if (browsetype === "texture") { %> selected="selected" <% } %>>texture</option>
                         <option value="thermal" <% if (browsetype === "thermal") { %> selected="selected" <% } %>>thermal</option>
                         <option value="top/base" <% if (browsetype === "top/base") { %> selected="selected" <% } %>>top/base</option>
+                        <option value="uv" <% if (browsetype === "uv") { %> selected="selected" <% } %>>uv</option>
                     </select>
                     <br><br><br>
                     <input type="checkbox" name="indie" <% if (browseindie === "on") { %> checked <% } %>>Indie polishes<br><br><br>
@@ -162,7 +165,7 @@
                         <td>
                             <span><%= polishes[i].type.replace(/,/g,", ") %></span>
                         </td>
-                        <td><% if (isAuthenticated()) { %>
+                        <td class="nomargin"><% if (isAuthenticated()) { %>
                                 <% if (status[i] === "owned") { %>
                                     <center><span>&#10004;</span></center>
                                 <% } else if (status[i] === "wanted") { %>

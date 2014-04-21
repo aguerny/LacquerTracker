@@ -8,8 +8,8 @@
                 <div id="photo-left_col">
                     <form action="/photo/add/<%= pid %>" method="post" enctype='multipart/form-data'>
                         <h3>Add a Photo:</h3><br>
-                        Polish Name: <input type="text" name="name" value="<%= pname %>" placeholder="<%= pname %>" disabled><br><br>
-                        Polish Brand: <input type="text" value="<%= pbrand %>" name="brand" placeholder="<%= pbrand %>" disabled><br><br>
+                        Polish Name: <input type="text" name="name" value="<%= pname %>" placeholder="<%= pname %>" class="width50" disabled><br><br>
+                        Polish Brand: <input type="text" value="<%= pbrand %>" name="brand" placeholder="<%= pbrand %>" class="width50" disabled><br><br><br>
                         Image for Upload: <input type="file" value="photo" name="photo" class="width50" id="upimg" required><br><br>
                         Credit:<br><input type="text" name="creditname" placeholder="credit name" class="width50"><br>
                         <input type="url" name="creditlink" placeholder="credit link" class="width50"><br><br>

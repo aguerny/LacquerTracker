@@ -26,8 +26,10 @@ app.get('/profile/:username', function(req, res) {
         } else {
             var data = {};
             data.title = 'Profile - Lacquer Tracker';
-            data.opolishes = _.sortBy(user.ownedpolish, ['brand', 'name']);
-            data.wpolishes = _.sortBy(user.wantedpolish, ['brand', 'name']);
+            var osort = _.sortBy(user.ownedpolish, ['brand', 'name']);
+            var wsort = _.sortBy(user.wantedpolish, ['brand', 'name']);
+            data.opolishes = osort;
+            data.wpolishes = wsort;
             data.username = user.username;
             data.about = sanitizer.sanitize(markdown(user.about));
             data.profilephoto = user.profilephoto;
@@ -43,7 +45,7 @@ app.get('/profile/:username', function(req, res) {
             var oreviews = [];
             Review.find({user:user.id}, function(err, reviews) {
                 for (i=0; i<reviews.length; i++) {
-                    var thisindex = _.findIndex(user.ownedpolish, {'id':reviews[i].polishid});
+                    var thisindex = _.findIndex(osort, {'id':reviews[i].polishid});
                     oreviews[thisindex] = reviews[i];
                 }
                 data.oreviews = oreviews;
