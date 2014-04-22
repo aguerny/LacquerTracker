@@ -7,10 +7,10 @@
             <div>
         		<form action="/polishedit/<%= editid %>" method="post">
     	     		<h3>Edit polish:</h3><br><br>
-        			Name: <input type="text" name="name" value="<%= editname %>" class="width45" <% if (isAuthenticated()) { if (user.level !== "admin") { %> readonly="readonly" <% } } %> required><br><br><br>
-                    Brand: <input type="text" name="brand" value="<%= editbrand %>" class="width45" <% if (isAuthenticated()) { if (user.level !== "admin") { %> readonly="readonly" <% } } %> required><br><br><br>
-                    Collection: <input type="text" name="batch" value="<%= editbatch %>" class="width44"><br><i>Please format like: 2013 Off Shore (Summer)</i><br><br><br>
-                    Code: <input type="text" name="code" value="<%= editcode %>" class="width45"><br><br><br>
+        			Name:<br><input type="text" name="name" value="<%= editname %>" class="width45" <% if (isAuthenticated()) { if (user.level !== "admin") { %> readonly="readonly" <% } } %> required><br><br><br>
+                    Brand:<br><input type="text" name="brand" value="<%= editbrand %>" class="width45" <% if (isAuthenticated()) { if (user.level !== "admin") { %> readonly="readonly" <% } } %> required><br><br><br>
+                    Collection:<br><input type="text" name="batch" value="<%= editbatch %>" class="width45"><br><i>Please format like: 2013 Off Shore (Summer)</i><br><br><br>
+                    Code:<br><input type="text" name="code" value="<%= editcode %>" class="width45"><br><br><br>
                     Color: <select name="colorcat">
                         <option value="">select a color category</option>
                         <option value="black" <% if (editcolorcat === "black") { %> selected="selected" <%}%>>black</option>
@@ -63,5 +63,29 @@
         </section>
     </div>
 </div>
+
+<!-- <select class="selectmultiple" name="type" multiple="multiple" title="select polish types">
+                        <option value="crackle" <% if (edittype.indexOf("crackle") !== -1) { %> selected="selected" <%}%>>crackle</option>
+                        <option value="crelly" <% if (edittype.indexOf("crelly") !== -1) { %> selected="selected" <%}%>>crelly</option>
+                        <option value="creme" <% if (edittype.indexOf("creme") !== -1) { %> selected="selected" <%}%>>creme</option>
+                        <option value="duochrome" <% if (edittype.indexOf("duochrome") !== -1) { %> selected="selected" <%}%>>duochrome</option>
+                        <option value="flakie" <% if (edittype.indexOf("flakie") !== -1) { %> selected="selected" <%}%>>flakie</option>
+                        <option value="glitter" <% if (edittype.indexOf("glitter") !== -1) { %> selected="selected" <%}%>>glitter</option>
+                        <option value="glow" <% if (edittype.indexOf("glow") !== -1) { %> selected="selected" <%}%>>glow in the dark</option>
+                        <option value="holo" <% if (edittype.indexOf("holo") !== -1) { %> selected="selected" <%}%>>holo</option>
+                        <option value="jelly" <% if (edittype.indexOf("jelly") !== -1) { %> selected="selected" <%}%>>jelly</option>
+                        <option value="magnetic" <% if (edittype.indexOf("magnetic") !== -1) { %> selected="selected" <%}%>>magnetic</option>
+                        <option value="matte" <% if (edittype.indexOf("matte") !== -1) { %> selected="selected" <%}%>>matte</option>
+                        <option value="metallic" <% if (edittype.indexOf("metallic") !== -1) { %> selected="selected" <%}%>>metallic</option>
+                        <option value="neon" <% if (edittype.indexOf("neon") !== -1) { %> selected="selected" <%}%>>neon</option>
+                        <option value="sheer" <% if (edittype.indexOf("sheer") !== -1) { %> selected="selected" <%}%>>sheer</option>
+                        <option value="shimmer" <% if (edittype.indexOf("shimmer") !== -1) { %> selected="selected" <%}%>>shimmer</option>
+                        <option value="striper" <% if (edittype.indexOf("striper") !== -1) { %> selected="selected" <%}%>>striper</option>
+                        <option value="texture" <% if (edittype.indexOf("texture") !== -1) { %> selected="selected" <%}%>>texture</option>
+                        <option value="thermal" <% if (edittype.indexOf("thermal") !== -1) { %> selected="selected" <%}%>>thermal</option>
+                        <option value="top/base" <% if (edittype.indexOf("top/base") !== -1) { %> selected="selected" <%}%>>top/base coat</option>
+                        <option value="uv" <% if (edittype.indexOf("uv") !== -1) { %> selected="selected" <%}%>>UV color change</option>
+                        </select>
+                        </scripT> -->
 
 <% include ../layoutBottom %>

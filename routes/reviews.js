@@ -47,7 +47,10 @@ app.post('/review/edit/:id', isLoggedIn, function(req, res) {
             review.userreview = sanitizer.sanitize(req.body.userreview);
             review.notes = sanitizer.sanitize(req.body.notes);
             review.save(function(err) {
-                res.redirect('/polish/' + polishbrand.replace(/ /g,"_") + "/" + polishname.replace(/ /g,"_"));
+                polish.dateupdated = new Date();
+                polish.save(function(err) {
+                    res.redirect('/polish/' + polishbrand.replace(/ /g,"_") + "/" + polishname.replace(/ /g,"_"));
+                })
             });
         } else {
             var newReview = new Review ({
@@ -58,7 +61,10 @@ app.post('/review/edit/:id', isLoggedIn, function(req, res) {
                 notes: sanitizer.sanitize(req.body.notes),
             });
             newReview.save(function(err) {
-                res.redirect('/polish/' + polishbrand.replace(/ /g,"_") + "/" + polishname.replace(/ /g,"_"));
+                polish.dateupdated = new Date();
+                polish.save(function(err) {
+                    res.redirect('/polish/' + polishbrand.replace(/ /g,"_") + "/" + polishname.replace(/ /g,"_"));
+                })
             });
             }
         })

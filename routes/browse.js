@@ -8,7 +8,7 @@ module.exports = function(app, passport) {
 
 app.get('/browse', function(req, res) {
     Polish.find().distinct('brand', function(error, brands) {
-        var allbrands = _.sortBy(brands);
+        var allbrands = _.sortBy(brands, function(b) {return b.toLowerCase();});
 
         data = {};
         data.title = 'Browse - Lacquer Tracker';
@@ -61,7 +61,7 @@ app.get('/browse', function(req, res) {
 
 app.post('/browse', function(req, res) {
     Polish.find().distinct('brand', function(error, brands) {
-        var allbrands = _.sortBy(brands);
+        var allbrands = _.sortBy(brands, function(b) {return b.toLowerCase();});
 
         data = {};
         data.title = 'Browse - Lacquer Tracker';

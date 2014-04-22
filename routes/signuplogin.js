@@ -77,7 +77,7 @@ app.post('/signup', function(req, res) {
                                                 res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Your account was created, but there was an error sending your validation e-mail. Please try again.'});
                                             }
                                             else {
-                                                res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: "Success! Please check your e-mail to validate your new account. (It might be in your spam folder.)", email:'', username:''});
+                                                res.render('account/successmessage.ejs', {title: 'Signup - Lacquer Tracker', message: "Success! Please check your e-mail to validate your new account. (It might be in your spam folder.)"});
                                             }
 
                                             transport.close();
@@ -147,7 +147,7 @@ app.post('/revalidate', function(req, res) {
                             res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Error sending e-mail. Please try again later.'});
                         }
                         else {
-                            res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'E-mail successfully sent. (It might be in your spam folder.)'});
+                            res.render('account/successmessage.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Validation e-mail successfully re-sent. (It might be in your spam folder.)'});
                         }
 
                         transport.close();
@@ -218,7 +218,7 @@ app.post('/passwordreset', function(req, res) {
                             res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error sending e-mail. Please try again later.'});
                         }
                         else {
-                            res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'E-mail successfully sent.'});
+                            res.render('account/successmessage.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Password reset e-mail successfully sent.'});
                         }
 
                         transport.close();

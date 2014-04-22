@@ -20,15 +20,15 @@ custom_theme_widget: 'recaptcha_widget'
         <div>
             <form action="/signup" method="post">
                 <h3>Fill out the information below to get started.</h3><br><br>
-                E-mail address: <input type="email" name="email" class="width40" required value="<%=email%>" placeholder="A validation message will be sent."><br><br>
-                Username: <input type="text" name="username" class="width44" required value="<%=username%>"><br><br>
-                Password: <input type="password" name="password" class="width44" required><br><br>
-                Confirm Password: <input type="password" class="width40" name="confirm" required><br><br><br>
+                E-mail address:<br><input type="email" name="email" class="width45" required value="<%=email%>" placeholder="A validation message will be sent."><br><br><br>
+                Username:<br><input type="text" name="username" class="width45" required value="<%=username%>" placeholder="Only use letters and numbers. No spaces or special characters allowed."><br><br><br>
+                Password:<br><input type="password" name="password" class="width45" required><br><br><br>
+                Confirm Password:<br><input type="password" class="width45" name="confirm" required><br><br><br><br>
                 <div id="recaptcha_widget" style="display: none;">
                     <div id="recaptcha_image"></div>
                     <span class="recaptcha_only_if_image">Enter the words above:</span>
                     <span class="recaptcha_only_if_audio">Enter the numbers you hear:</span>
-                    <br><input id="recaptcha_response_field" name="recaptcha_response_field" type="text" class="width40">
+                    <br><input id="recaptcha_response_field" name="recaptcha_response_field" type="text" class="width45">
                     <br><strong style="font-size: 10px;"><a href="javascript:Recaptcha.reload();">Get another CAPTCHA</a></strong>
 
                     <!--div class="recaptcha_only_if_image"><a href="javascript:Recaptcha.switch_type('audio')">Get an audio CAPTCHA</a></div><br />
