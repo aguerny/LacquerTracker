@@ -93,12 +93,15 @@
     }
 
     .hovermenu {display:none;}
-
     .hoverholder:hover + .hovermenu, .hovermenu:hover, .hoverholder:focus + .hovermenu, .hovermenu:focus{display:block;}
 
     .polishphotosmall {max-width:300px;}
 
     .nomargin {margin:0; padding:0;}
+
+    .replybox {display:none;}
+
+    .smallfont {font-size:11px;}
 
     /*---Footer---*/
 

@@ -5,6 +5,7 @@ var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
 var nodemailer = require('nodemailer');
 var moment = require('moment-timezone');
+var mongoose = require('mongoose');
 
 
 module.exports = function(app, passport) {
@@ -104,7 +105,9 @@ app.get('/blog/:title/add', isLoggedIn, function(req, res) {
     res.redirect('/blog/' + req.params.title.replace(/_/g," ") + "#addcomment")
 });
 
-
+app.get('/blog/:title/addreply', isLoggedIn, function(req, res) {
+    res.redirect('/blog/' + req.params.title.replace(/_/g," "))
+});
 
 app.post('/blog/:title/:id/add', isLoggedIn, function(req, res) {
     var thistitle = req.params.title.replace(/_/g," ")
@@ -178,69 +181,73 @@ app.post('/blog/:title/:id/add', isLoggedIn, function(req, res) {
 });
 
 
-
-//reply to blog post comment
-app.get('/blog/:title/:id/add', isLoggedIn, function(req, res) {
-    data = {};
-    Blog.findOne({title: req.params.title.replace(/_/g," ")}).populate('user').exec(function (err, blog) {
-        BlogComment.findById(req.params.id).populate('user').exec(function(err, comment) {
-            if (comment === null || comment === undefined) {
+//remove blog post comment
+app.get('/blog/:id/:cid/remove', isLoggedIn, function(req, res) {
+    Blog.findById(req.params.id, function(err, blog) {
+        BlogComment.findById(req.params.cid, function(err, comment) {
+            if (comment === undefined || comment === null) {
                 res.redirect('/error');
             } else {
-                data.replyid = req.params.id;
-                data.title = blog.title + " - Lacquer Tracker";
-                data.posttitle = blog.title;
-                data.postuser = blog.user;
-                data.postmessage = markdown(blog.message);
-                if (req.isAuthenticated() && req.user.timezone.length > 0) {
-                    data.postdate = moment(blog.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
-                    comment.date = moment(comment.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
+                if (comment.user == req.user.id || req.user.level === "admin") {
+                    if (comment.childid.length > 0) {
+                        comment.message = sanitizer.sanitize(markdown("_deleted_"));
+                        comment.save(function(err) {
+                            res.redirect("/blog/" + blog.title.replace(/ /g,"_"));
+                        })
+                    } else {
+                        blog.comments.remove(req.params.cid);
+                        blog.save(function(err) {
+                            if (comment.parentid !== comment.blogid) {
+                                BlogComment.findById(comment.parentid, function(err, parentcomment) {
+                                    parentcomment.childid.remove(req.params.id);
+                                    parentcomment.save(function(err) {
+                                        BlogComment.findByIdAndRemove(req.params.cid, function(err) {
+                                            res.redirect("/blog/" + blog.title.replace(/ /g,"_"));
+                                        })
+                                    })
+                                })
+                            } else {
+                                BlogComment.findByIdAndRemove(req.params.cid, function(err) {
+                                    res.redirect("/blog/" + blog.title.replace(/ /g,"_"));
+                                })
+                            }
+                        })
+                    }
                 } else {
-                    data.postdate = moment(blog.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
-                    comment.date = moment(comment.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
+                    res.redirect('/error');
                 }
-                data.comment = comment;
-                res.render('blog/reply.ejs', data);
             }
         })
     })
 });
 
 
-
-//remove blog post comment
-app.get('/blog/:title/:id/remove', isLoggedIn, function(req, res) {
-    BlogComment.findById(req.params.id, function(err, comment) {
-        if (comment === undefined || comment === null) {
-            res.redirect('/error');
-        } else {
-            if (comment.user == req.user.id || req.user.level === "admin") {
-                if (comment.childid.length > 0) {
-                    comment.message = "<i>deleted</i>";
-                    comment.save(function(err) {
-                        res.redirect("/blog/" + req.params.title);
-                    })
+//remove blog post comment - admin only
+app.get('/blog/:id/:cid/removepermanent', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        Blog.findById(req.params.id, function(err, blog) {
+            BlogComment.findById(req.params.cid, function(err, comment) {
+                if (comment === undefined || comment === null) {
+                    res.redirect('/error');
                 } else {
-                    Blog.find({title: req.params.title}).remove({comments: req.params.id});
-                        BlogComment.findByIdAndRemove(req.params.id, function(err) {
-                        res.redirect("/blog/" + req.params.title);
+                    blog.comments.remove(req.params.cid);
+                    blog.save(function(err) {
+                        if (comment.parentid !== comment.blogid) {
+                            BlogComment.findById(comment.parentid, function(err, parentcomment) {
+                                parentcomment.childid.remove(req.params.id);
+                                parentcomment.save(function(err) {
+                                    BlogComment.findByIdAndRemove(req.params.cid, function(err) {
+                                        res.redirect("/blog/" + blog.title.replace(/ /g,"_"));
+                                    })
+                                })
+                            })
+                        } else {
+                            BlogComment.findByIdAndRemove(req.params.cid, function(err) {
+                                res.redirect("/blog/" + blog.title.replace(/ /g,"_"));
+                            })
+                        }
                     })
                 }
-            } else {
-                res.redirect('/error');
-            }
-        }
-    })
-});
-
-
-//remove blog post comment - admin only
-app.get('/blog/:title/:id/removepermanent', isLoggedIn, function(req, res) {
-    if (req.user.level === "admin") {
-        BlogComment.findById(req.params.id, function(err, comment) {
-            Blog.find({title: req.params.title}).remove({comments: req.params.id});
-                BlogComment.findByIdAndRemove(req.params.id, function(err) {
-                res.redirect("/blog/" + req.params.title);
             })
         })
     } else {

@@ -31,13 +31,21 @@ function confirm_alert(node) {
                         <b><a href="/profile/<%= postcomments[i].user.username %>"><% if (postuser.username === postcomments[i].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[i].user.username %><% if (postuser.username === postcomments[i].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[i].date %>:</font>
                         <% if (isAuthenticated()) { %>
                             <% if (user.username === postcomments[i].user.username || user.level === "admin") { %>
-                                <a href="/blog/<%= posttitle %>/<%= postcomments[i].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                <a href="/blog/<%= postid %>/<%= postcomments[i].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                             <% } %>
                         <% } %>
                         <br>
                         <div>
                             <p style="white-space: pre;"><%- postcomments[i].message %></p>
-                            <a href="/blog/<%= posttitle %>/<%= postcomments[i].id %>/add">Reply</a>
+                            <% if (isAuthenticated()) { %>
+                                <div class="replylink"><a href="#">Reply</a></div>
+                                <div class="replybox"><br><form action="/blog/<%= posttitle %>/<%= postcomments[i].id %>/add" method="post">
+                                    <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                    <input type="submit" value="Submit" class="button">
+                                </form></div>
+                            <% } else { %>
+                                <div><a href="/blog/<%= posttitle %>/addreply">Reply</a></div>
+                            <% } %>
                         </div>
                     </div>
                     <br>
@@ -50,13 +58,22 @@ function confirm_alert(node) {
                                     <b><a href="/profile/<%= postcomments[j].user.username %>"><% if (postuser.username === postcomments[j].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[j].user.username %><% if (postuser.username === postcomments[j].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[j].date %>:</font>
                                     <% if (isAuthenticated()) { %>
                                         <% if (user.username === postcomments[j].user.username || user.level === "admin") { %>
-                                        <a href="/blog/<%= posttitle %>/<%= postcomments[j].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                        <a href="/blog/<%= postid %>/<%= postcomments[j].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                         <% } %>
                                     <% } %>
                                 <br>
                                 <div>
                                     <p style="white-space: pre; padding-left: 3em"><%- postcomments[j].message %></p>
-                                    <a href="/blog/<%= posttitle %>/<%= postcomments[j].id %>/add">Reply</a></div>
+                                    <% if (isAuthenticated()) { %>
+                                        <div class="replylink"><a href="#">Reply</a></div>
+                                        <div class="replybox"><br><form action="/blog/<%= posttitle %>/<%= postcomments[j].id %>/add" method="post">
+                                            <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                            <input type="submit" value="Submit" class="button">
+                                        </form></div>
+                                    <% } else { %>
+                                        <div><a href="/blog/<%= posttitle %>/addreply">Reply</a></div>
+                                    <% } %>
+                                </div>
                                 <br></div></div><br>
 
 
@@ -68,13 +85,22 @@ function confirm_alert(node) {
                                     <b><a href="/profile/<%= postcomments[k].user.username %>"><% if (postuser.username === postcomments[k].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[k].user.username %><% if (postuser.username === postcomments[k].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[k].date %>:</font>
                                     <% if (isAuthenticated()) { %>
                                         <% if (user.username === postcomments[k].user.username || user.level === "admin") { %>
-                                            <a href="/blog/<%= posttitle %>/<%= postcomments[k].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                            <a href="/blog/<%= postid %>/<%= postcomments[k].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                         <% } %>
                                     <% } %>
                                 <br>
                                 <div>
                                     <p style="white-space: pre; padding-left: 3em"><%- postcomments[k].message %></p>
-                                    <a href="/blog/<%= posttitle %>/<%= postcomments[k].id %>/add">Reply</a></div>
+                                    <% if (isAuthenticated()) { %>
+                                        <div class="replylink"><a href="#">Reply</a></div>
+                                        <div class="replybox"><br><form action="/blog/<%= posttitle %>/<%= postcomments[k].id %>/add" method="post">
+                                            <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                            <input type="submit" value="Submit" class="button">
+                                        </form></div>
+                                    <% } else { %>
+                                        <div><a href="/blog/<%= posttitle %>/addreply">Reply</a></div>
+                                    <% } %>
+                                </div>
                                 </div><br>
 
 
@@ -86,13 +112,22 @@ function confirm_alert(node) {
                                             <b><a href="/profile/<%= postcomments[l].user.username %>"><% if (postuser.username === postcomments[l].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[l].user.username %><% if (postuser.username === postcomments[l].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[l].date %>:</font>
                                             <% if (isAuthenticated()) { %>
                                                 <% if (user.username === postcomments[l].user.username || user.level === "admin") { %>
-                                                <a href="/blog/<%= posttitle %>/<%= postcomments[l].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                <a href="/blog/<%= postid %>/<%= postcomments[l].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                 <% } %>
                                             <% } %>
                                         <br>
                                         <div>
                                             <p style="white-space: pre; padding-left: 3em"><%- postcomments[l].message %></p>
-                                            <a href="/blog/<%= posttitle %>/<%= postcomments[l].id %>/add">Reply</a></div>
+                                            <% if (isAuthenticated()) { %>
+                                                <div class="replylink"><a href="#">Reply</a></div>
+                                                <div class="replybox"><br><form action="/blog/<%= posttitle %>/<%= postcomments[l].id %>/add" method="post">
+                                                    <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                                    <input type="submit" value="Submit" class="button">
+                                                </form></div>
+                                            <% } else { %>
+                                                <div><a href="/blog/<%= posttitle %>/addreply">Reply</a></div>
+                                            <% } %>
+                                        </div>
                                         <br></div></div><br>
 
 
@@ -104,13 +139,21 @@ function confirm_alert(node) {
                                             <b><a href="/profile/<%= postcomments[m].user.username %>"><% if (postuser.username === postcomments[m].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[m].user.username %><% if (postuser.username === postcomments[m].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[m].date %>:</font>
                                             <% if (isAuthenticated()) { %>
                                                 <% if (user.username === postcomments[m].user.username || user.level === "admin") { %>
-                                                    <a href="/blog/<%= posttitle %>/<%= postcomments[m].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                    <a href="/blog/<%= postid %>/<%= postcomments[m].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                 <% } %>
                                             <% } %>
                                         <br>
                                         <div>
                                             <p style="white-space: pre; padding-left: 3em"><%- postcomments[m].message %></p>
-                                            <a href="/blog/<%= posttitle %>/<%= postcomments[m].id %>/add">Reply</a>
+                                            <% if (isAuthenticated()) { %>
+                                                <div class="replylink"><a href="#">Reply</a></div>
+                                                <div class="replybox"><br><form action="/blog/<%= posttitle %>/<%= postcomments[m].id %>/add" method="post">
+                                                    <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                                    <input type="submit" value="Submit" class="button">
+                                                </form></div>
+                                            <% } else { %>
+                                                <div><a href="/blog/<%= posttitle %>/addreply">Reply</a></div>
+                                            <% } %>
                                         </div>
                                         </div>
                                         <br>
@@ -124,13 +167,22 @@ function confirm_alert(node) {
                                                     <b><a href="/profile/<%= postcomments[n].user.username %>"><% if (postuser.username === postcomments[n].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[n].user.username %><% if (postuser.username === postcomments[n].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[n].date %>:</font>
                                                     <% if (isAuthenticated()) { %>
                                                         <% if (user.username === postcomments[n].user.username || user.level === "admin") { %>
-                                                        <a href="/blog/<%= posttitle %>/<%= postcomments[n].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                        <a href="/blog/<%= postid %>/<%= postcomments[n].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                         <% } %>
                                                     <% } %>
                                                 <br>
                                                 <div>
                                                     <p style="white-space: pre; padding-left: 3em"><%- postcomments[n].message %></p>
-                                                    <a href="/blog/<%= posttitle %>/<%= postcomments[n].id %>/add">Reply</a></div>
+                                                    <% if (isAuthenticated()) { %>
+                                                        <div class="replylink"><a href="#">Reply</a></div>
+                                                        <div class="replybox"><br><form action="/blog/<%= posttitle %>/<%= postcomments[n].id %>/add" method="post">
+                                                            <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                                            <input type="submit" value="Submit" class="button">
+                                                        </form></div>
+                                                    <% } else { %>
+                                                        <div><a href="/blog/<%= posttitle %>/addreply">Reply</a></div>
+                                                    <% } %>
+                                                </div>
                                                 <br></div></div><br>
 
 
@@ -142,13 +194,22 @@ function confirm_alert(node) {
                                                         <b><a href="/profile/<%= postcomments[o].user.username %>"><% if (postuser.username === postcomments[o].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[o].user.username %><% if (postuser.username === postcomments[o].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[o].date %>:</font>
                                                         <% if (isAuthenticated()) { %>
                                                             <% if (user.username === postcomments[o].user.username || user.level === "admin") { %>
-                                                                <a href="/blog/<%= posttitle %>/<%= postcomments[o].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                                <a href="/blog/<%= postid %>/<%= postcomments[o].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                             <% } %>
                                                         <% } %>
                                                     <br>
                                                     <div>
                                                         <p style="white-space: pre; padding-left: 3em"><%- postcomments[o].message %></p>
-                                                        <a href="/blog/<%= posttitle %>/<%= postcomments[o].id %>/add">Reply</a></div>
+                                                        <% if (isAuthenticated()) { %>
+                                                            <div class="replylink"><a href="#">Reply</a></div>
+                                                            <div class="replybox"><br><form action="/blog/<%= posttitle %>/<%= postcomments[o].id %>/add" method="post">
+                                                                <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                                                <input type="submit" value="Submit" class="button">
+                                                            </form></div>
+                                                        <% } else { %>
+                                                            <div><a href="/blog/<%= posttitle %>/addreply">Reply</a></div>
+                                                        <% } %>
+                                                    </div>
                                                     </div>
                                                     <br>
 
@@ -161,13 +222,22 @@ function confirm_alert(node) {
                                                                 <b><a href="/profile/<%= postcomments[p].user.username %>"><% if (postuser.username === postcomments[p].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[p].user.username %><% if (postuser.username === postcomments[p].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[p].date %>:</font>
                                                                 <% if (isAuthenticated()) { %>
                                                                     <% if (user.username === postcomments[p].user.username || user.level === "admin") { %>
-                                                                    <a href="/blog/<%= posttitle %>/<%= postcomments[p].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                                    <a href="/blog/<%= postid %>/<%= postcomments[p].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                                     <% } %>
                                                                 <% } %>
                                                             <br>
                                                             <div>
                                                                 <p style="white-space: pre; padding-left: 3em"><%- postcomments[p].message %></p>
-                                                                <a href="/blog/<%= posttitle %>/<%= postcomments[p].id %>/add">Reply</a></div>
+                                                                <% if (isAuthenticated()) { %>
+                                                                    <div class="replylink"><a href="#">Reply</a></div>
+                                                                    <div class="replybox"><br><form action="/blog/<%= posttitle %>/<%= postcomments[p].id %>/add" method="post">
+                                                                        <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                                                        <input type="submit" value="Submit" class="button">
+                                                                    </form></div>
+                                                                <% } else { %>
+                                                                    <div><a href="/blog/<%= posttitle %>/addreply">Reply</a></div>
+                                                                <% } %>
+                                                            </div>
                                                             <br></div></div><br>
 
 
@@ -179,7 +249,7 @@ function confirm_alert(node) {
                                                                     <b><a href="/profile/<%= postcomments[q].user.username %>"><% if (postuser.username === postcomments[q].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= postcomments[q].user.username %><% if (postuser.username === postcomments[q].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= postcomments[q].date %>:</font>
                                                                     <% if (isAuthenticated()) { %>
                                                                         <% if (user.username === postcomments[q].user.username || user.level === "admin") { %>
-                                                                            <a href="/blog/<%= posttitle %>/<%= postcomments[q].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                                            <a href="/blog/<%= postid %>/<%= postcomments[q].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                                         <% } %>
                                                                     <% } %>
                                                                 <br>
@@ -224,5 +294,12 @@ function confirm_alert(node) {
     </section>
     </div>
 </div>
+
+<script>
+$(".replylink").click(function(){
+    $(this).siblings(".replybox").show();
+    return false;
+});
+</script>
 
 <% include ../layoutBottom %>
