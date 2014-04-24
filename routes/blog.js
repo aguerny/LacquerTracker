@@ -199,11 +199,10 @@ app.get('/blog/:id/:cid/remove', isLoggedIn, function(req, res) {
                         blog.save(function(err) {
                             if (comment.parentid !== comment.blogid) {
                                 BlogComment.findById(comment.parentid, function(err, parentcomment) {
-                                    parentcomment.childid.remove(req.params.id);
-                                    parentcomment.save(function(err) {
-                                        BlogComment.findByIdAndRemove(req.params.cid, function(err) {
-                                            res.redirect("/blog/" + blog.title.replace(/ /g,"_"));
-                                        })
+                                    parentcomment.childid.remove(req.params.cid);
+                                    parentcomment.save();
+                                    BlogComment.findByIdAndRemove(req.params.cid, function(err) {
+                                        res.redirect("/blog/" + blog.title.replace(/ /g,"_"));
                                     })
                                 })
                             } else {
@@ -234,11 +233,10 @@ app.get('/blog/:id/:cid/removepermanent', isLoggedIn, function(req, res) {
                     blog.save(function(err) {
                         if (comment.parentid !== comment.blogid) {
                             BlogComment.findById(comment.parentid, function(err, parentcomment) {
-                                parentcomment.childid.remove(req.params.id);
-                                parentcomment.save(function(err) {
-                                    BlogComment.findByIdAndRemove(req.params.cid, function(err) {
-                                        res.redirect("/blog/" + blog.title.replace(/ /g,"_"));
-                                    })
+                                parentcomment.childid.remove(req.params.cid);
+                                parentcomment.save();
+                                BlogComment.findByIdAndRemove(req.params.cid, function(err) {
+                                    res.redirect("/blog/" + blog.title.replace(/ /g,"_"));
                                 })
                             })
                         } else {
@@ -263,9 +261,13 @@ app.get('/blog/:id/remove', isLoggedIn, function(req, res) {
             res.redirect('/error');
         } else {
             if (post.user == req.user.id || req.user.level === "admin") {
-                Blog.findByIdAndRemove(req.params.id, function(err) {
-                    BlogComment.find({parentid : req.params.id}).remove();
-                    res.redirect('/blog');
+                BlogComment.find({blogid:req.params.id}, function(err, comments) {
+                    for (i=0; i < comments.length; i++) {
+                        comments[i].remove();
+                    }
+                    Blog.findByIdAndRemove(req.params.id, function(err) {
+                        res.redirect('/blog');
+                    })
                 })
             } else {
                 res.redirect('/error');

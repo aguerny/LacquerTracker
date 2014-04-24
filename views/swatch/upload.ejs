@@ -7,8 +7,7 @@
             <div>
                 <form action="/swatch/add/<%= pid %>" method="post" enctype='multipart/form-data'>
                     <h3>Choose a photo to crop into swatch:</h3><br>
-                    Polish Name: <input type="text" name="name" value="<%= pname %>" placeholder="<%= pname %>" disabled><br><br>
-                    Polish Brand: <input type="text" value="<%= pbrand %>" name="brand" placeholder="<%= pbrand %>" disabled><br><br><br>
+                    <h4><%= pbrand %> - <%= pname %></h4><br><br>
                     Upload Image: <input type="file" value="photo" name="photo" required>
                     <br><br>
                     <input type="submit" value="Submit" class="button">

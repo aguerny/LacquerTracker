@@ -27,12 +27,12 @@ app.get('/forums', function(req, res) {
         for (i=0; i < latest.length; i++) {
             if (latest[i] !== undefined) {
                 if (req.isAuthenticated() && req.user.timezone.length > 0) {
-                    latestdates.push(moment(latest[i].dateupdated).tz(req.user.timezone).calendar());
+                    latestdates.push("Updated " + moment(latest[i].dateupdated).tz(req.user.timezone).calendar());
                 } else {
-                    latestdates.push(moment(latest[i].dateupdated).tz("America/New_York").calendar());
+                    latestdates.push("Updated " + moment(latest[i].dateupdated).tz("America/New_York").calendar());
                 }
             } else {
-                latestdates.push("never. Be the first!");
+                latestdates.push("Be the first!");
             }
         }
         data.latest = latestdates;
@@ -253,6 +253,7 @@ app.get('/forums/:forum/:id/addreply', isLoggedIn, function(req, res) {
     res.redirect('/forums/' + req.params.forum + '/' + req.params.id)
 });
 
+
 //remove comment
 app.get('/forums/:forum/:id/:cid/remove', isLoggedIn, function(req, res) {
     ForumPost.findById(req.params.id, function(err, post) {
@@ -271,11 +272,10 @@ app.get('/forums/:forum/:id/:cid/remove', isLoggedIn, function(req, res) {
                         post.save(function(err) {
                             if (comment.parentid !== comment.postid) {
                                 ForumComment.findById(comment.parentid, function(err, parentcomment) {
-                                    parentcomment.childid.remove(req.params.id);
-                                    parentcomment.save(function(err) {
-                                        ForumComment.findByIdAndRemove(req.params.cid, function(err) {
-                                            res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
-                                        })
+                                    parentcomment.childid.remove(req.params.cid);
+                                    parentcomment.save();
+                                    ForumComment.findByIdAndRemove(req.params.cid, function(err) {
+                                        res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
                                     })
                                 })
                             } else {
@@ -306,11 +306,10 @@ app.get('/forums/:forum/:id/:cid/removepermanent', isLoggedIn, function(req, res
                     post.save(function(err) {
                         if (comment.parentid !== comment.postid) {
                             ForumComment.findById(comment.parentid, function(err, parentcomment) {
-                                parentcomment.childid.remove(req.params.id);
-                                parentcomment.save(function(err) {
-                                    ForumComment.findByIdAndRemove(req.params.cid, function(err) {
-                                        res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
-                                    })
+                                parentcomment.childid.remove(req.params.cid);
+                                parentcomment.save();
+                                ForumComment.findByIdAndRemove(req.params.cid, function(err) {
+                                    res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
                                 })
                             })
                         } else {
@@ -335,9 +334,13 @@ app.get('/forums/:forum/:id/remove', isLoggedIn, function(req, res) {
             res.redirect('/error');
         } else {
             if (post.user == req.user.id || req.user.level === "admin") {
-                ForumPost.findByIdAndRemove(req.params.id, function(err) {
-                    ForumComment.find({parentid : req.params.id}).remove();
-                    res.redirect('/forums/' + req.params.forum);
+                ForumComment.find({postid:req.params.id}, function(err, comments) {
+                    for (i=0; i < comments.length; i++) {
+                        comments[i].remove();
+                    }
+                    ForumPost.findByIdAndRemove(req.params.id, function(err) {
+                        res.redirect('/forums/' + req.params.forum);
+                    })
                 })
             } else {
                 res.redirect('/error');

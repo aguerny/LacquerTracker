@@ -8,9 +8,8 @@
                 <div id="photo-left_col">
                     <form action="/photo/add/<%= pid %>" method="post" enctype='multipart/form-data'>
                         <h3>Add a Photo:</h3><br>
-                        Polish Name: <input type="text" name="name" value="<%= pname %>" placeholder="<%= pname %>" class="width50" disabled><br><br>
-                        Polish Brand: <input type="text" value="<%= pbrand %>" name="brand" placeholder="<%= pbrand %>" class="width50" disabled><br><br><br>
-                        Image for Upload: <input type="file" value="photo" name="photo" class="width50" id="upimg" required><br><br>
+                        <h4><%= pbrand %> - <%= pname %></h4><br><br>
+                        Upload Image: <input type="file" value="photo" name="photo" class="width50" id="upimg" required><br><br>
                         Credit:<br><input type="text" name="creditname" placeholder="credit name" class="width50"><br>
                         <input type="url" name="creditlink" placeholder="credit link" class="width50"><br><br>
                         <input type="submit" value="Submit" class="button">
@@ -23,12 +22,12 @@
                         <input type="submit" value="Submit" class="button">
                     </form>
                     <br><br><br>
-                    <b>Want to just change the swatch thumbnail instead? <a href="/swatch/add/<%= pid %>">Click here.</a>
+                    <b>Want to just change the swatch thumbnail instead? <a href="/swatch/add/<%= pid %>">Click here.</a></b>
                 </div>
             <div id="photo-right_col">
                 <div id="smalllayout"><br><hr></div>
-                <br><i>Preview:</i><br><br>
-                <img class="width80" id="preview" src="#">
+                <br><b><i>Preview:</b><br><span class="smallfont">(if uploading)</span></i><br><br>
+                <img style="max-width:80%" id="preview" src="#">
             </div>
         </section>
     </div>
