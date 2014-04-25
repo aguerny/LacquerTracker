@@ -31,7 +31,7 @@ app.get('/profile/:username', function(req, res) {
             data.opolishes = osort;
             data.wpolishes = wsort;
             data.username = user.username;
-            data.about = sanitizer.sanitize(markdown(user.about));
+            data.about = markdown(user.about);
             data.profilephoto = user.profilephoto;
             data.notifications = user.notifications;
             data.useremail = user.useremail;

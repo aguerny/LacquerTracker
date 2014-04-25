@@ -8,9 +8,15 @@
             <img id="polish-image" src="/images/swatchwheels.JPG">
         </div>
         <div id="welcome">
-            <h2>Welcome to Lacquer Tracker!</h2>
-            <br>
-            <p>Ready to get started digitally organizing and building your nail polish collection?<br><br><br><a href="/login">Log in</a> or <a href="/signup">sign up</a> now!</p>
+            <% if (!isAuthenticated()) { %>
+                <h2>Welcome to Lacquer Tracker!</h2>
+                <br><br>
+                Ready to get started digitally organizing and building your nail polish collection?<br><br><br><a href="/login">Log in</a> or <a href="/signup">sign up</a> now!
+            <% } else if (isAuthenticated()) {%>
+                <h2>Welcome back to Lacquer Tracker, <%=user.username%>!</h2>
+                <br><br>
+                Are you ready to continue digitally organizing and building your nail polish collection?
+            <% } %>
         </div>
         <div id="smalllayout">
             <br><br>

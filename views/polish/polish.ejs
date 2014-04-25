@@ -30,7 +30,15 @@
                             <%= ptype.replace(/,/g,", ") %>
                         <br><br><b>Indie:</b> <%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%>
                         <br><br><br><br>
-                        <a target="_blank" href="http://www.amazon.com/gp/search?ie=UTF8&camp=1789&creative=9325&index=aps&keywords=<%= linkbrand %>%20<%= linkname %>&linkCode=ur2&tag=lacqutrack-20">View on Amazon</a><img src="http://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+                        <% if (isAuthenticated()) { %>
+                            <% if (user.country === 'CAN') { %>
+                                <a href="http://www.amazon.ca/s/?_encoding=UTF8&camp=15121&creative=390961&field-keywords=<%= linkbrand %>%20<%= linkname %>&linkCode=ur2&tag=lacqutrack00-20&url=search-alias%3Daps">View on Amazon</a><img src="https://ir-ca.amazon-adsystem.com/e/ir?t=lacqutrack00-20&l=ur2&o=15" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+                            <% } else {%>
+                                <a href="http://www.amazon.com/gp/search?ie=UTF8&camp=1789&creative=9325&index=aps&keywords=<%= linkbrand %>%20<%= linkname %>&linkCode=ur2&tag=lacqutrack-20">View on Amazon</a><img src="http://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+                            <% } %>
+                        <% } else { %>
+                            <a href="http://www.amazon.com/gp/search?ie=UTF8&camp=1789&creative=9325&index=aps&keywords=<%= linkbrand %>%20<%= linkname %>&linkCode=ur2&tag=lacqutrack-20">View on Amazon</a><img src="http://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+                        <% } %>
                     </div>
                     <div id="polish-right_col">
                         <div class="slideshow">
@@ -118,7 +126,15 @@
                     <%= ptype.replace(/,/g,", ") %>
                 <br><br><b>Indie:</b> <%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%><br><br>
                 <br>
-                <a target="_blank" href="http://www.amazon.com/s/?_encoding=UTF8&camp=1789&creative=390957&linkCode=ur2&pageMinusResults=1&suo=1393008765386&tag=lacqutrack-20&url=search-alias%3Daps#/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=<%= linkbrand %>%20<%= linkname %>&sepatfbtf=true&tc=1393008769421">View on Amazon</a><img src="https://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+                <% if (isAuthenticated()) { %>
+                    <% if (user.country === 'CAN') { %>
+                        <a href="http://www.amazon.ca/s/?_encoding=UTF8&camp=15121&creative=390961&field-keywords=<%= linkbrand %>%20<%= linkname %>&linkCode=ur2&tag=lacqutrack00-20&url=search-alias%3Daps">View on Amazon</a><img src="https://ir-ca.amazon-adsystem.com/e/ir?t=lacqutrack00-20&l=ur2&o=15" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+                    <% } else {%>
+                        <a href="http://www.amazon.com/gp/search?ie=UTF8&camp=1789&creative=9325&index=aps&keywords=<%= linkbrand %>%20<%= linkname %>&linkCode=ur2&tag=lacqutrack-20">View on Amazon</a><img src="http://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+                    <% } %>
+                <% } else { %>
+                    <a href="http://www.amazon.com/gp/search?ie=UTF8&camp=1789&creative=9325&index=aps&keywords=<%= linkbrand %>%20<%= linkname %>&linkCode=ur2&tag=lacqutrack-20">View on Amazon</a><img src="http://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+                <% } %>
             </div>
             </section>
             <div id="container" class="clear">

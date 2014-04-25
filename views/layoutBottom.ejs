@@ -5,5 +5,42 @@
     </footer>
 </div>
 
+<script>
+$(document.links).filter(function() {
+    return this.hostname != window.location.hostname;
+}).attr('target', '_blank');
+
+
+$('a').click(function() {
+    addAffiliate(this);
+});
+
+myAmazonUSCode = '?tag=lacqutrack-20';
+myAmazonCACode = '?tag=lacqutrack00-20';
+myAmazonUKCode = '?tag=lacqutrack-21';
+
+function addAffiliate(link) {
+    if ((link.href).indexOf('amzn.com/') > -1) {
+        link.href = link.href + myAmazonUSCode;
+        return true; 
+    } else if ((link.href).indexOf('amazon.com/registry') > -1) {
+        link.href = link.href + myAmazonUSCode;
+        return true; 
+    } else if ((link.href).indexOf('amzn.ca/') > -1) {
+        link.href = link.href + myAmazonCACode;
+        return true; 
+    } else if ((link.href).indexOf('amazon.ca/registry') > -1) {
+        link.href = link.href + myAmazonCACode;
+        return true;
+/*    } else if ((link.href).indexOf('amzn.co.uk/') > -1) {
+        link.href = link.href + myAmazonUKCode;
+        return true; 
+    } else if ((link.href).indexOf('amazon.co.uk/registry') > -1) {
+        link.href = link.href + myAmazonUKCode;
+        return true;*/
+    }
+};
+</script>
+
 </body>
 </html>

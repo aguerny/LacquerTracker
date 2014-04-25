@@ -41,6 +41,7 @@
                     <br><br><br>
                     <select name="type" class="width80">
                         <option value="">All Types</option>
+                        <option value="blackened" <% if (browsetype === "blackened") { %> selected="selected" <% } %>>blackened</option>
                         <option value="crackle" <% if (browsetype === "crackle") { %> selected="selected" <% } %>>crackle</option>
                         <option value="crelly" <% if (browsetype === "crelly") { %> selected="selected" <% } %>>crelly</option>
                         <option value="creme" <% if (browsetype === "creme") { %> selected="selected" <% } %>>creme</option>
@@ -171,21 +172,13 @@
                                 <% } else if (status[i] === "wanted") { %>
                                     <center><span>&#10084;</span></center>
                                 <% } else {%>
-                                    <div id="biglayout">
-                                        <center><div class="hoverholder">+</div>
-                                        <div class="hovermenu"><a title="Add ownership" href="/addownbrowse/<%= polishes[i].id %>">&#10004;</a>|<a title="Add to wishlist" href="/addwantbrowse/<%= polishes[i].id %>">&#10084;</a></div></center>
-                                    </div>
-                                    <div id="smalllayout">
+                                    <div>
                                         <center><div class="hoverholder">+</div>
                                         <div class="hovermenu"><a title="Add ownership" href="/addownbrowse/<%= polishes[i].id %>">&#10004;</a>|<a title="Add to wishlist" href="/addwantbrowse/<%= polishes[i].id %>">&#10084;</a></div></center>
                                     </div>
                                 <% } %>
                             <% } else { %>
-                                <div id="biglayout">
-                                    <center><div class="hoverholder">+</div>
-                                    <div class="hovermenu"><a title="Add ownership" href="/addownbrowse/<%= polishes[i].id %>">&#10004;</a>|<a title="Add to wishlist" href="/addwantbrowse/<%= polishes[i].id %>">&#10084;</a></div></center>
-                                </div>
-                                <div id="smalllayout">
+                                <div>
                                     <center><div class="hoverholder">+</div>
                                     <div class="hovermenu"><a title="Add ownership" href="/addownbrowse/<%= polishes[i].id %>">&#10004;</a>|<a title="Add to wishlist" href="/addwantbrowse/<%= polishes[i].id %>">&#10084;</a></div></center>
                                 </div>

@@ -145,6 +145,7 @@
     /*---Header---*/
 
     #header{padding:20px 0;}
+    #header a {color:black;}
     #header nav{display:block; width:100%; margin:0; padding:20px 0; color:#C0BAB6; background-color:#232323; clear:both;}
     #header nav ul{padding:0 20px;}
     #header nav li{display:inline; margin-right:25px; text-transform:uppercase;}
@@ -306,6 +307,7 @@
 
     #header h1, nav, nav a{text-align:center; margin:6px 0 6px 0; color:black; list-style:none;}
     #header h1 {text-align:left; margin-left:1%;}
+    #header a {color:black;}
 
     #header nav, #header nav a {background-color:#232323; color:#C0BAB6; padding: 2px 0 2px 0;}
 

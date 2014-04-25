@@ -204,7 +204,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                     newPolish.type = '';
                 }
                 newPolish.save(function(err) {
-                    res.redirect('/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"));;
+                    res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_")})
                 })
             });
         }
