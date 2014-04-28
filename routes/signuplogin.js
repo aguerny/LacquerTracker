@@ -48,8 +48,8 @@ app.post('/signup', function(req, res) {
                                 newUser.profilephoto = '';
                                 newUser.isvalidated = false;
                                 newUser.level = "normal";
-                                newUser.notifications = true;
-                                newUser.useremail = true;
+                                newUser.notifications = "on";
+                                newUser.useremail = "on";
                                 newUser.creationdate = new Date();
                                 newUser.country = "";
                                 newUser.timezone = "";
