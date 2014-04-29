@@ -7,20 +7,16 @@
             <div id="photo-wrap">
                 <div id="photo-left_col">
                     <form action="/photo/profile" method="post" enctype='multipart/form-data'>
-                        <h3>Upload a Profile Photo:</h3><br>
-                        Upload Image: <input type="file" value="photo" name="photo" id="upimg" required>
-                        <br><br>
-                        <input type="submit" value="Submit" class="button">
-                    </form>
-                    <br><b>OR</b><br><br>
-                    <form action="/photo/profileurl" method="post">
-                        Add from URL: <input name="url" id="upimg" class="width50" required><br><br>
+                        <h3>Upload a Profile Photo:</h3><br><br>
+                        Upload Image: <input type="file" value="photo" name="photo" id="upimg"><br><br>
+                        <b>OR</b><br><br>
+                        Add from URL: <input name="url" id="upimg" class="width50"><br><br>
                         <input type="submit" value="Submit" class="button">
                     </form>
                 </div>
             <div id="photo-right_col">
                 <div id="smalllayout"><br><hr></div>
-                <br><b><i>Preview:</b><span class="smallfont">(if uploading)</span></i><br><br>
+                <br><b><i>Preview:</b><br><span class="smallfont">(if uploading)</span></i><br><br>
                 <img style="max-width:80%" id="preview" src="#">
             </div>
         </section>

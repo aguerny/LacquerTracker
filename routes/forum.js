@@ -1,4 +1,5 @@
 var User = require('../app/models/user');
+var UserPhoto = require('../app/models/userphoto');
 var ForumPost = require('../app/models/forumpost');
 var ForumComment = require('../app/models/forumcomment');
 var sanitizer = require('sanitizer');
@@ -6,6 +7,10 @@ var markdown = require('markdown-css');
 var nodemailer = require('nodemailer');
 var moment = require('moment-timezone');
 var _ = require('lodash');
+var fs = require('node-fs');
+var path = require('path');
+var gm = require('gm').subClass({ imageMagick: true });
+var http = require('http');
 
 module.exports = function(app, passport) {
 
@@ -51,20 +56,120 @@ app.get('/forums/:forum/add', isLoggedIn, function(req, res) {
 });
 
 app.post('/forums/:forum/add', isLoggedIn, function(req, res) {
-    var newForumPost = new ForumPost ({
-        user: req.user.id,
-        username: req.user.username,
-        title: sanitizer.sanitize(req.body.posttitle),
-        message: sanitizer.sanitize(req.body.postmessage),
-        date: new Date(),
-        dateupdated: new Date(),
-        dateupdatedsort: new Date(),
-        forum: req.body.forum,
-    });
-    newForumPost.save(function(err) {
-        if (err) throw err;
-        else res.redirect('/forums/' + newForumPost.forum + '/' + newForumPost.id);
-    })
+    console.log(req.files);
+    if (req.files.photo.name.length > 0) {
+        var ext = path.extname(req.files.photo.name);
+        var newUserPhoto = new UserPhoto ({
+            userid: req.user.id,
+            onprofile: req.body.onprofile,
+            location: '',
+        })
+        newUserPhoto.save(function(err) {
+            if (err) {
+                fs.unlink(req.files.photo.path, function(err) {
+                    newUserPhoto.remove(function(err) {
+                        res.redirect('/error');
+                    })
+                })
+            } else {
+                req.user.photos.push(newUserPhoto.id);
+                req.user.save(function(err) {
+                    gm(req.files.photo.path).size(function(err, value) {
+                        if (err) {
+                            fs.unlink(req.files.photo.path, function(err) {
+                                newUserPhoto.remove();
+                                req.user.photos.remove(newUserPhoto.id);
+                                req.user.save(function(err) {
+                                    res.redirect('/error');
+                                })
+                            })
+                        } else {
+                            if (value.width > 600) {
+                                gm(req.files.photo.path).resize(600).write(path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function (err) {
+                                    if (err) {
+                                        fs.unlink(req.files.photo.path, function(err) {
+                                            newUserPhoto.remove();
+                                            req.user.photos.remove(newUserPhoto.id);
+                                            req.user.save(function(err) {
+                                                res.redirect('/error');
+                                            })
+                                        })
+                                    } else {
+                                        fs.unlink(req.files.photo.path, function() {
+                                            newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
+                                            newUserPhoto.save(function(err) {
+                                                var newForumPost = new ForumPost ({
+                                                    user: req.user.id,
+                                                    username: req.user.username,
+                                                    title: sanitizer.sanitize(req.body.posttitle),
+                                                    message: '![]('+newUserPhoto.location+')<br>' + sanitizer.sanitize(req.body.postmessage),
+                                                    date: new Date(),
+                                                    dateupdated: new Date(),
+                                                    dateupdatedsort: new Date(),
+                                                    forum: req.body.forum,
+                                                });
+                                                newForumPost.save(function(err) {
+                                                    if (err) throw err;
+                                                    else res.redirect('/forums/' + newForumPost.forum + '/' + newForumPost.id);
+                                                })
+                                            })
+                                        })
+                                    }
+                                })
+                            } else {
+                                fs.rename(req.files.photo.path, path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function(err) {
+                                    if (err) {
+                                        fs.unlink(req.files.photo.path, function(err) {
+                                            newUserPhoto.remove();
+                                            req.user.photos.remove(newUserPhoto.id);
+                                            req.user.save(function(err) {
+                                                res.redirect('/error');
+                                            })
+                                        })
+                                    } else {
+                                        fs.unlink(req.files.photo.path, function() {
+                                            newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
+                                            newUserPhoto.save(function(err) {
+                                                var newForumPost = new ForumPost ({
+                                                    user: req.user.id,
+                                                    username: req.user.username,
+                                                    title: sanitizer.sanitize(req.body.posttitle),
+                                                    message: '![]('+newUserPhoto.location+')\n\n' + sanitizer.sanitize(req.body.postmessage),
+                                                    date: new Date(),
+                                                    dateupdated: new Date(),
+                                                    dateupdatedsort: new Date(),
+                                                    forum: req.body.forum,
+                                                });
+                                                newForumPost.save(function(err) {
+                                                    if (err) throw err;
+                                                    else res.redirect('/forums/' + newForumPost.forum + '/' + newForumPost.id);
+                                                })
+                                            })
+                                        })
+                                    }
+                                })
+                            }
+                        }
+                    })
+                })
+            }
+        })
+    } else {
+        var newForumPost = new ForumPost ({
+            user: req.user.id,
+            username: req.user.username,
+            title: sanitizer.sanitize(req.body.posttitle),
+            message: sanitizer.sanitize(req.body.postmessage),
+            date: new Date(),
+            dateupdated: new Date(),
+            dateupdatedsort: new Date(),
+            forum: req.body.forum,
+        });
+        newForumPost.save(function(err) {
+            if (err) throw err;
+            else res.redirect('/forums/' + newForumPost.forum + '/' + newForumPost.id);
+        })
+    }
 });
 
 
@@ -73,7 +178,13 @@ app.post('/forums/:forum/add', isLoggedIn, function(req, res) {
 app.get('/forums/:forum', function(req, res) {
     if (req.params.forum === "intro" || req.params.forum === "general" || req.params.forum === "notd" || req.params.forum === "contests" || req.params.forum === "tutorials" || req.params.forum === "offtopic" || req.params.forum === "lt") {
         data = {}
-        data.title = req.params.forum + ' - Lacquer Tracker';
+        var allforums = ['intro', 'general', 'notd', 'contests', 'tutorials', 'offtopic', 'lt'];
+        var forumtitles = ['Introductions', 'General Polish Discussion', 'Nails of the Day', 'Contests and Giveaways', 'Tutorials', 'Off Topic', 'Lacquer Tracker Discussion'];
+        for (i=0; i<allforums.length; i++) {
+            if (req.params.forum === allforums[i]) {
+                data.title = forumtitles[i] + ' - Lacquer Tracker';
+            }
+        }
         data.forumcat = req.params.forum;
         ForumPost.find({forum: req.params.forum}).sort({dateupdatedsort: -1}).populate('comments').populate('user').exec(function(err, posts) {
             User.populate(posts, {path:'comments.user'}, function(err) {

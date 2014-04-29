@@ -112,26 +112,26 @@ app.get('/addwant/:id', isLoggedIn, function(req, res) {
 
 
 //add own polish browse
-app.get('/addownbrowse/:id', isLoggedIn, function(req, res) {
+app.post('/addownbrowse/:id', isLoggedIn, function(req, res) {
     req.user.wantedpolish.remove(req.params.id);
     req.user.ownedpolish.addToSet(req.params.id);
     req.user.save();
     Polish.findById(req.params.id, function(err, p) {
         p.dateupdated = new Date();
         p.save(function(err) {
-            res.redirect('/browse');
+            res.end();
         })
     })
 });
 
 //add wishlist polish browse
-app.get('/addwantbrowse/:id', isLoggedIn, function(req, res) {
+app.post('/addwantbrowse/:id', isLoggedIn, function(req, res) {
     req.user.wantedpolish.addToSet(req.params.id);
     req.user.save();
     Polish.findById(req.params.id, function(err, p) {
         p.dateupdated = new Date();
         p.save(function(err) {
-            res.redirect('/browse');
+            res.end();
         })
     })
 });

@@ -6,7 +6,6 @@
     <section>
         <form action="/forums/<%= postforum %>/<%= postid %>/edit" method="post">
             <h3>Edit your post:</h3><br><br>
-                <a target="blank" href="/photo/upload">Want to include a photo?</a><br><br><br>
                 Forum:<br><select name="forum" required>
                     <option value="">select a forum to post to</option>
                     <option value="intro" <% if (postforum === "intro") { %> selected="selected" <%}%>>Introductions</option>
@@ -18,7 +17,8 @@
                     <option value="offtopic" <% if (postforum === "offtopic") { %> selected="selected" <%}%>>Off Topic</option>
                     </select><br><br>
                 Title:<br><input type="text" name="posttitle" class="width53" value="<%=posttitle%>" required><br><br><br>
-                Post:<br><textarea type="text" class="markItUp" name="postmessage" required><%=postmessage%></textarea><br><br>
+                Post:<br><textarea type="text" class="markItUp" name="postmessage" required><%=postmessage%></textarea><br>
+                <a target="blank" href="/photo/upload"><i>(Click here to upload/include a photo.)</i></a><br><br><br>
                 <input type="submit" value="Submit" class="button">
         </form>
     </section>

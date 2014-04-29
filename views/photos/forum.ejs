@@ -6,17 +6,12 @@
         <section>
             <div id="photo-wrap">
                 <div id="photo-left_col">
-                    <div id="smalllayout">
-                        <% if (typeof message !== "undefined" && typeof url !== "undefined") { %>
-                            <center><h3><%= message %></h3><br>
-                            <input id="copyurl" class="width80" value=<%=url%>><br><br><br>
-                        <% } %>
-                    </div>
                     <div>
                         <form action="/photo/upload" method="post" enctype='multipart/form-data'>
-                            <h3>Add a Photo:</h3><br>
-                            Upload Image: <input type="file" value="photo" name="photo" id="upimg" required>
-                                </input><br><br>
+                            <h3>Add a Photo:</h3><br><br>
+                            Upload Image: <input type="file" value="photo" name="photo" id="upimg"><br><br>
+                            <b>OR</b><br><br>
+                            Add from URL: <input name="url" id="upimg" class="width50"><br><br><br>
                             Do you want this image to appear on your profile page?
                                 <select name="onprofile">
                                     <option value="no">no</option>
@@ -24,22 +19,6 @@
                                     </select><br><br><br>
                             <input type="submit" value="Submit" class="button">
                         </form>
-                        <br><b>OR</b><br><br>
-                        <form action="/photo/uploadurl" method="post">
-                            Add from URL: <input name="url" id="upimg" class="width50" required><br><br>
-                            Do you want this image to appear on your profile page?
-                            <select name="onprofile">
-                                <option value="no">no</option>
-                                <option value="yes">yes</option>
-                                </select><br><br><br>
-                            <input type="submit" value="Submit" class="button">
-                        </form>
-                    </div>
-                    <div id="biglayout">
-                        <% if (typeof message !== "undefined" && typeof url !== "undefined") { %>
-                            <br><br><b><%= message %></b><br><br>
-                            <textarea id="copyurl" class="width80"><%=url%></textarea><br><input type="button" id="copy" value="Copy to Clipboard"/>
-                        <% } %>
                     </div>
                 </div>
             <div id="photo-right_col">
@@ -65,18 +44,6 @@ function readURL(input) {
 
 $("#upimg").change(function(){
     readURL(this);
-});
-</script>
-
-<script>
-$(document).ready(function(){
-    $('#copy').zclip({
-        path:'/scripts/ZeroClipboard.swf',
-        copy:function(){return $('#copyurl').val();},
-        afterCopy:function(){
-            $('#copyurl').css('background-color','#9ED9CF');
-        }
-    });
 });
 </script>
 

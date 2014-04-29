@@ -4,9 +4,8 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
-        <form action="/forums/<%= forumcat %>/add" method="post">
+        <form action="/forums/<%= forumcat %>/add" method="post" enctype='multipart/form-data'>
             <h3>Add a discussion post:</h3><br><br>
-                <a target="blank" href="/photo/upload">Want to include a photo?</a><br><br><br>
                 Forum:<br><select name="forum" required>
                     <option value="">select a forum to post to</option>
                     <option value="intro" <% if (forumcat === "intro") { %> selected="selected" <%}%>>Introductions</option>
@@ -18,8 +17,15 @@
                     <option value="offtopic" <% if (forumcat === "offtopic") { %> selected="selected" <%}%>>Off Topic</option>
                     </select><br><br>
                 Title:<br><input type="text" name="posttitle" class="width53" required><br><br><br>
-                Post:<br><textarea type="text" class="markItUp" name="postmessage" required></textarea><br><br>
+                Post:<br><textarea type="text" class="markItUp" name="postmessage" required></textarea><br>
+                Include an image? <input type="file" value="photo" name="photo" /><br><br>
+                Do you want this photo to also appear on your profile page? <select name="onprofile">
+                    <option value="no">no</option>
+                    <option value="yes">yes</option>
+                    </select><br><br>
+                <a target="blank" href="/photo/upload"><i>(Click here to upload/include more than one photo.)</i></a><br><br><br>
                 <input type="submit" value="Submit" class="button">
+                <br><br>
         </form>
     </section>
     </div>
