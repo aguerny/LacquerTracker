@@ -33,40 +33,41 @@ app.get('/swatch/add/:id', isLoggedIn, function(req, res) {
     })
 });
 
-//from file
+//upload image
 app.post('/swatch/add/:id', isLoggedIn, function(req, res) {
-    var ext = path.extname(req.files.photo.name);
-    var tempPath = path.resolve('./public/images/tmp/' + req.user.username + ext);
-    fs.rename(req.files.photo.path, tempPath, function (err) {
-        var data = {};
-        data.title = 'Add a Swatch - Lacquer Tracker';
-        data.pid = req.params.id;
-        data.ext = ext;
-        data.location = '/images/tmp/' + req.user.username + ext;
-        console.log(req.files.photo.path);
-        res.render('swatch/crop.ejs', data);    
-    }) 
-});
-
-
-
-//from url
-app.post('/swatch/addurl/:id', isLoggedIn, function(req, res) {
-    var ext = path.extname(req.body.url);
-    var tempPath = path.resolve('./public/images/tmp/' + req.user.username + ext);
-    download(req.body.url, tempPath, function(err) {
-        if (err) {
-            res.redirect('/error');
-        } else {
+    if (req.files.photo.name.length > 0) {
+        var ext = path.extname(req.files.photo.name);
+        var tempPath = path.resolve('./public/images/tmp/' + req.user.username + ext);
+        fs.rename(req.files.photo.path, tempPath, function (err) {
             var data = {};
             data.title = 'Add a Swatch - Lacquer Tracker';
             data.pid = req.params.id;
             data.ext = ext;
             data.location = '/images/tmp/' + req.user.username + ext;
-            res.render('swatch/crop.ejs', data);
-        }
-    })
+            console.log(req.files.photo.path);
+            res.render('swatch/crop.ejs', data);    
+        })
+    } else if (req.body.url.length > 0) {
+        fs.unlink(req.files.photo.path);
+        var ext = path.extname(req.body.url);
+        var tempPath = path.resolve('./public/images/tmp/' + req.user.username + ext);
+        download(req.body.url, tempPath, function(err) {
+            if (err) {
+                res.redirect('/error');
+            } else {
+                var data = {};
+                data.title = 'Add a Swatch - Lacquer Tracker';
+                data.pid = req.params.id;
+                data.ext = ext;
+                data.location = '/images/tmp/' + req.user.username + ext;
+                res.render('swatch/crop.ejs', data);
+            }
+        })
+    } else {
+        res.redirect('/error');
+    }
 });
+
 
 
 //crop happens here

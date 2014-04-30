@@ -103,6 +103,8 @@
 
     .smallfont {font-size:11px;}
 
+    #code, #batch, #colorcat, #type, #indie {color:black;}
+
     /*---Footer---*/
 
     #footer {box-shadow: 0px 500px 0px 500px #9ED9CF; padding-top:1%;}

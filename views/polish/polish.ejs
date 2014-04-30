@@ -10,7 +10,6 @@
             <div id="biglayout">
                 <div id="polish-wrap">
                     <div id="polish-left_col">
-                        <a href="/polishedit/<%= pid %>">Edit information | </a>
                         <% if (status === "owned") { %>
                             Owned (<a href="/removeown/<%= pid %>">remove</a>)
                         <% } else if (status === "wanted") {%>
@@ -23,12 +22,20 @@
                             <img class="polishswatch" src="<%=pswatch%>"/><br><br>
                         <%}%>
                         <br>
-                        <b>Code:</b> <%= pcode %><br><br>
-                        <b>Collection:</b> <%= pbatch %><br><br>
-                        <b>Color:</b> <%= pcolorcat %><br><br>
-                        <b>Type:</b>
-                            <%= ptype.replace(/,/g,", ") %>
-                        <br><br><b>Indie:</b> <%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%>
+                        <% if (isAuthenticated()) { %>
+                            <b>Code:</b> <a href="#" id="code" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/code"><% if (pcode.length > 0) {%><%= pcode %><%}else{%>?<%}%></a><br><br>
+                            <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch"><% if (pbatch.length > 0) {%><%= pbatch %><%}else{%>?<%}%></a><br><br>
+                            <b>Color:</b> <a href="#" id="colorcat" class="editablecolor" data-pk="1" data-type="select" data-url="/polishedit/<%= pid %>/colorcat" data-value="<%= pcolorcat %>"><% if (pcolorcat.length > 0) {%><%=pcolorcat%><%} else {%>?<%}%></a><br><br>
+                            <b>Type:</b> <a href="#" id="type" data-pk="1" class="editabletype" data-type="checklist" data-url="/polishedit/<%= pid %>/type" data-value="<%= ptype %>" data-defaultValue="?" data-separator=","><% if (ptype.length > 0) {%><%= ptype.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
+                            <b>Indie:</b> <a href="#" id="indie" class="editableindie" data-pk="1" data-type="select" data-url="/polishedit/<%= pid %>/indie" data-value="<%= pindie %>"><%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%></a><br><br><br><span class="smallfont"><i>(Click value to edit polish information.)</i></span>
+                        <% } else { %>
+                            <b>Code:</b> <%= pcode %><br><br>
+                            <b>Collection:</b> <%= pbatch %><br><br>
+                            <b>Color:</b> <%= pcolorcat %><br><br>
+                            <b>Type:</b>
+                                <%= ptype.replace(/,/g,", ") %>
+                            <br><br><b>Indie:</b> <%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%>
+                        <% } %>
                         <br><br><br><br>
                         <% if (isAuthenticated()) { %>
                             <% if (user.country === 'CAN') { %>
@@ -114,19 +121,25 @@
                     </div>
                 </div>
                 <br><br>
-                <a href="/polishedit/<%= pid %>">Edit information</a><br><br>
-                <br>
                 <% if (pswatch.length > 0) {%>
                     <img class="polishswatch" src="<%=pswatch%>"/><br><br>
                 <%}%>
                 <br>
-                <b>Code:</b> <%= pcode %><br><br>
-                <b>Collection:</b> <%= pbatch %><br><br>
-                <b>Color:</b> <%= pcolorcat %><br><br>
-                <b>Type:</b>
-                    <%= ptype.replace(/,/g,", ") %>
-                <br><br><b>Indie:</b> <%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%><br><br>
-                <br>
+                <% if (isAuthenticated()) { %>
+                    <b>Code:</b> <a href="#" id="code" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/code"><% if (pcode.length > 0) {%><%= pcode %><%}else{%>?<%}%></a><br><br>
+                    <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch"><% if (pbatch.length > 0) {%><%= pbatch %><%}else{%>?<%}%></a><br><br>
+                    <b>Color:</b> <a href="#" id="colorcat" class="editablecolor" data-pk="1" data-type="select" data-url="/polishedit/<%= pid %>/colorcat" data-value="<%= pcolorcat %>"><% if (pcolorcat.length > 0) {%><%=pcolorcat%><%} else {%>?<%}%></a><br><br>
+                    <b>Type:</b> <a href="#" id="type" data-pk="1" class="editabletype" data-type="checklist" data-url="/polishedit/<%= pid %>/type" data-value="<%= ptype %>" data-defaultValue="?" data-separator=","><% if (ptype.length > 0) {%><%= ptype.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
+                    <b>Indie:</b> <a href="#" id="indie" data-pk="1" class="editableindie" data-type="select" data-url="/polishedit/<%= pid %>/indie" data-value="<%= pindie %>"><%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%></a><br><br><br><span class="smallfont"><i>(Click value to edit polish information.)</i></span>
+                <% } else { %>
+                    <b>Code:</b> <%= pcode %><br><br>
+                    <b>Collection:</b> <%= pbatch %><br><br>
+                    <b>Color:</b> <%= pcolorcat %><br><br>
+                    <b>Type:</b>
+                        <%= ptype.replace(/,/g,", ") %>
+                    <br><br><b>Indie:</b> <%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%>
+                <% } %>
+                <br><br><br>
                 <% if (isAuthenticated()) { %>
                     <% if (user.country === 'CAN') { %>
                         <a href="http://www.amazon.ca/s/?_encoding=UTF8&camp=15121&creative=390961&field-keywords=<%= linkbrand %>%20<%= linkname %>&linkCode=ur2&tag=lacqutrack00-20&url=search-alias%3Daps">View on Amazon</a><img src="https://ir-ca.amazon-adsystem.com/e/ir?t=lacqutrack00-20&l=ur2&o=15" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /><br><br>
@@ -140,32 +153,37 @@
             </div>
             </section>
             <div id="container" class="clear">
-            <section>
-            <hr><br>
-            <% if (userreview.length > 0 || notes.length > 0 || rating.length > 0) { %>
-                <i><a href="/review/edit/<%= pid %>">Edit your review</a></i><br><br><br>
-                <h5>Your Rating:</h5><br><%if (rating >= 1) {%><img src="/images/stars/<%=rating%>star.png"/><%} else {%>&nbsp;<%}%><br><br><br><br>
-                <h5>Your Review:</h5><br><%= userreview %><br><br><br><br>
-                <h5>Your Notes:</h5><br><%= notes %>
-            <% } else {%>
-            <i><a href="/review/edit/<%= pid %>">Add a review or personal notes for this polish.</a></i>
-            <% } %>
-            <% if (allreviews.length > 0 || pdupes.length > 0) { %>
-            <br><br><hr><br><br>
-                <% if (allreviews.length > 0) { %>
-                    <h5>All User Reviews:</h5><br>
-                    <% for (i=0; i<allreviews.length; i++) {%>
-                        <% if (allreviews[i].userreview.length > 0) { %>
-                            <%if (allreviews[i].rating >= 1) {%><img class="staradjust" src="/images/stars/<%=allreviews[i].rating%>star.png"/> - <%}%><%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+                <section>
+                <hr><br>
+                <% if (userreview.length > 0 || notes.length > 0 || rating.length > 0) { %>
+                    <i><a href="/review/edit/<%= pid %>">Edit your review</a></i><br><br><br>
+                    <h5>Your Rating:</h5><br><%if (rating >= 1) {%><img src="/images/stars/<%=rating%>star.png"/><%} else {%>&nbsp;<%}%><br><br><br><br>
+                    <h5>Your Review:</h5><br><%= userreview %><br><br><br><br>
+                    <h5>Your Notes:</h5><br><%= notes %>
+                <% } else {%>
+                <i><a href="/review/edit/<%= pid %>">Add a review or personal notes for this polish.</a></i>
+                <% } %>
+                <% if (allreviews.length > 0 || pdupes.length > 0) { %>
+                <br><br><hr><br><br>
+                    <% if (allreviews.length > 0) { %>
+                        <h5>All User Reviews:</h5><br>
+                        <% for (i=0; i<allreviews.length; i++) {%>
+                            <% if (allreviews[i].userreview.length > 0) { %>
+                                <%if (allreviews[i].rating >= 1) {%><img class="staradjust" src="/images/stars/<%=allreviews[i].rating%>star.png"/> - <%}%><%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+                            <% } %>
                         <% } %>
+                    <br><br>
                     <% } %>
-                <br><br>
+                    <% if (pdupes.length > 0) { %>
+                        <h5 style="display:inline">User-Submitted Dupes:</h5>
+                        <i><a href="/polishedit/<%=pid%>/dupes">Edit</a></i>
+                        <p style="white-space: pre;"><%- pdupes %></p>
+                    <% } else {%>
+                        <br><br><br><a href="/polishedit/<%=pid%>/dupes"><i>Add dupes for this polish.</i></a>
+                    <% } %>
+                <% } else {%>
+                    <br><br><br><a href="/polishedit/<%=pid%>/dupes"><i>Add dupes for this polish.</i></a>
                 <% } %>
-                <% if (pdupes.length > 0) { %>
-                    <h5>User-Submitted Dupes:</h5>
-                    <p style="white-space: pre;"><%- pdupes %></p>
-                <% } %>
-            <% } %>
             </div>
         </section>
     </div>
@@ -197,6 +215,69 @@ var speed = 100;
 
         $(".gallery").on("swiperight", function() {
             $(this).parent().children(".prev").trigger('click');
+        });
+    });
+
+    $.fn.editable.defaults.mode = 'inline';
+    $(document).ready(function() {
+        $('.editable').editable({
+        });
+        $(function(){
+            $('.editablecolor').editable({
+                source: [
+                    {value: '', text: 'select a color'},
+                    {value: 'black', text: 'black'},
+                    {value: 'blue', text: 'blue'},
+                    {value: 'brown', text: 'brown'},
+                    {value: 'clear', text: 'clear'},
+                    {value: 'gold', text: 'gold'},
+                    {value: 'green', text: 'green'},
+                    {value: 'grey', text: 'grey'},
+                    {value: 'nude', text: 'nude'},
+                    {value: 'orange', text: 'orange'},
+                    {value: 'pink', text: 'pink'},
+                    {value: 'purple', text: 'purple'},
+                    {value: 'red', text: 'red'},
+                    {value: 'silver', text: 'silver'},
+                    {value: 'white', text: 'white'},
+                    {value: 'yellow', text: 'yellow'}
+                ]
+            });
+        });
+        $(function(){
+            $('.editabletype').editable({
+                source: [
+                    {value: 'blackened', text: 'blackened'},
+                    {value: 'crackle', text: 'crackle'},
+                    {value: 'crelly', text: 'crelly'},
+                    {value: 'creme', text: 'creme'},
+                    {value: 'duochrome', text: 'duochrome'},
+                    {value: 'flakie', text: 'flakie'},
+                    {value: 'glitter', text: 'glitter'},
+                    {value: 'glow', text: 'glow in the dark'},
+                    {value: 'holo', text: 'holo'},
+                    {value: 'jelly', text: 'jelly'},
+                    {value: 'magnetic', text: 'magnetic'},
+                    {value: 'matte', text: 'matte'},
+                    {value: 'metallic', text: 'metallic'},
+                    {value: 'neon', text: 'neon'},
+                    {value: 'sheer', text: 'sheer'},
+                    {value: 'shimmer', text: 'shimmer'},
+                    {value: 'striper', text: 'striper'},
+                    {value: 'texture', text: 'texture'},
+                    {value: 'thermal', text: 'thermal'},
+                    {value: 'top/base', text: 'top/base coat'},
+                    {value: 'uv', text: 'UV color change'}
+                ]
+            });
+        });
+        $(function(){
+            $('.editableindie').editable({
+                source: [
+                    {value: 'off', text: 'no'},
+                    {value: 'on', text: 'yes'}
+                ]
+            });
         });
     });
 </script>

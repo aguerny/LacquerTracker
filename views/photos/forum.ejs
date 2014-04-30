@@ -11,7 +11,7 @@
                             <h3>Add a Photo:</h3><br><br>
                             Upload Image: <input type="file" value="photo" name="photo" id="upimg"><br><br>
                             <b>OR</b><br><br>
-                            Add from URL: <input name="url" id="upimg" class="width50"><br><br><br>
+                            Add from URL: <input name="url" class="width50" id="urlimg"><br><br><br>
                             Do you want this image to appear on your profile page?
                                 <select name="onprofile">
                                     <option value="no">no</option>
@@ -23,7 +23,7 @@
                 </div>
             <div id="photo-right_col">
                 <div id="smalllayout"><br><hr></div>
-                <br><b><i>Preview:</b><br><span class="smallfont">(if uploading)</span></i><br><br>
+                <br><b><i>Preview:</b></i><br><br>
                 <img style="max-width:80%" id="preview" src="#">
             </div>
         </section>
@@ -44,6 +44,10 @@ function readURL(input) {
 
 $("#upimg").change(function(){
     readURL(this);
+});
+
+$('#urlimg').on('change', function() {
+     $('#preview').prop('src', this.value);
 });
 </script>
 
