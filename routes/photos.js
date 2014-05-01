@@ -72,7 +72,13 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                                 fs.unlink(req.files.photo.path, function() {
                                     newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
                                     newPhoto.save(function(err) {
-                                        res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                        fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
+                                            if (exists === false) {
+                                                res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
+                                            } else {
+                                                res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                            }
+                                        })
                                     })
                                 })
                             }
@@ -91,7 +97,13 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                                 fs.unlink(req.files.photo.path, function() {
                                     newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
                                     newPhoto.save(function(err) {
-                                        res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                        fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
+                                            if (exists === false) {
+                                                res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
+                                            } else {
+                                                res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                            }
+                                        })
                                     })
                                 })
                             }
@@ -146,15 +158,27 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                                     } else {
                                         newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
                                         newPhoto.save(function(err) {
-                                            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                            fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
+                                                if (exists === false) {
+                                                    res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
+                                                } else {
+                                                    res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                                }
+                                            })
                                         })
                                     }
                                 })
                             } else {
                                 newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
                                 newPhoto.save(function(err) {
-                                    res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                               })
+                                    fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
+                                        if (exists === false) {
+                                            res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
+                                        } else {
+                                            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                        }
+                                    })
+                                })
                             }
                         })
                     }
