@@ -1,0 +1,22 @@
+<% include layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+        <section>
+            <form action="/import" method="post" enctype='multipart/form-data'>
+                <h3>Import Owned Polish</h3><br><br>
+                * Must be a .CSV file<br><br>
+                * Must contain a header column with all names in lowercase.<br><br>
+                * Required columns are "name" and "brand"<br><br>
+                * Optional columns are "code", "collection", "color", "type", and "indie"<br><br>
+                * For indie column, please use either "yes" or "no" to specify.<br><br>
+                * Any information you do not know, leave the cell blank.<br><br><br><br>
+                File for upload: <input type="file" value="spreadsheet" name="spreadsheet" class="width50"><br><br>
+                <input type="submit" value="Submit" class="button">
+            </form>
+        </section>
+    </div>
+</div>
+
+<% include layoutBottom %>

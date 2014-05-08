@@ -10,6 +10,7 @@
     "connect-flash": "*",
     "ejs": "*",
     "express": "3.4.8",
+    "fast-csv": "*",
     "gm": "*",
     "lodash": "*",
     "markdown-css": "*",
