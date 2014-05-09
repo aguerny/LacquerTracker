@@ -55,6 +55,7 @@
                         <option value="matte" <% if (browsetype === "matte") { %> selected="selected" <% } %>>matte</option>
                         <option value="metallic" <% if (browsetype === "metallic") { %> selected="selected" <% } %>>metallic</option>
                         <option value="neon" <% if (browsetype === "neon") { %> selected="selected" <% } %>>neon</option>
+                        <option value="scented" <% if (browsetype === "scented") { %> selected="selected" <% } %>>scented</option>
                         <option value="sheer" <% if (browsetype === "sheer") { %> selected="selected" <% } %>>sheer</option>
                         <option value="shimmer" <% if (browsetype === "shimmer") { %> selected="selected" <% } %>>shimmer</option>
                         <option value="striper" <% if (browsetype === "striper") { %> selected="selected" <% } %>>striper</option>
@@ -111,8 +112,11 @@
                         <br><br><br>
                         <select name="type" class="width80">
                             <option value="">All Types</option>
+                            <option value="blackened" <% if (browsetype === "blackened") { %> selected="selected" <% } %>>blackened</option>
                             <option value="crackle" <% if (browsetype === "crackle") { %> selected="selected" <% } %>>crackle</option>
+                            <option value="crelly" <% if (browsetype === "crelly") { %> selected="selected" <% } %>>crelly</option>
                             <option value="creme" <% if (browsetype === "creme") { %> selected="selected" <% } %>>creme</option>
+                            <option value="duochrome" <% if (browsetype === "duochrome") { %> selected="selected" <% } %>>duochrome</option>
                             <option value="flakie" <% if (browsetype === "flakie") { %> selected="selected" <% } %>>flakie</option>
                             <option value="glitter" <% if (browsetype === "glitter") { %> selected="selected" <% } %>>glitter</option>
                             <option value="glow" <% if (browsetype === "glow") { %> selected="selected" <% } %>>glow</option>
@@ -122,12 +126,14 @@
                             <option value="matte" <% if (browsetype === "matte") { %> selected="selected" <% } %>>matte</option>
                             <option value="metallic" <% if (browsetype === "metallic") { %> selected="selected" <% } %>>metallic</option>
                             <option value="neon" <% if (browsetype === "neon") { %> selected="selected" <% } %>>neon</option>
+                            <option value="scented" <% if (browsetype === "scented") { %> selected="selected" <% } %>>scented</option>
                             <option value="sheer" <% if (browsetype === "sheer") { %> selected="selected" <% } %>>sheer</option>
                             <option value="shimmer" <% if (browsetype === "shimmer") { %> selected="selected" <% } %>>shimmer</option>
                             <option value="striper" <% if (browsetype === "striper") { %> selected="selected" <% } %>>striper</option>
                             <option value="texture" <% if (browsetype === "texture") { %> selected="selected" <% } %>>texture</option>
                             <option value="thermal" <% if (browsetype === "thermal") { %> selected="selected" <% } %>>thermal</option>
                             <option value="top/base" <% if (browsetype === "top/base") { %> selected="selected" <% } %>>top/base</option>
+                            <option value="uv" <% if (browsetype === "uv") { %> selected="selected" <% } %>>uv</option>
                         </select>
                         <br><br><br>
                         <input type="checkbox" name="indie" <% if (browseindie === "on") { %> checked <% } %>>Indie polishes<br><br><br>
