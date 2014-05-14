@@ -25,7 +25,7 @@ app.get('/profile/:username', function(req, res) {
             res.redirect('/error');
         } else {
             var data = {};
-            data.title = 'Profile - Lacquer Tracker';
+            data.title = user.username + "'s Profile - Lacquer Tracker";
             var osort = _.sortBy(user.ownedpolish, ['brand', 'name']);
             var wsort = _.sortBy(user.wantedpolish, ['brand', 'name']);
             data.opolishes = osort;
@@ -35,6 +35,7 @@ app.get('/profile/:username', function(req, res) {
             data.profilephoto = user.profilephoto;
             data.notifications = user.notifications;
             data.useremail = user.useremail;
+            data.colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
             yesphotos = [];
             for (i=0; i < user.photos.length; i++) {
                 if (user.photos[i].onprofile === "yes") {

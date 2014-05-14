@@ -30,7 +30,7 @@ app.get('/polish/:brand/:name', function(req, res) {
             data.linkbrand = polish.brand.replace("%20"," ");
             data.linkname = polish.name.replace("%20"," ");
 
-            Photo.find({polishid : polish.id}, function(err, photo) {
+            Photo.find({polishid : polish.id, pendingdelete:false}, function(err, photo) {
                 if (photo.length < 1) {
                     data.numphotos = 0;
                 } else {
@@ -38,7 +38,7 @@ app.get('/polish/:brand/:name', function(req, res) {
                         return x;
                     })
                     data.allphotos = _.shuffle(allphotos);
-                    data.numphotos = photo.length;
+                    data.numphotos = allphotos.length;
                 }
 
                 if (req.isAuthenticated()) {
@@ -189,7 +189,6 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                 name: sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
                 brand: sanitizer.sanitize((req.body.brand).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
                 batch: sanitizer.sanitize(req.body.batch),
-                colorcat: req.body.colorcat,
                 indie: req.body.indie,
                 code: sanitizer.sanitize(req.body.code),
                 keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
@@ -202,6 +201,11 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                     newPolish.type = req.body.type;
                 } else {
                     newPolish.type = '';
+                }
+                if (req.body.colorcat !== undefined) {
+                    newPolish.colorcat = req.body.colorcat;
+                } else {
+                    newPolish.colorcat = '';
                 }
                 newPolish.save(function(err) {
                     res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_")})
@@ -290,8 +294,13 @@ app.post('/polishedit/:id/colorcat', isLoggedIn, function(req, res) {
         if (!p) {
             res.redirect('/error');
         } else {
-            p.colorcat = sanitizer.sanitize(req.body.value);
-            p.dateupdated = new Date();
+            if (req.body.value !== undefined) {
+                p.colorcat = sanitizer.sanitize(req.body.value);
+                p.dateupdated = new Date();
+            } else {
+                p.dateupdated = new Date();
+                p.colorcat = '';
+            }
             p.save(function(err) {
                 res.end();
             });
@@ -305,7 +314,7 @@ app.post('/polishedit/:id/type', isLoggedIn, function(req, res) {
             res.redirect('/error');
         } else {
             if (req.body.value !== undefined) {
-                p.type = req.body.value;
+                p.type = sanitizer.sanitize(req.body.value);
                 p.dateupdated = new Date();
             } else {
                 p.dateupdated = new Date();

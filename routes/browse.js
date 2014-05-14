@@ -22,6 +22,8 @@ app.get('/browse', function(req, res) {
 
         data.page = 1;
 
+        data.colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
+
         Polish.find({})
         .sort({dateupdated: -1})
         .limit(10)
@@ -74,6 +76,7 @@ app.post('/browse', function(req, res) {
 
         data.recent = false;
 
+        data.colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
 
         if (typeof req.body.browse !== "undefined") {
             var page = 1;

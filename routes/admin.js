@@ -1,5 +1,9 @@
 var User = require('../app/models/user');
 var moment = require('moment-timezone');
+var Polish = require('../app/models/polish');
+var Photo = require('../app/models/photo');
+var fs = require('node-fs');
+var path = require('path');
 
 module.exports = function(app, passport) {
 
@@ -18,6 +22,54 @@ app.get('/admin/users', isLoggedIn, function(req, res) {
         res.redirect('/error');
     }
 });
+
+
+//photos pending delete
+app.get('/admin/pending', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        Photo.find({pendingdelete:true}).populate('polishid').exec(function(err, photos) {
+            data = {};
+            data.title = 'Photos Pending Delete - Lacquer Tracker';
+            data.pendingphotos = photos;
+            res.render('admin/pending.ejs', data);
+        })
+    } else {
+        res.redirect('/error');
+    }
+});
+
+
+//remove pending photo
+app.get('/admin/pending/:pid/:id/:action', isLoggedIn, function(req, res) {
+    Photo.findById(req.params.id).exec(function(err, photo) {
+        if (photo === null || photo === undefined) {
+            res.redirect('/error');
+        } else {
+            if (req.params.action === "restore") {
+                photo.pendingdelete = false;
+                photo.save(function(err) {
+                    res.redirect('/admin/pending');
+                })
+            } else if (req.params.action === "remove") {
+                fs.unlink('./public' + photo.location, function(err) {
+                    if (err) throw err;
+                })
+                photo.remove();
+                Polish.findById(req.params.pid, function(err, p) {
+                    p.photos.remove(req.params.id);
+                    p.save(function(err) {
+                        res.redirect('/admin/pending');
+                    });
+                })
+            } else {
+                res.redirect('/error');
+            }
+        }
+    });
+});
+
+
+
 
 };
 

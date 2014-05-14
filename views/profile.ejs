@@ -52,7 +52,15 @@ $(window).load(function () {
                     <td><span><%= opolishes[i].batch %></span></td>
                     <td class="colorcat"><p><%= opolishes[i].colorcat %></p>
                         <% if (opolishes[i].colorcat.length > 0) {%>
-                            <img src="/images/colors/<%= opolishes[i].colorcat %>.png"/>
+                            <% if (opolishes[i].colorcat.indexOf(",") == -1) { %>
+                                <img src="/images/colors/<%= opolishes[i].colorcat %>.png"/>
+                            <% } else { %>
+                                <% for (j=0; j<colors.length; j++) { %>
+                                    <% if (opolishes[i].colorcat.indexOf(colors[j]) !== -1) { %>
+                                        <img src="/images/colors/<%= colors[j] %>.png"/>
+                                    <% } %>
+                                <% } %>
+                            <% } %>
                         <%}%>
                     </td>
                     <td class="tableswatch"><% if (opolishes[i].swatch.length > 0) {%>
@@ -88,9 +96,15 @@ $(window).load(function () {
                         <td><span><%= wpolishes[i].batch %></span></td>
                         <td class="colorcat"><p><%= wpolishes[i].colorcat %></p>
                             <% if (wpolishes[i].colorcat.length > 0) {%>
-                                <img src="/images/colors/<%= wpolishes[i].colorcat %>.png"/>
-                            <%} else {%>
-                                &nbsp;
+                                <% if (wpolishes[i].colorcat.indexOf(",") == -1) { %>
+                                    <img src="/images/colors/<%= wpolishes[i].colorcat %>.png"/>
+                                <% } else { %>
+                                    <% for (j=0; j<colors.length; j++) { %>
+                                        <% if (wpolishes[i].colorcat.indexOf(colors[j]) !== -1) { %>
+                                            <img src="/images/colors/<%= colors[j] %>.png"/>
+                                        <% } %>
+                                    <% } %>
+                                <% } %>
                             <%}%>
                         </td>
                         <td class="tableswatch"><% if (wpolishes[i].swatch.length > 0) {%>
@@ -105,12 +119,23 @@ $(window).load(function () {
                     <% } %>
                     </table>
             <% } %>
-
+        </div>
+        <div id="biglayout">
             <% if (photos.length > 0) { %>
                 <br><br><h4><%= username %>'s Photos (<%= photos.length %>):</h4><br>
                 <div class="collage">
                     <% for (i=0; i<photos.length; i++) { %>
                         <img src="<%= photos[i].location %>">
+                    <% } %>
+                </div>
+            <% } %>
+        </div>
+        <div id="smalllayout">
+            <% if (photos.length > 0) { %>
+                <br><br><h4><%= username %>'s Photos (<%= photos.length %>):</h4><br>
+                <div>
+                    <% for (i=0; i<photos.length; i++) { %>
+                        <img style="max-width:100%" src="<%= photos[i].location %>"><br><br>
                     <% } %>
                 </div>
             <% } %>

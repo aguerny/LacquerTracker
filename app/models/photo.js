@@ -4,11 +4,13 @@ var mongoose = require('mongoose');
 
 //define the schema for our user model
 var photoSchema = mongoose.Schema({
-	polishid: String,
+	polishid: {type: mongoose.Schema.Types.ObjectId, ref: 'Polish'},
 	userid: String,
     location: String,
     creditname: String,
     creditlink: String,
+    pendingdelete: Boolean,
+    pendingreason: String,
 });
 
 

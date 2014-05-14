@@ -37,21 +37,15 @@ app.post('/import', isLoggedIn, function(req, res) {
                         if (typeof polish[0].colorcat == "undefined" || polish[0].colorcat.length === 0) {
                             if (data.color) {
                                 if (data.color.length > 0) {
-                                    if (data.color.toLowerCase() === "black") {polish[0].colorcat = "black";}
-                                    if (data.color.toLowerCase() === "blue") {polish[0].colorcat = "blue";}
-                                    if (data.color.toLowerCase() === "brown") {polish[0].colorcat = "brown";}
-                                    if (data.color.toLowerCase() === "clear") {polish[0].colorcat = "clear";}
-                                    if (data.color.toLowerCase() === "gold") {polish[0].colorcat = "gold";}
-                                    if (data.color.toLowerCase() === "green") {polish[0].colorcat = "green";}
-                                    if (data.color.toLowerCase() === "grey") {polish[0].colorcat = "grey";}
-                                    if (data.color.toLowerCase() === "nude") {polish[0].colorcat = "nude";}
-                                    if (data.color.toLowerCase() === "orange") {polish[0].colorcat = "orange";}
-                                    if (data.color.toLowerCase() === "pink") {polish[0].colorcat = "pink";}
-                                    if (data.color.toLowerCase() === "purple") {polish[0].colorcat = "purple";}
-                                    if (data.color.toLowerCase() === "red") {polish[0].colorcat = "red";}
-                                    if (data.color.toLowerCase() === "silver") {polish[0].colorcat = "silver";}
-                                    if (data.color.toLowerCase() === "white") {polish[0].colorcat = "white";}
-                                    if (data.color.toLowerCase() === "yellow") {polish[0].colorcat = "yellow";}
+                                    var input = sanitizer.sanitize(data.color.toLowerCase().split(" "));
+                                    var formatted = [];
+                                    var colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
+                                    for (i=0; i<colors.length; i++) {
+                                        if (input.indexOf(colors[i]) !== -1) {
+                                            formatted.push(colors[i]);
+                                        }
+                                    }
+                                    polish[0].colorcat = formatted.toString();
                                     polish[0].save();
                                 }
                             }
@@ -74,7 +68,7 @@ app.post('/import', isLoggedIn, function(req, res) {
                                 if (data.type.length > 0) {
                                     var input = sanitizer.sanitize(data.type.toLowerCase().split(" "));
                                     var formatted = [];
-                                    var types = ["blackened", "crackle", "crelly", "creme", "duochrome", "flakie", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "neon", "scented", "sheer", "shimmer", "striper", "texture", "thermal", "uv"];
+                                    var types = ["blackened", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "neon", "scented", "sheer", "shimmer", "striper", "texture", "thermal", "uv"];
                                     for (i=0; i<types.length; i++) {
                                         if (input.indexOf(types[i]) !== -1) {
                                             formatted.push(types[i]);
@@ -116,21 +110,15 @@ app.post('/import', isLoggedIn, function(req, res) {
                         }
                         if (data.color) {
                             if (data.color.length > 0) {
-                                if (data.color.toLowerCase() === "black") {newPolish.colorcat = "black";}
-                                if (data.color.toLowerCase() === "blue") {newPolish.colorcat = "blue";}
-                                if (data.color.toLowerCase() === "brown") {newPolish.colorcat = "brown";}
-                                if (data.color.toLowerCase() === "clear") {newPolish.colorcat = "clear";}
-                                if (data.color.toLowerCase() === "gold") {newPolish.colorcat = "gold";}
-                                if (data.color.toLowerCase() === "green") {newPolish.colorcat = "green";}
-                                if (data.color.toLowerCase() === "grey") {newPolish.colorcat = "grey";}
-                                if (data.color.toLowerCase() === "nude") {newPolish.colorcat = "nude";}
-                                if (data.color.toLowerCase() === "orange") {newPolish.colorcat = "orange";}
-                                if (data.color.toLowerCase() === "pink") {newPolish.colorcat = "pink";}
-                                if (data.color.toLowerCase() === "purple") {newPolish.colorcat = "purple";}
-                                if (data.color.toLowerCase() === "red") {newPolish.colorcat = "red";}
-                                if (data.color.toLowerCase() === "silver") {newPolish.colorcat = "silver";}
-                                if (data.color.toLowerCase() === "white") {newPolish.colorcat = "white";}
-                                if (data.color.toLowerCase() === "yellow") {newPolish.colorcat = "yellow";}
+                                var input = sanitizer.sanitize(data.color.toLowerCase().split(" "));
+                                var formatted = [];
+                                var colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
+                                for (i=0; i<colors.length; i++) {
+                                    if (input.indexOf(colors[i]) !== -1) {
+                                        formatted.push(colors[i]);
+                                    }
+                                }
+                                newPolish.colorcat = formatted.toString();
                             }
                         }
                         if (data.indie) {
@@ -148,7 +136,7 @@ app.post('/import', isLoggedIn, function(req, res) {
                             if (data.type.length > 0) {
                                 var input = sanitizer.sanitize(data.type.toLowerCase().split(" "));
                                 var formatted = [];
-                                var types = ["blackened", "crackle", "crelly", "creme", "duochrome", "flakie", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "neon", "scented", "sheer", "shimmer", "striper", "texture", "thermal", "uv"];
+                                var types = ["blackened", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "neon", "scented", "sheer", "shimmer", "striper", "texture", "thermal", "uv"];
                                 for (i=0; i<types.length; i++) {
                                     if (input.indexOf(types[i]) !== -1) {
                                         formatted.push(types[i]);

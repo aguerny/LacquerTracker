@@ -44,6 +44,8 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                 location: '',
                 creditname: sanitizer.sanitize(req.body.creditname),
                 creditlink: sanitizer.sanitize(req.body.creditlink),
+                pendingdelete: false,
+                pendingreason: '',
             })
             newPhoto.save(function(err) {
                 p.dateupdated = new Date();
@@ -122,6 +124,8 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                 location: '',
                 creditname: sanitizer.sanitize(req.body.creditname),
                 creditlink: sanitizer.sanitize(req.body.creditlink),
+                pendingdelete: false,
+                pendingreason: '',
             })
             newPhoto.save(function(err) {
                 var targetPath = path.resolve('./public/images/polish/' + req.params.id + '-' + newPhoto.id + ext);
@@ -191,22 +195,31 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
 });
 
 
-
-//remove polish photo
-app.get('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
+//user flags polish photo
+app.get('/photo/flag/:pid/:id', isLoggedIn, function(req, res) {
     Photo.findById(req.params.id).exec(function(err, photo) {
         if (photo === null || photo === undefined) {
             res.redirect('/error');
         } else {
-            fs.unlink('./public' + photo.location, function(err) {
-                if (err) throw err;
-            })
-            photo.remove();
-            Polish.findById(req.params.pid, function(err, p) {
-                p.photos.remove(req.params.id);
-                p.save(function(err) {
+            data = {};
+            data.title = "Flag Photo - Lacquer Tracker";
+            data.photo = photo;
+            res.render('photos/flag.ejs', data);
+        }
+    });
+});
+
+app.post('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
+    Photo.findById(req.params.id).exec(function(err, photo) {
+        if (photo === null || photo === undefined) {
+            res.redirect('/error');
+        } else {
+            photo.pendingdelete = true;
+            photo.pendingreason = sanitizer.sanitize(req.body.pendingreason);
+            photo.save(function(err) {
+                Polish.findById(req.params.pid, function(err, p) {
                     res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                });
+                })
             })
         }
     });
@@ -215,8 +228,8 @@ app.get('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
 
 app.get('/photo/edit/:pid', isLoggedIn, function(req, res) {
     data = {};
-    data.title = 'Remove Polish Photos - Lacquer Tracker';
-    Photo.find({polishid: req.params.pid}, function(err, photo) {
+    data.title = 'Edit Polish Photos - Lacquer Tracker';
+    Photo.find({polishid: req.params.pid, pendingdelete:false}, function(err, photo) {
         data.allphotos = photo;
         Polish.findById(req.params.pid, function(err, p) {
             data.urlbrand = p.brand.replace(/ /g,"_");
@@ -427,7 +440,7 @@ app.post('/photo/profile', isLoggedIn, function(req, res) {
         var ext = path.extname(req.files.photo.name);
         var tempPath = req.files.photo.path;
         var targetPath = path.resolve('./public/images/profilephotos/' + req.user.username + ext);
-        gm(tempPath).resize(200, 200).write(targetPath, function (err) {
+        gm(tempPath).resize(200).write(targetPath, function (err) {
             if (err) {
                 fs.unlink(tempPath, function(err) {
                     res.redirect('/error');
@@ -450,7 +463,7 @@ app.post('/photo/profile', isLoggedIn, function(req, res) {
             if (err) {
                 res.redirect('/error');
             } else {
-                gm(tempPath).resize(200,200).write(targetPath, function(err) {
+                gm(tempPath).resize(200).write(targetPath, function(err) {
                     if (err) {
                         fs.unlink(tempPath, function(err) {
                             res.redirect('/error');
