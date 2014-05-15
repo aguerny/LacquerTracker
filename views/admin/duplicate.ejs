@@ -1,0 +1,19 @@
+<% include ../layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    	<section>
+    		<div>
+	     		<br><h3>Combine Duplicate Polishes:</h3><br>
+                <form action="/admin/duplicate" method="post">
+                    Polish Name: <input name="polishname" class="width50" required><br><br>
+                    Polish Brand: <input name="polishbrand" class="width50" required><br><br>
+                    <input type="submit" value="Submit" class="button">
+                </form>
+            </div>
+    	</section>
+    </div>
+</div>
+
+<% include ../layoutBottom %>

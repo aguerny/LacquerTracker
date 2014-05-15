@@ -4,6 +4,7 @@ var Polish = require('../app/models/polish');
 var Photo = require('../app/models/photo');
 var fs = require('node-fs');
 var path = require('path');
+var Review = require('../app/models/review');
 
 module.exports = function(app, passport) {
 
@@ -24,10 +25,11 @@ app.get('/admin/users', isLoggedIn, function(req, res) {
 });
 
 
+
 //photos pending delete
 app.get('/admin/pending', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
-        Photo.find({pendingdelete:true}).populate('polishid').exec(function(err, photos) {
+        Photo.find({pendingdelete:true}).exec(function(err, photos) {
             data = {};
             data.title = 'Photos Pending Delete - Lacquer Tracker';
             data.pendingphotos = photos;
@@ -67,6 +69,58 @@ app.get('/admin/pending/:pid/:id/:action', isLoggedIn, function(req, res) {
         }
     });
 });
+
+
+//admin duplicate polishes
+app.get('/admin/duplicate', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        Photo.find({pendingdelete:true}).exec(function(err, photos) {
+            data = {};
+            data.title = 'Photos Pending Delete - Lacquer Tracker';
+            data.pendingphotos = photos;
+            res.render('admin/pending.ejs', data);
+        })
+    } else {
+        res.redirect('/error');
+    }
+});
+
+app.post('/admin/duplicate', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        var allowners = [];
+        var allwanters = [];
+        var allphotos = [];
+        var allreviews = [];
+        Polish.find({name:req.body.polishname, brand:req.body.polishbrand}, function(err, polishes) {
+            for (i=0; i < polishes.length; i++) {
+                User.find({ownedpolish:polishes[i].id}, function(err, users) {
+                    for (j=0; j<users.length; j++) {
+                        allowners.push(users[j]);
+                    }
+                })
+                User.find({wantedpolish:polishes[i].id}, function(err, users) {
+                    for (j=0; j<users.length; j++) {
+                        allwanters.push(users[j]);
+                    }
+                })
+                Photos.find({polishid:polishes[i].id}, function(err, photos) {
+                    for (j=0; j<photos.length; j++) {
+                        allphotos.push(photos[j]);
+                    }
+                })
+                Review.find({polishid:polishes[i].id}, function(err, reviews) {
+                    for (j=0; j<reviews.length; j++) {
+                        allreviews.push(reviews[j]);
+                    }
+                })
+            }
+
+
+        })
+    } else {
+        res.redirect('/error');
+    }
+});  
 
 
 

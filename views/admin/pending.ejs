@@ -11,7 +11,7 @@
                     Credit name: <%=pendingphotos[i].creditname%><br>
                     Credit link: <%=pendingphotos[i].creditlink%><br>
                     Reason: <%=pendingphotos[i].pendingreason%><br>
-                    <a href="/admin/pending/<%= pendingphotos[i].polishid.id %>/<%= pendingphotos[i].id %>/remove">Delete photo</a> | <a href="/admin/pending/<%= pendingphotos[i].polishid.id %>/<%= pendingphotos[i].id %>/restore">Restore Photo</a> | <a href="/polish/<%=pendingphotos[i].polishid.brand.replace(/ /g,"_")%>/<%=pendingphotos[i].polishid.name.replace(/ /g,"_")%>">Polish Link</a>
+                    <a href="/admin/pending/<%= pendingphotos[i].polishid %>/<%= pendingphotos[i].id %>/remove">Delete photo</a> | <a href="/admin/pending/<%= pendingphotos[i].polishid %>/<%= pendingphotos[i].id %>/restore">Restore Photo</a>
                 <% } %>
             </div>
     	</section>

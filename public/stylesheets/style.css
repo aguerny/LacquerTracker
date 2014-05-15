@@ -97,7 +97,7 @@
 
     .polishphotosmall {max-width:300px;}
 
-    .nomargin {margin:0; padding:0;}
+    .nomargin {margin-left:0; margin-right:0; padding-left:0; padding-right:0;}
 
     .replybox {display:none;}
 

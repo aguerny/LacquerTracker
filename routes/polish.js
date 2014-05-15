@@ -180,17 +180,17 @@ app.get('/polishadd', isLoggedIn, function(req, res) {
 });
 
 app.post('/polishadd', isLoggedIn, function(req, res) {
-    Polish.findOne({ name : req.body.name, brand : req.body.brand}, function(err, polish) {
+    Polish.findOne({ name : req.body.name.replace(/^\s+|\s+$/g,''), brand : req.body.brand.replace(/^\s+|\s+$/g,'')}, function(err, polish) {
         //check to see if there's already a polish name and brand in the database
         if (polish) {
             res.render('polish/add.ejs', {title: 'Add a Polish - Lacquer Tracker', message: 'That polish already exists in the database.'});
         } else {
             var newPolish = new Polish ({
-                name: sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
-                brand: sanitizer.sanitize((req.body.brand).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
+                name: sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
+                brand: sanitizer.sanitize((req.body.brand).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
                 batch: sanitizer.sanitize(req.body.batch),
                 indie: req.body.indie,
-                code: sanitizer.sanitize(req.body.code),
+                code: sanitizer.sanitize(req.body.code).replace(/^\s+|\s+$/g,''),
                 keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
                 dateupdated: new Date(),
                 dupes: sanitizer.sanitize(req.body.dupes),
