@@ -214,10 +214,10 @@ app.post('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
         if (photo === null || photo === undefined) {
             res.redirect('/error');
         } else {
-            photo.pendingdelete = true;
-            photo.pendingreason = sanitizer.sanitize(req.body.pendingreason);
-            photo.save(function(err) {
-                Polish.findById(req.params.pid, function(err, p) {
+            Polish.findById(req.params.pid, function(err, p) {
+                photo.pendingdelete = true;
+                photo.pendingreason = sanitizer.sanitize(req.body.pendingreason) + " - " + req.user.username + " - " + p.brand + "-" + p.name;
+                photo.save(function(err) {
                     res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
                 })
             })

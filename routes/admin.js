@@ -78,7 +78,7 @@ app.get('/admin/duplicate', isLoggedIn, function(req, res) {
             data = {};
             data.title = 'Photos Pending Delete - Lacquer Tracker';
             data.pendingphotos = photos;
-            res.render('admin/pending.ejs', data);
+            res.render('admin/duplicate.ejs', data);
         })
     } else {
         res.redirect('/error');
@@ -87,35 +87,97 @@ app.get('/admin/duplicate', isLoggedIn, function(req, res) {
 
 app.post('/admin/duplicate', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
-        var allowners = [];
-        var allwanters = [];
-        var allphotos = [];
-        var allreviews = [];
         Polish.find({name:req.body.polishname, brand:req.body.polishbrand}, function(err, polishes) {
+            console.log(polishes);
             for (i=0; i < polishes.length; i++) {
                 User.find({ownedpolish:polishes[i].id}, function(err, users) {
                     for (j=0; j<users.length; j++) {
-                        allowners.push(users[j]);
+                        users[j].ownedpolish.remove(polishes[i].id);
+                        users[j].ownedpolish.addToSet(polishes[0].id);
+                        users[j].save();
                     }
                 })
                 User.find({wantedpolish:polishes[i].id}, function(err, users) {
                     for (j=0; j<users.length; j++) {
-                        allwanters.push(users[j]);
+                        users[j].wantedpolish.remove(polishes[i].id);
+                        users[j].wantedpolish.addToSet(polishes[0].id);
+                        users[j].save();
                     }
                 })
-                Photos.find({polishid:polishes[i].id}, function(err, photos) {
+                Photo.find({polishid:polishes[i].id}, function(err, photos) {
                     for (j=0; j<photos.length; j++) {
-                        allphotos.push(photos[j]);
+                        photos[j].polishid = polishes[0].id;
+                        photos[j].save();
+                        polishes[0].photos.addToSet(photos[j].id);
+                        polishes[0].save();
                     }
                 })
                 Review.find({polishid:polishes[i].id}, function(err, reviews) {
                     for (j=0; j<reviews.length; j++) {
-                        allreviews.push(reviews[j]);
+                        reviews[j].polishid = polishes[0].id;
+                        reviews[j].save();
                     }
                 })
             }
-
-
+            if (!polishes[0].batch.length) {
+                for (i=1; i<polishes.length; i++) {
+                    if (polishes[i].batch.length) {
+                        polishes[0].batch = polishes[i].batch;
+                        polishes[0].keywords = polishes[0].name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + polishes[0].brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + polishes[0].batch + " " + polishes[0].code;
+                        polishes[0].save();
+                    }
+                }
+            }
+            if (!polishes[0].code.length) {
+                for (i=1; i<polishes.length; i++) {
+                    if (polishes[i].code.length) {
+                        polishes[0].code = polishes[i].code;
+                        polishes[0].keywords = polishes[0].name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + polishes[0].brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + polishes[0].batch + " " + polishes[0].code;
+                        polishes[0].save();
+                    }
+                }
+            }
+            if (!polishes[0].colorcat.length) {
+                for (i=1; i<polishes.length; i++) {
+                    if (polishes[i].colorcat.length) {
+                        polishes[0].colorcat = polishes[i].colorcat;
+                        polishes[0].save();
+                    }
+                }
+            }
+            if (!polishes[0].type.length) {
+                for (i=1; i<polishes.length; i++) {
+                    if (polishes[i].type.length) {
+                        polishes[0].type = polishes[i].type;
+                        polishes[0].save();
+                    }
+                }
+            }
+            if (!polishes[0].indie.length) {
+                for (i=1; i<polishes.length; i++) {
+                    if (polishes[i].indie.length) {
+                        polishes[0].indie = polishes[i].indie;
+                        polishes[0].save();
+                    }
+                }
+            }
+            if (!polishes[0].dupes.length) {
+                for (i=1; i<polishes.length; i++) {
+                    if (polishes[i].dupes.length) {
+                        polishes[0].dupes = polishes[i].dupes;
+                        polishes[0].save();
+                    }
+                }
+            }
+            if (!polishes[0].swatch.length) {
+                for (i=1; i<polishes.length; i++) {
+                    if (polishes[i].swatch.length) {
+                        polishes[0].swatch = polishes[i].swatch;
+                        polishes[0].save();
+                    }
+                }
+            }
+            res.redirect('/browse');
         })
     } else {
         res.redirect('/error');
