@@ -85,6 +85,85 @@ app.get('/polish/:brand/:name', function(req, res) {
 });
 
 
+app.get('/polishid/:id', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        Polish.findById(req.params.id, function(err, polish) {
+            if (polish === null) {
+                res.redirect('/error');
+            } else {
+                data = {};
+                data.title = polish.name + ' - ' + polish.brand + ' - Lacquer Tracker'
+                data.pname = polish.name;
+                data.pbrand = polish.brand;
+                data.pbatch = polish.batch;
+                data.pcolorcat = polish.colorcat;
+                data.pswatch = polish.swatch;
+                data.ptype = polish.type;
+                data.pcode = polish.code;
+                data.pid = polish.id;
+                data.pindie = polish.indie;
+                data.pdupes = markdown(polish.dupes);
+                data.linkbrand = polish.brand.replace("%20"," ");
+                data.linkname = polish.name.replace("%20"," ");
+
+                Photo.find({polishid : polish.id, pendingdelete:false}, function(err, photo) {
+                    if (photo.length < 1) {
+                        data.numphotos = 0;
+                    } else {
+                        var allphotos = photo.map(function(x) {
+                            return x;
+                        })
+                        data.allphotos = _.shuffle(allphotos);
+                        data.numphotos = allphotos.length;
+                    }
+
+                    if (req.isAuthenticated()) {
+
+                        if (req.user.ownedpolish.indexOf(polish.id) > -1) {
+                            data.status = "owned";
+                        } else if (req.user.wantedpolish.indexOf(polish.id) > -1) {
+                            data.status = "wanted";
+                        } else {
+                            data.status = "none";
+                        }
+
+
+                        Review.findOne({user:req.user.id, polishid:polish.id}).populate('user').exec(function (err, review) {
+                            if (review) {
+                            data.rating = review.rating;
+                            data.userreview = review.userreview;
+                            data.notes = review.notes;
+                            } else {
+                            data.rating = "";
+                            data.userreview = "";
+                            data.notes = "";
+                            }
+
+                        Review.find({polishid:polish.id}).populate('user').exec(function(err, r) {
+                            data.allreviews = r;
+                            res.render('polish/polish.ejs', data);
+                        })
+
+                        })
+                    } else {
+                        data.rating = "";
+                        data.userreview = "";
+                        data.notes = "";
+                        data.status = "none";
+                        Review.find({polishid:polish.id}).populate('user').exec(function(err, r) {
+                            data.allreviews = r;
+                            res.render('polish/polish.ejs', data);
+                        })
+                    }
+                })
+            }
+        })
+    } else {
+        res.redirect('/error');
+    }
+});
+
+
 //add own polish
 app.get('/addown/:id', isLoggedIn, function(req, res) {
     req.user.wantedpolish.remove(req.params.id);
@@ -154,12 +233,28 @@ app.get('/removewant/:id', isLoggedIn, function(req, res) {
     })
 });
 
-//delete polish
+//delete polish by view page
 app.get('/polish/:brand/:name/delete', isLoggedIn, function(req, res) {
     if (req.user.level !== "admin") {
         res.redirect('/error')
     } else if (req.user.level === "admin") {
         Polish.findOne({brand: req.params.brand.replace(/_/g," "), name:req.params.name.replace(/_/g," ")}, function(err, polish) {
+            if (polish === null) {
+                res.redirect('/error');
+            } else {
+                polish.remove();
+                res.redirect('/browse');
+            }
+        })
+    }
+});
+
+//delete polish by ID
+app.get('/polishid/:id/delete', isLoggedIn, function(req, res) {
+    if (req.user.level !== "admin") {
+        res.redirect('/error')
+    } else if (req.user.level === "admin") {
+        Polish.findById(req.params.id, function(err, polish) {
             if (polish === null) {
                 res.redirect('/error');
             } else {
@@ -187,11 +282,11 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
         } else {
             var newPolish = new Polish ({
                 name: sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
-                brand: sanitizer.sanitize((req.body.brand).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
+                brand: sanitizer.sanitize((req.body.brand).replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
                 batch: sanitizer.sanitize(req.body.batch),
                 indie: req.body.indie,
                 code: sanitizer.sanitize(req.body.code).replace(/^\s+|\s+$/g,''),
-                keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
+                keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
                 dateupdated: new Date(),
                 dupes: sanitizer.sanitize(req.body.dupes),
                 swatch: '',
@@ -242,7 +337,7 @@ app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
             res.redirect('/error');
         } else {
             p.name = sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
-            p.brand = sanitizer.sanitize((req.body.brand).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
+            p.brand = sanitizer.sanitize((req.body.brand).replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
             p.dupes = sanitizer.sanitize(req.body.dupes);
             p.dateupdated = new Date();
             p.save(function(err) {

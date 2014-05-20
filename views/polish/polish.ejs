@@ -6,6 +6,7 @@
         <section>
             <div>
                 <h2><%= pbrand %> - <%= pname %></h2><br><br>
+                <% if (isAuthenticated()) {%><% if (user.level === "admin") { %><%=pid%><br><br><%}%><%}%>
             </div>
             <div id="biglayout">
                 <div id="polish-wrap">

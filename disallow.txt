@@ -35,5 +35,6 @@ res.send("User-agent: *
 	\nDisallow: /logout
 	\nDisallow: /scripts
 	\nDisallow: /stylesheets
-	\nDisallow: /polishsuccessful"
+	\nDisallow: /polishsuccessful
+	\nDisallow: /polishid"
 );

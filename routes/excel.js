@@ -98,7 +98,7 @@ app.post('/import', isLoggedIn, function(req, res) {
                     } else {
                         var newPolish = new Polish ({
                             name: sanitizer.sanitize((data.name).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
-                            brand: sanitizer.sanitize((data.brand).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
+                            brand: sanitizer.sanitize((data.brand).replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
                             batch: '',
                             colorcat: '',
                             indie: '',
