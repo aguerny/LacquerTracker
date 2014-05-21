@@ -271,7 +271,12 @@ app.get('/polishid/:id/delete', isLoggedIn, function(req, res) {
 
 //add polish
 app.get('/polishadd', isLoggedIn, function(req, res) {
-    res.render('polish/add.ejs', {title: 'Add a Polish - Lacquer Tracker'});
+    Polish.find().distinct('brand', function(error, brands) {
+        var allbrands = _.sortBy(brands, function(b) {return b.toLowerCase();});
+        data.title = 'Add a Polish - Lacquer Tracker';
+        data.brands = allbrands;
+        res.render('polish/add.ejs', data);
+    })
 });
 
 app.post('/polishadd', isLoggedIn, function(req, res) {

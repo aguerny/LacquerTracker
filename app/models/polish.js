@@ -16,6 +16,8 @@ var polishSchema = mongoose.Schema({
     dupes: String,
     photos: [{type: mongoose.Schema.Types.ObjectId, ref: 'Photo'}],
     swatch: String,
+    flagged: Boolean,
+    flaggedreason: String,
 });
 
 

@@ -6,6 +6,7 @@ var fs = require('node-fs');
 var path = require('path');
 var Review = require('../app/models/review');
 var mongoose = require('mongoose');
+var sanitizer = require('sanitizer');
 
 module.exports = function(app, passport) {
 
@@ -199,6 +200,68 @@ app.post('/admin/duplicate/remove', isLoggedIn, function(req, res) {
     }
 });
 
+
+
+//admin get flagged polishes
+app.get('/admin/flagged', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        Polish.find({flagged:true}).exec(function(err, polish) {
+            data = {};
+            data.title = 'Flagged Polish - Lacquer Tracker';
+            data.pendingpolish = polish;
+            res.render('admin/flaggedpolish.ejs', data);
+        })
+    } else {
+        res.redirect('/error');
+    }
+});
+
+
+//user flags polish
+app.get('/polishid/:id/flag', isLoggedIn, function(req, res) {
+    Polish.findById(req.params.id, function(err, polish) {
+        if (polish === null || polish === undefined) {
+            res.redirect('/error');
+        } else {
+            data = {};
+            data.title = 'Flag Polish - Lacquer Tracker';
+            data.polish = polish;
+            res.render('polish/flag.ejs', data);
+        }
+    })
+});
+
+
+app.post('/polishid/:id/flag', isLoggedIn, function(req, res) {
+    Polish.findById(req.params.id, function(err, polish) {
+        if (polish === null || polish === undefined) {
+            res.redirect('/error');
+        } else {
+            polish.flagged = true;
+            polish.flaggedreason = sanitizer.sanitize(req.body.flaggedreason) + " - " + req.user.username;
+            polish.save();
+            res.redirect('/browse');
+        }
+    })
+});
+
+//unflag
+app.get('/polishid/:id/flag', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        Polish.findById(req.params.id, function(err, polish) {
+            if (polish === null || polish === undefined) {
+                res.redirect('/error');
+            } else {
+                polish.flagged = false;
+                polish.flaggedreason = '';
+                polish.save();
+                res.redirect('/admin/flagged');
+            }
+        })
+    } else {
+        res.redirect('/error');
+    }
+});
 
 
 

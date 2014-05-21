@@ -10,7 +10,6 @@
     "connect-flash": "*",
     "ejs": "*",
     "express": "3.4.8",
-    "fast-csv": "*",
     "gm": "*",
     "lodash": "*",
     "markdown-css": "*",
@@ -28,6 +27,7 @@
     "request": "*",
     "sanitizer": "*",
     "simple-recaptcha": "*",
-    "stream-counter": "*"
+    "stream-counter": "*",
+    "ya-csv": "*"
   }
 }

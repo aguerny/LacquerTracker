@@ -1,0 +1,18 @@
+<% include ../layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    	<section>
+    		<div>
+                <form action="/polishid/<%=polish.id%>/flag" method="post">
+	     		    <br><h3>Flag <%=polish.brand%> - <%=polish.name%>:</h3><br>
+                    Reason: <input name="flaggedreason" class="width50" required><br><br>
+                    <input type="submit" value="Submit" class="button">
+                </form>
+            </div>
+    	</section>
+    </div>
+</div>
+
+<% include ../layoutBottom %>
