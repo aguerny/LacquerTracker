@@ -240,6 +240,20 @@ app.post('/polishid/:id/flag', isLoggedIn, function(req, res) {
             polish.flagged = true;
             polish.flaggedreason = sanitizer.sanitize(req.body.flaggedreason) + " - " + req.user.username;
             polish.save();
+            var transport = nodemailer.createTransport('sendmail', {
+                path: "/usr/sbin/sendmail",
+            });
+
+            var mailOptions = {
+                from: "polishrobot@lacquertracker.com",
+                to: 'lacquertrackermailer@gmail.com',
+                subject: 'Flagged Polish',
+                text: req.user.username + " has flagged a polish: " + polish.brand + " - " + polish.name + "\n\n\nwww.lacquertracker.com/admin/flagged",
+            }
+
+            transport.sendMail(mailOptions, function(error, response) {
+                transport.close();
+            });
             res.redirect('/browse');
         }
     })

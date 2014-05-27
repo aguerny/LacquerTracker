@@ -143,6 +143,7 @@
     h4{font-size:14px;}
     h5{font-size:16px;}
 
+    img{max-width:600px;}
 
     /*---Header---*/
 
@@ -303,6 +304,8 @@
     h3{font-size:16px;}
     h4{font-size:14px;}
     h5{font-size:12px;}
+
+    img{max-width:100%;}
 
 
     /*---Header---*/

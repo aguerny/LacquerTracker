@@ -218,6 +218,20 @@ app.post('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
                 photo.pendingdelete = true;
                 photo.pendingreason = sanitizer.sanitize(req.body.pendingreason) + " - " + req.user.username + " - " + p.brand + "-" + p.name;
                 photo.save(function(err) {
+                    var transport = nodemailer.createTransport('sendmail', {
+                        path: "/usr/sbin/sendmail",
+                    });
+
+                    var mailOptions = {
+                        from: "polishrobot@lacquertracker.com",
+                        to: 'lacquertrackermailer@gmail.com',
+                        subject: 'Flagged Photo',
+                        text: req.user.username + " has flagged a photo.\n\n\nwww.lacquertracker.com/admin/pending",
+                    }
+
+                    transport.sendMail(mailOptions, function(error, response) {
+                        transport.close();
+                    });
                     res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
                 })
             })

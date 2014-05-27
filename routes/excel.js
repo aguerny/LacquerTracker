@@ -10,7 +10,6 @@ module.exports = function(app, passport) {
 
 //Import owned polish from CSV
 app.get('/import', isLoggedIn, function(req, res) {
-
     data = {};
     data.title = 'Import Owned Polish - Lacquer Tracker';
     res.render('import.ejs', data);
@@ -64,7 +63,7 @@ app.post('/import', isLoggedIn, function(req, res) {
                             if (data.type.length > 0) {
                                 var input = sanitizer.sanitize(data.type.toLowerCase().split(" "));
                                 var formatted = [];
-                                var types = ["blackened", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "neon", "pen", "scented", "sheer", "shimmer", "striper", "texture", "thermal", "uv"];
+                                var types = ["blackened", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "frost", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "neon", "pen", "scented", "sheer", "shimmer", "striper", "texture", "thermal", "uv"];
                                 for (i=0; i<types.length; i++) {
                                     if (input.indexOf(types[i]) !== -1) {
                                         formatted.push(types[i]);
@@ -141,7 +140,7 @@ app.post('/import', isLoggedIn, function(req, res) {
                             if (data.type.length > 0) {
                                 var input = sanitizer.sanitize(data.type.toLowerCase().split(" "));
                                 var formatted = [];
-                                var types = ["blackened", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "neon", "pen", "scented", "sheer", "shimmer", "striper", "texture", "thermal", "uv"];
+                                var types = ["blackened", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "frost", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "neon", "pen", "scented", "sheer", "shimmer", "striper", "texture", "thermal", "uv"];
                                 for (i=0; i<types.length; i++) {
                                     if (input.indexOf(types[i]) !== -1) {
                                         formatted.push(types[i]);

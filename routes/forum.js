@@ -14,9 +14,30 @@ var http = require('http');
 
 module.exports = function(app, passport) {
 
-
-//forums directory
+//all forums together
 app.get('/forums', function(req, res) {
+    ForumPost.find({}).sort({dateupdatedsort: -1}).populate('comments').populate('user').exec(function(err, posts) {
+        data = {};
+        data.title = 'Forums - Lacquer Tracker';
+        User.populate(posts, {path:'comments.user'}, function(err) {
+            var allposts = posts.map(function(x) {
+                if (req.isAuthenticated() && req.user.timezone.length > 0) {
+                    x.dateupdated = moment(x.dateupdated).tz(req.user.timezone).calendar();
+                } else {
+                    x.dateupdated = moment(x.dateupdated).tz("America/New_York").calendar();
+                }
+                return x;
+            })
+            data.forumposts = allposts;
+            res.render('forums/allforums.ejs', data);
+        })
+    })
+});
+
+
+//OLD
+//forums directory
+/*app.get('/forums', function(req, res) {
     ForumPost.find({}).sort({dateupdatedsort: -1}).exec(function(err, posts) {
         data = {};
         data.title = 'Forums - Lacquer Tracker';
@@ -43,7 +64,7 @@ app.get('/forums', function(req, res) {
         data.latest = latestdates;
         res.render('forums/forums.ejs', data);
     })
-});
+});*/
 
 
 
