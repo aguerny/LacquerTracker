@@ -7,6 +7,7 @@ var path = require('path');
 var Review = require('../app/models/review');
 var mongoose = require('mongoose');
 var sanitizer = require('sanitizer');
+var nodemailer = require('nodemailer');
 
 module.exports = function(app, passport) {
 
@@ -260,7 +261,7 @@ app.post('/polishid/:id/flag', isLoggedIn, function(req, res) {
 });
 
 //unflag
-app.get('/polishid/:id/flag', isLoggedIn, function(req, res) {
+app.get('/polishid/:id/unflag', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
         Polish.findById(req.params.id, function(err, polish) {
             if (polish === null || polish === undefined) {

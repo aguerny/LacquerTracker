@@ -7,6 +7,7 @@ var path = require('path');
 var sanitizer = require('sanitizer');
 var gm = require('gm').subClass({ imageMagick: true });
 var http = require('http');
+var nodemailer = require('nodemailer');
 var request = require('request');
 var download = function(uri, filename, callback){
     request.head(uri, function(err, res, body){
