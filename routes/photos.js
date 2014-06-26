@@ -342,7 +342,7 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
                                         fs.unlink(req.files.photo.path, function() {
                                             newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
                                             newUserPhoto.save(function(err) {
-                                                res.render('photos/forum.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext});
+                                                res.render('photos/forumsuccess.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext, srcurl: newUserPhoto.location});
                                             })
                                         })
                                     }
@@ -417,7 +417,7 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
                                         } else {
                                             newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
                                             newUserPhoto.save(function(err) {
-                                                res.render('photos/forum.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext});
+                                                res.render('photos/forumsuccess.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext, srcurl: newUserPhoto.location});
                                             })
                                         }
                                     })
