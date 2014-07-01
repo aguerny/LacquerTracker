@@ -14,7 +14,7 @@ var http = require('http');
 
 module.exports = function(app, passport) {
 
-//all forums together
+/*//all forums together
 app.get('/forums', function(req, res) {
     ForumPost.find({}).sort({dateupdatedsort: -1}).populate('comments').populate('user').exec(function(err, posts) {
         data = {};
@@ -32,12 +32,12 @@ app.get('/forums', function(req, res) {
             res.render('forums/allforums.ejs', data);
         })
     })
-});
+});*/
 
 
-//OLD
+
 //forums directory
-/*app.get('/forums', function(req, res) {
+app.get('/forums', function(req, res) {
     ForumPost.find({}).sort({dateupdatedsort: -1}).exec(function(err, posts) {
         data = {};
         data.title = 'Forums - Lacquer Tracker';
@@ -64,7 +64,7 @@ app.get('/forums', function(req, res) {
         data.latest = latestdates;
         res.render('forums/forums.ejs', data);
     })
-});*/
+});
 
 
 
