@@ -2,6 +2,7 @@ var User = require('../app/models/user');
 var moment = require('moment-timezone');
 var Polish = require('../app/models/polish');
 var Photo = require('../app/models/photo');
+var Brand = require('../app/models/brand');
 var fs = require('node-fs');
 var path = require('path');
 var Review = require('../app/models/review');
@@ -277,6 +278,7 @@ app.get('/polishid/:id/unflag', isLoggedIn, function(req, res) {
         res.redirect('/error');
     }
 });
+
 
 
 

@@ -1,4 +1,5 @@
 var Polish = require('../app/models/polish');
+var Brand = require('../app/models/brand');
 var User = require('../app/models/user');
 var Review = require('../app/models/review');
 var Photo = require('../app/models/photo');
@@ -308,7 +309,21 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                     newPolish.colorcat = '';
                 }
                 newPolish.save(function(err) {
-                    res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_")})
+                    Brand.findOne({name: req.body.brand.replace(/^\s+|\s+$/g,'')}, function(err, brand) {
+                        //check if brand is already in brand database
+                        if (brand) {
+                            res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_")});
+                        } else {
+                            var newBrand = new Brand ({
+                                name: req.body.brand.replace(/^\s+|\s+$/g,''),
+                                website: '',
+                                bio: ''
+                            })
+                            newBrand.save(function(err) {
+                                res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_")});
+                            })
+                        }
+                    })
                 })
             });
         }

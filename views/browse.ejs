@@ -174,7 +174,7 @@
                     <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="color"><span>Color</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><% if (isAuthenticated()) {%><th class="info"><span>Info</span></th><%}%></tr>
                     <% for(var i=0; i<polishes.length; i++) {%>
                         <tr><td><a id='tablelink' href='/polish/<%= polishes[i].brand.replace(/ /g,"_") %>/<%= polishes[i].name.replace(/ /g,"_") %>'><span><%= polishes[i].name %></span></a></td>
-                        <td><span><%= polishes[i].brand %></span></td>
+                        <td><a id='tablelink' href='/brand/<%= polishes[i].brand.replace(/ /g,"_") %>'><span><%= polishes[i].brand %></span></a></td>
                         <td><span><%= polishes[i].batch %></span></td>
                         <td class="colorcat nomargin"><p><%= polishes[i].colorcat %></p>
                             <% if (polishes[i].colorcat.length > 0) {%>

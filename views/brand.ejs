@@ -1,0 +1,112 @@
+<% include layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+        <section>
+            <div>
+                <h2 style="display:inline-block"><%= bname %></h2>
+                    <% if (bwebsite.length > 0) {%>
+                        - <a href="<%= bwebsite %>">Official Website</a>
+                    <% } %>
+                    <br><br><br>
+            </div>
+            <% if (bbio.length > 0) {%>
+                <%= bbio %><br><br><br><br>
+            <% } else { %>
+                Please <a href="/contact">contact us</a> to have more information added about your brand.<br><br><br><br>
+            <% } %>
+            <% if (polishes.length > 0) { %>
+                <table id="polishbrowse" class="sortable browsetable" style="width:100%">
+                    <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="color"><span>Color</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><% if (isAuthenticated()) {%><th class="info"><span>Info</span></th><%}%></tr>
+                    <% for(var i=0; i<polishes.length; i++) {%>
+                        <tr><td><a id='tablelink' href='/polish/<%= polishes[i].brand.replace(/ /g,"_") %>/<%= polishes[i].name.replace(/ /g,"_") %>'><span><%= polishes[i].name %></span></a></td>
+                        <td><span><%= polishes[i].brand %></span></td>
+                        <td><span><%= polishes[i].batch %></span></td>
+                        <td class="colorcat nomargin"><p><%= polishes[i].colorcat %></p>
+                            <% if (polishes[i].colorcat.length > 0) {%>
+                                <% if (polishes[i].colorcat.indexOf(",") == -1) { %>
+                                    <img src="/images/colors/<%= polishes[i].colorcat %>.png"/>
+                                <% } else { %>
+                                    <% for (j=0; j<colors.length; j++) { %>
+                                        <% if (polishes[i].colorcat.indexOf(colors[j]) !== -1) { %>
+                                            <img src="/images/colors/<%= colors[j] %>.png"/>
+                                        <% } %>
+                                    <% } %>
+                                <% } %>
+                            <%}%>
+                        </td>
+                        <td class="tableswatch"><% if (polishes[i].swatch.length > 0) {%>
+                                <img src="<%=polishes[i].swatch%>"/>
+                            <%} else {%>
+                                &nbsp;
+                            <%}%>
+                        </td>
+                        <td>
+                            <span><%= polishes[i].type.replace(/,/g,", ") %></span>
+                        </td>
+                        <% if (isAuthenticated()) { %><td class="nomargin">
+                                <% if (status[i] === "owned") { %>
+                                    <center><span>&#10004;</span></center>
+                                <% } else if (status[i] === "wanted") { %>
+                                    <center><span>&#10084;</span></center>
+                                <% } else {%>
+                                    <div class="replace">
+                                        <center><div class="hoverholder">+</div>
+                                        <div class="hovermenu"><a title="Add ownership" class="addown" pid="<%= polishes[i].id %>" href="#">&#10004;</a>|<a title="Add to wishlist" class="addwant" pid="<%= polishes[i].id %>" href="#">&#10084;</a></div></center>
+                                    </div>
+                                <% } %>
+                        </td><% } %>
+                        </tr>
+                    <% } %>
+                </table>
+            <% } %>
+            <br><br>Can't find the polish you're looking for? <a href="/polishadd">Add it to the database.</a>
+        </section>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+
+    $(function() {
+        $('span').each(function() {
+            var fontSize = 100;
+            while (this.scrollWidth > $(this).width() && fontSize > 0) {
+                // adjust the font-size 5% at a time
+                fontSize -= 5;
+                $(this).css('font-size', fontSize + '%');
+            }
+        });
+    });
+
+    $('.addown').on('tap', function(e){
+        $.ajax({
+            type: 'POST',
+            url: '/addownbrowse/' + $(this).attr('pid'),
+            dataType: 'json',
+            success: function() {
+                $(this).parent().parent().replaceWith('<div><center><span>&#10004;</span></center></div>');
+            }
+        })
+        $(this).parent().parent().replaceWith('<div><center><span>&#10004;</span></center></div>');
+        e.preventDefault();
+    });
+
+    $('.addwant').on('tap', function(e){
+        $.ajax({
+            type: 'POST',
+            url: '/addwantbrowse/' + $(this).attr('pid'),
+            dataType: 'json',
+            success: function() {
+                $(this).parent().parent().replaceWith('<div><center><span>&#10084;</span></center></div>');
+            }
+        })
+        $(this).parent().parent().replaceWith('<div><center><span>&#10084;</span></center></div>');
+        e.preventDefault();
+    });
+
+});
+</script>
+
+<% include layoutBottom %>

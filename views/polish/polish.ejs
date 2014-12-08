@@ -6,17 +6,17 @@
         <section>
             <div>
                 <h2><%= pbrand %> - <%= pname %></h2><br><br>
-                <% if (isAuthenticated()) {%><% if (user.level === "admin") { %><%=pid%><br><br><%}%><%}%>
+                <!--<% if (isAuthenticated()) {%><% if (user.level === "admin") { %><%=pid%><br><br><%}%><%}%>-->
             </div>
             <div id="biglayout">
                 <div id="polish-wrap">
                     <div id="polish-left_col">
                         <% if (status === "owned") { %>
-                            Owned (<a href="/removeown/<%= pid %>">remove</a>)
+                            Owned (<a href="/removeown/<%= pid %>">remove</a>) | <a href="/polishid/<%=pid%>/flag">Flag polish</a>
                         <% } else if (status === "wanted") {%>
-                            Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a>
+                            Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/polishid/<%=pid%>/flag">Flag polish</a>
                         <% } else { %>
-                            <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a>
+                            <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a> | <a href="/polishid/<%=pid%>/flag">Flag polish</a>
                         <% } %>
                         <br><br><br>
                         <% if (pswatch.length > 0) {%>
@@ -28,7 +28,7 @@
                             <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch"><% if (pbatch.length > 0) {%><%= pbatch %><%}else{%>?<%}%></a><br><br>
                             <b>Color:</b> <a href="#" id="colorcat" data-pk="1" class="editablecolorcat" data-type="checklist" data-url="/polishedit/<%= pid %>/colorcat" data-value="<%= pcolorcat %>" data-defaultValue="?" data-separator=","><% if (pcolorcat.length > 0) {%><%= pcolorcat.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
                             <b>Type:</b> <a href="#" id="type" data-pk="1" class="editabletype" data-type="checklist" data-url="/polishedit/<%= pid %>/type" data-value="<%= ptype %>" data-defaultValue="?" data-separator=","><% if (ptype.length > 0) {%><%= ptype.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
-                            <b>Indie:</b> <a href="#" id="indie" class="editableindie" data-pk="1" data-type="select" data-url="/polishedit/<%= pid %>/indie" data-value="<%= pindie %>"><%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%></a><br><br><br><span class="smallfont"><i>(Click value to edit polish information.)</i><br><a href="/polishid/<%=pid%>/flag">Flag polish</a></span>
+                            <b>Indie:</b> <a href="#" id="indie" class="editableindie" data-pk="1" data-type="select" data-url="/polishedit/<%= pid %>/indie" data-value="<%= pindie %>"><%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%></a><br><br><span class="smallfont"><i>(Click value to edit polish information.)</i></span>
                         <% } else { %>
                             <b>Code:</b> <%= pcode %><br><br>
                             <b>Collection:</b> <%= pbatch %><br><br>
@@ -53,7 +53,7 @@
                         <div class="slideshow">
                             <div class="slideButtons">
                                 <span>(<%= numphotos %>)</span>&nbsp;&nbsp;
-                                <span><a href="/photo/add/<%= pid %>">Add</a></span>
+                                <span><a href="/photo/add/<%= pid %>">Add Photo</a></span>
                                 <% if (numphotos > 0) { %>
                                     &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/photo/edit/<%= pid %>">Edit</a></span>
                                 <% } %>
@@ -85,16 +85,19 @@
             </div>
             <div id="smalllayout">
                 <% if (status === "owned") { %>
-                    Owned (<a href="/removeown/<%= pid %>">remove</a>)<br><br><br>
+                    Owned (<a href="/removeown/<%= pid %>">remove</a>)
+                    <br><br><a href="/polishid/<%=pid%>/flag">Flag polish</a><br><br><br>
                 <% } else if (status === "wanted") {%>
-                    Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a><br><br><br>
+                    Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a>
+                    <br><br><a href="/polishid/<%=pid%>/flag">Flag polish</a><br><br><br>
                 <% } else { %>
-                    <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a><br><br><br>
+                    <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a>
+                    <br><br><a href="/polishid/<%=pid%>/flag">Flag polish</a><br><br><br>
                 <% } %>
                 <div class="slideshow">
                     <div class="slideButtons">
                         <span>(<%= numphotos %>)</span>&nbsp;&nbsp;
-                        <span><a href="/photo/add/<%= pid %>">Add</a></span>
+                        <span><a href="/photo/add/<%= pid %>">Add Photo</a></span>
                         <% if (numphotos > 0) { %>
                             &nbsp;&nbsp;|&nbsp;&nbsp;<span><a href="/photo/edit/<%= pid %>">Edit</a></span>
                         <% } %>
@@ -131,7 +134,7 @@
                     <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch"><% if (pbatch.length > 0) {%><%= pbatch %><%}else{%>?<%}%></a><br><br>
                     <b>Color:</b> <a href="#" id="colorcat" data-pk="1" class="editablecolorcat" data-type="checklist" data-url="/polishedit/<%= pid %>/colorcat" data-value="<%= pcolorcat %>" data-defaultValue="?" data-separator=","><% if (pcolorcat.length > 0) {%><%= pcolorcat.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
                     <b>Type:</b> <a href="#" id="type" data-pk="1" class="editabletype" data-type="checklist" data-url="/polishedit/<%= pid %>/type" data-value="<%= ptype %>" data-defaultValue="?" data-separator=","><% if (ptype.length > 0) {%><%= ptype.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
-                    <b>Indie:</b> <a href="#" id="indie" data-pk="1" class="editableindie" data-type="select" data-url="/polishedit/<%= pid %>/indie" data-value="<%= pindie %>"><%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%></a><br><br><br><span class="smallfont"><i>(Click value to edit polish information.)</i><br><a href="/polishid/<%=pid%>/flag">Flag polish</a></span>
+                    <b>Indie:</b> <a href="#" id="indie" data-pk="1" class="editableindie" data-type="select" data-url="/polishedit/<%= pid %>/indie" data-value="<%= pindie %>"><%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%></a><br><br><span class="smallfont"><i>(Click value to edit polish information.)</i></span>
                 <% } else { %>
                     <b>Code:</b> <%= pcode %><br><br>
                     <b>Collection:</b> <%= pbatch %><br><br>
