@@ -15,12 +15,12 @@
                         - <a href="<%= bwebsite %>">Official Website</a>
                     <% } %>
                     <br><br><br>
+                <% if (bbio.length > 0) {%>
+                    <p style="white-space: pre;"><%- bbio %></p><br><br><br><br>
+                <% } else { %>
+                    Please <a href="/contact">contact us</a> to have more information added about your brand.<br><br><br><br>
+                <% } %>
             </div>
-            <% if (bbio.length > 0) {%>
-                <p style="white-space: pre;"><%- bbio %></p><br><br><br><br>
-            <% } else { %>
-                Please <a href="/contact">contact us</a> to have more information added about your brand.<br><br><br><br>
-            <% } %>
             <% if (polishes.length > 0) { %>
                 <table id="polishbrowse" class="sortable browsetable" style="width:100%">
                     <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="color"><span>Color</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><% if (isAuthenticated()) {%><th class="info"><span>Info</span></th><%}%></tr>

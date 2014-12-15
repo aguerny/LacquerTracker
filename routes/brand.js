@@ -53,7 +53,7 @@ app.get('/brand/:brandname', function(req, res) {
             data.title = brand.name + ' - Lacquer Tracker';
             data.bname = brand.name;
             data.bwebsite = brand.website;
-            data.bbio = brand.bio;
+            data.bbio = markdown(brand.bio);
             data.bphoto = brand.photo;
 
             Polish.find({brand: thisbrand}).sort('name').exec(function(err, polishes) {
