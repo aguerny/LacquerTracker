@@ -1,4 +1,5 @@
 var Polish = require('../app/models/polish');
+var Brand = require('../app/models/brand');
 var User = require('../app/models/user');
 var Photo = require('../app/models/photo');
 var UserPhoto = require('../app/models/userphoto');
@@ -497,6 +498,68 @@ app.post('/photo/profile', isLoggedIn, function(req, res) {
     } else {
         res.redirect('/error');
     }
+});
+
+
+//brand photo
+app.get('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
+    var data = {};
+    data.title = 'Upload a Brand Photo - Lacquer Tracker';
+    data.brandid = req.params.id;
+    res.render('photos/brand.ejs', data);
+});
+
+
+//from file
+app.post('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
+    Brand.findById(req.params.id, function(err, brand) {
+        if (req.files.photo.name.length > 0) {
+            var ext = path.extname(req.files.photo.name);
+            var tempPath = req.files.photo.path;
+            var targetPath = path.resolve('./public/images/brandphotos/' + brand.id + ext);
+            gm(tempPath).resize(200).write(targetPath, function (err) {
+                if (err) {
+                    fs.unlink(tempPath, function(err) {
+                        res.redirect('/error');
+                    })
+                } else {
+                    fs.unlink(tempPath, function() {
+                        brand.photo = '/images/brandphotos/' + brand.id + ext,
+                        brand.save(function(err) {
+                            res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
+                        })
+                    })
+                }
+            })
+        } else if (req.body.url.length > 0) {
+            fs.unlink(req.files.photo.path);
+            var ext = path.extname(req.body.url);
+            var tempPath = path.resolve('./public/images/tmp/' + brand.id + ext);
+            var targetPath = path.resolve('./public/images/brandphotos/' + brand.id + ext);
+            download(req.body.url, tempPath, function(err) {
+                if (err) {
+                    res.redirect('/error');
+                } else {
+                    gm(tempPath).resize(200).write(targetPath, function(err) {
+                        if (err) {
+                            fs.unlink(tempPath, function(err) {
+                                res.redirect('/error');
+                            })
+                        } else {
+                            fs.unlink(tempPath, function() {
+                                brand.photo = '/images/brandphotos/' + brand.id + ext,
+                                brand.save(function(err) {
+                                    res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
+                                })
+                            })
+                        }
+                    })
+                }
+            })
+        } else {
+            res.redirect('/error');
+        }
+    })
 });
 
 

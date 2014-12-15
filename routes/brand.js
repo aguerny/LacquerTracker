@@ -20,6 +20,7 @@ app.get('/brand/:brandname', function(req, res) {
             data.bname = thisbrand;
             data.bwebsite = '';
             data.bbio = '';
+            data.bphoto = '';
 
             Polish.find({brand: thisbrand}).sort('name').exec(function(err, polishes) {
                 var statuses = [];
@@ -53,6 +54,7 @@ app.get('/brand/:brandname', function(req, res) {
             data.bname = brand.name;
             data.bwebsite = brand.website;
             data.bbio = brand.bio;
+            data.bphoto = brand.photo;
 
             Polish.find({brand: thisbrand}).sort('name').exec(function(err, polishes) {
                 var statuses = [];

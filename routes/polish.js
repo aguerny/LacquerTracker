@@ -317,7 +317,8 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                             var newBrand = new Brand ({
                                 name: req.body.brand.replace(/^\s+|\s+$/g,''),
                                 website: '',
-                                bio: ''
+                                bio: '',
+                                photo: '',
                             })
                             newBrand.save(function(err) {
                                 res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_")});

@@ -5,6 +5,11 @@
     <div id="container" class="clear">
         <section>
             <div>
+            <% if (bphoto.length > 0) { %>
+                <img class="profilephoto" src="<%= bphoto %>">
+            <% } %>
+            </div>
+            <div>
                 <h2 style="display:inline-block"><%= bname %></h2>
                     <% if (bwebsite.length > 0) {%>
                         - <a href="<%= bwebsite %>">Official Website</a>
@@ -12,7 +17,7 @@
                     <br><br><br>
             </div>
             <% if (bbio.length > 0) {%>
-                <%= bbio %><br><br><br><br>
+                <p style="white-space: pre;"><%- bbio %></p><br><br><br><br>
             <% } else { %>
                 Please <a href="/contact">contact us</a> to have more information added about your brand.<br><br><br><br>
             <% } %>

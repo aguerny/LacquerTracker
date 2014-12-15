@@ -1,0 +1,14 @@
+<% include ../layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
+        <% for (i=0; i < allbrands.length; i++) { %>
+            <a href="/admin/brandedit/<%= allbrands[i].id %>"><%= allbrands[i].name %></a> - <a href="/admin/brandphoto/<%= allbrands[i].id %>">photo</a><br><br>
+        <% } %>
+    </section>
+    </div>
+</div>
+
+<% include ../layoutBottom %>

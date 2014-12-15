@@ -8,6 +8,8 @@ var path = require('path');
 var Review = require('../app/models/review');
 var mongoose = require('mongoose');
 var sanitizer = require('sanitizer');
+var markdown = require('markdown-css');
+var _ = require('lodash');
 var nodemailer = require('nodemailer');
 
 module.exports = function(app, passport) {
@@ -279,6 +281,53 @@ app.get('/polishid/:id/unflag', isLoggedIn, function(req, res) {
     }
 });
 
+
+//admin brands page
+app.get('/admin/brands', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        Brand.find({}).sort('name').exec(function(err, brands) {
+            var brands = brands;
+            res.render('admin/brands.ejs', {title: 'All Brands - Lacquer Tracker', allbrands: brands});
+        })
+    } else {
+        res.redirect('/error');
+    }
+});
+
+
+//admin brand edit
+app.get('/admin/brandedit/:id', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        Brand.findById(req.params.id, function(err, brand) {
+            if (brand === null || brand === undefined) {
+                res.redirect('/error');
+            } else {
+                var brand = brand;
+                res.render('admin/brandedit.ejs', {title: 'Edit Brands - Lacquer Tracker', brand: brand});
+            }
+        })
+    } else {
+        res.redirect('/error');
+    }
+});
+
+app.post('/admin/brandedit/:id', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        Brand.findById(req.params.id, function(err, brand) {
+            if (brand === null || brand === undefined) {
+                res.redirect('/error');
+            } else {
+                brand.website = sanitizer.sanitize(req.body.website);
+                brand.bio = sanitizer.sanitize(req.body.bio);
+                brand.save(function(err) {
+                    res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
+                })
+            }
+        })
+    } else {
+        res.redirect('/error');
+    }
+});
 
 
 
