@@ -319,6 +319,7 @@ app.post('/admin/brandedit/:id', isLoggedIn, function(req, res) {
             } else {
                 brand.website = sanitizer.sanitize(req.body.website);
                 brand.bio = sanitizer.sanitize(req.body.bio);
+                brand.official = sanitizer.sanitize(req.body.official);
                 brand.save(function(err) {
                     res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
                 })

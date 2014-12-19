@@ -14,6 +14,9 @@
                     <% if (bwebsite.length > 0) {%>
                         - <a href="<%= bwebsite %>">Official Website</a>
                     <% } %>
+                    <% if (bofficial === true) {%>
+                        <span title="Page verified by brand">&#10004;</span>
+                    <% } %>
                     <br><br><br>
                 <% if (bbio.length > 0) {%>
                     <p style="white-space: pre;"><%- bbio %></p><br><br><br><br>

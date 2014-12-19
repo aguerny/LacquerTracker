@@ -319,6 +319,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                                 website: '',
                                 bio: '',
                                 photo: '',
+                                official: false,
                             })
                             newBrand.save(function(err) {
                                 res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_")});

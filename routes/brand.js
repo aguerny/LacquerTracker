@@ -15,39 +15,49 @@ app.get('/brand/:brandname', function(req, res) {
     Brand.findOne({name: req.params.brandname.replace(/_/g, " ")}, function(err, brand) {
         var thisbrand = req.params.brandname.replace(/_/g, " ");
         if (brand === null) {
-            data = {};
-            data.title = thisbrand + ' - Lacquer Tracker';
-            data.bname = thisbrand;
-            data.bwebsite = '';
-            data.bbio = '';
-            data.bphoto = '';
+            var newBrand = new Brand ({
+                name: thisbrand,
+                website: '',
+                bio: '',
+                photo: '',
+                official: false,
+            })
+            newBrand.save(function(err) {
+                data = {};
+                data.title = thisbrand + ' - Lacquer Tracker';
+                data.bname = thisbrand;
+                data.bwebsite = '';
+                data.bbio = '';
+                data.bphoto = '';
+                data.bofficial = '';
 
-            Polish.find({brand: thisbrand}).sort('name').exec(function(err, polishes) {
-                var statuses = [];
-                data.colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
+                Polish.find({brand: thisbrand}).sort('name').exec(function(err, polishes) {
+                    var statuses = [];
+                    data.colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
 
-                if (req.isAuthenticated()) {
+                    if (req.isAuthenticated()) {
 
-                    for (i=0; i < polishes.length; i++) {
-                        if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
-                            statuses.push("owned");
-                        } else if (req.user.wantedpolish.indexOf(polishes[i].id) > -1) {
-                            statuses.push("wanted");
-                        } else {
-                            statuses.push("");
+                        for (i=0; i < polishes.length; i++) {
+                            if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
+                                statuses.push("owned");
+                            } else if (req.user.wantedpolish.indexOf(polishes[i].id) > -1) {
+                                statuses.push("wanted");
+                            } else {
+                                statuses.push("");
+                            }
                         }
+                        var returnedpolish = polishes;
+                        data.polishes = returnedpolish;
+                        data.status = statuses;
+                        res.render('brand.ejs', data);
+                    } else {
+                        var returnedpolish = polishes;
+                        data.polishes = returnedpolish;
+                        data.status = statuses;
+                        res.render('brand.ejs', data);
                     }
-                    var returnedpolish = polishes;
-                    data.polishes = returnedpolish;
-                    data.status = statuses;
-                    res.render('brand.ejs', data);
-                } else {
-                    var returnedpolish = polishes;
-                    data.polishes = returnedpolish;
-                    data.status = statuses;
-                    res.render('brand.ejs', data);
-                }
-            });
+                });
+            })
         } else {
             data = {};
             data.title = brand.name + ' - Lacquer Tracker';
@@ -55,6 +65,7 @@ app.get('/brand/:brandname', function(req, res) {
             data.bwebsite = brand.website;
             data.bbio = markdown(brand.bio);
             data.bphoto = brand.photo;
+            data.bofficial = brand.official;
 
             Polish.find({brand: thisbrand}).sort('name').exec(function(err, polishes) {
                 var statuses = [];
