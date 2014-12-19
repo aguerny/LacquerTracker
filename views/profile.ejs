@@ -48,7 +48,7 @@ $(window).load(function () {
                     <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="color"><span>Color</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><th class="rating"><span>Rating</span></th></tr>
                 <% for(var i=0; i<opolishes.length; i++) {%>
                     <tr><td><a id='tablelink' href='/polish/<%= opolishes[i].brand.replace(/ /g,"_") %>/<%= opolishes[i].name.replace(/ /g,"_") %>'><span><%= opolishes[i].name %></span></a></td>
-                    <td><a id='tablelink' href='/brand/<%= opolishes[i].brand.replace(/ /g,"_") %> %>'><span><%= opolishes[i].brand %></span></a></td>
+                    <td><a id='tablelink' href='/brand/<%= opolishes[i].brand.replace(/ /g,"_") %>'><span><%= opolishes[i].brand %></span></a></td>
                     <td><span><%= opolishes[i].batch %></span></td>
                     <td class="colorcat"><p><%= opolishes[i].colorcat %></p>
                         <% if (opolishes[i].colorcat.length > 0) {%>
@@ -92,7 +92,7 @@ $(window).load(function () {
                         <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="color"><span>Color</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th></tr>
                     <% for(var i=0; i<wpolishes.length; i++) {%>
                         <tr><td><a id='tablelink' href='/polish/<%= wpolishes[i].brand.replace(/ /g,"_") %>/<%= wpolishes[i].name.replace(/ /g,"_") %>'><span><%= wpolishes[i].name %></span></a></td>
-                        <td><span><%= wpolishes[i].brand %></span></td>
+                        <td><a id='tablelink' href='/brand/<%= wpolishes[i].brand.replace(/ /g,"_") %>'><span><%= wpolishes[i].brand %></span></a></td>
                         <td><span><%= wpolishes[i].batch %></span></td>
                         <td class="colorcat"><p><%= wpolishes[i].colorcat %></p>
                             <% if (wpolishes[i].colorcat.length > 0) {%>
