@@ -5,9 +5,46 @@
     <div id="container" class="clear">
     	<section>
             <h2>Success!</h2><br><br>
+			<div class="replace">
+                <a class="addown" pid="<%= polishid %>" href="#">Add ownership</a> | <a class="addwant" pid="<%= polishid %>" href="#">Add to wishlist</a></center>
+                <br><br><br>OR
+            </div>
+            <br><br>
             <a href="/polishadd">Add another?</a> | <a href=<%=url%>>View the polish you just added!</a>
         </section>
     </div>
 </div>
+
+<script>
+$(document).ready(function() {
+
+    $('.addown').on('tap', function(e){
+        $.ajax({
+            type: 'POST',
+            url: '/addownbrowse/' + $(this).attr('pid'),
+            dataType: 'json',
+            success: function() {
+                $(this).parent().replaceWith('Ownership added!<br>');
+            }
+        })
+        $(this).parent().replaceWith('Ownership added!<br>');
+        e.preventDefault();
+    });
+
+    $('.addwant').on('tap', function(e){
+        $.ajax({
+            type: 'POST',
+            url: '/addwantbrowse/' + $(this).attr('pid'),
+            dataType: 'json',
+            success: function() {
+                $(this).parent().replaceWith('Added to wishlist!<br>');
+            }
+        })
+        $(this).parent().replaceWith('Added to wishlist!<br>');
+        e.preventDefault();
+    });
+
+});
+</script>
 
 <% include ../layoutBottom %>
