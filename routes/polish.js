@@ -285,7 +285,14 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
     Polish.findOne({ name : req.body.name.replace(/^\s+|\s+$/g,''), brand : req.body.brand.replace(/^\s+|\s+$/g,'')}, function(err, polish) {
         //check to see if there's already a polish name and brand in the database
         if (polish) {
-            res.render('polish/add.ejs', {title: 'Add a Polish - Lacquer Tracker', message: 'That polish already exists in the database.'});
+            Polish.find().distinct('brand', function(error, brands) {
+                var allbrands = _.sortBy(brands, function(b) {return b.toLowerCase();});
+                data = {};
+                data.title = 'Add a Polish - Lacquer Tracker';
+                data.message = 'That polish already exists in the database.';
+                data.brands = allbrands;
+                res.render('polish/add.ejs', data);
+            })
         } else {
             var newPolish = new Polish ({
                 name: sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
@@ -316,7 +323,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                         Brand.findOne({name: req.body.brand.replace(/^\s+|\s+$/g,'')}, function(err, brand) {
                             //check if brand is already in brand database
                             if (brand) {
-                                res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_")});
+                                res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
                             } else {
                                 var newBrand = new Brand ({
                                     name: req.body.brand.replace(/^\s+|\s+$/g,''),
