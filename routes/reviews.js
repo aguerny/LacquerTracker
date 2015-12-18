@@ -12,6 +12,7 @@ app.get('/review/edit/:id', isLoggedIn, function(req, res) {
     var data = {};
     data.title = 'Edit Your Review - Lacquer Tracker';
     data.polishid = req.params.id;
+    data.user = req.user;
 
     Polish.findById(req.params.id, function(err, polish) {
         data.polishname = polish.name;
@@ -19,13 +20,11 @@ app.get('/review/edit/:id', isLoggedIn, function(req, res) {
 
         Review.findOne({polishid: req.params.id, user:req.user.id}).exec(function(err, review) {
             if (review) { //if review already exists
-                data.user = review.user.id;
                 data.rating = review.rating;
                 data.userreview = review.userreview;
                 data.notes = review.notes;
                 res.render('reviewedit.ejs', data);
             } else { //the review doesn't exist yet.
-                data.user = req.user.id;
                 data.rating = "";
                 data.userreview = "";
                 data.notes = "";
