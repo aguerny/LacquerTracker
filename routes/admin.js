@@ -31,6 +31,38 @@ app.get('/admin/users', isLoggedIn, function(req, res) {
 });
 
 
+//admin settings
+app.get('/admin/settings', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        data = {};
+        data.title = 'Admin Settings - Lacquer Tracker';
+        data.adminview = req.user.adminview;
+        data.username = req.user.username;
+        res.render('admin/settings.ejs', data);
+    } else {
+        res.redirect('/error');
+    }
+});
+
+app.post('/admin/settings', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        User.findOne(req.user, function(err, user) {
+            if (!user) {
+                res.redirect('/error');
+            } else {
+                if (req.body.adminview) {
+                    user.adminview = true;
+                } else {
+                    user.adminview = false;
+                }
+                user.save(function(err) {
+                    res.redirect('/');
+                });
+            }
+        });
+    };
+});
+
 
 //photos pending delete
 app.get('/admin/pending', isLoggedIn, function(req, res) {

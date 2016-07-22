@@ -15,6 +15,7 @@ var userSchema = mongoose.Schema({
 	profilephoto : String,
 	isvalidated  : Boolean,
 	level        : String,
+	adminview    : Boolean,
 	notifications: String,
 	useremail    : String,
 	creationdate : String,

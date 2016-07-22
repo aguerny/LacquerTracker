@@ -36,7 +36,6 @@ app.get('/photo/add/:id', isLoggedIn, function(req, res) {
     })
 });
 
-
 app.post('/photo/add/:id', isLoggedIn, function(req, res) {
     if (req.files.photo.name.length > 0) {
         var ext = path.extname(req.files.photo.name);
@@ -77,21 +76,13 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                                 fs.unlink(req.files.photo.path, function() {
                                     newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
                                     newPhoto.save(function(err) {
-                                        fs.access(path.resolve('./public/images/swatches/' + p.id + '.jpg'), fs.F_OK | fs.F_OK, function(err) {
-                                            if (err) {
-                                                res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
-                                            } else {
-                                                res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                                            }
-                                        })
-                                        //fs.exists has depreciated. Testing fs.access
-                                        /*fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
+                                        fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
                                             if (exists === false) {
                                                 res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
                                             } else {
                                                 res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
                                             }
-                                        })*/
+                                        })
                                     })
                                 })
                             }
@@ -110,21 +101,13 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                                 fs.unlink(req.files.photo.path, function() {
                                     newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
                                     newPhoto.save(function(err) {
-                                        fs.access(path.resolve('./public/images/swatches/' + p.id + '.jpg'), fs.F_OK | fs.F_OK, function(err) {
-                                            if (err) {
-                                                res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
-                                            } else {
-                                                res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                                            }
-                                        })
-                                        //fs.exists has depreciated. Testing fs.access
-                                        /*fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
+                                        fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
                                             if (exists === false) {
                                                 res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
                                             } else {
                                                 res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
                                             }
-                                        })*/
+                                        })
                                     })
                                 })
                             }
@@ -181,42 +164,26 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                                     } else {
                                         newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
                                         newPhoto.save(function(err) {
-                                            fs.access(path.resolve('./public/images/swatches/' + p.id + '.jpg'), fs.F_OK | fs.F_OK, function(err) {
-                                                if (err) {
-                                                    res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
-                                                } else {
-                                                    res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                                                }
-                                            })
-                                            //fs.exists has depreciated. Testing fs.access
-                                            /*fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
+                                            fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
                                                 if (exists === false) {
                                                     res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
                                                 } else {
                                                     res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
                                                 }
-                                            })*/
+                                            })
                                         })
                                     }
                                 })
                             } else {
                                 newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
                                 newPhoto.save(function(err) {
-                                    fs.access(path.resolve('./public/images/swatches/' + p.id + '.jpg'), fs.F_OK | fs.F_OK, function(err) {
-                                        if (err) {
-                                            res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
-                                        } else {
-                                            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                                        }
-                                    })
-                                    //fs.exists has depreciated. Testing fs.access
-                                    /*fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
+                                    fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
                                         if (exists === false) {
                                             res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
                                         } else {
                                             res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
                                         }
-                                    })*/
+                                    })
                                 })
                             }
                         })

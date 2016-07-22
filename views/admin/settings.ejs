@@ -1,0 +1,17 @@
+<% include ../layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
+        <h3><%=user.username%>'s Admin Settings</h3><br><br>
+        <form action="/admin/settings" method="post">
+            <input type="checkbox" name="adminview" <% if (adminview === true) { %> checked <% } %>>Show admin view while browsing?<br>
+            <br><br>
+            <input type="submit" value="Submit" class="button">
+        </form>
+    </section>
+    </div>
+</div>
+
+<% include ../layoutBottom %>
