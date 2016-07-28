@@ -5,7 +5,7 @@
     <div id="container" class="clear">
     <section>
         <% for (i=0; i < allbrands.length; i++) { %>
-            <a href="/admin/brandedit/<%= allbrands[i].id %>"><%= allbrands[i].name %></a> - <a href="/admin/brandphoto/<%= allbrands[i].id %>">photo</a><br><br>
+            <a href="/brand/<%= allbrands[i].name.replace(/ /g,"_") %>"><%= allbrands[i].name %></a> - <a href="/admin/brandedit/<%= allbrands[i].id %>">edit</a> - <a href="/admin/brandphoto/<%= allbrands[i].id %>">photo</a><br><br>
         <% } %>
     </section>
     </div>
