@@ -28,7 +28,7 @@
                             <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch"><% if (pbatch.length > 0) {%><%= pbatch %><%}else{%>?<%}%></a><br><br>
                             <b>Color:</b> <a href="#" id="colorcat" data-pk="1" class="editablecolorcat" data-type="checklist" data-url="/polishedit/<%= pid %>/colorcat" data-value="<%= pcolorcat %>" data-defaultValue="?" data-separator=","><% if (pcolorcat.length > 0) {%><%= pcolorcat.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
                             <b>Type:</b> <a href="#" id="type" data-pk="1" class="editabletype" data-type="checklist" data-url="/polishedit/<%= pid %>/type" data-value="<%= ptype %>" data-defaultValue="?" data-separator=","><% if (ptype.length > 0) {%><%= ptype.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
-                            <b>Indie:</b> <a href="#" id="indie" class="editableindie" data-pk="1" data-type="select" data-url="/polishedit/<%= pid %>/indie" data-value="<%= pindie %>"><%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%></a><br><br><span class="smallfont"><i>(Click value to edit polish information.)</i></span>
+                            <b>Indie:</b> <a href="#" id="indie" class="editableindie" data-pk="1" data-type="select" data-url="/polishedit/<%= pid %>/indie" data-value="<%= pindie %>"><%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%} else {%>?<%}%></a><br><br><span class="smallfont"><i>(Click value to edit polish information.)</i></span>
                         <% } else { %>
                             <b>Code:</b> <%= pcode %><br><br>
                             <b>Collection:</b> <%= pbatch %><br><br>
@@ -134,7 +134,7 @@
                     <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch"><% if (pbatch.length > 0) {%><%= pbatch %><%}else{%>?<%}%></a><br><br>
                     <b>Color:</b> <a href="#" id="colorcat" data-pk="1" class="editablecolorcat" data-type="checklist" data-url="/polishedit/<%= pid %>/colorcat" data-value="<%= pcolorcat %>" data-defaultValue="?" data-separator=","><% if (pcolorcat.length > 0) {%><%= pcolorcat.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
                     <b>Type:</b> <a href="#" id="type" data-pk="1" class="editabletype" data-type="checklist" data-url="/polishedit/<%= pid %>/type" data-value="<%= ptype %>" data-defaultValue="?" data-separator=","><% if (ptype.length > 0) {%><%= ptype.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
-                    <b>Indie:</b> <a href="#" id="indie" data-pk="1" class="editableindie" data-type="select" data-url="/polishedit/<%= pid %>/indie" data-value="<%= pindie %>"><%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%></a><br><br><span class="smallfont"><i>(Click value to edit polish information.)</i></span>
+                    <b>Indie:</b> <a href="#" id="indie" data-pk="1" class="editableindie" data-type="select" data-url="/polishedit/<%= pid %>/indie" data-value="<%= pindie %>"><%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%} else {%>?<%}%></a><br><br><span class="smallfont"><i>(Click value to edit polish information.)</i></span>
                 <% } else { %>
                     <b>Code:</b> <%= pcode %><br><br>
                     <b>Collection:</b> <%= pbatch %><br><br>
