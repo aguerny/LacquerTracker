@@ -15,56 +15,17 @@ app.get('/brand/:brandname', function(req, res) {
     Brand.findOne({name: req.params.brandname.replace(/_/g, " ")}, function(err, brand) {
         var thisbrand = req.params.brandname.replace(/_/g, " ");
         if (brand === null) {
-            var newBrand = new Brand ({
-                name: thisbrand,
-                website: '',
-                bio: '',
-                photo: '',
-                official: false,
-            })
-            newBrand.save(function(err) {
-                data = {};
-                data.title = thisbrand + ' - Lacquer Tracker';
-                data.bname = thisbrand;
-                data.bwebsite = '';
-                data.bbio = '';
-                data.bphoto = '';
-                data.bofficial = '';
-
-                Polish.find({brand: thisbrand}).sort('name').exec(function(err, polishes) {
-                    if (polishes === null) {
-                        data.colors = [];
-                        data.polishes = [];
-                        data.status = [];
-                        res.render('brand.ejs', data);
-                    } else {
-                        var statuses = [];
-                        data.colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
-
-                        if (req.isAuthenticated()) {
-
-                            for (i=0; i < polishes.length; i++) {
-                                if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
-                                    statuses.push("owned");
-                                } else if (req.user.wantedpolish.indexOf(polishes[i].id) > -1) {
-                                    statuses.push("wanted");
-                                } else {
-                                    statuses.push("");
-                                }
-                            }
-                            var returnedpolish = polishes;
-                            data.polishes = returnedpolish;
-                            data.status = statuses;
-                            res.render('brand.ejs', data);
-                        } else {
-                            var returnedpolish = polishes;
-                            data.polishes = returnedpolish;
-                            data.status = statuses;
-                            res.render('brand.ejs', data);
-                        }
-                    }
-                });
-            })
+            data = {};
+            data.title = thisbrand + ' - Lacquer Tracker';
+            data.bname = thisbrand;
+            data.bwebsite = '';
+            data.bbio = '';
+            data.bphoto = '';
+            data.bofficial = '';
+            data.polishes = [];
+            data.status = [];
+            data.colors = [];
+            res.render('brand.ejs', data);
         } else {
             data = {};
             data.title = brand.name + ' - Lacquer Tracker';
