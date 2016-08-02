@@ -180,7 +180,9 @@ app.post('/import', isLoggedIn, function(req, res) {
         }
     })
     reader.addListener('end', function(){
-        res.redirect('/profile');
+        fs.unlink(req.files.spreadsheet.path, function(err) {
+            res.redirect('/profile');
+        })
     })
 });
 
@@ -351,7 +353,9 @@ app.post('/admin/importnew', isLoggedIn, function(req, res) {
         }
     })
     reader.addListener('end', function(){
-        res.redirect('/');
+        fs.unlink(req.files.spreadsheet.path, function(err) {
+            res.redirect('/profile');
+        })
     })
 });
 
