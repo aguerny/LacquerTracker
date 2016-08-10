@@ -6,14 +6,15 @@
         <section>
             <form action="/import" method="post" enctype='multipart/form-data'>
                 <h3>Import Owned Polish</h3><br><br>
-                <b>Note: This is still a little buggy, especially with huge spreadsheets! This issue is being looked into.<br></b> - Sometimes you will need to run it a couple times on large files for it to cycle through all the polishes.<br>
-                - My current suggestion is to break up your spreadsheet into smaller lists and do a little at a time.<br><br><br>
+                <b>Note: This is still a little buggy, especially with huge spreadsheets! This issue is being looked into.<br></b>
+                - My current suggestion is to break up your spreadsheet into smaller lists (max 2,000 rows at a time) and do a little at a time.<br><br><br>
                 * Must be a .CSV file<br><br>
                 * Must contain a header column with all header titles in lowercase and spelled as shown here.<br><br>
                 * Required columns are "name" and "brand"<br><br>
                 * Optional columns are "code", "collection", "color", "type", and "indie"<br><br>
                 * If using indie column, please use either "yes" or "no" to specify.<br><br>
-                * Any information you do not know, leave the cell blank.<br><br><br><br>
+                * Any information you do not know, leave the cell blank.<br><br>
+                * Please be patient when submitting and only hit submit once. It can take up to five minutes to process.<br><br><br><br>
                 File for upload: <input type="file" value="spreadsheet" name="spreadsheet" class="width50"><br><br>
                 <input type="submit" value="Submit" class="button">
             </form>
