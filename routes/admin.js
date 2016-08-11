@@ -136,101 +136,152 @@ app.post('/admin/duplicate', isLoggedIn, function(req, res) {
 
 app.post('/admin/duplicate/remove', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
-        Polish.findById(mongoose.Types.ObjectId(req.body.keepid.replace(/^\s+|\s+$/g,'')), function(err, keep) {
+        if (req.body.keepid.length > 0) {
+            Polish.findById(mongoose.Types.ObjectId(req.body.keepid.replace(/^\s+|\s+$/g,'')), function(err, keep) {
+                Polish.findById(mongoose.Types.ObjectId(req.body.removeid.replace(/^\s+|\s+$/g,'')), function(err, remove) {
+                    User.find({ownedpolish:remove.id}, function(err, users) {
+                        for (var j=0; j<users.length; j++) {
+                            users[j].ownedpolish.remove(remove.id);
+                            users[j].ownedpolish.addToSet(keep.id);
+                            users[j].save();
+                        }
+                    })
+
+                    User.find({wantedpolish:remove.id}, function(err, users) {
+                        for (var j=0; j<users.length; j++) {
+                            users[j].wantedpolish.remove(remove.id);
+                            users[j].wantedpolish.addToSet(keep.id);
+                            users[j].save();
+                        }
+                    })
+
+                    
+                    Photo.find({polishid:remove.id}, function(err, photos) {
+                        for (var j=0; j<photos.length; j++) {
+                            photos[j].polishid = keep.id;
+                            photos[j].save();
+                            keep.photos.addToSet(photos[j].id);
+                            keep.save();
+                        }
+                    })
+
+                    Review.find({polishid:remove.id}, function(err, reviews) {
+                        for (var j=0; j<reviews.length; j++) {
+                            reviews[j].polishid = keep.id;
+                            reviews[j].save();
+                        }
+                    })
+
+                    if (!keep.batch.length) {
+                        if (remove.batch.length) {
+                            keep.batch = remove.batch;
+                            keep.keywords = keep.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.batch + " " + keep.code;
+                            keep.save();
+                        }
+                    }
+
+                    if (!keep.code.length) {
+                        if (remove.code.length) {
+                            keep.code = remove.code;
+                            keep.keywords = keep.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.batch + " " + keep.code;
+                            keep.save();
+                        }
+                    }
+
+                    if (remove.colorcat.length) {
+                        var input = remove.colorcat.split(",");
+                        var formatted = keep.colorcat.split(",");
+                        for (j=0; j<input.length; j++) {
+                            if (formatted.indexOf(input[j]) == -1) {
+                                formatted.push(input[j]);
+                            }
+                        }
+                        keep.colorcat = formatted.toString().replace(/^,/, '');
+                        keep.save();
+                    }
+
+                    if (remove.type.length) {
+                        var input = remove.type.split(",");
+                        var formatted = keep.type.split(",");
+                        for (j=0; j<input.length; j++) {
+                            if (formatted.indexOf(input[j]) == -1) {
+                                formatted.push(input[j]);
+                            }
+                        }
+                        keep.type = formatted.toString().replace(/^,/, '');
+                        keep.save();
+                    }
+
+                    if (!keep.indie.length) {
+                        if (remove.indie.length) {
+                            keep.indie = remove.indie;
+                            keep.keywords = keep.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.batch + " " + keep.code;
+                            keep.save();
+                        }
+                    }
+
+                    if (!keep.dupes.length) {
+                        if (remove.dupes.length) {
+                            keep.dupes = remove.dupes;
+                            keep.keywords = keep.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.batch + " " + keep.code;
+                            keep.save();
+                        }
+                    }
+
+                    if (!keep.swatch.length) {
+                        if (remove.swatch.length) {
+                            keep.swatch = remove.swatch;
+                            keep.keywords = keep.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.batch + " " + keep.code;
+                            keep.save();
+                        }
+                    }
+                    res.redirect('/browse');
+                })
+            })
+        } else {
             Polish.findById(mongoose.Types.ObjectId(req.body.removeid.replace(/^\s+|\s+$/g,'')), function(err, remove) {
                 User.find({ownedpolish:remove.id}, function(err, users) {
-                    for (var j=0; j<users.length; j++) {
-                        users[j].ownedpolish.remove(remove.id);
-                        users[j].ownedpolish.addToSet(keep.id);
-                        users[j].save();
+                    for (var i=0; i<users.length; i++) {
+                        users[i].ownedpolish.remove(remove.id);
+                        users[i].save();
                     }
                 })
 
                 User.find({wantedpolish:remove.id}, function(err, users) {
-                    for (var j=0; j<users.length; j++) {
-                        users[j].wantedpolish.remove(remove.id);
-                        users[j].wantedpolish.addToSet(keep.id);
-                        users[j].save();
+                    for (var i=0; i<users.length; i++) {
+                        users[i].wantedpolish.remove(remove.id);
+                        users[i].save();
                     }
                 })
 
-                
+                    
                 Photo.find({polishid:remove.id}, function(err, photos) {
-                    for (var j=0; j<photos.length; j++) {
-                        photos[j].polishid = keep.id;
-                        photos[j].save();
-                        keep.photos.addToSet(photos[j].id);
-                        keep.save();
+                    for (var i=0; i<photos.length; i++) {
+                        fs.unlink(path.resolve('./public' + photos[i].location), function(err) {
+                            if (err) throw err;
+                        })
+                        photos[i].remove();
                     }
                 })
 
                 Review.find({polishid:remove.id}, function(err, reviews) {
-                    for (var j=0; j<reviews.length; j++) {
-                        reviews[j].polishid = keep.id;
-                        reviews[j].save();
+                    for (var i=0; i<reviews.length; i++) {
+                        reviews[i].remove();
                     }
                 })
 
-                if (!keep.batch.length) {
-                    if (remove.batch.length) {
-                        keep.batch = remove.batch;
-                        keep.keywords = keep.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.batch + " " + keep.code;
-                        keep.save();
-                    }
+                    
+                if (remove.swatch.length > 0) {
+                    fs.unlink(path.resolve('./public/images/swatches/' + remove.id + '.jpg'), function(err) {
+                            if (err) throw err;
+                    })
                 }
-                if (!keep.code.length) {
-                    if (remove.code.length) {
-                        keep.code = remove.code;
-                        keep.keywords = keep.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.batch + " " + keep.code;
-                        keep.save();
-                    }
-                }
-                if (remove.colorcat.length) {
-                    var input = remove.colorcat.split(",");
-                    var formatted = keep.colorcat.split(",");
-                    for (j=0; j<input.length; j++) {
-                        if (formatted.indexOf(input[j]) == -1) {
-                            formatted.push(input[j]);
-                        }
-                    }
-                    keep.colorcat = formatted.toString();
-                    keep.save();
-                }
-                if (remove.type.length) {
-                    var input = remove.type.split(",");
-                    var formatted = keep.type.split(",");
-                    for (j=0; j<input.length; j++) {
-                        if (formatted.indexOf(input[j]) == -1) {
-                            formatted.push(input[j]);
-                        }
-                    }
-                    keep.type = formatted.toString();
-                    keep.save();
-                }
-                if (!keep.indie.length) {
-                    if (remove.indie.length) {
-                        keep.indie = remove.indie;
-                        keep.keywords = keep.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.batch + " " + keep.code;
-                        keep.save();
-                    }
-                }
-                if (!keep.dupes.length) {
-                    if (remove.dupes.length) {
-                        keep.dupes = remove.dupes;
-                        keep.keywords = keep.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.batch + " " + keep.code;
-                        keep.save();
-                    }
-                }
-                if (!keep.swatch.length) {
-                    if (remove.swatch.length) {
-                        keep.swatch = remove.swatch;
-                        keep.keywords = keep.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.batch + " " + keep.code;
-                        keep.save();
-                    }
-                }
+
+                remove.remove();
+                
                 res.redirect('/browse');
             })
-        });
+        }
     } else {
         res.redirect('/error');
     }
