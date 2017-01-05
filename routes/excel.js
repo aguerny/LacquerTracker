@@ -79,7 +79,7 @@ app.post('/import', isLoggedIn, function(req, res) {
                             if (data.type.length > 0) {
                                 var input = sanitizer.sanitize(data.type.toLowerCase().split(" "));
                                 var formatted = [];
-                                var types = ["blackened", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "frost", "gel", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "multichrome", "neon", "pen", "scented", "sheer", "shimmer", "striper", "texture", "thermal", "uv"];
+                                var types = ["blackened", "chrome", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "frost", "gel", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "microglitter", "microshimmer", "multichrome", "neon", "pearl", "pen", "satin", "scented", "sheer", "shimmer", "striper", "suede", "texture", "thermal", "uv"];
                                 for (i=0; i<types.length; i++) {
                                     if (input.indexOf(types[i]) !== -1) {
                                         formatted.push(types[i]);
@@ -157,7 +157,7 @@ app.post('/import', isLoggedIn, function(req, res) {
                             if (data.type.length > 0) {
                                 var input = sanitizer.sanitize(data.type.toLowerCase().split(" "));
                                 var formatted = [];
-                                var types = ["blackened", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "frost", "gel", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "multichrome", "neon", "pen", "scented", "sheer", "shimmer", "striper", "texture", "thermal", "uv"];
+                                var types = ["blackened", "chrome", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "frost", "gel", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "microglitter", "microshimmer", "multichrome", "neon", "pearl", "pen", "satin", "scented", "sheer", "shimmer", "striper", "suede", "texture", "thermal", "uv"];
                                 for (i=0; i<types.length; i++) {
                                     if (input.indexOf(types[i]) !== -1) {
                                         formatted.push(types[i]);
@@ -254,7 +254,7 @@ app.post('/admin/importnew', isLoggedIn, function(req, res) {
                             if (data.type.length > 0) {
                                 var input = sanitizer.sanitize(data.type.toLowerCase().split(" "));
                                 var formatted = [];
-                                var types = ["blackened", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "frost", "gel", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "multichrome", "neon", "pen", "scented", "sheer", "shimmer", "striper", "texture", "thermal", "uv"];
+                                var types = ["blackened", "chrome", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "frost", "gel", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "microglitter", "microshimmer", "multichrome", "neon", "pearl", "pen", "satin", "scented", "sheer", "shimmer", "striper", "suede", "texture", "thermal", "uv"];
                                 for (i=0; i<types.length; i++) {
                                     if (input.indexOf(types[i]) !== -1) {
                                         formatted.push(types[i]);
@@ -330,7 +330,7 @@ app.post('/admin/importnew', isLoggedIn, function(req, res) {
                             if (data.type.length > 0) {
                                 var input = sanitizer.sanitize(data.type.toLowerCase().split(" "));
                                 var formatted = [];
-                                var types = ["blackened", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "frost", "gel", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "multichrome", "neon", "pen", "scented", "sheer", "shimmer", "striper", "texture", "thermal", "uv"];
+                                var types = ["blackened", "chrome", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "frost", "gel", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "microglitter", "microshimmer", "multichrome", "neon", "pearl", "pen", "satin", "scented", "sheer", "shimmer", "striper", "suede", "texture", "thermal", "uv"];
                                 for (i=0; i<types.length; i++) {
                                     if (input.indexOf(types[i]) !== -1) {
                                         formatted.push(types[i]);

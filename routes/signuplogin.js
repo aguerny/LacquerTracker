@@ -195,7 +195,7 @@ app.post('/passwordreset', function(req, res) {
                     var a = new Date();
                     a.setDate(a.getDate()+1);
                     var newResetKey = new ResetKey ({
-                        username: req.body.username.toLowerCase(),
+                        username: user.username,
                         expiredate: a,
                     })
                     newResetKey.save();
@@ -240,7 +240,7 @@ app.get('/reset/:key', function(req, res) {
             res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
         } else {
             if (new Date(resetkey.expiredate) > new Date()) {
-                res.render('account/passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: resetkey.username})
+                res.render('account/passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: resetkey.username, key: resetkey.id})
             } else {
                 res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
             }
@@ -249,16 +249,25 @@ app.get('/reset/:key', function(req, res) {
 });
 
 
-app.post('/reset/:username', function(req, res) {
-    if (req.body.password === req.body.confirm) {
-        User.findOneAndUpdate({username: req.params.username}, {password: bcrypt.hashSync(req.body.password)}, function(err, user) {
-            res.redirect('/login');
-        });
-    } else {
-        res.render('account/passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: req.params.username, message:'Passwords do not match.'})
-    }
+app.post('/reset/:key', function(req, res) {
+    ResetKey.findById(req.params.key, function(err, resetkey) {
+        if (err) {
+            res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
+        } else {
+            if (new Date(resetkey.expiredate) > new Date()) {
+                if (req.body.password === req.body.confirm && req.body.username === resetkey.username) {
+                    User.findOneAndUpdate({username: resetkey.username}, {password: bcrypt.hashSync(sanitizer.sanitize(req.body.password))}, function(err, user) {
+                        res.redirect('/login');
+                    });
+                } else {
+                    res.render('account/passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: resetkey.username, key: resetkey.id, message:'Passwords do not match.'})
+                }
+            } else {
+                res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
+            }
+        }
+    })
 });
-
 
 
 ///////////////////////////////////////////////////////////////////////////
