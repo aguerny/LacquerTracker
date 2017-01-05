@@ -255,7 +255,7 @@ app.post('/reset/:key', function(req, res) {
             res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
         } else {
             if (new Date(resetkey.expiredate) > new Date()) {
-                if (req.body.password === req.body.confirm && req.body.username === resetkey.username) {
+                if (req.body.password === req.body.confirm) {
                     User.findOneAndUpdate({username: resetkey.username}, {password: bcrypt.hashSync(sanitizer.sanitize(req.body.password))}, function(err, user) {
                         res.redirect('/login');
                     });
