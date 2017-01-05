@@ -1,0 +1,31 @@
+var types = [
+    "blackened",
+    "crackle",
+    "crelly",
+    "creme",
+    "duochrome",
+    "flakie",
+    "fleck",
+    "foil",
+    "frost",
+    "gel",
+    "glitter",
+    "glow",
+    "holo",
+    "jelly",
+    "magnetic",
+    "matte",
+    "metallic",
+    "multichrome",
+    "neon",
+    "pen",
+    "scented",
+    "sheer",
+    "shimmer",
+    "striper",
+    "texture",
+    "thermal",
+    "uv"
+];
+
+module.exports = types;
