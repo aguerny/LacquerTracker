@@ -18,7 +18,7 @@ require(__dirname+'/app/passport')(passport); // pass passport for configuration
 app.configure(function() {
 
 	//set up express
-	app.set('port', process.env.PORT || 3000);
+	app.set('port', process.env.LTPORT || 3000);
 	app.engine('html', require('ejs').renderFile);
 
     app.enable('trust proxy');
@@ -60,7 +60,7 @@ app.configure(function() {
 	});
 
 	app.use(express.timeout(10000));
-	
+
 	app.use(app.router);
 	app.use(function(req,res){
    		res.redirect('/error');
