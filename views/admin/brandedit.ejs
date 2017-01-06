@@ -7,7 +7,7 @@
             <div>
         		<form action="/admin/brandedit/<%= brand.id %>" method="post">
     	     		<h3>Edit <%= brand.name %>:</h3><br><br>
-                    Website:<br><input type="text" name="website" value="<%= brand.website %>" class="width45"><br><br><br>
+                    Website:<br><input type="text" name="website" value="<%= brand.website %>" class="width45" autofocus><br><br><br>
                     Bio: <textarea class="markItUp" type="text" name="bio" value="<%= brand.bio %>"><%= brand.bio %></textarea><br>
                     Official: <select name="official">
                         <option value="false" <% if (brand.official === false) { %> selected='selected' <%}%>>No</option>

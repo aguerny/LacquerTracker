@@ -12,6 +12,8 @@ var markdown = require('markdown-css');
 var _ = require('lodash');
 var nodemailer = require('nodemailer');
 var csv = require('ya-csv');
+var PolishTypes = require('../app/constants/polishTypes');
+var PolishColors = require('../app/constants/polishColors');
 
 module.exports = function(app, passport) {
 
@@ -47,7 +49,7 @@ app.post('/import', isLoggedIn, function(req, res) {
                             if (data.color.length > 0) {
                                 var input = sanitizer.sanitize(data.color.toLowerCase().split(" "));
                                 var formatted = [];
-                                var colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
+                                var colors = PolishColors;
                                 for (i=0; i<colors.length; i++) {
                                     if (input.indexOf(colors[i]) !== -1) {
                                         formatted.push(colors[i]);
@@ -79,7 +81,7 @@ app.post('/import', isLoggedIn, function(req, res) {
                             if (data.type.length > 0) {
                                 var input = sanitizer.sanitize(data.type.toLowerCase().split(" "));
                                 var formatted = [];
-                                var types = ["blackened", "chrome", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "frost", "gel", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "microglitter", "microshimmer", "multichrome", "neon", "pearl", "pen", "satin", "scented", "sheer", "shimmer", "striper", "suede", "texture", "thermal", "uv"];
+                                var types = PolishTypes;
                                 for (i=0; i<types.length; i++) {
                                     if (input.indexOf(types[i]) !== -1) {
                                         formatted.push(types[i]);
@@ -129,7 +131,7 @@ app.post('/import', isLoggedIn, function(req, res) {
                             if (data.color.length > 0) {
                                 var input = sanitizer.sanitize(data.color.toLowerCase().split(" "));
                                 var formatted = [];
-                                var colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
+                                var colors = PolishColors;
                                 for (i=0; i<colors.length; i++) {
                                     if (input.indexOf(colors[i]) !== -1) {
                                         formatted.push(colors[i]);
@@ -157,7 +159,7 @@ app.post('/import', isLoggedIn, function(req, res) {
                             if (data.type.length > 0) {
                                 var input = sanitizer.sanitize(data.type.toLowerCase().split(" "));
                                 var formatted = [];
-                                var types = ["blackened", "chrome", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "frost", "gel", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "microglitter", "microshimmer", "multichrome", "neon", "pearl", "pen", "satin", "scented", "sheer", "shimmer", "striper", "suede", "texture", "thermal", "uv"];
+                                var types = PolishTypes;
                                 for (i=0; i<types.length; i++) {
                                     if (input.indexOf(types[i]) !== -1) {
                                         formatted.push(types[i]);
@@ -222,7 +224,7 @@ app.post('/admin/importnew', isLoggedIn, function(req, res) {
                             if (data.color.length > 0) {
                                 var input = sanitizer.sanitize(data.color.toLowerCase().split(" "));
                                 var formatted = [];
-                                var colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
+                                var colors = PolishColors;
                                 for (i=0; i<colors.length; i++) {
                                     if (input.indexOf(colors[i]) !== -1) {
                                         formatted.push(colors[i]);
@@ -254,7 +256,7 @@ app.post('/admin/importnew', isLoggedIn, function(req, res) {
                             if (data.type.length > 0) {
                                 var input = sanitizer.sanitize(data.type.toLowerCase().split(" "));
                                 var formatted = [];
-                                var types = ["blackened", "chrome", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "frost", "gel", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "microglitter", "microshimmer", "multichrome", "neon", "pearl", "pen", "satin", "scented", "sheer", "shimmer", "striper", "suede", "texture", "thermal", "uv"];
+                                var types = PolishTypes;
                                 for (i=0; i<types.length; i++) {
                                     if (input.indexOf(types[i]) !== -1) {
                                         formatted.push(types[i]);
@@ -302,7 +304,7 @@ app.post('/admin/importnew', isLoggedIn, function(req, res) {
                             if (data.color.length > 0) {
                                 var input = sanitizer.sanitize(data.color.toLowerCase().split(" "));
                                 var formatted = [];
-                                var colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
+                                var colors = PolishColors;
                                 for (i=0; i<colors.length; i++) {
                                     if (input.indexOf(colors[i]) !== -1) {
                                         formatted.push(colors[i]);
@@ -330,7 +332,7 @@ app.post('/admin/importnew', isLoggedIn, function(req, res) {
                             if (data.type.length > 0) {
                                 var input = sanitizer.sanitize(data.type.toLowerCase().split(" "));
                                 var formatted = [];
-                                var types = ["blackened", "chrome", "crackle", "crelly", "creme", "duochrome", "flakie", "fleck", "foil", "frost", "gel", "glitter", "glow", "holo", "jelly", "magnetic", "matte", "metallic", "microglitter", "microshimmer", "multichrome", "neon", "pearl", "pen", "satin", "scented", "sheer", "shimmer", "striper", "suede", "texture", "thermal", "uv"];
+                                var types = PolishTypes;
                                 for (i=0; i<types.length; i++) {
                                     if (input.indexOf(types[i]) !== -1) {
                                         formatted.push(types[i]);

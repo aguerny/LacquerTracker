@@ -6,6 +6,7 @@ var Photo = require('../app/models/photo');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
 var _ = require('lodash');
+var PolishColors = require('../app/constants/polishColors');
 
 module.exports = function(app, passport) {
 
@@ -37,7 +38,7 @@ app.get('/brand/:brandname', function(req, res) {
 
             Polish.find({brand: thisbrand}).sort('name').exec(function(err, polishes) {
                 var statuses = [];
-                data.colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
+                data.colors = PolishColors;
 
                 if (req.isAuthenticated()) {
 

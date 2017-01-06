@@ -1,6 +1,8 @@
 var Polish = require('../app/models/polish');
 var User = require('../app/models/user');
 var _ = require('lodash');
+var PolishTypes = require('../app/constants/polishTypes');
+var PolishColors = require('../app/constants/polishColors');
 
 
 module.exports = function(app, passport) {
@@ -19,10 +21,10 @@ app.get('/browse', function(req, res) {
         data.browsetype = '';
         data.browseindie = '';
         data.recent = true;
+        data.types = PolishTypes;
+        data.colors = PolishColors;
 
         data.page = 1;
-
-        data.colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
 
         Polish.find({})
         .sort({dateupdated: -1})
@@ -48,6 +50,7 @@ app.get('/browse', function(req, res) {
                 var returnedpolish = polishes;
                 data.polishes = returnedpolish;
                 data.status = statuses;
+
                 res.render('browse.ejs', data);
             } else {
                 var returnedpolish = polishes;
@@ -73,10 +76,10 @@ app.post('/browse', function(req, res) {
         data.browsecolorcat = req.body.colorcat;
         data.browsetype = req.body.type;
         data.browseindie = req.body.indie;
+        data.types = PolishTypes;
+        data.colors = PolishColors;
 
         data.recent = false;
-
-        data.colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
 
         if (typeof req.body.browse !== "undefined") {
             var page = 1;

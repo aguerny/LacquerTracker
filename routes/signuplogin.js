@@ -28,7 +28,7 @@ app.post('/signup', function(req, res) {
                     res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'That username is already taken.', email:req.body.email, username:''});
                 } else {
                     if (req.body.password === req.body.confirm) {
-                        var privateKey = '6Leqre8SAAAAAOKCKdo2WZdYwBcOfjbEOF3v2G99'; // your private key here
+                        var privateKey = process.env.LTRECAPTCHAPRIVATEKEY; // your private key here
                         var ip = req.ip;
                         var challenge = req.body.recaptcha_challenge_field;
                         var response = req.body.recaptcha_response_field;
