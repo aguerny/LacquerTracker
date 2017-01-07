@@ -9,6 +9,7 @@ var brandSchema = mongoose.Schema({
     bio: String,
     photo: String,
     official: Boolean,
+    alternatenames: [String],
 });
 
 

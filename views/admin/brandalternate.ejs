@@ -1,0 +1,38 @@
+<% include ../layoutTop %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    	<section>
+            <div>
+                <% if (typeof message !== "undefined") { %>
+                    <center><%= message %><br><br><br><br></center>
+                <% } %>
+        		<form action="/admin/brandalternate" method="post">
+    	     		<h3>Add Alternate Brand Names:</h3><br><br>
+                    Official Brand:<br><input type="text" list="brands" name="brand" class="width45" required autofocus><br><br><br>
+                    Alternate Brand Name (please enter only one at a time):<br><input type="text" name="alternate" class="width45" required><br><br><br>
+                    <input type="submit" value="Submit" class="button">
+                </form>
+            </div>
+            <div>
+                <table>
+                    <table id="brandalternates" class="sortable browsetable" style="width:100%">
+                    <tr><th><span>Brand</span></th><th><span>Brand Alternate Names</span></th></tr>
+                    <% for (var i=0; i<brands.length; i++) {%>
+                        <tr><td><span><%=brands[i].name%></span></a></td>
+                        <td><span><%=brands[i].alternatenames%></span></a></td></tr>
+                    <% } %>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+
+<datalist id="brands">
+    <% for (i=0; i<brandnames.length; i++) {%>
+        <option value="<%=brandnames[i]%>">
+    <% } %>
+</datalist>
+
+<% include ../layoutBottom %>

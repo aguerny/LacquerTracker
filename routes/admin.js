@@ -414,6 +414,63 @@ app.post('/admin/brandedit/:id', isLoggedIn, function(req, res) {
 });
 
 
+//admin add alternate polish brand names
+app.get('/admin/brandalternate', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        Polish.find().distinct('brand', function(error, brands) {
+            var allbrands = _.sortBy(brands, function(b) {return b.toLowerCase();});
+            Brand.find({alternatenames: {$exists: true, $not: {$size: 0}}}, function (error, somebrands) {
+                data = {};
+                data.brandnames = allbrands;
+                data.brands = somebrands;
+                data.title = 'Add Alternate Brand Names - Lacquer Tracker';
+                res.render('admin/brandalternate.ejs', data);
+            })
+        })
+    } else {
+        res.redirect('/error');
+    }
+});
+
+
+app.post('/admin/brandalternate', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        Polish.find().distinct('brand', function(error, brands) {
+            var allbrands = _.sortBy(brands, function(b) {return b.toLowerCase();});
+            console.log(req.body.brand);
+                Brand.findOne({name:sanitizer.sanitize(req.body.brand)}, function(err, brand) {
+                    console.log(brand);
+                    if (brand) {
+                        brand.alternatenames.addToSet(sanitizer.sanitize(req.body.alternate.toLowerCase()));
+                        brand.save(function(err) {
+                            Brand.find({}, function (error, somebrands) {
+                                data = {};
+                                data.title = 'Add Alternate Brand Names - Lacquer Tracker';
+                                data.brandnames = allbrands;
+                                data.brands = somebrands;
+                                data.message = 'Alternate name successfully saved. Add another?';
+                                res.render('admin/brandalternate.ejs', data);
+                            })
+                        })
+                    } else {
+                        Brand.find({}, function (error, somebrands) {
+                            data = {};
+                            data.title = 'Add Alternate Brand Names - Lacquer Tracker';
+                            data.brandnames = allbrands;
+                            data.brands = somebrands;
+                            data.message = 'Error adding alternate name.';
+                            res.render('admin/brandalternate.ejs', data);
+                        })
+                    }
+                })
+        })
+    } else {
+        res.redirect('/error');
+    }
+});
+
+        
+
 
 };
 

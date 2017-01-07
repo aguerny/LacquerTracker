@@ -118,7 +118,16 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                 data.pdupes = markdown(polish.dupes);
                 data.linkbrand = polish.brand.replace("%20"," ");
                 data.linkname = polish.name.replace("%20"," ");
-                data.types = PolishTypes;
+                
+                var formattedTypes = PolishTypes.map(function(type) {
+                    return {value: type, text: type};
+                });
+                data.types = formattedTypes;
+
+                var formattedColors = PolishColors.map(function(color) {
+                    return {value: color, text: color};
+                });
+                data.colors = formattedColors;
 
                 Photo.find({polishid : polish.id, pendingdelete:false}, function(err, photo) {
                     if (photo.length < 1) {
@@ -310,11 +319,11 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
             })
         } else {
             var newPolish = new Polish ({
-                name: sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
-                brand: sanitizer.sanitize((req.body.brand).replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
+                name: sanitizer.sanitize((req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,''))),
+                brand: sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,''))),
                 batch: sanitizer.sanitize(req.body.batch),
-                indie: req.body.indie,
-                code: sanitizer.sanitize(req.body.code).replace(/^\s+|\s+$/g,''),
+                indie: sanitizer.sanitize(req.body.indie),
+                code: sanitizer.sanitize(req.body.code.replace(/^\s+|\s+$/g,'')),
                 keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
                 dateupdated: new Date(),
                 dupes: sanitizer.sanitize(req.body.dupes),
@@ -325,27 +334,29 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                     res.redirect('/error');
                 } else {
                     if (req.body.type !== undefined) {
-                        newPolish.type = req.body.type;
+                        newPolish.type = sanitizer.sanitize(req.body.type);
                     } else {
                         newPolish.type = '';
                     }
                     if (req.body.colorcat !== undefined) {
-                        newPolish.colorcat = req.body.colorcat;
+                        newPolish.colorcat = sanitizer.sanitize(req.body.colorcat);
                     } else {
                         newPolish.colorcat = '';
                     }
                     newPolish.save(function(err) {
-                        Brand.findOne({name: req.body.brand.replace(/^\s+|\s+$/g,'')}, function(err, brand) {
+                        Brand.findOne({name: sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')))}, function(err, brand) {
                             //check if brand is already in brand database
                             if (brand) {
                                 res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
                             } else {
+                                var brandName = sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')));
                                 var newBrand = new Brand ({
-                                    name: req.body.brand.replace(/^\s+|\s+$/g,''),
+                                    name: brandName,
                                     website: '',
                                     bio: '',
                                     photo: '',
                                     official: false,
+                                    alternatenames: [brandName.toLowerCase()]
                                 })
                                 newBrand.save(function(err) {
                                     res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
@@ -385,8 +396,8 @@ app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
         if (!p) {
             res.redirect('/error');
         } else {
-            p.name = sanitizer.sanitize((req.body.name).replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
-            p.brand = sanitizer.sanitize((req.body.brand).replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")),
+            p.name = sanitizer.sanitize((req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-"))),
+            p.brand = sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-"))),
             p.dupes = sanitizer.sanitize(req.body.dupes);
             p.dateupdated = new Date();
             p.save(function(err) {
