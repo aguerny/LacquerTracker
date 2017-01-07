@@ -17,67 +17,20 @@
             <div>
         		<form action="/polishadd" method="post">
     	     		<h3>Add a new polish:</h3><br><br>
-        			Name:<br><input type="text" name="name" class="width45" required><br><br><br>
+        			Name:<br><input type="text" name="name" class="width45" required autofocus><br><br><br>
         			Brand:<br><input type="text" list="brands" name="brand" class="width45" required><br><br><br>
                     Collection:<br><input type="text" name="batch" class="width45"><br><i>Please format like: 2013 Off Shore (Summer)</i><br><br><br>
                     Code:<br><input type="text" name="code" class="width45"><br><br><br>
                     Color Category: <br><ul>
-                    <input type="checkbox" name="colorcat" value="black">black<br>
-                    <input type="checkbox" name="colorcat" value="blue">blue<br>
-                    <input type="checkbox" name="colorcat" value="brown">brown<br>
-                    <input type="checkbox" name="colorcat" value="clear">clear<br>
-                    <input type="checkbox" name="colorcat" value="copper">copper<br>
-                    <input type="checkbox" name="colorcat" value="coral">coral<br>
-                    <input type="checkbox" name="colorcat" value="gold">gold<br>
-                    <input type="checkbox" name="colorcat" value="green">green<br>
-                    <input type="checkbox" name="colorcat" value="grey">grey<br>
-                    <input type="checkbox" name="colorcat" value="multi">multi<br>
-                    <input type="checkbox" name="colorcat" value="nude">nude<br>
-                    <input type="checkbox" name="colorcat" value="orange">orange<br>
-                    <input type="checkbox" name="colorcat" value="pink">pink<br>
-                    <input type="checkbox" name="colorcat" value="purple">purple<br>
-                    <input type="checkbox" name="colorcat" value="red">red<br>
-                    <input type="checkbox" name="colorcat" value="silver">silver<br>
-                    <input type="checkbox" name="colorcat" value="teal">teal<br>
-                    <input type="checkbox" name="colorcat" value="white">white<br>
-                    <input type="checkbox" name="colorcat" value="yellow">yellow<br>
+                    <% for (i=0; i<colors.length; i++) { %>
+                        <input type="checkbox" name="colorcat" value="<%=colors[i]%>"><%=colors[i]%><br>
+                    <% } %>
                     </ul><br><br>
                     Types:<br><ul>
-                    <input type="checkbox" name="type" value="blackened">blackened<br>
-                    <input type="checkbox" name="type" value="chrome">chrome<br>
-                    <input type="checkbox" name="type" value="crackle">crackle<br>
-                    <input type="checkbox" name="type" value="crelly">crelly<br>
-                    <input type="checkbox" name="type" value="creme">creme<br>
-                    <input type="checkbox" name="type" value="duochrome">duochrome<br>
-                    <input type="checkbox" name="type" value="flakie">flakie<br>
-                    <input type="checkbox" name="type" value="fleck">glass fleck<br>
-                    <input type="checkbox" name="type" value="foil">foil<br>
-                    <input type="checkbox" name="type" value="frost">frost<br>
-                    <input type="checkbox" name="type" value="gel">gel<br>
-                    <input type="checkbox" name="type" value="glitter">glitter<br>
-                    <input type="checkbox" name="type" value="glow">glow in the dark<br>
-                    <input type="checkbox" name="type" value="holo">holo<br>
-                    <input type="checkbox" name="type" value="jelly">jelly<br>
-                    <input type="checkbox" name="type" value="magnetic">magnetic<br>
-                    <input type="checkbox" name="type" value="matte">matte<br>
-                    <input type="checkbox" name="type" value="metallic">metallic<br>
-                    <input type="checkbox" name="type" value="microglitter">microglitter<br>
-                    <input type="checkbox" name="type" value="microshimmer">microshimmer<br>
-                    <input type="checkbox" name="type" value="multichrome">multichrome<br>
-                    <input type="checkbox" name="type" value="neon">neon<br>
-                    <input type="checkbox" name="type" value="pearl">pearl<br>
-                    <input type="checkbox" name="type" value="pen">pen<br>
-                    <input type="checkbox" name="type" value="satin">satin<br>
-                    <input type="checkbox" name="type" value="scented">scented<br>
-                    <input type="checkbox" name="type" value="sheer">sheer<br>
-                    <input type="checkbox" name="type" value="shimmer">shimmer<br>
-                    <input type="checkbox" name="type" value="striper">striper<br>
-                    <input type="checkbox" name="type" value="suede">suede<br>
-                    <input type="checkbox" name="type" value="texture">texture<br>
-                    <input type="checkbox" name="type" value="thermal">thermal<br>
-                    <input type="checkbox" name="type" value="top/base">top/base coat<br>
-                    <input type="checkbox" name="type" value="uv">UV color change</ul>
-                    <br><br>
+                    <% for (i=0; i<types.length; i++) { %>
+                        <input type="checkbox" name="type" value="<%=types[i]%>"><%=types[i]%><br>
+                    <% } %>
+                    </ul><br><br>
                     Is this an indie?: <select name="indie">
                         <option value="off">no</option>
                         <option value="on">yes</option>

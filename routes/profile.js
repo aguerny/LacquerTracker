@@ -6,6 +6,7 @@ var UserPhoto = require('../app/models/userphoto');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
 var _ = require('lodash');
+var PolishColors = require('../app/constants/polishColors');
 
 
 module.exports = function(app, passport) {
@@ -37,7 +38,7 @@ app.get('/profile/:username', function(req, res) {
             data.profilephoto = user.profilephoto;
             data.notifications = user.notifications;
             data.useremail = user.useremail;
-            data.colors = ['black','blue','brown','clear','copper','coral','gold','green','grey','multi','nude','orange','pink','purple','red','silver','teal','white','yellow'];
+            data.colors = PolishColors;
             yesphotos = [];
             for (i=0; i < user.photos.length; i++) {
                 if (user.photos[i].onprofile === "yes") {

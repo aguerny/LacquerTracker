@@ -9,7 +9,7 @@
     	     		<h3>Add dupes:</h3><br><br>
         			Name:<br><input type="text" name="name" value="<%= editname %>" class="width45" <% if (isAuthenticated()) { if (user.level !== "admin" || user.adminview !== true) { %> readonly="readonly" <% } } %> required><br><br><br>
                     Brand:<br><input type="text" name="brand" value="<%= editbrand %>" class="width45" <% if (isAuthenticated()) { if (user.level !== "admin" || user.adminview !== true) { %> readonly="readonly" <% } } %> required><br><br><br>
-                    Dupes:<br><textarea name="dupes" value="<%= editdupes %>" class="width45" rows="10" placeholder="Format links to other polishes as: [Name of polish](Link)"><%= editdupes %></textarea><br><br><br><br>
+                    Dupes:<br><textarea name="dupes" autofocus value="<%= editdupes %>" class="width45" rows="10" placeholder="Format links to other polishes as: [Name of polish](Link)"><%= editdupes %></textarea><br><br><br><br>
                     <input type="submit" value="Submit" class="button">
                 </form>
             </div>

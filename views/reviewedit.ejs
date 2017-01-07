@@ -14,7 +14,7 @@
                     <option value="4" <% if (rating === "4") { %> selected="selected" <%}%>>****</option>
                     <option value="5" <% if (rating === "5") { %> selected="selected" <%}%>>*****</option>
                 </select><br><br><br>
-                Review:<br> <textarea class="width50" rows="5" name="userreview"><%= userreview %></textarea><br><br><br>
+                Review:<br> <textarea autofocus class="width50" rows="5" name="userreview"><%= userreview %></textarea><br><br><br>
                 Notes: <i>(Will only be visible to you.)</i><br> <textarea  class="width50" rows="5" name="notes"><%= notes %></textarea><br><br><br>
                 <input type="submit" value="Submit" class="button">
             </form>

@@ -14,7 +14,7 @@ function confirm_alert(node) {
                 <form action="/photo/remove/<%= photo.polishid %>/<%= photo.id %>" method="post">
 	     		    <br><h3>Flag photo:</h3><br>
                     <br><img class="polishphotosmall" src="<%= photo.location %>"><br><br>
-                    Reason: <input name="pendingreason" class="width50" required><br><br>
+                    Reason: <input name="pendingreason" class="width50" required autofocus><br><br>
                     <input type="submit" value="Submit" class="button">
                 </form>
             </div>

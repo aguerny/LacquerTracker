@@ -27,7 +27,7 @@ app.post('/email/:username', isLoggedIn, function(req, res) {
         if (err || !user || user.useremail==="off") {
             res.redirect('/error');
         } else if (user.useremail === "on") {
-            var privateKey = '6Leqre8SAAAAAOKCKdo2WZdYwBcOfjbEOF3v2G99'; // your private key here
+            var privateKey = process.env.LTRECAPTCHAPRIVATEKEY; // your private key here
             var ip = req.ip;
             var challenge = req.body.recaptcha_challenge_field;
             var response = req.body.recaptcha_response_field;

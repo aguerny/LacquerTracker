@@ -6,6 +6,8 @@ var Photo = require('../app/models/photo');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
 var _ = require('lodash');
+var PolishTypes = require('../app/constants/polishTypes');
+var PolishColors = require('../app/constants/polishColors');
 
 module.exports = function(app, passport) {
 
@@ -30,6 +32,16 @@ app.get('/polish/:brand/:name', function(req, res) {
             data.pdupes = markdown(polish.dupes);
             data.linkbrand = polish.brand.replace("%20"," ");
             data.linkname = polish.name.replace("%20"," ");
+
+            var formattedTypes = PolishTypes.map(function(type) {
+                return {value: type, text: type};
+            });
+            data.types = formattedTypes;
+
+            var formattedColors = PolishColors.map(function(color) {
+                return {value: color, text: color};
+            });
+            data.colors = formattedColors;
 
             Photo.find({polishid : polish.id, pendingdelete:false}, function(err, photo) {
                 if (photo.length < 1) {
@@ -106,6 +118,7 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                 data.pdupes = markdown(polish.dupes);
                 data.linkbrand = polish.brand.replace("%20"," ");
                 data.linkname = polish.name.replace("%20"," ");
+                data.types = PolishTypes;
 
                 Photo.find({polishid : polish.id, pendingdelete:false}, function(err, photo) {
                     if (photo.length < 1) {
@@ -277,6 +290,8 @@ app.get('/polishadd', isLoggedIn, function(req, res) {
         data = {};
         data.title = 'Add a Polish - Lacquer Tracker';
         data.brands = allbrands;
+        data.types = PolishTypes;
+        data.colors = PolishColors;
         res.render('polish/add.ejs', data);
     })
 });
