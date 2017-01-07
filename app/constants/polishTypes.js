@@ -34,5 +34,4 @@ var types = [
 	"uv"
 ];
 
-
 module.exports = types;

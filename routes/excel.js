@@ -15,6 +15,9 @@ var csv = require('ya-csv');
 var PolishTypes = require('../app/constants/polishTypes');
 var PolishColors = require('../app/constants/polishColors');
 
+var PolishTypes = require('../app/constants/polishTypes');
+
+
 module.exports = function(app, passport) {
 
 
