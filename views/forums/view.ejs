@@ -40,7 +40,7 @@ function confirm_alert(node) {
                         <% if (isAuthenticated()) { %>
                             <div class="replylink"><a href="#">Reply</a></div>
                             <div class="replybox"><br><form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[i].id %>/add" method="post">
-                                <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                <textarea name="message" placeholder="Reply here." class="width40" rows="5" required autofocus></textarea><br><br>
                                 <input type="submit" value="Submit" class="button">
                             </form></div>
                         <% } else { %>

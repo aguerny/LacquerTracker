@@ -16,7 +16,7 @@
                     <option value="lt" <% if (forumcat === "lt") { %> selected="selected" <%}%>>Feedback / Suggestions</option>
                     <option value="offtopic" <% if (forumcat === "offtopic") { %> selected="selected" <%}%>>Off Topic</option>
                     </select><br><br>
-                Title:<br><input type="text" name="posttitle" class="width53" required><br><br><br>
+                Title:<br><input type="text" name="posttitle" class="width53" required autofocus><br><br><br>
                 Post:<br><textarea type="text" class="markItUp" name="postmessage" required></textarea><br>
                 Include an image? <input type="file" value="photo" name="photo" /><br><br>
                 Do you want this photo to also appear on your profile page? <select name="onprofile">

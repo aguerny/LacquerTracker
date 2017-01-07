@@ -35,7 +35,8 @@ app.configure(function() {
 	app.use(express.static(__dirname+'/public')); // Catch static files
 	app.use(express.logger('dev')); // log every request to the console
 	/*app.use(express.logger({format: 'dev', stream: fs.createWriteStream('app.log', {'flags': 'w'})}));*/
-	app.use(express.cookieParser('lala')); // read cookies (needed for auth)
+    var cookieSecret = process.env.LTCOOKIESECRET || "Development Cookie Secret";
+	app.use(express.cookieParser(cookieSecret)); // read cookies (needed for auth)
 	app.use(express.bodyParser({uploadDir:__dirname+'/public/images/tmp/'})); // get information from HTML forms
 	app.use(express.favicon(__dirname+'/public/images/lt.png'));
 	app.use(express.json());

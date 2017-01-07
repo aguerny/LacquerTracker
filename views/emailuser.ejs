@@ -20,7 +20,7 @@
         <div>
             <h3>Send message to <%= username %>:</h3><br><i>Be sure to include a reply e-mail if you need a response.</i><br><br><br><br>
             <form action="/email/<%=username%>" method="post">
-                <textarea rows="10" class="width50" type="text" name="emailmessage" required <%if (typeof emailmessage !== "undefined") {%>value="<%=emailmessage%>" <%}%>><%if (typeof emailmessage !== "undefined") {%><%=emailmessage%><%}%></textarea><br><br><br>
+                <textarea autofocus rows="10" class="width50" type="text" name="emailmessage" required <%if (typeof emailmessage !== "undefined") {%>value="<%=emailmessage%>" <%}%>><%if (typeof emailmessage !== "undefined") {%><%=emailmessage%><%}%></textarea><br><br><br>
                 <div id="recaptcha_widget" style="display: none;">
                     <div id="recaptcha_image"></div>
                     <span class="recaptcha_only_if_image">Enter the words above:</span>
@@ -33,10 +33,10 @@
                     <div><a href="javascript:Recaptcha.showhelp()">Help</a><br />
                     </div-->
 
-                    <script type="text/javascript" src="http://api.recaptcha.net/challenge?k=6Leqre8SAAAAAPF0aSeJiXTZVodtro9YDxlA-9a_"></script>
+                    <script type="text/javascript" src="http://api.recaptcha.net/challenge?k=6Lf6yRAUAAAAAIUum-58aneAsxUsLWbVrMhRiQ-c"></script>
 
                     <noscript>
-                    <iframe src="http://api.recaptcha.net/noscript?k=k=6Leqre8SAAAAAPF0aSeJiXTZVodtro9YDxlA-9a_" height="200" width="500" frameborder="0"></iframe>
+                    <iframe src="http://api.recaptcha.net/noscript?k=k=6Lf6yRAUAAAAAIUum-58aneAsxUsLWbVrMhRiQ-c" height="200" width="500" frameborder="0"></iframe>
                     <textarea name="recaptcha_challenge_field" rows="3" class="width50"></textarea>
                     <input type="'hidden'" name="'recaptcha_response_field'" value="'manual_challenge'">
                     </noscript>
