@@ -306,69 +306,86 @@ app.get('/polishadd', isLoggedIn, function(req, res) {
 });
 
 app.post('/polishadd', isLoggedIn, function(req, res) {
-    Polish.findOne({ name : req.body.name.replace(/^\s+|\s+$/g,''), brand : req.body.brand.replace(/^\s+|\s+$/g,'')}, function(err, polish) {
-        //check to see if there's already a polish name and brand in the database
-        if (polish) {
-            Polish.find().distinct('brand', function(error, brands) {
-                var allbrands = _.sortBy(brands, function(b) {return b.toLowerCase();});
-                data = {};
-                data.title = 'Add a Polish - Lacquer Tracker';
-                data.message = 'That polish already exists in the database.';
-                data.brands = allbrands;
-                res.render('polish/add.ejs', data);
-            })
-        } else {
-            var newPolish = new Polish ({
-                name: sanitizer.sanitize((req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,''))),
-                brand: sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,''))),
-                batch: sanitizer.sanitize(req.body.batch),
-                indie: sanitizer.sanitize(req.body.indie),
-                code: sanitizer.sanitize(req.body.code.replace(/^\s+|\s+$/g,'')),
-                keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
-                dateupdated: new Date(),
-                dupes: sanitizer.sanitize(req.body.dupes),
-                swatch: '',
-            });
-            newPolish.save(function(err) {
-                if (err) {
-                    res.redirect('/error');
-                } else {
-                    if (req.body.type !== undefined) {
-                        newPolish.type = sanitizer.sanitize(req.body.type);
-                    } else {
-                        newPolish.type = '';
-                    }
-                    if (req.body.colorcat !== undefined) {
-                        newPolish.colorcat = sanitizer.sanitize(req.body.colorcat);
-                    } else {
-                        newPolish.colorcat = '';
-                    }
-                    newPolish.save(function(err) {
-                        Brand.findOne({name: sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')))}, function(err, brand) {
-                            //check if brand is already in brand database
-                            if (brand) {
-                                res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
-                            } else {
-                                var brandName = sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')));
-                                var newBrand = new Brand ({
-                                    name: brandName,
-                                    website: '',
-                                    bio: '',
-                                    photo: '',
-                                    official: false,
-                                    alternatenames: [brandName.toLowerCase()]
-                                })
-                                newBrand.save(function(err) {
-                                    res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
-                                })
-                            }
-                        })
+    if (req.body.name.length > 0 && req.body.brand.length > 0) {
+        var polishNameToFind = sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,''));
+        var polishBrandEntered = sanitizer.sanitize(req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,''));
+        var polishBrandToFind;
+        Brand.findOne({alternatenames:polishBrandEntered.toLowerCase()}, function(err, brand) {
+            console.log(polishNameToFind);
+            if (brand) {
+                polishBrandToFind = brand.name;
+            } else {
+                polishBrandToFind = polishBrandEntered;
+            }
+            Polish.find({name: new RegExp(polishNameToFind,"i"), brand: new RegExp(polishBrandToFind, "i")}, function(err, polish) {
+                if (polish.length !== 0) {
+                    Polish.find().distinct('brand', function(error, brands) {
+                        var allbrands = _.sortBy(brands, function(b) {return b.toLowerCase();});
+                        data = {};
+                        data.title = 'Add a Polish - Lacquer Tracker';
+                        data.message = 'That polish already exists in the database.';
+                        data.brands = allbrands;
+                        data.types = PolishTypes;
+                        data.colors = PolishColors;
+                        res.render('polish/add.ejs', data);
                     })
+                } else {
+                    var newPolish = new Polish ({
+                        name: polishNameToFind,
+                        brand: polishBrandToFind,
+                        batch: sanitizer.sanitize(req.body.batch),
+                        indie: sanitizer.sanitize(req.body.indie),
+                        code: sanitizer.sanitize(req.body.code.replace(/^\s+|\s+$/g,'')),
+                        keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
+                        dateupdated: new Date(),
+                        dupes: sanitizer.sanitize(req.body.dupes),
+                        swatch: '',
+                    });
+                    newPolish.save(function(err) {
+                        if (err) {
+                            res.redirect('/error');
+                        } else {
+                            if (req.body.type !== undefined) {
+                                newPolish.type = sanitizer.sanitize(req.body.type);
+                            } else {
+                                newPolish.type = '';
+                            }
+                            if (req.body.colorcat !== undefined) {
+                                newPolish.colorcat = sanitizer.sanitize(req.body.colorcat);
+                            } else {
+                                newPolish.colorcat = '';
+                            }
+                            newPolish.save(function(err) {
+                                Brand.findOne({name: polishBrandToFind}, function(err, brand) {
+                                    //check if brand is already in brand database
+                                    if (brand) {
+                                        res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
+                                    } else {
+                                        var newBrand = new Brand ({
+                                            name: polishBrandToFind,
+                                            website: '',
+                                            bio: '',
+                                            photo: '',
+                                            official: false,
+                                            alternatenames: [polishBrandToFind.toLowerCase()]
+                                        })
+                                        newBrand.save(function(err) {
+                                            res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
+                                        })
+                                    }
+                                })
+                            })
+                        }
+                    });
                 }
             });
-        }
-    });
+        });
+    } else {
+        res.redirect('/error');
+    }
 });
+           
+
 
 
 ///////////////////////////////////////////////////////////////////////////
