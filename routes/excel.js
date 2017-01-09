@@ -37,6 +37,15 @@ app.post('/import', isLoggedIn, function(req, res) {
                     polishBrandToFind = brand.name;
                 } else {
                     polishBrandToFind = polishBrandEntered;
+                    var newBrand = new Brand ({
+                        name: polishBrandToFind,
+                        website: '',
+                        bio: '',
+                        photo: '',
+                        official: false,
+                        alternatenames: [polishBrandToFind.toLowerCase()]
+                    })
+                    newBrand.save();
                 }
                 Polish.find({name: new RegExp(polishNameToFind,"i"), brand: new RegExp(polishBrandToFind, "i")}, function(err, polish) {
                     if (polish.length !== 0) {

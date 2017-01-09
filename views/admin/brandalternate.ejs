@@ -6,12 +6,12 @@
     	<section>
             <div>
                 <% if (typeof message !== "undefined") { %>
-                    <center><%= message %><br><br><br><br></center>
+                    <center><b><%= message %></b><br><br><br><br></center>
                 <% } %>
         		<form action="/admin/brandalternate" method="post">
     	     		<h3>Add Alternate Brand Names:</h3><br><br>
                     Official Brand:<br><input type="text" list="brands" name="brand" class="width45" required autofocus><br><br><br>
-                    Alternate Brand Name (please enter only one at a time):<br><input type="text" name="alternate" class="width45" required><br><br><br>
+                    Alternate Brand Name (Please enter only one at a time. Database automatically checks case sensitivity.):<br><input type="text" name="alternate" class="width45" required><br><br><br>
                     <input type="submit" value="Submit" class="button">
                 </form>
             </div>

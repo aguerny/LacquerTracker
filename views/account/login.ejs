@@ -4,14 +4,10 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     	<section>
-            <div id="smalllayout">
-                <% if (typeof message !== "undefined") { %>
-                    <% if (message.length > 0) { %>
-                        <center><h3><%= message %></h3><br><br></center>
-                    <% } %>
-                <% } %>
-            </div>
     		<div>
+                <% if (typeof message !== "undefined" && message.length > 0) { %>
+                    <center><b><%= message %></b><br><br><br><br></center>
+                <% } %>
                 <form action="/login" method="post">
     	     		<h3>Log in below:</h3><br>
         			Username:<br><input type="text" name="username" class="width45" autofocus><br><br><br>
@@ -19,13 +15,6 @@
         			<input type="submit" value="Submit" class="button" id="login-button">
         		</form>
                 <br><a href="/passwordreset">Forgot your password?</a>
-            </div>
-            <div id="biglayout">
-                <% if (typeof message !== "undefined") { %>
-                    <% if (message.length > 0) { %>
-                        <br><br><br><b><%= message %></b>
-                    <% } %>
-                <% } %>
             </div>
     	</section>
     </div>

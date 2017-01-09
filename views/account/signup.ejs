@@ -12,12 +12,10 @@ custom_theme_widget: 'recaptcha_widget'
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
-        <div id="smalllayout">
-            <% if (typeof message !== "undefined") { %>
-                <center><h3><%= message %></h3><br><br></center>
-            <% } %>
-        </div>
         <div>
+            <% if (typeof message !== "undefined") { %>
+                <center><b><%= message %></b><br><br><br><br></center>
+            <% } %>
             <form action="/signup" method="post">
                 <h3>Fill out the information below to get started.</h3><br><br>
                 E-mail address:<br><input type="email" name="email" class="width45" required value="<%=email%>" placeholder="A validation message will be sent." autofocus><br><br><br>
@@ -46,11 +44,6 @@ custom_theme_widget: 'recaptcha_widget'
                 </div><br><br><br>
                 <input type="submit" value="Submit" class="button" id="login-button">
             </form>
-        </div>
-        <div id="biglayout">
-            <% if (typeof message !== "undefined") { %>
-                <br><b><%= message %></b>
-            <% } %>
         </div>
     </section>
     </div>

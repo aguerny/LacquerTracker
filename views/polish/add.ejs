@@ -4,17 +4,10 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     	<section>
-            <div id="smalllayout">
-                <% if (typeof message !== "undefined") { %>
-                    <center><h3><%= message %></h3><br><br></center>
-                <% } %>
-            </div>
-            <div id="biglayout">
-                <% if (typeof message !== "undefined") { %>
-                    <b><%= message %></b><br><br><br>
-                <% } %>
-            </div>
             <div>
+                <% if (typeof message !== "undefined") { %>
+                    <center><b><%= message %></b><br><br><br><br></center>
+                <% } %>
         		<form action="/polishadd" method="post">
     	     		<h3>Add a new polish:</h3><br><br>
         			Name:<br><input type="text" name="name" class="width45" required autofocus><br><br><br>

@@ -12,12 +12,10 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
-        <div id="smalllayout">
-            <% if (typeof message !== "undefined") { %>
-                <center><h3><%= message %></h3><br><br></center>
-            <% } %>
-        </div>
         <div>
+            <% if (typeof message !== "undefined") { %>
+                <center><b><%= message %></b><br><br><br><br></center>
+            <% } %>
             <h3>Send message to <%= username %>:</h3><br><i>Be sure to include a reply e-mail if you need a response.</i><br><br><br><br>
             <form action="/email/<%=username%>" method="post">
                 <textarea autofocus rows="10" class="width50" type="text" name="emailmessage" required <%if (typeof emailmessage !== "undefined") {%>value="<%=emailmessage%>" <%}%>><%if (typeof emailmessage !== "undefined") {%><%=emailmessage%><%}%></textarea><br><br><br>
@@ -43,11 +41,6 @@
                 </div><br><br><br>
                 <input type="submit" value="Submit" class="button">
             </form>
-        </div>
-        <div id="biglayout">
-            <% if (typeof message !== "undefined") { %>
-                <br><b><%= message %></b>
-            <% } %>
         </div>
     </section>
     </div>

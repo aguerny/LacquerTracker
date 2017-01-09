@@ -413,8 +413,23 @@ app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
         if (!p) {
             res.redirect('/error');
         } else {
-            p.name = sanitizer.sanitize((req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-"))),
-            p.brand = sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-"))),
+            if (req.user.level === "admin") {
+                p.name = sanitizer.sanitize((req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")));
+                p.brand = sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")));
+                Brand.findOne({alternatenames:sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")).toLowerCase())}, function(err, brand) {
+                    if (brand === null || brand === undefined) {
+                        var newBrand = new Brand ({
+                            name: sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-"))),
+                            website: '',
+                            bio: '',
+                            photo: '',
+                            official: false,
+                            alternatenames: [sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")).toLowerCase())]
+                        })
+                        newBrand.save();
+                    }
+                });
+            }
             p.dupes = sanitizer.sanitize(req.body.dupes);
             p.dateupdated = new Date();
             p.save(function(err) {

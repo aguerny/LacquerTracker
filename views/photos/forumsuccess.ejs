@@ -4,21 +4,12 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
         <section>
-            <div id="smalllayout">
-                <% if (typeof message !== "undefined" && typeof url !== "undefined") { %>
-                    <center><h3><%= message %></h3><br>
-                    <input id="copyurl" class="width80" value=<%=url%>><br><br><br>
-                <% } %>
-            </div>
             <div>
+                <% if (typeof message !== "undefined") { %>
+                    <center><b><%= message %></b><br><br><br><br></center>
+                <% } %>
                 <b>Upload Success!</b><br><br>
                 <img class="polishphotosmall" src="<%=srcurl%>"/>
-            </div>
-            <div id="biglayout">
-                <% if (typeof message !== "undefined" && typeof url !== "undefined") { %>
-                    <br><br><b><%= message %></b><br><br>
-                    <textarea id="copyurl" class="width80"><%=url%></textarea><br><input type="button" id="copy" value="Copy to Clipboard"/>
-                <% } %>
             </div>
         </section>
     </div>

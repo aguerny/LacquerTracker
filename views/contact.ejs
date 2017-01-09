@@ -12,11 +12,6 @@ custom_theme_widget: 'recaptcha_widget'
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
-        <div id="smalllayout">
-            <% if (typeof message !== "undefined") { %>
-                <center><h3><%= message %></h3><br><br></center>
-            <% } %>
-        </div>
         <div id="contact-wrap">
             <div id="contact-left_col">
                 <h4>Let us know you care!</h4>
@@ -24,6 +19,9 @@ custom_theme_widget: 'recaptcha_widget'
                 <div id="biglayout"><img id="polish-image2" src="/images/polishheart.jpg"/></div>
             </div>
             <div id="contact-right_col">
+                <% if (typeof message !== "undefined") { %>
+                    <center><b><%= message %></b><br><br><br><br></center>
+                <% } %>
                 <form action="/contact" method="post" enctype="multipart/form-data">
                     Name:<br><input type="text" name="name" style="display:block; width:95%;" <%if (typeof inputname !== "undefined") {%>value="<%=inputname%>" <%}%> required autofocus><br><br>
                     Email:<br><input type="text" name="email" style="display:block; width:95%;" <%if (typeof inputemail !== "undefined") {%>value="<%=inputemail%>" <%}%>required><br><br>
@@ -50,11 +48,6 @@ custom_theme_widget: 'recaptcha_widget'
                     </div><br><br>
                     <input type="submit" class="button" value="Submit Feedback"/>
                 </form>
-                <div id="biglayout">
-                    <% if (typeof message !== "undefined") { %>
-                        <br><br><b><%= message %></b><br><br><br>
-                    <% } %>
-                </div>
                 <div id="smalllayout"><br><br><img id="polish-image" src="/images/polishheart.jpg"/></div>
             </div>
         </div>

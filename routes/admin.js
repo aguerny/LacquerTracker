@@ -113,7 +113,7 @@ app.get('/admin/pending/:pid/:id/:action', isLoggedIn, function(req, res) {
 app.get('/admin/duplicate', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
         data = {};
-        data.title = 'Duplicate Polishes - Lacquer Tracker';
+        data.title = 'Combine Duplicate Polishes - Lacquer Tracker';
         res.render('admin/duplicate.ejs', data);
     } else {
         res.redirect('/error');
@@ -122,23 +122,9 @@ app.get('/admin/duplicate', isLoggedIn, function(req, res) {
 
 app.post('/admin/duplicate', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
-        Polish.find({name:req.body.polishname, brand:req.body.polishbrand}, function(err, polishes) {
-            data = {};
-            data.title = 'Edit Duplicate Polishes - Lacquer Tracker';
-            data.polishes = polishes;
-            res.render('admin/duplicateedit.ejs', data);
-        })
-    } else {
-        res.redirect('/error');
-    }
-});
-
-
-app.post('/admin/duplicate/remove', isLoggedIn, function(req, res) {
-    if (req.user.level === "admin") {
-        if (req.body.keepid.length > 0) {
-            Polish.findById(mongoose.Types.ObjectId(req.body.keepid.replace(/^\s+|\s+$/g,'')), function(err, keep) {
-                Polish.findById(mongoose.Types.ObjectId(req.body.removeid.replace(/^\s+|\s+$/g,'')), function(err, remove) {
+        if (req.body.keepid.length > 0 && req.body.removeid.length > 0) {
+            Polish.findById(mongoose.Types.ObjectId(req.body.keepid), function(err, keep) {
+                Polish.findById(mongoose.Types.ObjectId(req.body.removeid), function(err, remove) {
                     User.find({ownedpolish:remove.id}, function(err, users) {
                         for (var j=0; j<users.length; j++) {
                             users[j].ownedpolish.remove(remove.id);
@@ -235,52 +221,17 @@ app.post('/admin/duplicate/remove', isLoggedIn, function(req, res) {
                             keep.save();
                         }
                     }
-                    res.redirect('/browse');
+                    data = {};
+                    data.title = 'Combine Duplicate Polishes - Lacquer Tracker';
+                    data.message = 'Polishes successfully combined. Please remember to delete the polish you wish to remove.'
+                    res.render('admin/duplicate.ejs', data);
                 })
             })
         } else {
-            Polish.findById(mongoose.Types.ObjectId(req.body.removeid.replace(/^\s+|\s+$/g,'')), function(err, remove) {
-                User.find({ownedpolish:remove.id}, function(err, users) {
-                    for (var i=0; i<users.length; i++) {
-                        users[i].ownedpolish.remove(remove.id);
-                        users[i].save();
-                    }
-                })
-
-                User.find({wantedpolish:remove.id}, function(err, users) {
-                    for (var i=0; i<users.length; i++) {
-                        users[i].wantedpolish.remove(remove.id);
-                        users[i].save();
-                    }
-                })
-
-                    
-                Photo.find({polishid:remove.id}, function(err, photos) {
-                    for (var i=0; i<photos.length; i++) {
-                        fs.unlink(path.resolve('./public' + photos[i].location), function(err) {
-                            if (err) throw err;
-                        })
-                        photos[i].remove();
-                    }
-                })
-
-                Review.find({polishid:remove.id}, function(err, reviews) {
-                    for (var i=0; i<reviews.length; i++) {
-                        reviews[i].remove();
-                    }
-                })
-
-                    
-                if (remove.swatch.length > 0) {
-                    fs.unlink(path.resolve('./public/images/swatches/' + remove.id + '.jpg'), function(err) {
-                            if (err) throw err;
-                    })
-                }
-
-                remove.remove();
-                
-                res.redirect('/browse');
-            })
+            data = {};
+            data.title = 'Combine Duplicate Polishes - Lacquer Tracker';
+            data.message = 'Error combining polishes.'
+            res.render('admin/duplicate.ejs', data);
         }
     } else {
         res.redirect('/error');
