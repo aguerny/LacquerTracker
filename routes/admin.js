@@ -109,18 +109,18 @@ app.get('/admin/pending/:pid/:id/:action', isLoggedIn, function(req, res) {
 });
 
 
-//admin duplicate polishes
-app.get('/admin/duplicate', isLoggedIn, function(req, res) {
+//admin combine polishes
+app.get('/admin/combine', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
         data = {};
-        data.title = 'Combine Duplicate Polishes - Lacquer Tracker';
-        res.render('admin/duplicate.ejs', data);
+        data.title = 'Combine Polishes - Lacquer Tracker';
+        res.render('admin/combine.ejs', data);
     } else {
         res.redirect('/error');
     }
 });
 
-app.post('/admin/duplicate', isLoggedIn, function(req, res) {
+app.post('/admin/combine', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
         if (req.body.keepid.length > 0 && req.body.removeid.length > 0) {
             Polish.findById(mongoose.Types.ObjectId(req.body.keepid), function(err, keep) {
@@ -222,17 +222,43 @@ app.post('/admin/duplicate', isLoggedIn, function(req, res) {
                         }
                     }
                     data = {};
-                    data.title = 'Combine Duplicate Polishes - Lacquer Tracker';
+                    data.title = 'Combine Polishes - Lacquer Tracker';
                     data.message = 'Polishes successfully combined. Please remember to delete the polish you wish to remove.'
-                    res.render('admin/duplicate.ejs', data);
+                    res.render('admin/combine.ejs', data);
                 })
             })
         } else {
             data = {};
-            data.title = 'Combine Duplicate Polishes - Lacquer Tracker';
+            data.title = 'Combine Polishes - Lacquer Tracker';
             data.message = 'Error combining polishes.'
-            res.render('admin/duplicate.ejs', data);
+            res.render('admin/combine.ejs', data);
         }
+    } else {
+        res.redirect('/error');
+    }
+});
+
+
+//admin duplicate polish search
+app.get('/admin/duplicate', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        data = {};
+        data.title = 'Duplicate Polish Search - Lacquer Tracker';
+        res.render('admin/duplicate.ejs', data);
+    } else {
+        res.redirect('/error');
+    }
+});
+
+
+app.post('/admin/duplicate', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        Polish.find({name:req.body.polishname, brand:req.body.polishbrand}, function(err, polishes) {
+            data = {};
+            data.title = 'Combine Polishes - Lacquer Tracker';
+            data.polishes = polishes;
+            res.render('admin/combine.ejs', data);
+        })
     } else {
         res.redirect('/error');
     }
