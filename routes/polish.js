@@ -307,8 +307,8 @@ app.get('/polishadd', isLoggedIn, function(req, res) {
 
 app.post('/polishadd', isLoggedIn, function(req, res) {
     if (req.body.name.length > 0 && req.body.brand.length > 0) {
-        var polishNameToFind = sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,''));
-        var polishBrandEntered = sanitizer.sanitize(req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,''));
+        var polishNameToFind = sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,''));
+        var polishBrandEntered = sanitizer.sanitize(req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,''));
         var polishBrandToFind;
         Brand.findOne({alternatenames:polishBrandEntered.toLowerCase()}, function(err, brand) {
             console.log(polishNameToFind);
@@ -336,7 +336,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                         batch: sanitizer.sanitize(req.body.batch),
                         indie: sanitizer.sanitize(req.body.indie),
                         code: sanitizer.sanitize(req.body.code.replace(/^\s+|\s+$/g,'')),
-                        keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
+                        keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
                         dateupdated: new Date(),
                         dupes: sanitizer.sanitize(req.body.dupes),
                         swatch: '',
@@ -414,17 +414,17 @@ app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
             res.redirect('/error');
         } else {
             if (req.user.level === "admin") {
-                p.name = sanitizer.sanitize((req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")));
-                p.brand = sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")));
-                Brand.findOne({alternatenames:sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")).toLowerCase())}, function(err, brand) {
+                p.name = sanitizer.sanitize((req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")));
+                p.brand = sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")));
+                Brand.findOne({alternatenames:sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")).toLowerCase())}, function(err, brand) {
                     if (brand === null || brand === undefined) {
                         var newBrand = new Brand ({
-                            name: sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-"))),
+                            name: sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-"))),
                             website: '',
                             bio: '',
                             photo: '',
                             official: false,
-                            alternatenames: [sanitizer.sanitize((req.body.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")).toLowerCase())]
+                            alternatenames: [sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")).toLowerCase())]
                         })
                         newBrand.save();
                     }
@@ -433,7 +433,7 @@ app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
             p.dupes = sanitizer.sanitize(req.body.dupes);
             p.dateupdated = new Date();
             p.save(function(err) {
-                p.keywords = sanitizer.sanitize(p.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(p.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(p.batch) + " " + sanitizer.sanitize(p.code);
+                p.keywords = sanitizer.sanitize(p.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.batch) + " " + sanitizer.sanitize(p.code);
                 p.save(function(err) {
                     res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));;
                 })
@@ -450,7 +450,7 @@ app.post('/polishedit/:id/code', isLoggedIn, function(req, res) {
             p.code = sanitizer.sanitize(req.body.value);
             p.dateupdated = new Date();
             p.save(function(err) {
-                p.keywords = sanitizer.sanitize(p.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(p.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(p.batch) + " " + sanitizer.sanitize(p.code);
+                p.keywords = sanitizer.sanitize(p.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.batch) + " " + sanitizer.sanitize(p.code);
                 p.save(function(err) {
                     res.end();
                 })
@@ -467,7 +467,7 @@ app.post('/polishedit/:id/batch', isLoggedIn, function(req, res) {
             p.batch = sanitizer.sanitize(req.body.value);
             p.dateupdated = new Date();
             p.save(function(err) {
-                p.keywords = sanitizer.sanitize(p.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(p.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-")) + " " + sanitizer.sanitize(p.batch) + " " + sanitizer.sanitize(p.code);
+                p.keywords = sanitizer.sanitize(p.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.batch) + " " + sanitizer.sanitize(p.code);
                 p.save(function(err) {
                     res.end();
                 })

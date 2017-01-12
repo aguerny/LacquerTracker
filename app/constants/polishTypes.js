@@ -31,6 +31,7 @@ var types = [
 	"suede",
 	"texture",
 	"thermal",
+	"top/base",
 	"uv"
 ];
 

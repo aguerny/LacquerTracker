@@ -29,8 +29,8 @@ app.post('/import', isLoggedIn, function(req, res) {
     var reader = csv.createCsvFileReader(req.files.spreadsheet.path, {columnsFromHeader:true, 'separator': ','});
     reader.addListener('data', function(data) {
         if (data.name.length > 0 && data.brand.length > 0) {
-            var polishNameToFind = sanitizer.sanitize(data.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,''));
-            var polishBrandEntered = sanitizer.sanitize(data.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,''));
+            var polishNameToFind = sanitizer.sanitize(data.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,''));
+            var polishBrandEntered = sanitizer.sanitize(data.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,''));
             var polishBrandToFind;
             Brand.findOne({alternatenames:polishBrandEntered.toLowerCase()}, function(err, brand) {
                 if (brand) {
@@ -226,7 +226,7 @@ app.post('/admin/importnew', isLoggedIn, function(req, res) {
     var reader = csv.createCsvFileReader(req.files.spreadsheet.path, {columnsFromHeader:true, 'separator': ','});
     reader.addListener('data', function(data) {
         if (data.name.length > 0 && data.brand.length > 0) {
-            Polish.find({name:sanitizer.sanitize(data.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')), brand:sanitizer.sanitize(data.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,''))}, function(err, polish) {
+            Polish.find({name:sanitizer.sanitize(data.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')), brand:sanitizer.sanitize(data.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,''))}, function(err, polish) {
                 if (polish.length !== 0) {
                     if (polish[0].batch.length === 0) {
                         if (data.collection) {
@@ -300,8 +300,8 @@ app.post('/admin/importnew', isLoggedIn, function(req, res) {
                 } else {
                     var newPolish = new Polish ({
                         name: sanitizer.sanitize(data.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
-                        brand: sanitizer.sanitize(data.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
-                        keywords: sanitizer.sanitize(data.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')) + " " + sanitizer.sanitize(data.brand.replace(/[()?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
+                        brand: sanitizer.sanitize(data.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
+                        keywords: sanitizer.sanitize(data.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')) + " " + sanitizer.sanitize(data.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-").replace(/^\s+|\s+$/g,'')),
                         batch: '',
                         colorcat: '',
                         indie: '',

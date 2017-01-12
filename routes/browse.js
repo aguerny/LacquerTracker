@@ -96,7 +96,9 @@ app.post('/browse', function(req, res) {
 
 
         var filterOptions = _.transform(req.body, function(result, value, key) {
-            result[key] = new RegExp(value.replace(/[^A-Za-z 0-9!é()'.-]/g,''), "i");
+            var valueWithCharactersStripped = value.replace(/[^A-Za-z 0-9!é()'.-]/g,'');
+            var valueWithCharactersStrippedAndEscaped = valueWithCharactersStripped.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            result[key] = new RegExp(valueWithCharactersStrippedAndEscaped, "i");
         });
 
         var polishkeys = _.keys(Polish.schema.paths);
