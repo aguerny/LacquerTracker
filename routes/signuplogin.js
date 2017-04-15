@@ -73,7 +73,6 @@ app.post('/signup', function(req, res) {
 
                                         transport.sendMail(mailOptions, function(error, response) {
                                             if (error) {
-                                                console.log(error);
                                                 res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Your account was created, but there was an error sending your validation e-mail. Please try again.'});
                                             }
                                             else {
@@ -143,7 +142,6 @@ app.post('/revalidate', function(req, res) {
 
                     transport.sendMail(mailOptions, function(error, response) {
                         if (error) {
-                            console.log(error);
                             res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Error sending e-mail. Please try again later.'});
                         }
                         else {
@@ -214,7 +212,6 @@ app.post('/passwordreset', function(req, res) {
 
                     transport.sendMail(mailOptions, function(error, response) {
                         if (error) {
-                            console.log(error);
                             res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error sending e-mail. Please try again later.'});
                         }
                         else {

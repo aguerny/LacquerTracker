@@ -47,7 +47,7 @@ app.post('/import', isLoggedIn, function(req, res) {
                     })
                     newBrand.save();
                 }
-                Polish.find({name: new RegExp(polishNameToFind,"i"), brand: new RegExp(polishBrandToFind, "i")}, function(err, polish) {
+                Polish.find({name: new RegExp("^"+polishNameToFind+"$","i"), brand: new RegExp("^"+polishBrandToFind+"$", "i")}, function(err, polish) {
                     if (polish.length !== 0) {
                         req.user.wantedpolish.remove(polish[0].id);
                         req.user.ownedpolish.addToSet(polish[0].id);

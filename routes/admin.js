@@ -223,7 +223,7 @@ app.post('/admin/combine', isLoggedIn, function(req, res) {
                     }
                     data = {};
                     data.title = 'Combine Polishes - Lacquer Tracker';
-                    data.message = 'Polishes successfully combined. Please remember to delete the polish you wish to remove.\n\nWould you like to remove that now? Click here: http://www.lacquertracker.com/polishid/' + req.body.removeid + '/delete';
+                    data.message = 'Polishes successfully combined. Please remember to delete the polish you wish to remove.<br><br>Would you like to remove that now? Click here: <a href="http://www.lacquertracker.com/polishid/' + req.body.removeid + '/delete>Delete!</a>';
                     res.render('admin/combine.ejs', data);
                 })
             })
@@ -414,9 +414,7 @@ app.post('/admin/brandalternate', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
         Polish.find().distinct('brand', function(error, brands) {
             var allbrands = _.sortBy(brands, function(b) {return b.toLowerCase();});
-            console.log(req.body.brand);
                 Brand.findOne({name:sanitizer.sanitize(req.body.brand)}, function(err, brand) {
-                    console.log(brand);
                     if (brand) {
                         brand.alternatenames.addToSet(sanitizer.sanitize(req.body.alternate.toLowerCase()));
                         brand.save(function(err) {

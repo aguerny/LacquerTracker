@@ -44,7 +44,6 @@ app.post('/swatch/add/:id', isLoggedIn, function(req, res) {
             data.pid = req.params.id;
             data.ext = ext;
             data.location = '/images/tmp/' + req.user.username + ext;
-            console.log(req.files.photo.path);
             res.render('swatch/crop.ejs', data);    
         })
     } else if (req.body.url.length > 0) {

@@ -50,7 +50,6 @@ app.post('/email/:username', isLoggedIn, function(req, res) {
 
                     transport.sendMail(mailOptions, function(error, response) {
                         if (error) {
-                            console.log(error);
                             res.render('emailuser.ejs', {title: 'Send Message - Lacquer Tracker', message:'Error sending message. Please try again later.', emailmessage:req.body.emailmessage, username:user.username});
                         } else {
                             res.render('emailuser.ejs', {title: 'Send Message - Lacquer Tracker', message: 'Success! Message sent.', username:user.username});

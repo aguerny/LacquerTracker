@@ -77,7 +77,6 @@ app.get('/forums/:forum/add', isLoggedIn, function(req, res) {
 });
 
 app.post('/forums/:forum/add', isLoggedIn, function(req, res) {
-    console.log(req.files);
     if (req.files.photo.name.length > 0) {
         var ext = path.extname(req.files.photo.name);
         var newUserPhoto = new UserPhoto ({

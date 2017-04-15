@@ -34,7 +34,6 @@ app.post('/contact', function (req, res) {
 
             transport.sendMail(mailOptions, function(error, response) {
                 if (error) {
-                    console.log(error);
                     res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Could not send feedback. Please try again later.', inputname:req.body.name, inputemail:req.body.email, inputmessage:req.body.usermessage});
                 } else {
                     res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Feedback successfully sent!'});

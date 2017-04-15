@@ -311,13 +311,12 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
         var polishBrandEntered = sanitizer.sanitize(req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,''));
         var polishBrandToFind;
         Brand.findOne({alternatenames:polishBrandEntered.toLowerCase()}, function(err, brand) {
-            console.log(polishNameToFind);
             if (brand) {
                 polishBrandToFind = brand.name;
             } else {
                 polishBrandToFind = polishBrandEntered;
             }
-            Polish.find({name: new RegExp(polishNameToFind,"i"), brand: new RegExp(polishBrandToFind, "i")}, function(err, polish) {
+            Polish.find({name: new RegExp("^"+polishNameToFind+"$","i"), brand: new RegExp("^"+polishBrandToFind+"$", "i")}, function(err, polish) {
                 if (polish.length !== 0) {
                     Polish.find().distinct('brand', function(error, brands) {
                         var allbrands = _.sortBy(brands, function(b) {return b.toLowerCase();});
