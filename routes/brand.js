@@ -13,7 +13,7 @@ module.exports = function(app, passport) {
 
 app.get('/brand/:brandname', function(req, res) {
 
-    Brand.findOne({alterantenames: req.params.brandname.toLowerCase().replace(/_/g, " ")}, function(err, brand) {
+    Brand.findOne({alternatenames: req.params.brandname.toLowerCase().replace(/_/g, " ")}, function(err, brand) {
         var thisbrand = req.params.brandname.replace(/_/g, " ");
         if (brand === null) {
             data = {};
@@ -36,7 +36,7 @@ app.get('/brand/:brandname', function(req, res) {
             data.bphoto = brand.photo;
             data.bofficial = brand.official;
 
-            Polish.find({brand: brand}).sort('name').exec(function(err, polishes) {
+            Polish.find({brand: thisbrand}).sort('name').exec(function(err, polishes) {
                 var statuses = [];
                 data.colors = PolishColors;
 
