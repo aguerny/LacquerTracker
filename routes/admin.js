@@ -444,6 +444,18 @@ app.post('/admin/brandalternate', isLoggedIn, function(req, res) {
     }
 });
 
+
+//admin portal
+app.get('/admin/portal', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        data = {};
+        data.title = 'Admin Portal - Lacquer Tracker';
+        res.render('admin/portal.ejs', data);
+    } else {
+        res.redirect('/error');
+    }
+});
+
         
 
 
