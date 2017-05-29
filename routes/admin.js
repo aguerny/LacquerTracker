@@ -380,8 +380,19 @@ app.post('/admin/brandedit/:id', isLoggedIn, function(req, res) {
                 brand.website = sanitizer.sanitize(req.body.website);
                 brand.bio = sanitizer.sanitize(req.body.bio);
                 brand.official = sanitizer.sanitize(req.body.official);
+                brand.indie = sanitizer.sanitize(req.body.indie);
                 brand.save(function(err) {
-                    res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
+                    Polish.find({brand:brand.name}, function(err, polishes) {
+                        for (i=0; i < polishes.length; i++) {
+                            if (brand.indie === true) {
+                                polishes[i].indie = "on";
+                            } else {
+                                polishes[i].indie = "off";
+                            }
+                            polishes[i].save();
+                        }
+                        res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
+                    })
                 })
             }
         })
@@ -455,8 +466,7 @@ app.get('/admin/portal', isLoggedIn, function(req, res) {
         res.redirect('/error');
     }
 });
-
-        
+    
 
 
 };

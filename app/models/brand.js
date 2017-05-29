@@ -10,6 +10,7 @@ var brandSchema = mongoose.Schema({
     photo: String,
     official: Boolean,
     alternatenames: [String],
+    indie: Boolean,
 });
 
 

@@ -4,9 +4,16 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
+    	<table class="sortable ownedtable"><th>Brand</th><th>Edit</th><th>Photo</th><th>Indie</th>
         <% for (i=0; i < allbrands.length; i++) { %>
-            <a href="/brand/<%= allbrands[i].name.replace(/ /g,"_") %>"><%= allbrands[i].name %></a> - <a href="/admin/brandedit/<%= allbrands[i].id %>">edit</a> - <a href="/admin/brandphoto/<%= allbrands[i].id %>">photo</a><br><br>
+        	<tr>
+            <td><a href="/brand/<%= allbrands[i].name.replace(/ /g,"_") %>"><%= allbrands[i].name %></a></td>
+            <td><a href="/admin/brandedit/<%= allbrands[i].id %>">edit</a></td>
+            <td><a href="/admin/brandphoto/<%= allbrands[i].id %>">photo</a><br><br></td>
+            <td><%= allbrands[i].indie %></td>
+            </tr>
         <% } %>
+        </table>
     </section>
     </div>
 </div>

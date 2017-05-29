@@ -14,8 +14,11 @@
                     <% if (bwebsite.length > 0) {%>
                         - <a href="<%= bwebsite %>">Official Website</a>
                     <% } %>
+                    <% if (bindie === true) {%>
+                        <span title="Indie brand"> &#9670;</span>
+                    <% } %>
                     <% if (bofficial === true) {%>
-                        <span title="Page verified by brand">&#10004;</span>
+                        <span title="Page verified by brand"> &#10004;</span>
                     <% } %>
                     <br><br><br>
                 <% if (bbio.length > 0) {%>

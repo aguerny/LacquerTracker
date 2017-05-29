@@ -1,17 +1,16 @@
-<% include layoutTop %>
+<% include ../layoutTop %>
 
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
         <section>
-            <form action="/import" method="post" enctype='multipart/form-data'>
+            <form action="/admin/importnew" method="post" enctype='multipart/form-data'>
                 <h3>Import Polish</h3><br><br>
                 <b>Please read follow all instructions very carefully!<br><br><br></b>
                 * Must be a .CSV file<br><br>
                 * Must contain a header row with all header titles in lowercase and spelled as shown here.<br><br>
                 * Required columns are "name" and "brand"<br><br>
-                * Optional columns are "code", "collection", "color", "type", and "indie"<br><br>
-                * If using indie column, please use either "yes" or "no" to specify.<br><br>
+                * Optional columns are "code", "collection", "color", and "type"<br><br>
                 * Any information you do not know, leave the cell blank.<br><br>
                 * Please be patient when submitting and only hit submit once. It can take up to five minutes to process.<br><br><br><br>
                 File for upload: <input type="file" value="spreadsheet" name="spreadsheet" class="width50"><br><br>
@@ -21,4 +20,4 @@
     </div>
 </div>
 
-<% include layoutBottom %>
+<% include ../layoutBottom %>

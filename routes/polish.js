@@ -26,9 +26,9 @@ app.get('/polish/:brand/:name', function(req, res) {
             data.pcolorcat = polish.colorcat;
             data.pswatch = polish.swatch;
             data.ptype = polish.type;
+            data.bindie = polish.indie;
             data.pcode = polish.code;
             data.pid = polish.id;
-            data.pindie = polish.indie;
             data.pdupes = markdown(polish.dupes);
             data.linkbrand = polish.brand.replace("%20"," ");
             data.linkname = polish.name.replace("%20"," ");
@@ -112,9 +112,9 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                 data.pcolorcat = polish.colorcat;
                 data.pswatch = polish.swatch;
                 data.ptype = polish.type;
+                data.bindie = polish.indie;
                 data.pcode = polish.code;
                 data.pid = polish.id;
-                data.pindie = polish.indie;
                 data.pdupes = markdown(polish.dupes);
                 data.linkbrand = polish.brand.replace("%20"," ");
                 data.linkname = polish.name.replace("%20"," ");
@@ -333,11 +333,11 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                         name: polishNameToFind,
                         brand: polishBrandToFind,
                         batch: sanitizer.sanitize(req.body.batch),
-                        indie: sanitizer.sanitize(req.body.indie),
                         code: sanitizer.sanitize(req.body.code.replace(/^\s+|\s+$/g,'')),
                         keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
                         dateupdated: new Date(),
                         dupes: sanitizer.sanitize(req.body.dupes),
+                        indie: false,
                         swatch: '',
                     });
                     newPolish.save(function(err) {
@@ -358,7 +358,14 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                                 Brand.findOne({name: polishBrandToFind}, function(err, brand) {
                                     //check if brand is already in brand database
                                     if (brand) {
-                                        res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
+                                        if (brand.indie === true) {
+                                            newPolish.indie = "on";
+                                        } else {
+                                            newPolish.indie = "off";
+                                        }
+                                        newPolish.save(function(err) {
+                                            res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
+                                        })
                                     } else {
                                         var newBrand = new Brand ({
                                             name: polishBrandToFind,
@@ -366,6 +373,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                                             bio: '',
                                             photo: '',
                                             official: false,
+                                            indie: false,
                                             alternatenames: [polishBrandToFind.toLowerCase()]
                                         })
                                         newBrand.save(function(err) {
@@ -506,20 +514,6 @@ app.post('/polishedit/:id/type', isLoggedIn, function(req, res) {
                 p.dateupdated = new Date();
                 p.type = '';
             }
-            p.save(function(err) {
-                res.end();
-            });
-        }
-    });
-});
-
-app.post('/polishedit/:id/indie', isLoggedIn, function(req, res) {
-    Polish.findById(req.params.id, function(err, p) {
-        if (!p) {
-            res.redirect('/error');
-        } else {
-            p.indie = sanitizer.sanitize(req.body.value);
-            p.dateupdated = new Date();
             p.save(function(err) {
                 res.end();
             });

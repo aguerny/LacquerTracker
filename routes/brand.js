@@ -23,6 +23,7 @@ app.get('/brand/:brandname', function(req, res) {
             data.bbio = '';
             data.bphoto = '';
             data.bofficial = '';
+            data.bindie = '';
             data.polishes = [];
             data.status = [];
             data.colors = [];
@@ -35,6 +36,7 @@ app.get('/brand/:brandname', function(req, res) {
             data.bbio = markdown(brand.bio);
             data.bphoto = brand.photo;
             data.bofficial = brand.official;
+            data.bindie = brand.indie;
 
             Polish.find({brand: thisbrand}).sort('name').exec(function(err, polishes) {
                 var statuses = [];

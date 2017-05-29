@@ -5,7 +5,11 @@
     <div id="container" class="clear">
         <section>
             <div>
-                <h2><%= pbrand %> - <%= pname %></h2><br><br>
+                <h2 style="display:inline-block"><a href="/brand/<%= pbrand %>"><%= pbrand %></a> - <%= pname %></h2>
+                <% if (bindie === "on") {%>
+                    <span title="Indie brand"> &#9670;</span>
+                <% } %>
+                <br><br>
                 <% if (isAuthenticated()) {%><% if (user.adminview === true) { %><%=pid%><br><br><%}%><%}%>
             </div>
             <div id="biglayout">
@@ -28,14 +32,12 @@
                             <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch"><% if (pbatch.length > 0) {%><%= pbatch %><%}else{%>?<%}%></a><br><br>
                             <b>Color:</b> <a href="#" id="colorcat" data-pk="1" class="editablecolorcat" data-type="checklist" data-url="/polishedit/<%= pid %>/colorcat" data-value="<%= pcolorcat %>" data-defaultValue="?" data-separator=","><% if (pcolorcat.length > 0) {%><%= pcolorcat.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
                             <b>Type:</b> <a href="#" id="type" data-pk="1" class="editabletype" data-type="checklist" data-url="/polishedit/<%= pid %>/type" data-value="<%= ptype %>" data-defaultValue="?" data-separator=","><% if (ptype.length > 0) {%><%= ptype.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
-                            <b>Indie:</b> <a href="#" id="indie" class="editableindie" data-pk="1" data-type="select" data-url="/polishedit/<%= pid %>/indie" data-value="<%= pindie %>"><%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%} else {%>?<%}%></a><br><br><span class="smallfont"><i>(Click value to edit polish information.)</i></span>
+                            <span class="smallfont"><i>(Click value to edit polish information.)</i></span>
                         <% } else { %>
                             <b>Code:</b> <%= pcode %><br><br>
                             <b>Collection:</b> <%= pbatch %><br><br>
                             <b>Color:</b> <%= pcolorcat.replace(/,/g,", ") %><br><br>
-                            <b>Type:</b>
-                                <%= ptype.replace(/,/g,", ") %>
-                            <br><br><b>Indie:</b> <%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%>
+                            <b>Type:</b> <%= ptype.replace(/,/g,", ") %>
                         <% } %>
                         <br><br><br><br>
                         <% if (isAuthenticated()) { %>
@@ -85,14 +87,11 @@
             </div>
             <div id="smalllayout">
                 <% if (status === "owned") { %>
-                    Owned (<a href="/removeown/<%= pid %>">remove</a>)
-                    <br><br><a href="/polishid/<%=pid%>/flag">Flag polish</a><br><br><br>
+                    Owned (<a href="/removeown/<%= pid %>">remove</a>) | <a href="/polishid/<%=pid%>/flag">Flag polish</a><br><br><br>
                 <% } else if (status === "wanted") {%>
-                    Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a>
-                    <br><br><a href="/polishid/<%=pid%>/flag">Flag polish</a><br><br><br>
+                    Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/polishid/<%=pid%>/flag">Flag polish</a><br><br><br>
                 <% } else { %>
-                    <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a>
-                    <br><br><a href="/polishid/<%=pid%>/flag">Flag polish</a><br><br><br>
+                    <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a> | <a href="/polishid/<%=pid%>/flag">Flag polish</a><br><br><br>
                 <% } %>
                 <div class="slideshow">
                     <div class="slideButtons">
@@ -134,14 +133,12 @@
                     <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch"><% if (pbatch.length > 0) {%><%= pbatch %><%}else{%>?<%}%></a><br><br>
                     <b>Color:</b> <a href="#" id="colorcat" data-pk="1" class="editablecolorcat" data-type="checklist" data-url="/polishedit/<%= pid %>/colorcat" data-value="<%= pcolorcat %>" data-defaultValue="?" data-separator=","><% if (pcolorcat.length > 0) {%><%= pcolorcat.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
                     <b>Type:</b> <a href="#" id="type" data-pk="1" class="editabletype" data-type="checklist" data-url="/polishedit/<%= pid %>/type" data-value="<%= ptype %>" data-defaultValue="?" data-separator=","><% if (ptype.length > 0) {%><%= ptype.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
-                    <b>Indie:</b> <a href="#" id="indie" data-pk="1" class="editableindie" data-type="select" data-url="/polishedit/<%= pid %>/indie" data-value="<%= pindie %>"><%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%} else {%>?<%}%></a><br><br><span class="smallfont"><i>(Click value to edit polish information.)</i></span>
+                    <span class="smallfont"><i>(Click value to edit polish information.)</i></span>
                 <% } else { %>
                     <b>Code:</b> <%= pcode %><br><br>
                     <b>Collection:</b> <%= pbatch %><br><br>
                     <b>Color:</b> <%= pcolorcat.replace(/,/g,", ") %><br><br>
-                    <b>Type:</b>
-                        <%= ptype.replace(/,/g,", ") %>
-                    <br><br><b>Indie:</b> <%if (pindie === "on") {%>yes<%}else if (pindie === "off") {%>no<%}%>
+                    <b>Type:</b> <%= ptype.replace(/,/g,", ") %>
                 <% } %>
                 <br><br><br>
                 <% if (isAuthenticated()) { %>
@@ -233,14 +230,6 @@ var speed = 100;
         $(function(){
             $('.editabletype').editable({
                 source: <%- JSON.stringify(types)%>
-            });
-        });
-        $(function(){
-            $('.editableindie').editable({
-                source: [
-                    {value: 'off', text: 'no'},
-                    {value: 'on', text: 'yes'}
-                ]
             });
         });
     });
