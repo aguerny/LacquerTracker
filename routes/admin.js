@@ -223,7 +223,7 @@ app.post('/admin/combine', isLoggedIn, function(req, res) {
                     }
                     data = {};
                     data.title = 'Combine Polishes - Lacquer Tracker';
-                    data.message = 'Polishes successfully combined. Please remember to delete the polish you wish to remove.<br><br>Would you like to remove that now? Click here: <a href="http://www.lacquertracker.com/polishid/' + req.body.removeid + '/delete>Delete!</a>';
+                    data.message = 'Polishes successfully combined. Please remember to delete the polish you wish to remove.<br><br>Would you like to remove that now? Click here: <a href="http://www.lacquertracker.com/polishid/' + req.body.removeid + '/delete">Delete!</a>';
                     res.render('admin/combine.ejs', data);
                 })
             })

@@ -1,5 +1,6 @@
 var types = [
 	"blackened",
+	"base",
 	"chrome",
 	"crackle",
 	"crelly",
@@ -14,6 +15,7 @@ var types = [
 	"glow",
 	"holo",
 	"jelly",
+	"latex",
 	"magnetic",
 	"matte",
 	"metallic",
@@ -31,7 +33,7 @@ var types = [
 	"suede",
 	"texture",
 	"thermal",
-	"top/base",
+	"top",
 	"uv"
 ];
 

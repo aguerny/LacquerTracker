@@ -76,6 +76,7 @@
             <% if (bbio !== "") {%>
                 <br><br><br><i>Please <a href="/contact">contact us</a> to update the information about your brand.</i>
             <% } %>
+            <% if (isAuthenticated()) {%><% if (user.adminview === true) { %><% if (bid) {%><br><br><br><a href="/brandedit/<%=bid%>">Admin Edit Brand</a><%}%><%}%><%}%>
         </section>
     </div>
 </div>

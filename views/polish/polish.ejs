@@ -10,7 +10,6 @@
                     <span title="Indie brand"> &#9670;</span>
                 <% } %>
                 <br><br>
-                <% if (isAuthenticated()) {%><% if (user.adminview === true) { %><%=pid%><br><br><%}%><%}%>
             </div>
             <div id="biglayout">
                 <div id="polish-wrap">
@@ -185,6 +184,7 @@
                 <% } else {%>
                     <br><br><br><a href="/polishedit/<%=pid%>/dupes"><i>Add dupes for this polish.</i></a>
                 <% } %>
+                <% if (isAuthenticated()) {%><% if (user.adminview === true) { %><br><br><%=pid%><%}%><%}%>
             </div>
         </section>
     </div>
