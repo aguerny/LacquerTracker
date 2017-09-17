@@ -4,6 +4,9 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
         <section>
+            <% if (typeof message !== "undefined") { %>
+                <center><b><%= message %></b><br><br><br><br></center>
+            <% } %>
             <form action="/import" method="post" enctype='multipart/form-data'>
                 <h3>Import Owned Polish</h3><br><br>
                 <b>Please follow all instructions very carefully!<br><br><br></b>

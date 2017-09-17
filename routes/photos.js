@@ -38,84 +38,89 @@ app.get('/photo/add/:id', isLoggedIn, function(req, res) {
 
 app.post('/photo/add/:id', isLoggedIn, function(req, res) {
     if (req.files.photo.name.length > 0) {
-        var ext = path.extname(req.files.photo.name);
-        Polish.findById(req.params.id, function(err, p) {
-            var newPhoto = new Photo ({
-                polishid: p.id,
-                userid: req.user.id,
-                location: '',
-                creditname: sanitizer.sanitize(req.body.creditname),
-                creditlink: sanitizer.sanitize(req.body.creditlink),
-                pendingdelete: false,
-                pendingreason: '',
-            })
-            newPhoto.save(function(err) {
-                p.dateupdated = new Date();
-                p.photos.push(newPhoto.id);
-                p.save();
-                gm(req.files.photo.path).size(function(err, value) {
-                    if (err) {
-                        fs.unlink(req.files.photo.path, function(err) {
-                            newPhoto.remove();
-                            p.photos.remove(newPhoto.id);
-                            p.save(function(err) {
-                                res.redirect('/error');
+        if (path.extname(req.files.photo.name) === ".jpg" || path.extname(req.files.photo.name) === ".jpeg" || path.extname(req.files.photo.name) === ".png" || path.extname(req.files.photo.name) === ".bmp") {
+            var ext = path.extname(req.files.photo.name);
+            Polish.findById(req.params.id, function(err, p) {
+                var newPhoto = new Photo ({
+                    polishid: p.id,
+                    userid: req.user.id,
+                    location: '',
+                    creditname: sanitizer.sanitize(req.body.creditname),
+                    creditlink: sanitizer.sanitize(req.body.creditlink),
+                    pendingdelete: false,
+                    pendingreason: '',
+                })
+                newPhoto.save(function(err) {
+                    p.dateupdated = new Date();
+                    p.photos.push(newPhoto.id);
+                    p.save();
+                    gm(req.files.photo.path).size(function(err, value) {
+                        if (err) {
+                            fs.unlink(req.files.photo.path, function(err) {
+                                newPhoto.remove();
+                                p.photos.remove(newPhoto.id);
+                                p.save(function(err) {
+                                    res.redirect('/error');
+                                })
                             })
-                        })
-                    } else if (value.width > 600) {
-                        gm(req.files.photo.path).resize(600).write(path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ext), function (err) {
-                            if (err) {
-                                fs.unlink(req.files.photo.path, function(err) {
-                                    newPhoto.remove();
-                                    p.photos.remove(newPhoto.id);
-                                    p.save(function(err) {
-                                        res.redirect('/error');
-                                    })
-                                })
-                            } else {
-                                fs.unlink(req.files.photo.path, function() {
-                                    newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
-                                    newPhoto.save(function(err) {
-                                        fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
-                                            if (exists === false) {
-                                                res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
-                                            } else {
-                                                res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                                            }
+                        } else if (value.width > 600) {
+                            gm(req.files.photo.path).resize(600).write(path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ext), function (err) {
+                                if (err) {
+                                    fs.unlink(req.files.photo.path, function(err) {
+                                        newPhoto.remove();
+                                        p.photos.remove(newPhoto.id);
+                                        p.save(function(err) {
+                                            res.redirect('/error');
                                         })
                                     })
-                                })
-                            }
-                        })
-                    } else {
-                        fs.rename(req.files.photo.path, path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ext), function(err) {
-                            if (err) {
-                                fs.unlink(req.files.photo.path, function(err) {
-                                    newPhoto.remove();
-                                    p.photos.remove(newPhoto.id);
-                                    p.save(function(err) {
-                                        res.redirect('/error');
-                                    })
-                                })
-                            } else {
-                                fs.unlink(req.files.photo.path, function() {
-                                    newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
-                                    newPhoto.save(function(err) {
-                                        fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
-                                            if (exists === false) {
-                                                res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
-                                            } else {
-                                                res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                                            }
+                                } else {
+                                    fs.unlink(req.files.photo.path, function() {
+                                        newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
+                                        newPhoto.save(function(err) {
+                                            fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
+                                                if (exists === false) {
+                                                    res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
+                                                } else {
+                                                    res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                                }
+                                            })
                                         })
                                     })
-                                })
-                            }
-                        })
-                    }
+                                }
+                            })
+                        } else {
+                            fs.rename(req.files.photo.path, path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ext), function(err) {
+                                if (err) {
+                                    fs.unlink(req.files.photo.path, function(err) {
+                                        newPhoto.remove();
+                                        p.photos.remove(newPhoto.id);
+                                        p.save(function(err) {
+                                            res.redirect('/error');
+                                        })
+                                    })
+                                } else {
+                                    fs.unlink(req.files.photo.path, function() {
+                                        newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
+                                        newPhoto.save(function(err) {
+                                            fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
+                                                if (exists === false) {
+                                                    res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
+                                                } else {
+                                                    res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                                }
+                                            })
+                                        })
+                                    })
+                                }
+                            })
+                        }
+                    })
                 })
             })
-        })
+        } else {
+            fs.unlink(req.files.photo.path);
+            res.redirect('/error');
+        }
     } else if (req.body.url.length > 0) {
         fs.unlink(req.files.photo.path);
         var ext = path.extname(req.body.url);
@@ -303,76 +308,81 @@ app.get('/photo/upload', isLoggedIn, function(req, res) {
 //from file
 app.post('/photo/upload', isLoggedIn, function(req, res) {
     if (req.files.photo.name.length > 0) {
-        var ext = path.extname(req.files.photo.name);
-        var newUserPhoto = new UserPhoto ({
-            userid: req.user.id,
-            onprofile: req.body.onprofile,
-            location: '',
-        })
-        newUserPhoto.save(function(err) {
-            if (err) {
-                fs.unlink(req.files.photo.path, function(err) {
-                    newUserPhoto.remove(function(err) {
-                        res.redirect('/error');
+        if (path.extname(req.files.photo.name) === ".jpg" || path.extname(req.files.photo.name) === ".jpeg" || path.extname(req.files.photo.name) === ".png" || path.extname(req.files.photo.name) === ".bmp") {
+            var ext = path.extname(req.files.photo.name);
+            var newUserPhoto = new UserPhoto ({
+                userid: req.user.id,
+                onprofile: req.body.onprofile,
+                location: '',
+            })
+            newUserPhoto.save(function(err) {
+                if (err) {
+                    fs.unlink(req.files.photo.path, function(err) {
+                        newUserPhoto.remove(function(err) {
+                            res.redirect('/error');
+                        })
                     })
-                })
-            } else {
-                req.user.photos.push(newUserPhoto.id);
-                req.user.save(function(err) {
-                    gm(req.files.photo.path).size(function(err, value) {
-                        if (err) {
-                            fs.unlink(req.files.photo.path, function(err) {
-                                newUserPhoto.remove();
-                                req.user.photos.remove(newUserPhoto.id);
-                                req.user.save(function(err) {
-                                    res.redirect('/error');
-                                })
-                            })
-                        } else {
-                            if (value.width > 600) {
-                                gm(req.files.photo.path).resize(600).write(path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function (err) {
-                                    if (err) {
-                                        fs.unlink(req.files.photo.path, function(err) {
-                                            newUserPhoto.remove();
-                                            req.user.photos.remove(newUserPhoto.id);
-                                            req.user.save(function(err) {
-                                                res.redirect('/error');
-                                            })
-                                        })
-                                    } else {
-                                        fs.unlink(req.files.photo.path, function() {
-                                            newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
-                                            newUserPhoto.save(function(err) {
-                                                res.render('photos/forumsuccess.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext, srcurl: newUserPhoto.location});
-                                            })
-                                        })
-                                    }
+                } else {
+                    req.user.photos.push(newUserPhoto.id);
+                    req.user.save(function(err) {
+                        gm(req.files.photo.path).size(function(err, value) {
+                            if (err) {
+                                fs.unlink(req.files.photo.path, function(err) {
+                                    newUserPhoto.remove();
+                                    req.user.photos.remove(newUserPhoto.id);
+                                    req.user.save(function(err) {
+                                        res.redirect('/error');
+                                    })
                                 })
                             } else {
-                                fs.rename(req.files.photo.path, path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function(err) {
-                                    if (err) {
-                                        fs.unlink(req.files.photo.path, function(err) {
-                                            newUserPhoto.remove();
-                                            req.user.photos.remove(newUserPhoto.id);
-                                            req.user.save(function(err) {
-                                                res.redirect('/error');
+                                if (value.width > 600) {
+                                    gm(req.files.photo.path).resize(600).write(path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function (err) {
+                                        if (err) {
+                                            fs.unlink(req.files.photo.path, function(err) {
+                                                newUserPhoto.remove();
+                                                req.user.photos.remove(newUserPhoto.id);
+                                                req.user.save(function(err) {
+                                                    res.redirect('/error');
+                                                })
                                             })
-                                        })
-                                    } else {
-                                        fs.unlink(req.files.photo.path, function() {
-                                            newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
-                                            newUserPhoto.save(function(err) {
-                                                res.render('photos/forumsuccess.ejs', {title: 'Upload Success - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext, srcurl: newUserPhoto.location});
+                                        } else {
+                                            fs.unlink(req.files.photo.path, function() {
+                                                newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
+                                                newUserPhoto.save(function(err) {
+                                                    res.render('photos/forumsuccess.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext, srcurl: newUserPhoto.location});
+                                                })
                                             })
-                                        })
-                                    }
-                                })
+                                        }
+                                    })
+                                } else {
+                                    fs.rename(req.files.photo.path, path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function(err) {
+                                        if (err) {
+                                            fs.unlink(req.files.photo.path, function(err) {
+                                                newUserPhoto.remove();
+                                                req.user.photos.remove(newUserPhoto.id);
+                                                req.user.save(function(err) {
+                                                    res.redirect('/error');
+                                                })
+                                            })
+                                        } else {
+                                            fs.unlink(req.files.photo.path, function() {
+                                                newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
+                                                newUserPhoto.save(function(err) {
+                                                    res.render('photos/forumsuccess.ejs', {title: 'Upload Success - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext, srcurl: newUserPhoto.location});
+                                                })
+                                            })
+                                        }
+                                    })
+                                }
                             }
-                        }
+                        })
                     })
-                })
-            }
-        })
+                }
+            })
+    }    else {
+            fs.unlink(req.files.photo.path);
+            res.redirect('/error');
+        }
     } else if (req.body.url.length > 0) {
         fs.unlink(req.files.photo.path);
         var ext = path.extname(req.body.url);
@@ -453,23 +463,28 @@ app.get('/photo/profile', isLoggedIn, function(req, res) {
 //from file
 app.post('/photo/profile', isLoggedIn, function(req, res) {
     if (req.files.photo.name.length > 0) {
-        var ext = path.extname(req.files.photo.name);
-        var tempPath = req.files.photo.path;
-        var targetPath = path.resolve('./public/images/profilephotos/' + req.user.username + ext);
-        gm(tempPath).resize(200).write(targetPath, function (err) {
-            if (err) {
-                fs.unlink(tempPath, function(err) {
-                    res.redirect('/error');
-                })
-            } else {
-                fs.unlink(tempPath, function() {
-                    req.user.profilephoto = '/images/profilephotos/' + req.user.username + ext,
-                    req.user.save(function(err) {
-                        res.redirect('/profile/' + req.user.username);
+        if (path.extname(req.files.photo.name) === ".jpg" || path.extname(req.files.photo.name) === ".jpeg" || path.extname(req.files.photo.name) === ".png" || path.extname(req.files.photo.name) === ".bmp") {
+            var ext = path.extname(req.files.photo.name);
+            var tempPath = req.files.photo.path;
+            var targetPath = path.resolve('./public/images/profilephotos/' + req.user.username + ext);
+            gm(tempPath).resize(200).write(targetPath, function (err) {
+                if (err) {
+                    fs.unlink(tempPath, function(err) {
+                        res.redirect('/error');
                     })
-                })
-            }
-        })
+                } else {
+                    fs.unlink(tempPath, function() {
+                        req.user.profilephoto = '/images/profilephotos/' + req.user.username + ext,
+                        req.user.save(function(err) {
+                            res.redirect('/profile/' + req.user.username);
+                        })
+                    })
+                }
+            })
+        } else {
+            fs.unlink(req.files.photo.path);
+            res.redirect('/error');
+        }
     } else if (req.body.url.length > 0) {
         fs.unlink(req.files.photo.path);
         var ext = path.extname(req.body.url);
@@ -514,23 +529,28 @@ app.get('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
 app.post('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
     Brand.findById(req.params.id, function(err, brand) {
         if (req.files.photo.name.length > 0) {
-            var ext = path.extname(req.files.photo.name);
-            var tempPath = req.files.photo.path;
-            var targetPath = path.resolve('./public/images/brandphotos/' + brand.id + ext);
-            gm(tempPath).resize(200).write(targetPath, function (err) {
-                if (err) {
-                    fs.unlink(tempPath, function(err) {
-                        res.redirect('/error');
-                    })
-                } else {
-                    fs.unlink(tempPath, function() {
-                        brand.photo = '/images/brandphotos/' + brand.id + ext,
-                        brand.save(function(err) {
-                            res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
+            if (path.extname(req.files.photo.name) === ".jpg" || path.extname(req.files.photo.name) === ".jpeg" || path.extname(req.files.photo.name) === ".png" || path.extname(req.files.photo.name) === ".bmp") {
+                var ext = path.extname(req.files.photo.name);
+                var tempPath = req.files.photo.path;
+                var targetPath = path.resolve('./public/images/brandphotos/' + brand.id + ext);
+                gm(tempPath).resize(200).write(targetPath, function (err) {
+                    if (err) {
+                        fs.unlink(tempPath, function(err) {
+                            res.redirect('/error');
                         })
-                    })
-                }
-            })
+                    } else {
+                        fs.unlink(tempPath, function() {
+                            brand.photo = '/images/brandphotos/' + brand.id + ext,
+                            brand.save(function(err) {
+                                res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
+                            })
+                        })
+                    }
+                })
+            } else {
+                fs.unlink(req.files.photo.path);
+                res.redirect('/error');
+            }
         } else if (req.body.url.length > 0) {
             fs.unlink(req.files.photo.path);
             var ext = path.extname(req.body.url);
