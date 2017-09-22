@@ -15,6 +15,7 @@ var download = function(uri, filename, callback){
         request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
     });
 };
+var mime = require('mime-types');
 
 
 module.exports = function(app, passport) {
@@ -38,7 +39,7 @@ app.get('/photo/add/:id', isLoggedIn, function(req, res) {
 
 app.post('/photo/add/:id', isLoggedIn, function(req, res) {
     if (req.files.photo.name.length > 0) {
-        if (path.extname(req.files.photo.name) === ".jpg" || path.extname(req.files.photo.name) === ".jpeg" || path.extname(req.files.photo.name) === ".png" || path.extname(req.files.photo.name) === ".bmp") {
+        if (mime.contentType(req.files.photo.name).startsWith("image")) {
             var ext = path.extname(req.files.photo.name);
             Polish.findById(req.params.id, function(err, p) {
                 var newPhoto = new Photo ({
@@ -308,7 +309,7 @@ app.get('/photo/upload', isLoggedIn, function(req, res) {
 //from file
 app.post('/photo/upload', isLoggedIn, function(req, res) {
     if (req.files.photo.name.length > 0) {
-        if (path.extname(req.files.photo.name) === ".jpg" || path.extname(req.files.photo.name) === ".jpeg" || path.extname(req.files.photo.name) === ".png" || path.extname(req.files.photo.name) === ".bmp") {
+        if (mime.contentType(req.files.photo.name).startsWith("image")) {
             var ext = path.extname(req.files.photo.name);
             var newUserPhoto = new UserPhoto ({
                 userid: req.user.id,
@@ -463,7 +464,7 @@ app.get('/photo/profile', isLoggedIn, function(req, res) {
 //from file
 app.post('/photo/profile', isLoggedIn, function(req, res) {
     if (req.files.photo.name.length > 0) {
-        if (path.extname(req.files.photo.name) === ".jpg" || path.extname(req.files.photo.name) === ".jpeg" || path.extname(req.files.photo.name) === ".png" || path.extname(req.files.photo.name) === ".bmp") {
+       if (mime.contentType(req.files.photo.name).startsWith("image")) {
             var ext = path.extname(req.files.photo.name);
             var tempPath = req.files.photo.path;
             var targetPath = path.resolve('./public/images/profilephotos/' + req.user.username + ext);
@@ -529,7 +530,7 @@ app.get('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
 app.post('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
     Brand.findById(req.params.id, function(err, brand) {
         if (req.files.photo.name.length > 0) {
-            if (path.extname(req.files.photo.name) === ".jpg" || path.extname(req.files.photo.name) === ".jpeg" || path.extname(req.files.photo.name) === ".png" || path.extname(req.files.photo.name) === ".bmp") {
+            if (mime.contentType(req.files.photo.name).startsWith("image")) {
                 var ext = path.extname(req.files.photo.name);
                 var tempPath = req.files.photo.path;
                 var targetPath = path.resolve('./public/images/brandphotos/' + brand.id + ext);

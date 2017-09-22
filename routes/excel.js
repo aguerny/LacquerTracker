@@ -14,6 +14,7 @@ var nodemailer = require('nodemailer');
 var csv = require('ya-csv');
 var PolishTypes = require('../app/constants/polishTypes');
 var PolishColors = require('../app/constants/polishColors');
+var mime = require('mime-types');
 
 module.exports = function(app, passport) {
 
@@ -26,7 +27,7 @@ app.get('/import', isLoggedIn, function(req, res) {
 });
 
 app.post('/import', isLoggedIn, function(req, res) {
-    if (path.extname(req.files.spreadsheet.path) === ".csv") {
+    if (mime.contentType(req.files.spreadsheet.path).startsWith("text/csv")) {
         var reader = csv.createCsvFileReader(req.files.spreadsheet.path, {columnsFromHeader:true, 'separator': ','});
         reader.addListener('data', function(data, err) {
             if (data.name.length > 0 && data.brand.length > 0) {
@@ -201,7 +202,7 @@ app.get('/admin/importnew', isLoggedIn, function(req, res) {
 });
 
 app.post('/admin/importnew', isLoggedIn, function(req, res) {
-    if (path.extname(req.files.spreadsheet.path) === ".csv") {
+    if (mime.contentType(req.files.spreadsheet.path).startsWith("text/csv")) {
         var reader = csv.createCsvFileReader(req.files.spreadsheet.path, {columnsFromHeader:true, 'separator': ','});
         reader.addListener('data', function(data) {
             if (data.name.length > 0 && data.brand.length > 0) {
