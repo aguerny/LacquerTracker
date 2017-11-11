@@ -14,7 +14,7 @@ var nodemailer = require('nodemailer');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
 var _ = require('lodash');
-var simple_recaptcha = require('simple-recaptcha');
+var request = require('request');
 
 
 

@@ -27,7 +27,6 @@
     "readable-stream": "*",
     "request": "*",
     "sanitizer": "*",
-    "simple-recaptcha": "*",
     "stream-counter": "*",
     "ya-csv": "*"
   }

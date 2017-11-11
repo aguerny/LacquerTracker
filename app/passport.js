@@ -5,7 +5,6 @@ var LocalStrategy = require('passport-local').Strategy;
 var User = require('../app/models/user');
 
 var sanitizer = require('sanitizer');
-var simple_recaptcha = require('simple-recaptcha');
 var nodemailer = require('nodemailer');
 
 //expose this function to our app using modeule.exports

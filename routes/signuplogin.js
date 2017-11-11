@@ -2,7 +2,7 @@ var User = require('../app/models/user');
 var ResetKey = require('../app/models/resetkey');
 var nodemailer = require('nodemailer');
 var sanitizer = require('sanitizer');
-var simple_recaptcha = require('simple-recaptcha');
+var request = require('request');
 var bcrypt = require("bcrypt-nodejs");
 
 
@@ -28,15 +28,22 @@ app.post('/signup', function(req, res) {
                     res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'That username is already taken.', email:req.body.email, username:''});
                 } else {
                     if (req.body.password === req.body.confirm) {
-                        var privateKey = process.env.LTRECAPTCHAPRIVATEKEY; // your private key here
-                        var ip = req.ip;
-                        var challenge = req.body.recaptcha_challenge_field;
-                        var response = req.body.recaptcha_response_field;
 
-                        simple_recaptcha(privateKey, ip, challenge, response, function(err) {
-                            if (err) {
+                        if (req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
+                            res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:req.body.email, username:req.body.username});
+                        }
+                        // Put your secret key here.
+                        var secretKey = "6LcxIzgUAAAAAA-GeS9omdvbuGvc6eNLCmH09-TN";
+                        // req.connection.remoteAddress will provide IP address of connected user.
+                        var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
+                        // Hitting GET request to the URL, Google will respond with success or error scenario.
+                        request(verificationUrl,function(error,response,body) {
+                            body = JSON.parse(body);
+                            // Success will be true or false depending upon captcha validation.
+                            if(body.success !== undefined && !body.success) {
                                 res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:req.body.email, username:req.body.username});
-                            } else {
+                            }
+                            if (body.success === true) {
                                 //create the user
                                 var newUser = new User();
 
@@ -83,11 +90,11 @@ app.post('/signup', function(req, res) {
                                         });
                                     }
                                 })
+                            } else {
+                                res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Your account was created, but there was an error sending your validation e-mail. Please try again.'});
                             }
-                        })
-                    } else {
-                        res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Passwords do not match.', email:req.body.email, username:req.body.username});
-                    }
+                        });
+                    }                       
                 }
             })
         }
