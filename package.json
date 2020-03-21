@@ -9,7 +9,7 @@
     "bcrypt-nodejs": "*",
     "connect-flash": "*",
     "ejs": "*",
-    "express": "3.4.8",
+    "express": "4.17.1",
     "gm": "*",
     "lodash": "*",
     "markdown-css": "*",
