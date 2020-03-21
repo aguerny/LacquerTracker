@@ -1,4 +1,4 @@
-<% include ../layoutTop %>
+<%- include('../layoutTop'); %>
 
 <!-- content -->
 <div class="wrapper row2">
@@ -26,7 +26,7 @@
                             <img class="polishswatch" src="<%=pswatch%>"/><br><br>
                         <%}%>
                         <br>
-                        <% if (isAuthenticated()) { %>
+                        <% if (isAuthenticated) { %>
                             <b>Code:</b> <a href="#" id="code" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/code"><% if (pcode.length > 0) {%><%= pcode %><%}else{%>?<%}%></a><br><br>
                             <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch"><% if (pbatch.length > 0) {%><%= pbatch %><%}else{%>?<%}%></a><br><br>
                             <b>Color:</b> <a href="#" id="colorcat" data-pk="1" class="editablecolorcat" data-type="checklist" data-url="/polishedit/<%= pid %>/colorcat" data-value="<%= pcolorcat %>" data-defaultValue="?" data-separator=","><% if (pcolorcat.length > 0) {%><%= pcolorcat.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
@@ -39,7 +39,7 @@
                             <b>Type:</b> <%= ptype.replace(/,/g,", ") %>
                         <% } %>
                         <br><br><br><br>
-                        <% if (isAuthenticated()) { %>
+                        <% if (isAuthenticated) { %>
                             <% if (user.country === 'CAN') { %>
                                 <a href="http://www.amazon.ca/s/?_encoding=UTF8&camp=15121&creative=390961&field-keywords=<%= linkbrand %>%20<%= linkname %>&linkCode=ur2&tag=lacqutrack00-20&url=search-alias%3Daps">View on Amazon</a><img src="https://ir-ca.amazon-adsystem.com/e/ir?t=lacqutrack00-20&l=ur2&o=15" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /><br><br>
                                 <a href="http://www.nailpolishcanada.com/search.php?search_query=<%=linkbrand%>%20<%=linkname%>">View on Nail Polish Canada</a>
@@ -127,7 +127,7 @@
                     <img class="polishswatch" src="<%=pswatch%>"/><br><br>
                 <%}%>
                 <br>
-                <% if (isAuthenticated()) { %>
+                <% if (isAuthenticated) { %>
                     <b>Code:</b> <a href="#" id="code" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/code"><% if (pcode.length > 0) {%><%= pcode %><%}else{%>?<%}%></a><br><br>
                     <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch"><% if (pbatch.length > 0) {%><%= pbatch %><%}else{%>?<%}%></a><br><br>
                     <b>Color:</b> <a href="#" id="colorcat" data-pk="1" class="editablecolorcat" data-type="checklist" data-url="/polishedit/<%= pid %>/colorcat" data-value="<%= pcolorcat %>" data-defaultValue="?" data-separator=","><% if (pcolorcat.length > 0) {%><%= pcolorcat.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
@@ -140,7 +140,7 @@
                     <b>Type:</b> <%= ptype.replace(/,/g,", ") %>
                 <% } %>
                 <br><br><br>
-                <% if (isAuthenticated()) { %>
+                <% if (isAuthenticated) { %>
                     <% if (user.country === 'CAN') { %>
                         <a href="http://www.amazon.ca/s/?_encoding=UTF8&camp=15121&creative=390961&field-keywords=<%= linkbrand %>%20<%= linkname %>&linkCode=ur2&tag=lacqutrack00-20&url=search-alias%3Daps">View on Amazon</a><img src="https://ir-ca.amazon-adsystem.com/e/ir?t=lacqutrack00-20&l=ur2&o=15" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /><br><br>
                         <a href="http://www.nailpolishcanada.com/search.php?search_query=<%=linkbrand%>%20<%=linkname%>">View on Nail Polish Canada</a>
@@ -184,7 +184,7 @@
                 <% } else {%>
                     <br><br><br><a href="/polishedit/<%=pid%>/dupes"><i>Add dupes for this polish.</i></a>
                 <% } %>
-                <% if (isAuthenticated()) {%><% if (user.adminview === true) { %><br><br><%=pid%><%}%><%}%>
+                <% if (isAuthenticated) {%><% if (user.adminview === true) { %><br><br><%=pid%><%}%><%}%>
             </div>
         </section>
     </div>
@@ -235,4 +235,4 @@ var speed = 100;
     });
 </script>
 
-<% include ../layoutBottom %>
+<%- include('../layoutBottom'); %>

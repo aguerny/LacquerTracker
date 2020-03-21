@@ -20,7 +20,7 @@ var request = require('request');
 
 module.exports = function(app, passport) {fs.readdirSync('./routes').forEach(function (file) {
 
-    
+
     // Avoid to read this current file.
     if (file === path.basename(__filename)) { return; }
 

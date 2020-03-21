@@ -1,4 +1,4 @@
-<% include layoutTop %>
+<%- include('layoutTop'); %>
 
 <!-- content -->
 <div class="wrapper row2">
@@ -34,7 +34,7 @@
                     </select>
                     <br><br><br>
                     <input type="checkbox" name="indie" <% if (browseindie === "on") { %> checked <% } %>>Indie polishes<br><br><br>
-                    <% if (isAuthenticated()) { %>
+                    <% if (isAuthenticated) { %>
                         <input type="checkbox" name="owned" <% if (browseowned === "on") { %> checked <% } %>>Owned polishes<br><br><br>
                         <input type="checkbox" name="wanted" <% if (browsewanted === "on") { %> checked <% } %>>Wanted polishes<br><br><br>
                     <% } %>
@@ -73,7 +73,7 @@
                         </select>
                         <br><br><br>
                         <input type="checkbox" name="indie" <% if (browseindie === "on") { %> checked <% } %>>Indie polishes<br><br><br>
-                        <% if (isAuthenticated()) { %>
+                        <% if (isAuthenticated) { %>
                             <input type="checkbox" name="owned" <% if (browseowned === "on") { %> checked <% } %>>Owned polishes<br><br><br>
                             <input type="checkbox" name="wanted" <% if (browsewanted === "on") { %> checked <% } %>>Wanted polishes<br><br><br>
                         <% } %>
@@ -89,7 +89,7 @@
             <div id="browse-right_col">
                 <% if (recent === true) { %><h4>Recently updated polishes:</h3><br><%}%>
                 <table id="polishbrowse" class="sortable browsetable" style="width:100%">
-                    <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="color"><span>Color</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><% if (isAuthenticated()) {%><th class="info"><span>Info</span></th><%}%></tr>
+                    <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="color"><span>Color</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><% if (isAuthenticated) {%><th class="info"><span>Info</span></th><%}%></tr>
                     <% for(var i=0; i<polishes.length; i++) {%>
                         <tr><td><a id='tablelink' href='/polish/<%= polishes[i].brand.replace(/ /g,"_") %>/<%= polishes[i].name.replace(/ /g,"_") %>'><span><%= polishes[i].name %></span></a></td>
                         <td><a id='tablelink' href='/brand/<%= polishes[i].brand.replace(/ /g,"_") %>'><span><%= polishes[i].brand %></span></a></td>
@@ -116,7 +116,7 @@
                         <td>
                             <span><%= polishes[i].type.replace(/,/g,", ") %></span>
                         </td>
-                        <% if (isAuthenticated()) { %><td class="nomargin">
+                        <% if (isAuthenticated) { %><td class="nomargin">
                                 <% if (status[i] === "owned") { %>
                                     <center><span>&#10004;</span></center>
                                 <% } else if (status[i] === "wanted") { %>
@@ -226,4 +226,4 @@ $(document).ready(function() {
 });
 </script>
 
-<% include layoutBottom %>
+<%- include('layoutBottom'); %>

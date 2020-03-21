@@ -22,19 +22,19 @@ myAmazonUKCode = '?tag=lacqutrack-21';
 function addAffiliate(link) {
     if ((link.href).indexOf('amzn.com/') > -1) {
         link.href = link.href + myAmazonUSCode;
-        return true; 
+        return true;
     } else if ((link.href).indexOf('amazon.com/registry') > -1) {
         link.href = link.href + myAmazonUSCode;
-        return true; 
+        return true;
     } else if ((link.href).indexOf('amzn.ca/') > -1) {
         link.href = link.href + myAmazonCACode;
-        return true; 
+        return true;
     } else if ((link.href).indexOf('amazon.ca/registry') > -1) {
         link.href = link.href + myAmazonCACode;
         return true;
 /*    } else if ((link.href).indexOf('amzn.co.uk/') > -1) {
         link.href = link.href + myAmazonUKCode;
-        return true; 
+        return true;
     } else if ((link.href).indexOf('amazon.co.uk/registry') > -1) {
         link.href = link.href + myAmazonUKCode;
         return true;*/

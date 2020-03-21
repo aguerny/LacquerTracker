@@ -1,4 +1,4 @@
-<% include layoutTop %>
+<%- include('layoutTop'); %>
 
 <!-- content -->
 <div class="wrapper row2">
@@ -29,7 +29,7 @@
             </div>
             <% if (polishes.length > 0) { %>
                 <table id="polishbrowse" class="sortable browsetable" style="width:100%">
-                    <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="color"><span>Color</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><% if (isAuthenticated()) {%><th class="info"><span>Info</span></th><%}%></tr>
+                    <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="color"><span>Color</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><% if (isAuthenticated) {%><th class="info"><span>Info</span></th><%}%></tr>
                     <% for(var i=0; i<polishes.length; i++) {%>
                         <tr><td><a id='tablelink' href='/polish/<%= polishes[i].brand.replace(/ /g,"_") %>/<%= polishes[i].name.replace(/ /g,"_") %>'><span><%= polishes[i].name %></span></a></td>
                         <td><span><%= polishes[i].brand %></span></td>
@@ -56,7 +56,7 @@
                         <td>
                             <span><%= polishes[i].type.replace(/,/g,", ") %></span>
                         </td>
-                        <% if (isAuthenticated()) { %><td class="nomargin">
+                        <% if (isAuthenticated) { %><td class="nomargin">
                                 <% if (status[i] === "owned") { %>
                                     <center><span>&#10004;</span></center>
                                 <% } else if (status[i] === "wanted") { %>
@@ -76,7 +76,7 @@
             <% if (bbio !== "") {%>
                 <br><br><br><i>Please <a href="/contact">contact us</a> to update the information about your brand.</i>
             <% } %>
-            <% if (isAuthenticated()) {%><% if (user.adminview === true) { %><% if (bid) {%><br><br><br><a href="/admin/brandedit/<%=bid%>">Admin Edit Brand</a><%}%><%}%><%}%>
+            <% if (isAuthenticated) {%><% if (user.adminview === true) { %><% if (bid) {%><br><br><br><a href="/admin/brandedit/<%=bid%>">Admin Edit Brand</a><%}%><%}%><%}%>
         </section>
     </div>
 </div>
@@ -124,4 +124,4 @@ $(document).ready(function() {
 });
 </script>
 
-<% include layoutBottom %>
+<%- include('layoutBottom'); %>

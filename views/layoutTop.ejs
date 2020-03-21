@@ -39,7 +39,7 @@
         <div>
             <h1><a href="/">Lacquer Tracker</a></h1>
             <div id="logininfo">
-                <% if (isAuthenticated()) { %>
+                <% if (isAuthenticated) { %>
                     <p>Hello <%= user.username %> | <a href="/logout">Logout</a></p>
                 <% } else { %>
                     <p><a href="/login">Login</a> | <a href="/signup">Signup</a></p>

@@ -7,72 +7,70 @@ var autoIncrement = require('mongoose-auto-increment');
 var passport = require('passport');
 var d = require('domain').create();
 var fs = require('fs');
+var morgan = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var favicon = require('serve-favicon');
+var methodOverride = require('method-override');
+var session = require('express-session');
+var timeout = require('connect-timeout');
+var errorHandler = require('errorhandler');
 
 var app = express();
 
 //configuration
-var connection = mongoose.connect('localhost/lacquertracker'); // connect to database
+mongoose.connect('mongodb://localhost:27017/lacquertracker', {useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true}); // connect to database
+var connection = mongoose.connection
 autoIncrement.initialize(connection);
 require(__dirname+'/app/passport')(passport); // pass passport for configuration
 
-app.configure(function() {
+//set up express
+app.set('port', process.env.LTPORT || 3000);
+app.engine('html', require('ejs').renderFile);
 
-	//set up express
-	app.set('port', process.env.LTPORT || 3000);
-	app.engine('html', require('ejs').renderFile);
+app.enable('trust proxy');
 
-    app.enable('trust proxy');
-
-    app.use(function (req, res, next) {
-    	if ('/robots.txt' == req.url) {
-        	res.type('text/plain')
-        	res.send("User-agent: *\nDisallow: /admin\nDisallow: /blog/add\nDisallow: /blog/*/add\nDisallow: /blog/*/*/add\nDisallow: /blog/*/*/remove\nDisallow: /blog/*/*/removepermanent\nDisallow: /blog/*/edit\nDisallow: /email\nDisallow: /forums/*/add\nDisallow: /forums/*/*/*/add\nDisallow: /forums/*/*/edit\nDisallow: /forums/*/*/add\nDisallow: /forums/*/*/*/remove\nDisallow: /forums/*/*/*/removepermanent\nDisallow: /forums/*/*/remove\nDisallow: /photo\nDisallow: /swatch\nDisallow: /addown\nDisallow: /addwant\nDisallow: /addownbrowse\nDisallow: /addwantbrowse\nDisallow: /removeown\nDisallow: /removewant\nDisallow: /polish/*/*/delete\nDisallow: /profile/edit\nDisallow: /profile/*/edit\nDisallow: /profile/*/*/remove\nDisallow: /profile/*/*/add\nDisallow: /profile/*/*/delete\nDisallow: /review\nDisallow: /validate\nDisallow: /revalidate\nDisallow: /reset\nDisallow: /logout\nDisallow: /scripts\nDisallow: /stylesheets\nDisallow: /polishsuccessful\nDisallow: /polishid");
-    	} else {
-        	next();
-    	}
-	});
-
-	app.use(express.static(__dirname+'/public')); // Catch static files
-	app.use(express.logger('dev')); // log every request to the console
-	/*app.use(express.logger({format: 'dev', stream: fs.createWriteStream('app.log', {'flags': 'w'})}));*/
-    var cookieSecret = process.env.LTCOOKIESECRET || "Development Cookie Secret";
-	app.use(express.cookieParser(cookieSecret)); // read cookies (needed for auth)
-	app.use(express.bodyParser({uploadDir:__dirname+'/public/images/tmp/'})); // get information from HTML forms
-	app.use(express.favicon(__dirname+'/public/images/lt.png'));
-	app.use(express.json());
-	app.use(express.urlencoded());
-	app.use(express.methodOverride());
-
-	app.use(express.session({cookie: {maxAge: 365 * 24 * 60 * 60 * 1000}})); // session secret
-	app.use(flash()); // use connect-flash for flash messages stored in session
-	app.use(passport.initialize());
-	app.use(passport.session()); // persistent login sessions
-
-	app.use(function (req, res, next) {
-    	res.locals({
-        	get user() { // as a getter to delay retrieval until `res.render()`
-            	return req.user;
-        	},
-        	isAuthenticated: function () {
-            	return req.user != null;
-        	}
-    	})
-    		next();
-	});
-
-	app.use(express.timeout(10000));
-
-	app.use(app.router);
-	app.use(function(req,res){
-   		res.redirect('/error');
-	});
-
+app.use(function (req, res, next) {
+	if ('/robots.txt' == req.url) {
+    	res.type('text/plain')
+    	res.send("User-agent: *\nDisallow: /admin\nDisallow: /blog/add\nDisallow: /blog/*/add\nDisallow: /blog/*/*/add\nDisallow: /blog/*/*/remove\nDisallow: /blog/*/*/removepermanent\nDisallow: /blog/*/edit\nDisallow: /email\nDisallow: /forums/*/add\nDisallow: /forums/*/*/*/add\nDisallow: /forums/*/*/edit\nDisallow: /forums/*/*/add\nDisallow: /forums/*/*/*/remove\nDisallow: /forums/*/*/*/removepermanent\nDisallow: /forums/*/*/remove\nDisallow: /photo\nDisallow: /swatch\nDisallow: /addown\nDisallow: /addwant\nDisallow: /addownbrowse\nDisallow: /addwantbrowse\nDisallow: /removeown\nDisallow: /removewant\nDisallow: /polish/*/*/delete\nDisallow: /profile/edit\nDisallow: /profile/*/edit\nDisallow: /profile/*/*/remove\nDisallow: /profile/*/*/add\nDisallow: /profile/*/*/delete\nDisallow: /review\nDisallow: /validate\nDisallow: /revalidate\nDisallow: /reset\nDisallow: /logout\nDisallow: /scripts\nDisallow: /stylesheets\nDisallow: /polishsuccessful\nDisallow: /polishid");
+	} else {
+    	next();
+	}
 });
+
+app.use(express.static(__dirname+'/public')); // Catch static files
+app.use(morgan('dev')); // log every request to the console
+var cookieSecret = process.env.LTCOOKIESECRET || "Development Cookie Secret";
+app.use(cookieParser(cookieSecret)); // read cookies (needed for auth)
+app.use(bodyParser({uploadDir:__dirname+'/public/images/tmp/'})); // get information from HTML forms
+app.use(favicon(__dirname+'/public/images/lt.png'));
+app.use(express.json());
+app.use(express.urlencoded());
+app.use(methodOverride());
+
+app.use(session({secret:cookieSecret, cookie: {maxAge: 365 * 24 * 60 * 60 * 1000}, resave:true, saveUninitialized:false})); // session secret
+app.use(flash()); // use connect-flash for flash messages stored in session
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+
+app.use(function (req, res, next) {
+    res.locals.user = req.user;
+    res.locals.isAuthenticated = req.user != null;
+    next();
+});
+
+app.use(timeout(10000));
+
+/*error handling, but doesn't work anymore
+app.use(function(req,res){
+    res.redirect('/error');
+});*/
 
 
 // development only
 if ('development' == app.get('env')) {
-    app.use(express.errorHandler());
+    app.use(errorHandler());
 }
 
 
