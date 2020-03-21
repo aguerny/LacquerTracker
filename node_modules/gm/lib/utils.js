@@ -9,7 +9,11 @@
 
 exports.escape = function escape (arg) {
   return '"' + String(arg).trim().replace(/"/g, '\\"') + '"';
-}
+};
+
+exports.unescape = function escape (arg) {
+    return String(arg).trim().replace(/"/g, "");
+};
 
 exports.argsToArray = function (args) {
   var arr = [];
@@ -20,4 +24,20 @@ exports.argsToArray = function (args) {
   }
 
   return arr;
+};
+
+exports.isUtil = function (v) {
+	var ty = 'object';
+	switch (Object.prototype.toString.call(v)) {
+	case '[object String]':
+		ty = 'String';
+		break;
+	case '[object Array]':
+		ty = 'Array';
+		break;
+	case '[object Boolean]':
+		ty = 'Boolean';
+		break;
+	}
+	return ty;
 }
