@@ -40,8 +40,9 @@ app.post('/email/:username', isLoggedIn, function(req, res) {
         }
         if (body.success === true) {
             //send e-mail
-            var transport = nodemailer.createTransport('sendmail', {
-                path: "/usr/sbin/sendmail",
+            var transport = nodemailer.createTransport({
+                sendmail: true,
+                path: "/usr/sbin/sendmail"
             });
 
             var mailOptions = {

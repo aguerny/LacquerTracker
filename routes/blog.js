@@ -125,8 +125,9 @@ app.post('/blog/:title/:id/add', isLoggedIn, function(req, res) {
                 if (comment !== null) {
                     if (req.user.username !== comment.user.username && comment.user.notifications === "on" && comment.user.username !== blog.user.username) {
                         //mail notification
-                        var transport = nodemailer.createTransport('sendmail', {
-                            path: "/usr/sbin/sendmail",
+                        var transport = nodemailer.createTransport({
+                            sendmail: true,
+                            path: "/usr/sbin/sendmail"
                         });
 
                         var mailOptions = {
@@ -144,8 +145,9 @@ app.post('/blog/:title/:id/add', isLoggedIn, function(req, res) {
 
                 if (req.user.username !== blog.user.username && blog.user.notifications === "on") {
                     //mail notification
-                    var transport = nodemailer.createTransport('sendmail', {
-                        path: "/usr/sbin/sendmail",
+                    var transport = nodemailer.createTransport({
+                        sendmail: true,
+                        path: "/usr/sbin/sendmail"
                     });
 
                     var mailOptions = {
@@ -273,7 +275,7 @@ app.get('/blog/:id/remove', isLoggedIn, function(req, res) {
                 res.redirect('/error');
             }
         }
-    })   
+    })
 });
 
 
@@ -294,7 +296,7 @@ app.get('/blog/:id/edit', isLoggedIn, function(req, res) {
             } else {
                 res.redirect('/error');
             }
-        }       
+        }
     })
 });
 

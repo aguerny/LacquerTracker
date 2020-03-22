@@ -27,26 +27,27 @@ app.post('/contact', function (req, res) {
             res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Captcha wrong. Try again.', inputname:req.body.name, inputemail:req.body.email, inputmessage:req.body.usermessage});
         }
         if (body.success === true) {
-            var transport = nodemailer.createTransport('sendmail', {
-                    path: "/usr/sbin/sendmail",
-                });
+            var transport = nodemailer.createTransport({
+                sendmail: true,
+                path: "/usr/sbin/sendmail"
+            });
 
-                var mailOptions = {
-                    from: "polishrobot@lacquertracker.com",
-                    to: 'lacquertrackermailer@gmail.com',
-                    subject: 'Contact Form Submission',
-                    text: "Message from " + sanitizer.sanitize(req.body.name) + " - " + sanitizer.sanitize(req.body.email) + ":\n\n\n" + sanitizer.sanitize(req.body.usermessage)
+            var mailOptions = {
+                from: "polishrobot@lacquertracker.com",
+                to: 'lacquertrackermailer@gmail.com',
+                subject: 'Contact Form Submission',
+                text: "Message from " + sanitizer.sanitize(req.body.name) + " - " + sanitizer.sanitize(req.body.email) + ":\n\n\n" + sanitizer.sanitize(req.body.usermessage)
+            }
+
+            transport.sendMail(mailOptions, function(error, response) {
+                if (error) {
+                    res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Could not send feedback. Please try again later.', inputname:req.body.name, inputemail:req.body.email, inputmessage:req.body.usermessage});
+                } else {
+                    res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Feedback successfully sent!'});
                 }
 
-                transport.sendMail(mailOptions, function(error, response) {
-                    if (error) {
-                        res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Could not send feedback. Please try again later.', inputname:req.body.name, inputemail:req.body.email, inputmessage:req.body.usermessage});
-                    } else {
-                        res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Feedback successfully sent!'});
-                    }
-
-                    transport.close();
-                });
+                transport.close();
+            });
         } else {
             res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Could not send feedback. Please try again later.', inputname:req.body.name, inputemail:req.body.email, inputmessage:req.body.usermessage});
         }

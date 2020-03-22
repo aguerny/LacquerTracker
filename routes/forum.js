@@ -284,8 +284,9 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
                 if (comment !== null) {
                     if (req.user.username !== comment.user.username && comment.user.notifications === "on" && comment.user.username !== post.user.username) {
                         //mail notification
-                        var transport = nodemailer.createTransport('sendmail', {
-                            path: "/usr/sbin/sendmail",
+                        var transport = nodemailer.createTransport({
+                            sendmail: true,
+                            path: "/usr/sbin/sendmail"
                         });
 
                         var mailOptions = {
@@ -303,8 +304,9 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
 
                 if (req.user.username !== post.user.username && post.user.notifications === "on") {
                     //mail notification
-                    var transport = nodemailer.createTransport('sendmail', {
-                        path: "/usr/sbin/sendmail",
+                    var transport = nodemailer.createTransport({
+                        sendmail: true,
+                        path: "/usr/sbin/sendmail"
                     });
 
                     var mailOptions = {

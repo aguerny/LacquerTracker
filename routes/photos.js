@@ -227,8 +227,9 @@ app.post('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
                 photo.pendingdelete = true;
                 photo.pendingreason = sanitizer.sanitize(req.body.pendingreason) + " - " + req.user.username + " - " + p.brand + "-" + p.name;
                 photo.save(function(err) {
-                    var transport = nodemailer.createTransport('sendmail', {
-                        path: "/usr/sbin/sendmail",
+                    var transport = nodemailer.createTransport({
+                        sendmail: true,
+                        path: "/usr/sbin/sendmail"
                     });
 
                     var mailOptions = {

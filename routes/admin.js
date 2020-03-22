@@ -304,9 +304,10 @@ app.post('/polishid/:id/flag', isLoggedIn, function(req, res) {
             polish.flagged = true;
             polish.flaggedreason = sanitizer.sanitize(req.body.flaggedreason) + " - " + req.user.username;
             polish.save();
-            var transport = nodemailer.createTransport('sendmail', {
-                path: "/usr/sbin/sendmail",
-            });
+                var transport = nodemailer.createTransport({
+                    sendmail: true,
+                    path: "/usr/sbin/sendmail"
+                });
 
             var mailOptions = {
                 from: "polishrobot@lacquertracker.com",

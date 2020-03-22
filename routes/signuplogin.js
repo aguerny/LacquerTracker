@@ -67,8 +67,9 @@ app.post('/signup', function(req, res) {
                                         res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Error saving account. Please try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
                                     } else {
                                         //send validation e-mail
-                                        var transport = nodemailer.createTransport('sendmail', {
-                                            path: "/usr/sbin/sendmail",
+                                        var transport = nodemailer.createTransport({
+                                            sendmail: true,
+                                            path: "/usr/sbin/sendmail"
                                         });
 
                                         var mailOptions = {
@@ -136,8 +137,9 @@ app.post('/revalidate', function(req, res) {
                 if (user.isvalidated === true) {
                     res.render('account/login.ejs', {title: 'Login - Lacquer Tracker', message:'Your account has already been validated. Please log in.'});
                 } else {
-                    var transport = nodemailer.createTransport('sendmail', {
-                        path: "/usr/sbin/sendmail",
+                    var transport = nodemailer.createTransport({
+                        sendmail: true,
+                        path: "/usr/sbin/sendmail"
                     });
 
                     var mailOptions = {
@@ -206,8 +208,9 @@ app.post('/passwordreset', function(req, res) {
                     newResetKey.save();
 
                     //send email
-                    var transport = nodemailer.createTransport('sendmail', {
-                        path: "/usr/sbin/sendmail",
+                    var transport = nodemailer.createTransport({
+                        sendmail: true,
+                        path: "/usr/sbin/sendmail"
                     });
 
                     var mailOptions = {
