@@ -15,6 +15,7 @@ var methodOverride = require('method-override');
 var session = require('express-session');
 var timeout = require('connect-timeout');
 var errorHandler = require('errorhandler');
+var fileUpload = require('express-fileupload');
 
 var app = express();
 
@@ -44,6 +45,7 @@ app.use(morgan('dev')); // log every request to the console
 var cookieSecret = process.env.LTCOOKIESECRET || "Development Cookie Secret";
 app.use(cookieParser(cookieSecret)); // read cookies (needed for auth)
 app.use(bodyParser({uploadDir:__dirname+'/public/images/tmp/'})); // get information from HTML forms
+app.use(fileUpload({useTempFiles:true, tempFileDir:__dirname+'/public/images/tmp/', safeFileNames: true}));
 app.use(favicon(__dirname+'/public/images/lt.png'));
 app.use(express.json());
 app.use(express.urlencoded());

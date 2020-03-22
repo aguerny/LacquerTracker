@@ -36,18 +36,24 @@ app.get('/swatch/add/:id', isLoggedIn, function(req, res) {
 //upload image
 app.post('/swatch/add/:id', isLoggedIn, function(req, res) {
     if (req.files.photo.name.length > 0) {
-        var ext = path.extname(req.files.photo.name);
-        var tempPath = path.resolve('./public/images/tmp/' + req.user.username + ext);
-        fs.rename(req.files.photo.path, tempPath, function (err) {
-            var data = {};
-            data.title = 'Add a Swatch - Lacquer Tracker';
-            data.pid = req.params.id;
-            data.ext = ext;
-            data.location = '/images/tmp/' + req.user.username + ext;
-            res.render('swatch/crop.ejs', data);    
-        })
+        if (req.files.photo.mimetype.startsWith("image")) {
+            var ext = path.extname(req.files.photo.name);
+            var tempPath = path.resolve('./public/images/tmp/' + req.user.username + ext);
+            fs.rename(req.files.photo.tempFilePath, tempPath, function (err) {
+                var data = {};
+                data.title = 'Add a Swatch - Lacquer Tracker';
+                data.pid = req.params.id;
+                data.ext = ext;
+                data.location = '/images/tmp/' + req.user.username + ext;
+                res.render('swatch/crop.ejs', data);
+            })
+        } else {
+            fs.unlink(req.files.photo.tempFilePath, function(){
+                res.redirect('/error');
+            })
+        }
     } else if (req.body.url.length > 0) {
-        fs.unlink(req.files.photo.path);
+        fs.unlink(req.files.photo.tempFilePath);
         var ext = path.extname(req.body.url);
         var tempPath = path.resolve('./public/images/tmp/' + req.user.username + ext);
         download(req.body.url, tempPath, function(err) {

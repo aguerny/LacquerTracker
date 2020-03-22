@@ -78,102 +78,108 @@ app.get('/forums/:forum/add', isLoggedIn, function(req, res) {
 
 app.post('/forums/:forum/add', isLoggedIn, function(req, res) {
     if (req.files.photo.name.length > 0) {
-        var ext = path.extname(req.files.photo.name);
-        var newUserPhoto = new UserPhoto ({
-            userid: req.user.id,
-            onprofile: req.body.onprofile,
-            location: '',
-        })
-        newUserPhoto.save(function(err) {
-            if (err) {
-                fs.unlink(req.files.photo.path, function(err) {
-                    newUserPhoto.remove(function(err) {
-                        res.redirect('/error');
+        if (req.files.photo.mimetype.startsWith("image")) {
+            var ext = path.extname(req.files.photo.name);
+            var newUserPhoto = new UserPhoto ({
+                userid: req.user.id,
+                onprofile: req.body.onprofile,
+                location: '',
+            })
+            newUserPhoto.save(function(err) {
+                if (err) {
+                    fs.unlink(req.files.photo.tempFilePath, function(err) {
+                        newUserPhoto.remove(function(err) {
+                            res.redirect('/error');
+                        })
                     })
-                })
-            } else {
-                req.user.photos.push(newUserPhoto.id);
-                req.user.save(function(err) {
-                    gm(req.files.photo.path).size(function(err, value) {
-                        if (err) {
-                            fs.unlink(req.files.photo.path, function(err) {
-                                newUserPhoto.remove();
-                                req.user.photos.remove(newUserPhoto.id);
-                                req.user.save(function(err) {
-                                    res.redirect('/error');
-                                })
-                            })
-                        } else {
-                            if (value.width > 600) {
-                                gm(req.files.photo.path).resize(600).write(path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function (err) {
-                                    if (err) {
-                                        fs.unlink(req.files.photo.path, function(err) {
-                                            newUserPhoto.remove();
-                                            req.user.photos.remove(newUserPhoto.id);
-                                            req.user.save(function(err) {
-                                                res.redirect('/error');
-                                            })
-                                        })
-                                    } else {
-                                        fs.unlink(req.files.photo.path, function() {
-                                            newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
-                                            newUserPhoto.save(function(err) {
-                                                var newForumPost = new ForumPost ({
-                                                    user: req.user.id,
-                                                    username: req.user.username,
-                                                    title: sanitizer.sanitize(req.body.posttitle),
-                                                    message: '![]('+newUserPhoto.location+')<br><br>' + sanitizer.sanitize(req.body.postmessage),
-                                                    date: new Date(),
-                                                    dateupdated: new Date(),
-                                                    dateupdatedsort: new Date(),
-                                                    forum: req.body.forum,
-                                                });
-                                                newForumPost.save(function(err) {
-                                                    if (err) throw err;
-                                                    else res.redirect('/forums/' + newForumPost.forum + '/' + newForumPost.id);
-                                                })
-                                            })
-                                        })
-                                    }
+                } else {
+                    req.user.photos.push(newUserPhoto.id);
+                    req.user.save(function(err) {
+                        gm(req.files.photo.tempFilePath).size(function(err, value) {
+                            if (err) {
+                                fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                    newUserPhoto.remove();
+                                    req.user.photos.remove(newUserPhoto.id);
+                                    req.user.save(function(err) {
+                                        res.redirect('/error');
+                                    })
                                 })
                             } else {
-                                fs.rename(req.files.photo.path, path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function(err) {
-                                    if (err) {
-                                        fs.unlink(req.files.photo.path, function(err) {
-                                            newUserPhoto.remove();
-                                            req.user.photos.remove(newUserPhoto.id);
-                                            req.user.save(function(err) {
-                                                res.redirect('/error');
-                                            })
-                                        })
-                                    } else {
-                                        fs.unlink(req.files.photo.path, function() {
-                                            newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
-                                            newUserPhoto.save(function(err) {
-                                                var newForumPost = new ForumPost ({
-                                                    user: req.user.id,
-                                                    username: req.user.username,
-                                                    title: sanitizer.sanitize(req.body.posttitle),
-                                                    message: '![]('+newUserPhoto.location+')<br><br>' + sanitizer.sanitize(req.body.postmessage),
-                                                    date: new Date(),
-                                                    dateupdated: new Date(),
-                                                    dateupdatedsort: new Date(),
-                                                    forum: req.body.forum,
-                                                });
-                                                newForumPost.save(function(err) {
-                                                    if (err) throw err;
-                                                    else res.redirect('/forums/' + newForumPost.forum + '/' + newForumPost.id);
+                                if (value.width > 400) {
+                                    gm(req.files.photo.tempFilePath).resize(400).write(path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function (err) {
+                                        if (err) {
+                                            fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                                newUserPhoto.remove();
+                                                req.user.photos.remove(newUserPhoto.id);
+                                                req.user.save(function(err) {
+                                                    res.redirect('/error');
                                                 })
                                             })
-                                        })
-                                    }
-                                })
+                                        } else {
+                                            fs.unlink(req.files.photo.tempFilePath, function() {
+                                                newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
+                                                newUserPhoto.save(function(err) {
+                                                    var newForumPost = new ForumPost ({
+                                                        user: req.user.id,
+                                                        username: req.user.username,
+                                                        title: sanitizer.sanitize(req.body.posttitle),
+                                                        message: '![]('+newUserPhoto.location+')<br><br>' + sanitizer.sanitize(req.body.postmessage),
+                                                        date: new Date(),
+                                                        dateupdated: new Date(),
+                                                        dateupdatedsort: new Date(),
+                                                        forum: req.body.forum,
+                                                    });
+                                                    newForumPost.save(function(err) {
+                                                        if (err) throw err;
+                                                        else res.redirect('/forums/' + newForumPost.forum + '/' + newForumPost.id);
+                                                    })
+                                                })
+                                            })
+                                        }
+                                    })
+                                } else {
+                                    fs.rename(req.files.photo.tempFilePath, path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function(err) {
+                                        if (err) {
+                                            fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                                newUserPhoto.remove();
+                                                req.user.photos.remove(newUserPhoto.id);
+                                                req.user.save(function(err) {
+                                                    res.redirect('/error');
+                                                })
+                                            })
+                                        } else {
+                                            fs.unlink(req.files.photo.tempFilePath, function() {
+                                                newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
+                                                newUserPhoto.save(function(err) {
+                                                    var newForumPost = new ForumPost ({
+                                                        user: req.user.id,
+                                                        username: req.user.username,
+                                                        title: sanitizer.sanitize(req.body.posttitle),
+                                                        message: '![]('+newUserPhoto.location+')<br><br>' + sanitizer.sanitize(req.body.postmessage),
+                                                        date: new Date(),
+                                                        dateupdated: new Date(),
+                                                        dateupdatedsort: new Date(),
+                                                        forum: req.body.forum,
+                                                    });
+                                                    newForumPost.save(function(err) {
+                                                        if (err) throw err;
+                                                        else res.redirect('/forums/' + newForumPost.forum + '/' + newForumPost.id);
+                                                    })
+                                                })
+                                            })
+                                        }
+                                    })
+                                }
                             }
-                        }
+                        })
                     })
-                })
-            }
-        })
+                }
+            })
+        } else {
+            fs.unlink(req.files.photo.tempFilePath, function() {
+                res.redirect('/error');
+            })
+        }
     } else {
         var newForumPost = new ForumPost ({
             user: req.user.id,
@@ -477,7 +483,7 @@ app.get('/forums/:forum/:id/remove', isLoggedIn, function(req, res) {
                 res.redirect('/error');
             }
         }
-    })   
+    })
 });
 
 
