@@ -63,8 +63,8 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                                     res.redirect('/error');
                                 })
                             })
-                        } else if (value.width > 600) {
-                            gm(req.files.photo.tempFilePath).resize(600).write(path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ext), function (err) {
+                        } else if (value.width > 400) {
+                            gm(req.files.photo.tempFilePath).resize(400).write(path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ext), function (err) {
                                 if (err) {
                                     fs.unlink(req.files.photo.tempFilePath, function(err) {
                                         newPhoto.remove();
@@ -157,8 +157,8 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                                             res.redirect('/error');
                                         })
                                     })
-                                } else if (value.width > 600) {
-                                    gm(targetPath).resize(600).write(targetPath, function (err) {
+                                } else if (value.width > 400) {
+                                    gm(targetPath).resize(400).write(targetPath, function (err) {
                                         if (err) {
                                             fs.unlink(targetPath, function() {
                                                 newPhoto.remove();
@@ -338,8 +338,8 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
                                     })
                                 })
                             } else {
-                                if (value.width > 600) {
-                                    gm(req.files.photo.tempFilePath).resize(600).write(path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function (err) {
+                                if (value.width > 400) {
+                                    gm(req.files.photo.tempFilePath).resize(400).write(path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function (err) {
                                         if (err) {
                                             fs.unlink(req.files.photo.tempFilePath, function(err) {
                                                 newUserPhoto.remove();
@@ -419,8 +419,8 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
                                                 res.redirect('/error');
                                             })
                                         })
-                                    } else if (value.width > 600) {
-                                        gm(targetPath).resize(600).write(targetPath, function (err) {
+                                    } else if (value.width > 400) {
+                                        gm(targetPath).resize(400).write(targetPath, function (err) {
                                             if (err) {
                                                 fs.unlink(targetPath, function(err) {
                                                     newUserPhoto.remove();

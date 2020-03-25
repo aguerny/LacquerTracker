@@ -1,0 +1,25 @@
+<%- include('../layoutTop'); %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
+        <form action="/nailsoftheday/<%= checkinid %>/edit" method="post">
+            <h3>Edit your check-in:</h3><br><br>
+                <img src=<%= checkinphotolocation %>><br><br><br>
+                Edit your polishes used:<br><select name="polish" class="chosen-select" multiple>
+                    <% for (i=0; i<polish.length; i++) { %>
+                        <option value="<%=polish[i].id%>"><%= polish[i].brand %> - <%= polish[i].name %></option>
+                    <% } %>
+                    </select><br><br><br>
+                <input type="submit" value="Submit" class="button">
+        </form>
+    </section>
+    </div>
+</div>
+
+<script>
+    $(".chosen-select").chosen({width: "230px"});
+</script>
+
+<%- include('../layoutBottom'); %>

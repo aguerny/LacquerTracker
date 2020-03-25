@@ -59,7 +59,7 @@ app.post('/signup', function(req, res) {
                                 newUser.useremail = "on";
                                 newUser.creationdate = new Date();
                                 newUser.country = "";
-                                newUser.timezone = "";
+                                newUser.timezone = "America/New_York";
 
                                 //save the user
                                 newUser.save(function(err) {
@@ -95,6 +95,8 @@ app.post('/signup', function(req, res) {
                                 res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Your account was created, but there was an error sending your validation e-mail. Please try again.'});
                             }
                         });
+                    } else {
+                        res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Passwords do not match. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
                     }
                 }
             })

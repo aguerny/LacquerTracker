@@ -272,7 +272,7 @@ function confirm_alert(node) {
             <br><hr><br><br>
             <% if (isAuthenticated) { %>
                 <b><a name="addcomment"><font color="#000000">Add a Comment:</font></b><br><br>
-                <a href="/photo/upload">Upload a photo?</a><br><br>
+                <a target="blank" href="/photo/upload">Upload a photo?</a><br><br>
                 <form action="/forums/<%= postforum %>/<%= postid %>/<%= postid %>/add" method="post">
                     <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
                     <input type="submit" value="Submit" class="button">

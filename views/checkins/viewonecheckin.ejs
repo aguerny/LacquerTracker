@@ -1,0 +1,297 @@
+<%- include('../layoutTop'); %>
+
+<script type="text/javascript">
+function confirm_alert(node) {
+    return confirm("Are you sure you want to permanently delete this?");
+}
+</script>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
+        <div class="forumpost">
+        <h2><%= checkinuser.username %>'s Nails of the Day</h2><br>
+            <i>Posted on <%= checkindate %></i><% if (isAuthenticated) { %>
+                    <% if (user.username === checkinuser.username || user.level === "admin") { %>
+                        : <a href="/nailsoftheday/<%=checkinid%>/edit">Edit</a> | <a href="/nailsoftheday/<%=checkinid%>/remove" onclick="return confirm_alert(this);">Delete</a>
+                    <% } %>
+                <% } %><br><br>
+            <p style="white-space: pre;">
+                <img src=<%= checkinphotolocation %>><br><br>
+                Polish Used:
+                    <% for (i=0; i<checkinpolish.length; i++) { %>
+                        &#8226; <a href='/polish/<%= checkinpolish[i].brand.replace(/ /g,"_") %>/<%= checkinpolish[i].name.replace(/ /g,"_") %>'><%= checkinpolish[i].brand %> - <%= checkinpolish[i].name %></a>
+                    <% } %>
+            </p><hr><br><br>
+            <b>Comments (<%= checkincomment.length %>)</b> | <a href="/nailsoftheday/<%= checkinid %>/add">Add a comment</a><br><br>
+
+
+            <% for (i=0; i<checkincomment.length; i++) { %>
+            <% if (checkincomment[i].parentid === checkincomment[i].checkinid) { %>
+                <hr style="border-top: dotted 3px; color: #D8D8D8;" />
+                <br>
+                <div>
+                    <%if (checkincomment[i].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[i].user.profilephoto %>">&nbsp;<%}%>
+                    <b><a href="/profile/<%= checkincomment[i].user.username %>"><% if (checkinuser.username === checkincomment[i].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[i].user.username %><% if (checkinuser.username === checkincomment[i].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[i].date %></font>
+                    <% if (isAuthenticated) { %>
+                        <% if (user.username === checkincomment[i].user.username || user.level === "admin") { %>
+                            <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[i].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                        <% } %>
+                    <% } %>
+                    <br>
+                    <div>
+                        <p style="white-space: pre; padding-left: 3em"><%- checkincomment[i].message %></p>
+                        <% if (isAuthenticated) { %>
+                            <div class="replylink"><a href="#">Reply</a></div>
+                            <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[i].id %>/add" method="post">
+                                <textarea name="message" placeholder="Reply here." class="width40" rows="5" required autofocus></textarea><br><br>
+                                <input type="submit" value="Submit" class="button">
+                            </form></div>
+                        <% } else { %>
+                            <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                        <% } %>
+                    </div>
+                </div>
+                <br>
+
+
+                    <% for (j=0; j<checkincomment.length; j++) { %>
+                    <% if (checkincomment[j].parentid === checkincomment[i].id) { %>
+                        <br>
+                        <div class="replycomment" style="margin-left:4%"><div style="padding-left:1%"><br>
+                            <%if (checkincomment[j].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[j].user.profilephoto %>">&nbsp;<%}%>
+                            <b><a href="/profile/<%= checkincomment[j].user.username %>"><% if (checkinuser.username === checkincomment[j].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[j].user.username %><% if (checkinuser.username === checkincomment[j].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[j].date %></font>
+                            <% if (isAuthenticated) { %>
+                                <% if (user.username === checkincomment[j].user.username || user.level === "admin") { %>
+                                    <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[j].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                <% } %>
+                            <% } %>
+                            <br>
+                            <div>
+                                <p style="white-space: pre; padding-left: 3em"><%- checkincomment[j].message %></p>
+                                <% if (isAuthenticated) { %>
+                                    <div class="replylink"><a href="#">Reply</a></div>
+                                    <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[j].id %>/add" method="post">
+                                        <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                        <input type="submit" value="Submit" class="button">
+                                    </form></div>
+                                <% } else { %>
+                                    <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                                <% } %>
+                            </div>
+                            <br></div></div><br>
+
+
+                                <% for (k=0; k<checkincomment.length; k++) { %>
+                                <% if (checkincomment[k].parentid === checkincomment[j].id) { %>
+                                    <br><div style="padding-left:10%">
+                                    <%if (checkincomment[k].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[k].user.profilephoto %>">&nbsp;<%}%>
+                                    <b><a href="/profile/<%= checkincomment[k].user.username %>"><% if (checkinuser.username === checkincomment[k].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[k].user.username %><% if (checkinuser.username === checkincomment[k].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[k].date %></font>
+                                    <% if (isAuthenticated) { %>
+                                        <% if (user.username === checkincomment[k].user.username || user.level === "admin") { %>
+                                            <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[k].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                        <% } %>
+                                    <% } %>
+                                <br>
+                                <div>
+                                    <p style="white-space: pre; padding-left: 3em"><%- checkincomment[k].message %></p>
+                                    <% if (isAuthenticated) { %>
+                                        <div class="replylink"><a href="#">Reply</a></div>
+                                        <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[k].id %>/add" method="post">
+                                            <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                            <input type="submit" value="Submit" class="button">
+                                        </form></div>
+                                    <% } else { %>
+                                        <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                                    <% } %>
+                                </div>
+                                </div><br>
+
+
+                                    <% for (l=0; l<checkincomment.length; l++) { %>
+                                    <% if (checkincomment[l].parentid === checkincomment[k].id) { %>
+                                        <br><div class="replycomment" style="margin-left:14%"><div style="padding-left:1%"><br>
+                                            <%if (checkincomment[l].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[l].user.profilephoto %>">&nbsp;<%}%>
+                                            <b><a href="/profile/<%= checkincomment[l].user.username %>"><% if (checkinuser.username === checkincomment[l].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[l].user.username %><% if (checkinuser.username === checkincomment[l].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[l].date %></font>
+                                            <% if (isAuthenticated) { %>
+                                                <% if (user.username === checkincomment[l].user.username || user.level === "admin") { %>
+                                                    <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[l].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                <% } %>
+                                            <% } %>
+                                    <br>
+                                    <div>
+                                        <p style="white-space: pre; padding-left: 3em"><%- checkincomment[l].message %></p>
+                                        <% if (isAuthenticated) { %>
+                                            <div class="replylink"><a href="#">Reply</a></div>
+                                            <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[l].id %>/add" method="post">
+                                                <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                                <input type="submit" value="Submit" class="button">
+                                            </form></div>
+                                        <% } else { %>
+                                            <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                                        <% } %>
+                                    </div>
+                                    <br></div></div><br>
+
+
+                                        <% for (m=0; m<checkincomment.length; m++) { %>
+                                        <% if (checkincomment[m].parentid === checkincomment[l].id) { %>
+                                            <br><div style="padding-left:20%">
+                                            <%if (checkincomment[m].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[m].user.profilephoto %>">&nbsp;<%}%>
+                                            <b><a href="/profile/<%= checkincomment[m].user.username %>"><% if (checkinuser.username === checkincomment[m].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[m].user.username %><% if (checkinuser.username === checkincomment[m].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[m].date %></font>
+                                            <% if (isAuthenticated) { %>
+                                                <% if (user.username === checkincomment[m].user.username || user.level === "admin") { %>
+                                                    <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[m].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                <% } %>
+                                            <% } %>
+                                        <br>
+                                        <div>
+                                            <p style="white-space: pre; padding-left: 3em"><%- checkincomment[m].message %></p>
+                                            <% if (isAuthenticated) { %>
+                                                <div class="replylink"><a href="#">Reply</a></div>
+                                                <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[m].id %>/add" method="post">
+                                                    <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                                    <input type="submit" value="Submit" class="button">
+                                                </form></div>
+                                            <% } else { %>
+                                                <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                                            <% } %>
+                                        </div>
+                                        </div><br>
+
+
+                                            <% for (n=0; n<checkincomment.length; n++) { %>
+                                            <% if (checkincomment[n].parentid === checkincomment[m].id) { %>
+                                                <br><div class="replycomment" style="margin-left:24%"><div style="padding-left:1%"><br>
+                                                    <%if (checkincomment[n].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[n].user.profilephoto %>">&nbsp;<%}%>
+                                                    <b><a href="/profile/<%= checkincomment[n].user.username %>"><% if (checkinuser.username === checkincomment[n].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[n].user.username %><% if (checkinuser.username === checkincomment[n].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[n].date %></font>
+                                                    <% if (isAuthenticated) { %>
+                                                        <% if (user.username === checkincomment[n].user.username || user.level === "admin") { %>
+                                                            <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[n].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                        <% } %>
+                                                    <% } %>
+                                            <br>
+                                            <div>
+                                                <p style="white-space: pre; padding-left: 3em"><%- checkincomment[n].message %></p>
+                                                <% if (isAuthenticated) { %>
+                                                    <div class="replylink"><a href="#">Reply</a></div>
+                                                    <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[n].id %>/add" method="post">
+                                                        <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                                        <input type="submit" value="Submit" class="button">
+                                                    </form></div>
+                                                <% } else { %>
+                                                    <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                                                <% } %>
+                                            </div>
+                                            <br></div></div><br>
+
+
+                                                <% for (o=0; o<checkincomment.length; o++) { %>
+                                                <% if (checkincomment[o].parentid === checkincomment[n].id) { %>
+                                                    <br><div style="padding-left:30%">
+                                                    <%if (checkincomment[o].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[o].user.profilephoto %>">&nbsp;<%}%>
+                                                    <b><a href="/profile/<%= checkincomment[o].user.username %>"><% if (checkinuser.username === checkincomment[o].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[o].user.username %><% if (checkinuser.username === checkincomment[o].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[o].date %></font>
+                                                    <% if (isAuthenticated) { %>
+                                                        <% if (user.username === checkincomment[o].user.username || user.level === "admin") { %>
+                                                            <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[o].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                        <% } %>
+                                                    <% } %>
+                                                <br>
+                                                <div>
+                                                    <p style="white-space: pre; padding-left: 3em"><%- checkincomment[o].message %></p>
+                                                    <% if (isAuthenticated) { %>
+                                                        <div class="replylink"><a href="#">Reply</a></div>
+                                                        <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[o].id %>/add" method="post">
+                                                            <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                                            <input type="submit" value="Submit" class="button">
+                                                        </form></div>
+                                                    <% } else { %>
+                                                        <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                                                    <% } %>
+                                                </div>
+                                                </div><br>
+
+
+                                                    <% for (p=0; p<checkincomment.length; p++) { %>
+                                                    <% if (checkincomment[p].parentid === checkincomment[o].id) { %>
+                                                        <br><div class="replycomment" style="margin-left:34%"><div style="padding-left:1%"><br>
+                                                            <%if (checkincomment[p].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[p].user.profilephoto %>">&nbsp;<%}%>
+                                                            <b><a href="/profile/<%= checkincomment[p].user.username %>"><% if (checkinuser.username === checkincomment[p].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[p].user.username %><% if (checkinuser.username === checkincomment[p].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[p].date %></font>
+                                                            <% if (isAuthenticated) { %>
+                                                                <% if (user.username === checkincomment[p].user.username || user.level === "admin") { %>
+                                                                    <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[p].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                                <% } %>
+                                                            <% } %>
+                                                    <br>
+                                                    <div>
+                                                        <p style="white-space: pre; padding-left: 3em"><%- checkincomment[p].message %></p>
+                                                        <% if (isAuthenticated) { %>
+                                                            <div class="replylink"><a href="#">Reply</a></div>
+                                                            <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[p].id %>/add" method="post">
+                                                                <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                                                                <input type="submit" value="Submit" class="button">
+                                                            </form></div>
+                                                        <% } else { %>
+                                                            <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                                                        <% } %>
+                                                    </div>
+                                                    <br></div></div><br>
+
+
+                                                        <% for (q=0; q<checkincomment.length; q++) { %>
+                                                        <% if (checkincomment[q].parentid === checkincomment[p].id) { %>
+                                                            <br><div style="padding-left:30%">
+                                                            <%if (checkincomment[q].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[q].user.profilephoto %>">&nbsp;<%}%>
+                                                            <b><a href="/profile/<%= checkincomment[q].user.username %>"><% if (checkinuser.username === checkincomment[q].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[q].user.username %><% if (checkinuser.username === checkincomment[q].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[q].date %></font>
+                                                            <% if (isAuthenticated) { %>
+                                                                <% if (user.username === checkincomment[q].user.username || user.level === "admin") { %>
+                                                                    <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[q].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                                <% } %>
+                                                            <% } %>
+                                                        <br>
+                                                        <div>
+                                                            <p style="white-space: pre; padding-left: 3em"><%- checkincomment[q].message %></p></div>
+                                                        </div><br>
+
+
+
+                                                        <% } %>
+                                                        <% } %>
+                                                    <% } %>
+                                                    <% } %>
+                                                <% } %>
+                                                <% } %>
+                                            <% } %>
+                                            <% } %>
+                                        <% } %>
+                                        <% } %>
+                                    <% } %>
+                                    <% } %>
+                                <% } %>
+                                <% } %>
+                            <% } %>
+                            <% } %>
+                <% } %>
+            <% } %>
+            <br><hr><br><br>
+            <% if (isAuthenticated) { %>
+                <b><a name="addcomment"><font color="#000000">Add a Comment:</font></b><br><br>
+                <form action="/nailsoftheday/<%= checkinid %>/<%= checkinid %>/add" method="post">
+                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                    <input type="submit" value="Submit" class="button">
+                </form>
+            <% } %>
+        </div>
+    </section>
+    </div>
+</div>
+
+<script>
+$(".replylink").click(function(){
+    $(this).siblings(".replybox").show();
+    return false;
+});
+</script>
+
+<%- include('../layoutBottom'); %>

@@ -31,10 +31,10 @@ app.engine('html', require('ejs').renderFile);
 
 app.enable('trust proxy');
 
-app.use(function (req, res, next) {
+app.get(function (req, res, next) {
 	if ('/robots.txt' == req.url) {
     	res.type('text/plain')
-    	res.send("User-agent: *\nDisallow: /admin\nDisallow: /blog/add\nDisallow: /blog/*/add\nDisallow: /blog/*/*/add\nDisallow: /blog/*/*/remove\nDisallow: /blog/*/*/removepermanent\nDisallow: /blog/*/edit\nDisallow: /email\nDisallow: /forums/*/add\nDisallow: /forums/*/*/*/add\nDisallow: /forums/*/*/edit\nDisallow: /forums/*/*/add\nDisallow: /forums/*/*/*/remove\nDisallow: /forums/*/*/*/removepermanent\nDisallow: /forums/*/*/remove\nDisallow: /photo\nDisallow: /swatch\nDisallow: /addown\nDisallow: /addwant\nDisallow: /addownbrowse\nDisallow: /addwantbrowse\nDisallow: /removeown\nDisallow: /removewant\nDisallow: /polish/*/*/delete\nDisallow: /profile/edit\nDisallow: /profile/*/edit\nDisallow: /profile/*/*/remove\nDisallow: /profile/*/*/add\nDisallow: /profile/*/*/delete\nDisallow: /review\nDisallow: /validate\nDisallow: /revalidate\nDisallow: /reset\nDisallow: /logout\nDisallow: /scripts\nDisallow: /stylesheets\nDisallow: /polishsuccessful\nDisallow: /polishid");
+    	res.send("User-agent: *\nDisallow: /admin\nDisallow: /blog\nDisallow: /email\nDisallow: /forums/*/add\nDisallow: /forums/*/edit\nDisallow: /forums/*/remove\nDisallow: /nailsoftheday/*/add\nDisallow: /nailsoftheday/*/edit\nDisallow: /nailsoftheday/*/remove\nDisallow: /photo\nDisallow: /swatch\nDisallow: /addown\nDisallow: /addwant\nDisallow: /addownbrowse\nDisallow: /addwantbrowse\nDisallow: /removeown\nDisallow: /removewant\nDisallow: /polish/*/delete\nDisallow: /polishedit\nDisallow: /profile/*/edit\nDisallow: /profile/*/remove\nDisallow: /profile/*/add\nDisallow: /profile/*/delete\nDisallow: /review\nDisallow: /validate\nDisallow: /revalidate\nDisallow: /reset\nDisallow: /logout\nDisallow: /scripts\nDisallow: /stylesheets\nDisallow: /polishsuccessful\nDisallow: /polishid");
 	} else {
     	next();
 	}
@@ -45,7 +45,7 @@ app.use(morgan('dev')); // log every request to the console
 var cookieSecret = process.env.LTCOOKIESECRET || "Development Cookie Secret";
 app.use(cookieParser(cookieSecret)); // read cookies (needed for auth)
 app.use(bodyParser({uploadDir:__dirname+'/public/images/tmp/'})); // get information from HTML forms
-app.use(fileUpload({useTempFiles:true, tempFileDir:__dirname+'/public/images/tmp/', safeFileNames: true}));
+app.use(fileUpload({useTempFiles:true, tempFileDir:__dirname+'/public/images/tmp/', safeFileNames: true, preserveExtension:true}));
 app.use(favicon(__dirname+'/public/images/lt.png'));
 app.use(express.json());
 app.use(express.urlencoded());

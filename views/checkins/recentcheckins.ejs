@@ -1,0 +1,31 @@
+<%- include('../layoutTop'); %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
+        <div>
+            <h3>Nails of the Day - Recent Manis</h3><br><br>
+            <a href="/nailsoftheday/add">Check in your mani</a><br><br><hr><br>
+                <% for (i=0; i<checkins.length; i++) { %>
+                    Posted on <%= checkins[i].date %> by <a href="/profile/<%= checkins[i].user.username %>"><%= checkins[i].user.username %></a><br><br>
+                    <a href="/nailsoftheday/<%= checkins[i].id %>"><%= checkins[i].comments.length %> Comments | Add a comment</a><br><br>
+                    <img src=<%= checkins[i].photolocation %>><br><br>
+                    <% if (checkins[i].polish.length === 0) { %>Polish Used: ?<%} else {%>
+                    Polish Used:
+                    <% for (j=0; j<checkins[i].polish.length; j++) { %>
+                        <br>&#8226; <a href='/polish/<%= checkins[i].polish[j].brand.replace(/ /g,"_") %>/<%= checkins[i].polish[j].name.replace(/ /g,"_") %>'><%= checkins[i].polish[j].brand %> - <%= checkins[i].polish[j].name %></a>
+                    <% }} %><br><br><hr><br>
+                <% } %>
+            <div style="clear: both;">
+                <% if (checkins.length === 10) { %>
+                    <% if (page > 1) {%><p style="float:right;"><a href="/nailsoftheday/page/<%=page-1%>">&#8592; Prev </a> | Page <%= page %> | <a href="/nailsoftheday/page/<%=page+1%>">Next &#8594;</a></p><%}
+                    else if (page === 1) {%><p style="float:right;">Page <%= page %> | <a href="/nailsoftheday/page/<%=page+1%>">Next &#8594;</a></p><%}%>
+                <% } %>
+            </div>
+        </div>
+    </section>
+    </div>
+</div>
+
+<%- include('../layoutBottom'); %>

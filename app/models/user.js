@@ -12,6 +12,7 @@ var userSchema = mongoose.Schema({
 	ownedpolish  : [{type: mongoose.Schema.Types.ObjectId, ref: 'Polish'}],
 	wantedpolish : [{type: mongoose.Schema.Types.ObjectId, ref: 'Polish'}],
 	photos       : [{type: mongoose.Schema.Types.ObjectId, ref: 'UserPhoto'}],
+	checkins     : [{type: mongoose.Schema.Types.ObjectId, ref: 'Checkin'}],
 	profilephoto : String,
 	isvalidated  : Boolean,
 	level        : String,
