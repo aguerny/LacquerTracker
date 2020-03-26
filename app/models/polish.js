@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 
 
-//define the schema for our user model
+//define the schema for our model
 var polishSchema = mongoose.Schema({
 	batch: String,
     brand: String,
@@ -13,9 +13,9 @@ var polishSchema = mongoose.Schema({
     code: String,
     keywords: String,
     dateupdated: Date,
-    dupes: String,
+    dupes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Polish'}],
     photos: [{type: mongoose.Schema.Types.ObjectId, ref: 'Photo'}],
-    checkins     : [{type: mongoose.Schema.Types.ObjectId, ref: 'Checkin'}],
+    checkins: [{type: mongoose.Schema.Types.ObjectId, ref: 'Checkin'}],
     swatch: String,
     flagged: Boolean,
     flaggedreason: String,

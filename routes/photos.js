@@ -300,35 +300,36 @@ app.post('/photo/edit/:pid/:id', isLoggedIn, function(req, res) {
 
 
 
-//forum photo upload
+//general photo upload (only admins allowed)
 app.get('/photo/upload', isLoggedIn, function(req, res) {
-    var data = {};
-    data.title = 'Upload a Photo - Lacquer Tracker';
-    res.render('photos/forum.ejs', data);
+    if (req.user.level === "admin") {
+        var data = {};
+        data.title = 'Upload a Photo - Lacquer Tracker';
+        res.render('photos/userphoto.ejs', data);
+    } else {
+        res.redirect('/error');
+    }
 });
 
 
-//from file
 app.post('/photo/upload', isLoggedIn, function(req, res) {
-    if (req.files.photo.name.length > 0) {
-        if (req.files.photo.mimetype.startsWith("image")) {
-            var ext = path.extname(req.files.photo.name);
-            var newUserPhoto = new UserPhoto ({
-                userid: req.user.id,
-                onprofile: req.body.onprofile,
-                location: '',
-            })
-            newUserPhoto.save(function(err) {
-                if (err) {
-                    fs.unlink(req.files.photo.tempFilePath, function(err) {
-                        newUserPhoto.remove(function(err) {
-                            res.redirect('/error');
+    if (req.user.level === "admin") {
+        if (req.files.photo.name.length > 0) {
+            if (req.files.photo.mimetype.startsWith("image")) {
+                var ext = path.extname(req.files.photo.name);
+                var newUserPhoto = new UserPhoto ({
+                    userid: req.user.id,
+                    location: '',
+                })
+                newUserPhoto.save(function(err) {
+                    if (err) {
+                        fs.unlink(req.files.photo.tempFilePath, function(err) {
+                            newUserPhoto.remove(function(err) {
+                                res.redirect('/error');
+                            })
                         })
-                    })
-                } else {
-                    req.user.photos.push(newUserPhoto.id);
-                    req.user.save(function(err) {
-                        gm(req.files.photo.tempFilePath).size(function(err, value) {
+                    } else {
+                        gm(req.files.photo.tempFilePath).resize(400).write(path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function (err) {
                             if (err) {
                                 fs.unlink(req.files.photo.tempFilePath, function(err) {
                                     newUserPhoto.remove();
@@ -338,70 +339,31 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
                                     })
                                 })
                             } else {
-                                if (value.width > 400) {
-                                    gm(req.files.photo.tempFilePath).resize(400).write(path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function (err) {
-                                        if (err) {
-                                            fs.unlink(req.files.photo.tempFilePath, function(err) {
-                                                newUserPhoto.remove();
-                                                req.user.photos.remove(newUserPhoto.id);
-                                                req.user.save(function(err) {
-                                                    res.redirect('/error');
-                                                })
-                                            })
-                                        } else {
-                                            fs.unlink(req.files.photo.tempFilePath, function() {
-                                                newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
-                                                newUserPhoto.save(function(err) {
-                                                    res.render('photos/forumsuccess.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext, srcurl: newUserPhoto.location});
-                                                })
-                                            })
-                                        }
+                                fs.unlink(req.files.photo.tempFilePath, function() {
+                                    newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
+                                    newUserPhoto.save(function(err) {
+                                        res.render('photos/userphoto.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext, url: newUserPhoto.location});
                                     })
-                                } else {
-                                    fs.rename(req.files.photo.tempFilePath, path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function(err) {
-                                        if (err) {
-                                            fs.unlink(req.files.photo.tempFilePath, function(err) {
-                                                newUserPhoto.remove();
-                                                req.user.photos.remove(newUserPhoto.id);
-                                                req.user.save(function(err) {
-                                                    res.redirect('/error');
-                                                })
-                                            })
-                                        } else {
-                                            fs.unlink(req.files.photo.tempFilePath, function() {
-                                                newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
-                                                newUserPhoto.save(function(err) {
-                                                    res.render('photos/forumsuccess.ejs', {title: 'Upload Success - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext, srcurl: newUserPhoto.location});
-                                                })
-                                            })
-                                        }
-                                    })
-                                }
+                                })
                             }
                         })
-                    })
-                }
-            })
-    }    else {
-            fs.unlink(req.files.photo.tempFilePath, function() {
+                    }
+                })
+            } else {
                 res.redirect('/error');
-            })
-        }
-    } else if (req.body.url.length > 0) {
-        fs.unlink(req.files.photo.tempFilePath, function() {
-            var ext = path.extname(req.body.url);
-            var newUserPhoto = new UserPhoto ({
-                userid: req.user.id,
-                onprofile: req.body.onprofile,
-                location: '',
-            })
-            newUserPhoto.save(function(err) {
-                if (err) {
-                    res.redirect('/error');
-                } else {
-                    req.user.photos.push(newUserPhoto.id);
-                    var targetPath = path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext);
-                    req.user.save(function(err) {
+            }
+        } else if (req.body.url.length > 0) {
+            fs.unlink(req.files.photo.tempFilePath, function() {
+                var ext = path.extname(req.body.url);
+                var newUserPhoto = new UserPhoto ({
+                    userid: req.user.id,
+                    location: '',
+                })
+                newUserPhoto.save(function(err) {
+                    if (err) {
+                        res.redirect('/error');
+                    } else {
+                        var targetPath = path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext);
                         download(req.body.url, targetPath, function(err) {
                             if (err) {
                                 newUserPhoto.remove();
@@ -411,44 +373,28 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
                                 })
                             } else {
                                 gm(targetPath).size(function(err, value) {
-                                    if (err) {
-                                        fs.unlink(targetPath, function(err) {
-                                            newUserPhoto.remove();
-                                            req.user.photos.remove(newUserPhoto.id);
-                                            req.user.save(function(err) {
+                                    gm(targetPath).resize(400).write(targetPath, function (err) {
+                                        if (err) {
+                                            fs.unlink(targetPath, function(err) {
+                                                newUserPhoto.remove();
                                                 res.redirect('/error');
                                             })
-                                        })
-                                    } else if (value.width > 400) {
-                                        gm(targetPath).resize(400).write(targetPath, function (err) {
-                                            if (err) {
-                                                fs.unlink(targetPath, function(err) {
-                                                    newUserPhoto.remove();
-                                                    req.user.photos.remove(newUserPhoto.id);
-                                                    req.user.save(function(err) {
-                                                        res.redirect('/error');
-                                                    })
-                                                })
-                                            } else {
-                                                newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
-                                                newUserPhoto.save(function(err) {
-                                                    res.render('photos/forumsuccess.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext, srcurl: newUserPhoto.location});
-                                                })
-                                            }
-                                        })
-                                    } else {
-                                        newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
-                                        newUserPhoto.save(function(err) {
-                                                res.render('photos/forumsuccess.ejs', {title: 'Upload Success - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext, srcurl: newUserPhoto.location});
-                                        })
-                                    }
+                                        } else {
+                                            newUserPhoto.location = '/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext;
+                                            newUserPhoto.save(function(err) {
+                                                res.render('photos/userphoto.ejs', {title: 'Upload a Photo - Lacquer Tracker', message: 'To use this photo on the forums, the URL is:', url: 'http://www.lacquertracker.com/images/useruploads/' + req.user.username + '-' + newUserPhoto.id + ext, url: newUserPhoto.location});
+                                            })
+                                        }
+                                    })
                                 })
                             }
                         })
-                    })
-                }
+                    }
+                })
             })
-        })
+        } else {
+            res.redirect('/error');
+        }
     } else {
         res.redirect('/error');
     }
@@ -530,8 +476,6 @@ app.get('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
     res.render('photos/brand.ejs', data);
 });
 
-
-//from file
 app.post('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
     Brand.findById(req.params.id, function(err, brand) {
         if (req.files.photo.name.length > 0) {

@@ -17,8 +17,8 @@
                     <option value="offtopic" <% if (postforum === "offtopic") { %> selected="selected" <%}%>>Off Topic</option>
                     </select><br><br>
                 Title:<br><input type="text" name="posttitle" class="width53" value="<%=posttitle%>" required><br><br><br>
-                Post:<br><input type="text" class="markItUp" name="postmessage" value="<%=postmessage%>" required><br><br>
-                <a target="blank" href="/photo/upload"><i>(Click here to upload/include a photo.)</i></a><br><br><br>
+                Post:<br><textarea type="text" class="markItUp" name="postmessage" required><%=postmessage%></textarea><br><br>
+                <img src=<%=postphotolocation%>><br><br>
                 <input type="submit" value="Submit" class="button">
         </form>
     </section>

@@ -5,14 +5,15 @@
     <div id="container" class="clear">
     <section>
         <table class="sortable">
-            <tr><th>#</th><th>Username</th><th>E-mail</th><th>Country/Timezone</th><th>Created</th><th>Validated</th></tr>
+            <tr><th>#</th><th>Username</th><th>E-mail</th><th>Country/Timezone</th><th>Created</th><th>Last Login</th><th>Validated</th></tr>
             <% for (i=0; i < allusers.length; i++) { %>
                 <tr>
                     <td><%=allusers[i].usernumber%></td>
                     <td><a href="/profile/<%= allusers[i].username %>"><%= allusers[i].username %></a></td>
                     <td><%=allusers[i].email%></td>
                     <td><%= allusers[i].country %>//<%= allusers[i].timezone %></td>
-                    <td><%= allusers[i].creationdate %></td>
+                    <td><%= moment(allusers[i].creationdate).tz("America/New_York").calendar() %></td>
+                    <td><%= moment(allusers[i].lastlogindate).tz("America/New_York").calendar() %></td>
                     <td><%= allusers[i].isvalidated %></td>
                 </tr>
             <% } %>

@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 var autoIncrement = require('mongoose-auto-increment');
 
-//define the schema for our user model
+//define the schema for our model
 var userSchema = mongoose.Schema({
 	username     : {type: String, lowercase: true},
 	password     : String,
@@ -11,15 +11,14 @@ var userSchema = mongoose.Schema({
 	about		 : String,
 	ownedpolish  : [{type: mongoose.Schema.Types.ObjectId, ref: 'Polish'}],
 	wantedpolish : [{type: mongoose.Schema.Types.ObjectId, ref: 'Polish'}],
-	photos       : [{type: mongoose.Schema.Types.ObjectId, ref: 'UserPhoto'}],
-	checkins     : [{type: mongoose.Schema.Types.ObjectId, ref: 'Checkin'}],
 	profilephoto : String,
 	isvalidated  : Boolean,
 	level        : String,
 	adminview    : Boolean,
 	notifications: String,
 	useremail    : String,
-	creationdate : String,
+	creationdate : String, //oops too late now
+	lastlogindate: Date,
 	country      : String,
 	timezone     : String,
 });

@@ -6,11 +6,9 @@
     <section>
         <form action="/forums/<%= forumcat %>/add" method="post" enctype='multipart/form-data'>
             <h3>Add a discussion post:</h3><br><br>
-                Forum:<br><select name="forum" required>
-                    <option value="">select a forum to post to</option>
-                    <option value="intro" <% if (forumcat === "intro") { %> selected="selected" <%}%>>Introductions</option>
+                Category:<br><select name="forum" required>
                     <option value="general" <% if (forumcat === "general") { %> selected="selected" <%}%>>General Polish Discussion</option>
-                    <option value="notd" <% if (forumcat === "notd") { %> selected="selected" <%}%>>Nails of the Day</option>
+                    <option value="intro" <% if (forumcat === "intro") { %> selected="selected" <%}%>>Introductions</option>
                     <option value="contests" <% if (forumcat === "contests") { %> selected="selected" <%}%>>Contests / Giveaways</option>
                     <option value="tutorials" <% if (forumcat === "tutorials") { %> selected="selected" <%}%>>Tutorials</option>
                     <option value="lt" <% if (forumcat === "lt") { %> selected="selected" <%}%>>Feedback / Suggestions</option>
@@ -18,14 +16,8 @@
                     </select><br><br>
                 Title:<br><input type="text" name="posttitle" class="width53" required autofocus><br><br><br>
                 Post:<br><textarea type="text" class="markItUp" name="postmessage" required></textarea><br>
-                Include an image? <input type="file" value="photo" name="photo" /><br><br>
-                Do you want this photo to also appear on your profile page? <select name="onprofile">
-                    <option value="no">no</option>
-                    <option value="yes">yes</option>
-                    </select><br><br>
-                <a target="blank" href="/photo/upload"><i>(Click here to upload/include more than one photo.)</i></a><br><br><br>
+                Include an image? <input type="file" value="photo" name="photo" /><br><br><br>
                 <input type="submit" value="Submit" class="button">
-                <br><br>
         </form>
     </section>
     </div>

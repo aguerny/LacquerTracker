@@ -3,6 +3,7 @@ var Brand = require('../app/models/brand');
 var User = require('../app/models/user');
 var Review = require('../app/models/review');
 var Photo = require('../app/models/photo');
+var Checkin = require('../app/models/checkin');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
 var _ = require('lodash');
@@ -14,7 +15,7 @@ module.exports = function(app, passport) {
 
 app.get('/polish/:brand/:name', function(req, res) {
 
-    Polish.findOne({brand: req.params.brand.replace(/_/g," "), name:req.params.name.replace(/_/g," ")}, function(err, polish) {
+    Polish.findOne({brand: req.params.brand.replace(/_/g," "), name:req.params.name.replace(/_/g," ")}).populate('dupes').exec(function(err, polish) {
         if (polish === null) {
             res.redirect('/error');
         } else {
@@ -29,7 +30,7 @@ app.get('/polish/:brand/:name', function(req, res) {
             data.bindie = polish.indie;
             data.pcode = polish.code;
             data.pid = polish.id;
-            data.pdupes = markdown(polish.dupes);
+            data.pdupes = polish.dupes;
             data.linkbrand = polish.brand.replace("%20"," ");
             data.linkname = polish.name.replace("%20"," ");
 
@@ -43,55 +44,59 @@ app.get('/polish/:brand/:name', function(req, res) {
             });
             data.colors = formattedColors;
 
-            Photo.find({polishid : polish.id, pendingdelete:false}, function(err, photo) {
-                if (photo.length < 1) {
-                    data.numphotos = 0;
-                } else {
-                    var allphotos = photo.map(function(x) {
-                        return x;
-                    })
-                    data.allphotos = _.shuffle(allphotos);
-                    data.numphotos = allphotos.length;
-                }
+            Checkin.find({polish:polish}, function(err, checkin) {
+                data.checkins = checkin;
 
-                if (req.isAuthenticated()) {
-
-                    if (req.user.ownedpolish.indexOf(polish.id) > -1) {
-                        data.status = "owned";
-                    } else if (req.user.wantedpolish.indexOf(polish.id) > -1) {
-                        data.status = "wanted";
+                Photo.find({polishid : polish.id, pendingdelete:false}, function(err, photo) {
+                    if (photo.length < 1) {
+                        data.numphotos = 0;
                     } else {
-                        data.status = "none";
+                        var allphotos = photo.map(function(x) {
+                            return x;
+                        })
+                        data.allphotos = _.shuffle(allphotos);
+                        data.numphotos = allphotos.length;
                     }
 
+                    if (req.isAuthenticated()) {
 
-                    Review.findOne({user:req.user.id, polishid:polish.id}).populate('user').exec(function (err, review) {
-                        if (review) {
-                        data.rating = review.rating;
-                        data.userreview = review.userreview;
-                        data.notes = review.notes;
+                        if (req.user.ownedpolish.indexOf(polish.id) > -1) {
+                            data.status = "owned";
+                        } else if (req.user.wantedpolish.indexOf(polish.id) > -1) {
+                            data.status = "wanted";
                         } else {
+                            data.status = "none";
+                        }
+
+
+                        Review.findOne({user:req.user.id, polishid:polish.id}).populate('user').exec(function (err, review) {
+                            if (review) {
+                            data.rating = review.rating;
+                            data.userreview = review.userreview;
+                            data.notes = review.notes;
+                            } else {
+                            data.rating = "";
+                            data.userreview = "";
+                            data.notes = "";
+                            }
+
+                        Review.find({polishid:polish.id}).populate('user').exec(function(err, r) {
+                            data.allreviews = r;
+                            res.render('polish/polish.ejs', data);
+                        })
+
+                        })
+                    } else {
                         data.rating = "";
                         data.userreview = "";
                         data.notes = "";
-                        }
-
-                    Review.find({polishid:polish.id}).populate('user').exec(function(err, r) {
-                        data.allreviews = r;
-                        res.render('polish/polish.ejs', data);
-                    })
-
-                    })
-                } else {
-                    data.rating = "";
-                    data.userreview = "";
-                    data.notes = "";
-                    data.status = "none";
-                    Review.find({polishid:polish.id}).populate('user').exec(function(err, r) {
-                        data.allreviews = r;
-                        res.render('polish/polish.ejs', data);
-                    })
-                }
+                        data.status = "none";
+                        Review.find({polishid:polish.id}).populate('user').exec(function(err, r) {
+                            data.allreviews = r;
+                            res.render('polish/polish.ejs', data);
+                        })
+                    }
+                })
             })
         }
     });
@@ -118,7 +123,7 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                 data.pdupes = markdown(polish.dupes);
                 data.linkbrand = polish.brand.replace("%20"," ");
                 data.linkname = polish.name.replace("%20"," ");
-                
+
                 var formattedTypes = PolishTypes.map(function(type) {
                     return {value: type, text: type};
                 });
@@ -391,7 +396,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
         res.redirect('/error');
     }
 });
-           
+
 
 
 
@@ -400,17 +405,21 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
 
 //edit polish
 app.get('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
-    Polish.findById(req.params.id, function(err, p) {
+    Polish.findById(req.params.id).exec(function(err, p) {
         if (p === null || err) {
             res.redirect('/error');
         } else {
-            var data = {};
+            Polish.find({}).sort({brand: 1}).sort({name: 1}).exec(function (err, polishes) {
+                var data = {};
                 data.title = 'Edit Dupes - Lacquer Tracker';
                 data.editid = p.id;
                 data.editname = p.name;
                 data.editbrand = p.brand;
                 data.editdupes = p.dupes;
-            res.render('polish/edit.ejs', data);
+                console.log(p.dupes);
+                data.polish = polishes;
+                res.render('polish/edit.ejs', data);
+            })
         }
     });
 });
@@ -431,13 +440,14 @@ app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
                             bio: '',
                             photo: '',
                             official: false,
+                            polishlock: false,
                             alternatenames: [sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")).toLowerCase())]
                         })
                         newBrand.save();
                     }
                 });
             }
-            p.dupes = sanitizer.sanitize(req.body.dupes);
+            p.dupes = req.body.dupes;
             p.dateupdated = new Date();
             p.save(function(err) {
                 p.keywords = sanitizer.sanitize(p.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.batch) + " " + sanitizer.sanitize(p.code);

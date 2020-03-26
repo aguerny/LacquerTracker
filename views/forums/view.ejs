@@ -11,14 +11,14 @@ function confirm_alert(node) {
     <div id="container" class="clear">
     <section>
         <div class="forumpost">
-        <a href="/forums/<%= postforum %>">&#8592; Back to Forum</a><br><br>
+        <a href="/forums">&#8592; Back to Forums</a><br><br>
         <h2><%= posttitle %></h2><br>
             <i>Posted by <a href="/profile/<%= postuser.username%>"><%= postuser.username %></a> on <%= postdate %></i><% if (isAuthenticated) { %>
                     <% if (user.username === postuser.username || user.level === "admin") { %>
                         : <a href="/forums/<%=postforum%>/<%=postid%>/edit">Edit</a> | <a href="/forums/<%=postforum%>/<%=postid%>/remove" onclick="return confirm_alert(this);">Delete</a>
                     <% } %>
                 <% } %><br><br><br>
-            <p style="white-space: pre;"><%- postmessage %></p><br><br><hr><br><br>
+            <p style="white-space: pre;"><%- postmessage %><br><br><img src=<%=postphotolocation%>></p><br><br><hr><br><br>
             <b>Comments (<%= postcomments.length %>)</b> | <a href="/forums/<%= postforum %>/<%= postid %>/add">Add a comment</a><br><br>
 
 
@@ -272,7 +272,6 @@ function confirm_alert(node) {
             <br><hr><br><br>
             <% if (isAuthenticated) { %>
                 <b><a name="addcomment"><font color="#000000">Add a Comment:</font></b><br><br>
-                <a target="blank" href="/photo/upload">Upload a photo?</a><br><br>
                 <form action="/forums/<%= postforum %>/<%= postid %>/<%= postid %>/add" method="post">
                     <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
                     <input type="submit" value="Submit" class="button">

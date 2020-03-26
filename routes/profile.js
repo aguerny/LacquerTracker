@@ -3,6 +3,7 @@ var User = require('../app/models/user');
 var Review = require('../app/models/review');
 var Photo = require('../app/models/photo');
 var UserPhoto = require('../app/models/userphoto');
+var Checkin = require('../app/models/checkin');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
 var _ = require('lodash');
@@ -14,46 +15,47 @@ module.exports = function(app, passport) {
 
 //profile general
 app.get('/profile', isLoggedIn, function(req, res) {
-    var username = req.user.username;
-    res.redirect('/profile/' + username);
+    User.findOne({username: req.user.username}, function (err, user) {
+        user.lastlogindate = new Date;
+        user.save(function(err) {
+            var username = req.user.username;
+            res.redirect('/profile/' + username);
+        })
+    })
 });
 
 
 //profile specific
 app.get('/profile/:username', function(req, res) {
-    User.findOne({username: req.params.username}).populate('photos').populate('ownedpolish').populate('wantedpolish').exec(function(err, user) {
+    User.findOne({username: req.params.username}).populate('photos').populate('checkins').populate('ownedpolish').populate('wantedpolish').exec(function(err, user) {
         if (!user || user.username==="admin" || user.username==="lacquertracker") {
             res.redirect('/error');
         } else {
-            var data = {};
-            data.title = user.username + "'s Profile - Lacquer Tracker";
-            var osort = user.ownedpolish.sort(function (a, b) {return a.name.toLowerCase().localeCompare(b.name.toLowerCase());});
-            var osort2 = _.sortBy(osort, function(b) {return b.brand.toLowerCase();});
-            var wsort = user.wantedpolish.sort(function (a, b) {return a.name.toLowerCase().localeCompare(b.name.toLowerCase());});
-            var wsort2 = _.sortBy(wsort, function(b) {return b.brand.toLowerCase();});
-            data.opolishes = osort2;
-            data.wpolishes = wsort2;
-            data.username = user.username;
-            data.about = markdown(user.about);
-            data.profilephoto = user.profilephoto;
-            data.notifications = user.notifications;
-            data.useremail = user.useremail;
-            data.colors = PolishColors;
-            yesphotos = [];
-            for (i=0; i < user.photos.length; i++) {
-                if (user.photos[i].onprofile === "yes") {
-                    yesphotos.push(user.photos[i]);
-                }
-            }
-            data.photos = _.shuffle(yesphotos);
-            var oreviews = [];
-            Review.find({user:user.id}, function(err, reviews) {
-                for (i=0; i<reviews.length; i++) {
-                    var thisindex = _.findIndex(osort2, {'id':reviews[i].polishid});
-                    oreviews[thisindex] = reviews[i];
-                }
-                data.oreviews = oreviews;
-                res.render('profile.ejs', data);
+            Checkin.find({user:user}, function(err, checkin) {
+                var data = {};
+                data.title = user.username + "'s Profile - Lacquer Tracker";
+                var osort = user.ownedpolish.sort(function (a, b) {return a.name.toLowerCase().localeCompare(b.name.toLowerCase());});
+                var osort2 = _.sortBy(osort, function(b) {return b.brand.toLowerCase();});
+                var wsort = user.wantedpolish.sort(function (a, b) {return a.name.toLowerCase().localeCompare(b.name.toLowerCase());});
+                var wsort2 = _.sortBy(wsort, function(b) {return b.brand.toLowerCase();});
+                data.opolishes = osort2;
+                data.wpolishes = wsort2;
+                data.username = user.username;
+                data.about = markdown(user.about);
+                data.profilephoto = user.profilephoto;
+                data.notifications = user.notifications;
+                data.useremail = user.useremail;
+                data.colors = PolishColors;
+                data.checkins = checkin;
+                var oreviews = [];
+                Review.find({user:user.id}, function(err, reviews) {
+                    for (i=0; i<reviews.length; i++) {
+                        var thisindex = _.findIndex(osort2, {'id':reviews[i].polishid});
+                        oreviews[thisindex] = reviews[i];
+                    }
+                    data.oreviews = oreviews;
+                    res.render('profile.ejs', data);
+                })
             })
         }
     });
@@ -84,15 +86,6 @@ app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
             data.useremail = user.useremail;
             data.country = user.country;
             data.timezone = user.timezone;
-            for (i=0; i < user.photos.length; i++) {
-                if (user.photos[i].onprofile === "yes") {
-                    yesphotos.push(user.photos[i]);
-                } else if (user.photos[i].onprofile === "no") {
-                    nophotos.push(user.photos[i]);
-                }
-            }
-            data.yesphotos = yesphotos;
-            data.nophotos = nophotos;
         res.render('profileedit.ejs', data);
         })
     } else {
@@ -127,41 +120,8 @@ app.post('/profile/:username/edit', isLoggedIn, function(req, res) {
 });
 
 
-app.get('/profile/:username/:id/remove', isLoggedIn, function(req, res) {
-    if (req.user.username == req.params.username) {
-        UserPhoto.findById(req.params.id, function(err, photo) {
-            photo.onprofile = "no";
-            photo.save();
-            res.redirect('/profile/' + req.user.username + '/edit');
-        })
-    } else {
-        res.redirect('/error');
-    }
-});
-
-
-app.get('/profile/:username/:id/add', isLoggedIn, function(req, res) {
-    if (req.user.username == req.params.username) {
-        UserPhoto.findById(req.params.id, function(err, photo) {
-            photo.onprofile = "yes";
-            photo.save();
-            res.redirect('/profile/' + req.user.username + '/edit');
-        })
-    } else {
-        res.redirect('/error');
-    }
-});
-
-
-app.get('/profile/:username/:id/delete', isLoggedIn, function(req, res) {
-    if (req.user.username == req.params.username) {
-        req.user.photos.remove(req.params.id);
-        req.user.save();
-        res.redirect('/profile/' + req.user.username + '/edit');
-    } else {
-        res.redirect('/error');
-    }
-});
+//delete profile
+    //TO-DO
 
 
 };

@@ -3,6 +3,7 @@ var Polish = require('../app/models/polish');
 var User = require('../app/models/user');
 var Review = require('../app/models/review');
 var Photo = require('../app/models/photo');
+var Checkin = require('../app/models/checkin');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
 var _ = require('lodash');
@@ -41,30 +42,33 @@ app.get('/brand/:brandname', function(req, res) {
             data.bid = brand.id;
 
             Polish.find({brand: thisbrand}).sort('name').exec(function(err, polishes) {
-                var statuses = [];
-                data.colors = PolishColors;
+                Checkin.find({polish:polishes}, function(err, checkin) {
+                    data.checkins = checkin;
+                    var statuses = [];
+                    data.colors = PolishColors;
 
-                if (req.isAuthenticated()) {
+                    if (req.isAuthenticated()) {
 
-                    for (i=0; i < polishes.length; i++) {
-                        if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
-                            statuses.push("owned");
-                        } else if (req.user.wantedpolish.indexOf(polishes[i].id) > -1) {
-                            statuses.push("wanted");
-                        } else {
-                            statuses.push("");
+                        for (i=0; i < polishes.length; i++) {
+                            if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
+                                statuses.push("owned");
+                            } else if (req.user.wantedpolish.indexOf(polishes[i].id) > -1) {
+                                statuses.push("wanted");
+                            } else {
+                                statuses.push("");
+                            }
                         }
+                        var returnedpolish = polishes;
+                        data.polishes = returnedpolish;
+                        data.status = statuses;
+                        res.render('brand.ejs', data);
+                    } else {
+                        var returnedpolish = polishes;
+                        data.polishes = returnedpolish;
+                        data.status = statuses;
+                        res.render('brand.ejs', data);
                     }
-                    var returnedpolish = polishes;
-                    data.polishes = returnedpolish;
-                    data.status = statuses;
-                    res.render('brand.ejs', data);
-                } else {
-                    var returnedpolish = polishes;
-                    data.polishes = returnedpolish;
-                    data.status = statuses;
-                    res.render('brand.ejs', data);
-                }
+                })
             });
         }
     });

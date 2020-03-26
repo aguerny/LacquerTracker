@@ -9,7 +9,7 @@
                 <img src=<%= checkinphotolocation %>><br><br><br>
                 Edit your polishes used:<br><select name="polish" class="chosen-select" multiple>
                     <% for (i=0; i<polish.length; i++) { %>
-                        <option value="<%=polish[i].id%>"><%= polish[i].brand %> - <%= polish[i].name %></option>
+                        <option value="<%=polish[i].id%>" <%if (checkinpolish.indexOf(polish[i].id) > -1) {%>selected<%}%>><%= polish[i].brand %> - <%= polish[i].name %></option>
                     <% } %>
                     </select><br><br><br>
                 <input type="submit" value="Submit" class="button">

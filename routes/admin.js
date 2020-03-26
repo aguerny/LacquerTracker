@@ -19,11 +19,7 @@ module.exports = function(app, passport) {
 app.get('/admin/users', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
         User.find({}).sort('usernumber').exec(function(err, users) {
-            var users = users.map(function(x) {
-                x.creationdate = moment(x.creationdate).tz("America/New_York").format('YY-MM-DD, hh:mm a');
-                return x;
-            })
-            res.render('admin/users.ejs', {title: 'All Users - Lacquer Tracker', allusers: users});
+            res.render('admin/users.ejs', {title: 'All Users - Lacquer Tracker', allusers: users, moment:moment});
         })
     } else {
         res.redirect('/error');

@@ -1,5 +1,14 @@
 <%- include('../layoutTop'); %>
 
+<script>
+$(window).load(function () {
+    $('.collage').collagePlus({
+        'targetHeight' : 250,
+        'allowPartialLastRow' : true,
+    });
+});
+</script>
+
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
@@ -39,7 +48,7 @@
                             <b>Type:</b> <%= ptype.replace(/,/g,", ") %>
                         <% } %>
                         <br><br><br><br>
-                        <% if (isAuthenticated) { %>
+<!--                         <% if (isAuthenticated) { %>
                             <% if (user.country === 'CAN') { %>
                                 <a href="http://www.amazon.ca/s/?_encoding=UTF8&camp=15121&creative=390961&field-keywords=<%= linkbrand %>%20<%= linkname %>&linkCode=ur2&tag=lacqutrack00-20&url=search-alias%3Daps">View on Amazon</a><img src="https://ir-ca.amazon-adsystem.com/e/ir?t=lacqutrack00-20&l=ur2&o=15" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /><br><br>
                                 <a href="http://www.nailpolishcanada.com/search.php?search_query=<%=linkbrand%>%20<%=linkname%>">View on Nail Polish Canada</a>
@@ -48,7 +57,7 @@
                             <% } %>
                         <% } else { %>
                             <a href="http://www.amazon.com/gp/search?ie=UTF8&camp=1789&creative=9325&index=aps&keywords=<%= linkbrand %>%20<%= linkname %>&linkCode=ur2&tag=lacqutrack-20">View on Amazon</a><img src="http://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-                        <% } %>
+                        <% } %> -->
                     </div>
                     <div id="polish-right_col">
                         <div class="slideshow">
@@ -140,7 +149,7 @@
                     <b>Type:</b> <%= ptype.replace(/,/g,", ") %>
                 <% } %>
                 <br><br><br>
-                <% if (isAuthenticated) { %>
+<!--                 <% if (isAuthenticated) { %>
                     <% if (user.country === 'CAN') { %>
                         <a href="http://www.amazon.ca/s/?_encoding=UTF8&camp=15121&creative=390961&field-keywords=<%= linkbrand %>%20<%= linkname %>&linkCode=ur2&tag=lacqutrack00-20&url=search-alias%3Daps">View on Amazon</a><img src="https://ir-ca.amazon-adsystem.com/e/ir?t=lacqutrack00-20&l=ur2&o=15" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /><br><br>
                         <a href="http://www.nailpolishcanada.com/search.php?search_query=<%=linkbrand%>%20<%=linkname%>">View on Nail Polish Canada</a>
@@ -149,43 +158,58 @@
                     <% } %>
                 <% } else { %>
                     <a href="http://www.amazon.com/gp/search?ie=UTF8&camp=1789&creative=9325&index=aps&keywords=<%= linkbrand %>%20<%= linkname %>&linkCode=ur2&tag=lacqutrack-20">View on Amazon</a><img src="http://ir-na.amazon-adsystem.com/e/ir?t=lacqutrack-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-                <% } %>
+                <% } %> -->
             </div>
             </section>
-            <div id="container" class="clear">
-                <section>
-                <hr><br>
-                <% if (userreview.length > 0 || notes.length > 0 || rating.length > 0) { %>
-                    <i><a href="/review/edit/<%= pid %>">Edit your review</a></i><br><br><br>
-                    <h5>Your Rating:</h5><br><%if (rating >= 1) {%><img src="/images/stars/<%=rating%>star.png"/><%} else {%>&nbsp;<%}%><br><br><br><br>
-                    <h5>Your Review:</h5><br><%= userreview %><br><br><br><br>
-                    <h5>Your Notes:</h5><br><%= notes %>
-                <% } else {%>
-                <i><a href="/review/edit/<%= pid %>">Add a review or personal notes for this polish.</a></i>
-                <% } %>
-                <% if (allreviews.length > 0 || pdupes.length > 0) { %>
-                <br><br><hr><br><br>
-                    <% if (allreviews.length > 0) { %>
-                        <h5>All User Reviews:</h5><br>
-                        <% for (i=0; i<allreviews.length; i++) {%>
-                            <% if (allreviews[i].userreview.length > 0) { %>
-                                <%if (allreviews[i].rating >= 1) {%><img class="staradjust" src="/images/stars/<%=allreviews[i].rating%>star.png"/> - <%}%><%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
-                            <% } %>
+            <section>
+                <div id="container" class="clear">
+                    <br><% if (isAuthenticated) { %>
+                        <hr><br>
+                        <h4 style="display:inline">Your Review:</h4> <i><a href="/review/edit/<%= pid %>">Edit</a></i><br><br>
+                        <% if (userreview.length > 0 || rating.length > 0) { %>
+                            <%if (rating >= 1) {%><img class="staradjust" src="/images/stars/<%=rating%>star.png"/> - <%}%><%= userreview %>
                         <% } %>
+                        <br><br><br>
+                        <h4 style="display:inline">Your Notes:</h4> <i><a href="/review/edit/<%= pid %>">Edit</a><br><br>(Notes are only visible to you.)</i><br><br>
+                        <% if (notes.length > 0) { %>
+                            <%= notes %><br><br>
+                        <% } %>
+                    <% } %>
+                    <hr><br>
+                    <h4 style="display:inline">User Reviews:</h4><br><br>
+                    <% for (i=0; i<allreviews.length; i++) {%>
+                        <% if (allreviews[i].userreview.length > 0) { %>
+                            <%if (allreviews[i].rating >= 1) {%><img class="staradjust" src="/images/stars/<%=allreviews[i].rating%>star.png"/> - <%}%><%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+                        <% } %>
+                    <% } %>
                     <br><br>
+                    <h4 style="display:inline">User-Submitted Dupes:</h4> <i><a href="/polishedit/<%=pid%>/dupes">Edit</a></i></i><br>
+                    <% for (i=0; i<pdupes.length; i++) { %>
+                        <br>&nbsp;&nbsp;&nbsp;&nbsp;&#8226; <a href='/polish/<%= pdupes[i].brand.replace(/ /g,"_") %>/<%= pdupes[i].name.replace(/ /g,"_") %>'><%= pdupes[i].brand %> - <%= pdupes[i].name %></a>
                     <% } %>
-                    <% if (pdupes.length > 0) { %>
-                        <h5 style="display:inline">User-Submitted Dupes:</h5>
-                        <i><a href="/polishedit/<%=pid%>/dupes">Edit</a></i>
-                        <p style="white-space: pre;"><%- pdupes %></p>
-                    <% } else {%>
-                        <br><br><br><a href="/polishedit/<%=pid%>/dupes"><i>Add dupes for this polish.</i></a>
+                </div>
+                <div id="biglayout">
+                    <% if (checkins.length > 0) { %>
+                        <br><br><hr><br><h4>Recent Check-Ins:</h4><br>
+                        <div class="collage">
+                            <% for (i=0; i<checkins.length; i++) { %>
+                                <a href="/nailsoftheday/<%=checkins[i].id%>"><img src="<%= checkins[i].photolocation %>"></a>
+                            <% } %>
+                        </div>
                     <% } %>
-                <% } else {%>
-                    <br><br><br><a href="/polishedit/<%=pid%>/dupes"><i>Add dupes for this polish.</i></a>
-                <% } %>
+                </div>
+                <div id="smalllayout">
+                    <% if (checkins.length > 0) { %>
+                        <br><br><br><hr><br><h4>Recent Check-Ins:</h4><br>
+                        <div>
+                            <% for (i=0; i<checkins.length; i++) { %>
+                                <a href="/nailsoftheday/<%=checkins[i].id%>"><img style="max-width:100%" src="<%= checkins[i].photolocation %>"></a>
+                            <% } %>
+                        </div>
+                    <% } %>
+                </div>
                 <% if (isAuthenticated) {%><% if (user.adminview === true) { %><br><br><%=pid%><%}%><%}%>
-            </div>
+            </section>
         </section>
     </div>
 </div>

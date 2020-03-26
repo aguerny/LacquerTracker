@@ -4,6 +4,9 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
+        <% if (typeof message !== "undefined") { %>
+            <center><b><%= message %></b><br><br><br><br></center>
+        <% } %>
         <form action="/nailsoftheday/add" method="post" enctype='multipart/form-data'>
             <h3>Check in your mani:</h3><br><br>
                 Choose your photo: <input type="file" name="photo" required><br><br><br>
@@ -11,7 +14,7 @@
                     <% for (i=0; i<polish.length; i++) { %>
                         <option value="<%=polish[i].id%>"><%= polish[i].brand %> - <%= polish[i].name %></option>
                     <% } %>
-                    </select><br><br><br>
+                </select><br><br><br>
                 <input type="submit" value="Submit" class="button"><br><br>
         </form>
         Can't find the polish you're looking for? <a target="blank" href="/polishadd">Add it to the database.</a>

@@ -82,73 +82,136 @@ app.get('/nailsoftheday/add', isLoggedIn, function(req, res) {
 
 
 app.post('/nailsoftheday/add', isLoggedIn, function(req, res) {
-    if (req.files.photo.name.length > 0) {
-        if (req.files.photo.mimetype.startsWith("image")) {
-            var ext = path.extname(req.files.photo.name);
-            var newCheckin = new Checkin ({
-                user: req.user.id,
-                creationdate: new Date,
-                editdate: new Date,
-                photolocation: "",
-                polish: req.body.polish,
-                pendingdelete: false,
-                pendingreason: "",
-                comments: [],
-            })
-            newCheckin.save(function(err) {
-                if (err) {
-                    fs.unlink(req.files.photo.tempFilePath, function(err) {
-                        newCheckin.remove(function(err) {
-                            res.redirect('/error');
-                        })
+    Checkin.findOne({user: req.user}).sort({creationdate: -1}).exec(function(err, checkin) {
+        if (checkin == null) {
+            // need to update below as well if under 12 hours
+            if (req.files.photo.name.length > 0) {
+                if (req.files.photo.mimetype.startsWith("image")) {
+                    var ext = path.extname(req.files.photo.name);
+                    var newCheckin = new Checkin ({
+                        user: req.user.id,
+                        creationdate: new Date,
+                        editdate: new Date,
+                        photolocation: "",
+                        polish: req.body.polish,
+                        pendingdelete: false,
+                        pendingreason: "",
+                        comments: [],
                     })
-                } else {
-                    req.user.checkins.push(newCheckin.id);
-                    req.user.save(function(err) {
-                        gm(req.files.photo.tempFilePath).size(function(err, value) {
-                            if (err) {
-                                fs.unlink(req.files.photo.tempFilePath, function(err) {
-                                    newCheckin.remove();
-                                    req.user.checkins.remove(newCheckin.id);
-                                    req.user.save(function(err) {
+                    newCheckin.save(function(err) {
+                        if (err) {
+                            fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                newCheckin.remove(function(err) {
+                                    res.redirect('/error');
+                                })
+                            })
+                        } else {
+                            gm(req.files.photo.tempFilePath).size(function(err, value) {
+                                if (err) {
+                                    fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                        newCheckin.remove();
                                         res.redirect('/error');
                                     })
-                                })
-                            } else {
-                                gm(req.files.photo.tempFilePath).resize(400).write(path.resolve('./public/images/checkins/' + newCheckin.id + ext), function (err) {
-                                    if (err) {
-                                        console.log(err);
-                                        fs.unlink(req.files.photo.tempFilePath, function(err) {
-                                            newCheckin.remove();
-                                            req.user.checkins.remove(newCheckin.id);
-                                            req.user.save(function(err) {
+                                } else {
+                                    gm(req.files.photo.tempFilePath).resize(400).write(path.resolve('./public/images/checkins/' + newCheckin.id + ext), function (err) {
+                                        if (err) {
+                                            fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                                newCheckin.remove();
                                                 res.redirect('/error');
                                             })
-                                        })
-                                    } else {
-                                        fs.unlink(req.files.photo.tempFilePath, function() {
-                                            newCheckin.photolocation = '/images/checkins/' + newCheckin.id + ext;
-                                            newCheckin.save(function(err) {
-                                                res.redirect('/nailsoftheday');
+                                        } else {
+                                            fs.unlink(req.files.photo.tempFilePath, function() {
+                                                newCheckin.photolocation = '/images/checkins/' + newCheckin.id + ext;
+                                                newCheckin.save(function(err) {
+                                                    res.redirect('/nailsoftheday');
+                                                })
                                             })
-                                        })
-                                    }
-                                })
-                            }
-                        })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                } else {
+                    fs.unlink(req.files.photo.tempFilePath, function() {
+                        res.redirect('/error');
                     })
                 }
+            } else {
+                fs.unlink(req.files.photo.tempFilePath, function() {
+                    res.redirect('/error');
+                })
+            }
+        } else if (moment(checkin.creationdate).add(12, 'hours').toDate() < moment().toDate() === false) {
+            Polish.find({}).sort({brand: 1}).sort({name: 1}).exec(function (err, polishes) {
+                fs.unlink(req.files.photo.tempFilePath, function() {
+                    data = {}
+                    data.title = 'Check In Your Mani - Lacquer Tracker';
+                    data.polish = polishes;
+                    data.message = 'You already checked in today. Upload your new mani tomorrow!'
+                    res.render('checkins/add.ejs', data);
+                })
             })
         } else {
-            fs.unlink(req.files.photo.tempFilePath, function() {
-                res.redirect('/error');
-            })
+            if (req.files.photo.name.length > 0) {
+                if (req.files.photo.mimetype.startsWith("image")) {
+                    var ext = path.extname(req.files.photo.name);
+                    var newCheckin = new Checkin ({
+                        user: req.user.id,
+                        creationdate: new Date,
+                        editdate: new Date,
+                        photolocation: "",
+                        polish: req.body.polish,
+                        pendingdelete: false,
+                        pendingreason: "",
+                        comments: [],
+                    })
+                    newCheckin.save(function(err) {
+                        if (err) {
+                            fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                newCheckin.remove(function(err) {
+                                    res.redirect('/error');
+                                })
+                            })
+                        } else {
+                            gm(req.files.photo.tempFilePath).size(function(err, value) {
+                                if (err) {
+                                    fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                        newCheckin.remove();
+                                        res.redirect('/error');
+                                    })
+                                } else {
+                                    gm(req.files.photo.tempFilePath).resize(400).write(path.resolve('./public/images/checkins/' + newCheckin.id + ext), function (err) {
+                                        if (err) {
+                                            fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                                newCheckin.remove();
+                                                res.redirect('/error');
+                                            })
+                                        } else {
+                                            fs.unlink(req.files.photo.tempFilePath, function() {
+                                                newCheckin.photolocation = '/images/checkins/' + newCheckin.id + ext;
+                                                newCheckin.save(function(err) {
+                                                    res.redirect('/nailsoftheday');
+                                                })
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                } else {
+                    fs.unlink(req.files.photo.tempFilePath, function() {
+                        res.redirect('/error');
+                    })
+                }
+            } else {
+                fs.unlink(req.files.photo.tempFilePath, function() {
+                    res.redirect('/error');
+                })
+            }
         }
-    } else {
-        fs.unlink(req.files.photo.tempFilePath, function() {
-            res.redirect('/error');
-        })
-    }
+    })
 });
 
 
@@ -369,13 +432,8 @@ app.get('/nailsoftheday/:id/remove', isLoggedIn, function(req, res) {
                     for (i=0; i < comments.length; i++) {
                         comments[i].remove();
                     }
-                    User.findById(post.user, function(err, p) {
-                        p.checkins.remove(req.params.id);
-                        p.save(function(err) {
-                            Checkin.findByIdAndRemove(req.params.id, function(err) {
-                                res.redirect('/nailsoftheday');
-                            })
-                        });
+                    Checkin.findByIdAndRemove(req.params.id, function(err) {
+                        res.redirect('/nailsoftheday');
                     })
                 })
             } else {

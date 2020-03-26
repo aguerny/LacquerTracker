@@ -9,12 +9,21 @@
     	     		<h3>Add dupes:</h3><br><br>
         			Name:<br><input type="text" name="name" value="<%= editname %>" class="width45" <% if (isAuthenticated) { if (user.level !== "admin" || user.adminview !== true) { %> readonly="readonly" <% } } %> required><br><br><br>
                     Brand:<br><input type="text" name="brand" value="<%= editbrand %>" class="width45" <% if (isAuthenticated) { if (user.level !== "admin" || user.adminview !== true) { %> readonly="readonly" <% } } %> required><br><br><br>
-                    Dupes:<br><textarea name="dupes" autofocus value="<%= editdupes %>" class="width45" rows="10" placeholder="Format links to other polishes as: * [Name of polish](Link)"><%= editdupes %></textarea><br><br><br><br>
+                    Dupes:<br><select name="dupes" class="chosen-select" multiple>
+                        <% for (i=0; i<polish.length; i++) { %>
+                            <option value="<%=polish[i].id%>" <%if (editdupes.indexOf(polish[i].id) > -1) {%>selected<%}%>><%= polish[i].brand %> - <%= polish[i].name %></option>
+                        <% } %>
+                    </select>
+                    <br><br><br>
                     <input type="submit" value="Submit" class="button">
                 </form>
             </div>
         </section>
     </div>
 </div>
+
+<script>
+    $(".chosen-select").chosen({width: "230px"});
+</script>
 
 <%- include('../layoutBottom'); %>

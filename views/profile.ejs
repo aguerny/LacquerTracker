@@ -3,7 +3,7 @@
 <script>
 $(window).load(function () {
     $('.collage').collagePlus({
-        'targetHeight' : 350,
+        'targetHeight' : 250,
         'allowPartialLastRow' : true,
     });
 });
@@ -121,21 +121,21 @@ $(window).load(function () {
             <% } %>
         </div>
         <div id="biglayout">
-            <% if (photos.length > 0) { %>
-                <br><br><h4><%= username %>'s Photos (<%= photos.length %>):</h4><br>
+            <% if (checkins.length > 0) { %>
+                <br><br><h4><%= username %>'s Check-Ins (<%= checkins.length %>):</h4><br>
                 <div class="collage">
-                    <% for (i=0; i<photos.length; i++) { %>
-                        <img src="<%= photos[i].location %>">
+                    <% for (i=0; i<checkins.length; i++) { %>
+                        <a href="/nailsoftheday/<%=checkins[i].id%>"><img src="<%= checkins[i].photolocation %>"></a>
                     <% } %>
                 </div>
             <% } %>
         </div>
         <div id="smalllayout">
-            <% if (photos.length > 0) { %>
-                <br><br><h4><%= username %>'s Photos (<%= photos.length %>):</h4><br>
+            <% if (checkins.length > 0) { %>
+                <br><br><h4><%= username %>'s Check-Ins (<%= checkins.length %>):</h4><br>
                 <div>
-                    <% for (i=0; i<photos.length; i++) { %>
-                        <img style="max-width:100%" src="<%= photos[i].location %>"><br><br>
+                    <% for (i=0; i<checkins.length; i++) { %>
+                        <a href="/nailsoftheday/<%=checkins[i].id%>"><img style="max-width:100%" src="<%= checkins[i].photolocation %>"></a>
                     <% } %>
                 </div>
             <% } %>

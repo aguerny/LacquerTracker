@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 
 
-//define the schema for our user model
+//define the schema for our model
 var reviewSchema = mongoose.Schema({
 	polishid: String,
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},

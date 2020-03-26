@@ -2,13 +2,14 @@
 var mongoose = require('mongoose');
 
 
-//define the schema for our user model
+//define the schema for our model
 var brandSchema = mongoose.Schema({
     name: String,
     website: String,
     bio: String,
     photo: String,
     official: Boolean,
+    polishlock: Boolean,
     alternatenames: [String],
     indie: Boolean,
 });
