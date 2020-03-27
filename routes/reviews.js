@@ -23,12 +23,12 @@ app.get('/review/edit/:id', isLoggedIn, function(req, res) {
                 data.rating = review.rating;
                 data.userreview = review.userreview;
                 data.notes = review.notes;
-                res.render('reviewedit.ejs', data);
+                res.render('polish/reviewedit.ejs', data);
             } else { //the review doesn't exist yet.
                 data.rating = "";
                 data.userreview = "";
                 data.notes = "";
-                res.render('reviewedit.ejs', data);
+                res.render('polish/reviewedit.ejs', data);
             }
         })
     })

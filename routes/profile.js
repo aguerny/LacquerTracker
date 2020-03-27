@@ -54,7 +54,7 @@ app.get('/profile/:username', function(req, res) {
                         oreviews[thisindex] = reviews[i];
                     }
                     data.oreviews = oreviews;
-                    res.render('profile.ejs', data);
+                    res.render('profile/profile.ejs', data);
                 })
             })
         }
@@ -86,7 +86,7 @@ app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
             data.useremail = user.useremail;
             data.country = user.country;
             data.timezone = user.timezone;
-        res.render('profileedit.ejs', data);
+        res.render('profile/profileedit.ejs', data);
         })
     } else {
         res.redirect('/error');

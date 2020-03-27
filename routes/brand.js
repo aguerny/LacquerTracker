@@ -29,7 +29,7 @@ app.get('/brand/:brandname', function(req, res) {
             data.polishes = [];
             data.status = [];
             data.colors = [];
-            res.render('brand.ejs', data);
+            res.render('polish/brand.ejs', data);
         } else {
             data = {};
             data.title = brand.name + ' - Lacquer Tracker';
@@ -61,12 +61,12 @@ app.get('/brand/:brandname', function(req, res) {
                         var returnedpolish = polishes;
                         data.polishes = returnedpolish;
                         data.status = statuses;
-                        res.render('brand.ejs', data);
+                        res.render('polish/brand.ejs', data);
                     } else {
                         var returnedpolish = polishes;
                         data.polishes = returnedpolish;
                         data.status = statuses;
-                        res.render('brand.ejs', data);
+                        res.render('polish/brand.ejs', data);
                     }
                 })
             });
