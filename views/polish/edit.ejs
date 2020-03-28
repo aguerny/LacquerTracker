@@ -9,7 +9,7 @@
     	     		<h3>Add dupes:</h3><br><br>
         			Name:<br><input type="text" name="name" value="<%= editname %>" class="width45" <% if (isAuthenticated) { if (user.level !== "admin" || user.adminview !== true) { %> readonly="readonly" <% } } %> required><br><br><br>
                     Brand:<br><input type="text" name="brand" value="<%= editbrand %>" class="width45" <% if (isAuthenticated) { if (user.level !== "admin" || user.adminview !== true) { %> readonly="readonly" <% } } %> required><br><br><br>
-                    Dupes:<br><select name="dupes" class="chosen-select" multiple>
+                    Dupes:<br><select name="dupes" id="select-polish" class="width50" multiple>
                         <% for (i=0; i<polish.length; i++) { %>
                             <option value="<%=polish[i].id%>" <%if (editdupes.indexOf(polish[i].id) > -1) {%>selected<%}%>><%= polish[i].brand %> - <%= polish[i].name %></option>
                         <% } %>
@@ -23,7 +23,13 @@
 </div>
 
 <script>
-    $(".chosen-select").chosen({width: "230px"});
+$('#select-polish').selectize({
+        create: false,
+        closeAfterSelect: true,
+        highlight: false,
+        maxOptions: 100,
+        dropdownParent: 'body'
+    })
 </script>
 
 <%- include('../layoutBottom'); %>

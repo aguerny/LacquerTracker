@@ -10,11 +10,22 @@
         <form action="/nailsoftheday/add" method="post" enctype='multipart/form-data'>
             <h3>Check in your mani:</h3><br><br>
                 Choose your photo: <input type="file" name="photo" required><br><br><br>
-                Select your polishes used:<br><select name="polish" class="chosen-select" multiple>
+                Select your polishes used:<br>
+                <select name="polish" id="select-polish" class="width50" multiple>
                     <% for (i=0; i<polish.length; i++) { %>
                         <option value="<%=polish[i].id%>"><%= polish[i].brand %> - <%= polish[i].name %></option>
                     <% } %>
-                </select><br><br><br>
+                </select>
+<!--                 <div id="app">
+                    <multiselect v-model="selectedPolish" class="style-chooser" id="ajax" label="name" track-by="name" :options="polish" :multiple="true":internal-search="false" :options-limit="300" :hide-selected="true" @search-change="asyncFind">
+                        <template slot="tag" slot-scope="{ option, remove }"><span class="custom__tag"><span>{{ option.name }}</span><span class="custom__remove" @click="remove(option)"> ❌<br></span></span></template>
+                        <template slot="clear" slot-scope="props">
+                        <div class="multiselect__clear" v-if="selectedPolish.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
+                        </template><span slot="noResult">No polsh matches found.</span>
+                    </multiselect>
+                    <input type="hidden" v-model="selectedPolish.id" name="polish" />
+                </div> -->
+                <br><br><br>
                 <input type="submit" value="Submit" class="button"><br><br>
         </form>
         Can't find the polish you're looking for? <a target="blank" href="/polishadd">Add it to the database.</a>
@@ -23,7 +34,47 @@
 </div>
 
 <script>
-    $(".chosen-select").chosen({width: "230px"});
+$('#select-polish').selectize({
+        create: false,
+        closeAfterSelect: true,
+        highlight: false,
+        maxOptions: 100,
+        dropdownParent: 'body'
+    })
 </script>
+
+<!-- <script>
+var app = new Vue({
+    el: '#app',
+    components: {
+        Multiselect: window.VueMultiselect.default
+    },
+    data () {
+        return {
+            selectedPolish: [],
+            polish: [],
+        }
+    },
+    methods: {
+        asyncFind (query) {
+            axios.post('/allpolish', {query:query}).then(response => {this.polish = response.data;})
+        },
+        clearAll () {
+            this.selectedPolish = []
+        }
+    },
+    computed: {
+        selectedPolish: function () {
+            let selectedPolish = [];
+            this.selected.forEach((polish) => {
+                selectedPolish.push(polish);
+            })
+            return selectedPolish;
+        }
+    }
+})
+</script> -->
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <%- include('../layoutBottom'); %>

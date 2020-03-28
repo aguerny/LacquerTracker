@@ -194,14 +194,6 @@ app.post('/admin/combine', isLoggedIn, function(req, res) {
                         keep.save();
                     }
 
-                    if (!keep.indie.length) {
-                        if (remove.indie.length) {
-                            keep.indie = remove.indie;
-                            keep.keywords = keep.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.batch + " " + keep.code;
-                            keep.save();
-                        }
-                    }
-
                     if (!keep.dupes.length) {
                         if (remove.dupes.length) {
                             keep.dupes = remove.dupes;
@@ -377,19 +369,10 @@ app.post('/admin/brandedit/:id', isLoggedIn, function(req, res) {
                 brand.website = sanitizer.sanitize(req.body.website);
                 brand.bio = sanitizer.sanitize(req.body.bio);
                 brand.official = sanitizer.sanitize(req.body.official);
+                brand.polishlock = sanitizer.sanitize(req.body.polishlock);
                 brand.indie = sanitizer.sanitize(req.body.indie);
                 brand.save(function(err) {
-                    Polish.find({brand:brand.name}, function(err, polishes) {
-                        for (i=0; i < polishes.length; i++) {
-                            if (brand.indie === true) {
-                                polishes[i].indie = "on";
-                            } else {
-                                polishes[i].indie = "off";
-                            }
-                            polishes[i].save();
-                        }
-                        res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
-                    })
+                    res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
                 })
             }
         })

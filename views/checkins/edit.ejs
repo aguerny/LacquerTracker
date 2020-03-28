@@ -7,7 +7,8 @@
         <form action="/nailsoftheday/<%= checkinid %>/edit" method="post">
             <h3>Edit your check-in:</h3><br><br>
                 <img src=<%= checkinphotolocation %>><br><br><br>
-                Edit your polishes used:<br><select name="polish" class="chosen-select" multiple>
+                Edit your polishes used:<br>
+                <select name="polish" id="select-polish" class="width50" multiple>
                     <% for (i=0; i<polish.length; i++) { %>
                         <option value="<%=polish[i].id%>" <%if (checkinpolish.indexOf(polish[i].id) > -1) {%>selected<%}%>><%= polish[i].brand %> - <%= polish[i].name %></option>
                     <% } %>
@@ -19,7 +20,13 @@
 </div>
 
 <script>
-    $(".chosen-select").chosen({width: "230px"});
+$('#select-polish').selectize({
+        create: false,
+        closeAfterSelect: true,
+        highlight: false,
+        maxOptions: 100,
+        dropdownParent: 'body'
+    })
 </script>
 
 <%- include('../layoutBottom'); %>

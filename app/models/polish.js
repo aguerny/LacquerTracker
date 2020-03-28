@@ -9,7 +9,6 @@ var polishSchema = mongoose.Schema({
     name: String,
     colorcat: String,
     type: String,
-    indie: String,
     code: String,
     keywords: String,
     dateupdated: Date,

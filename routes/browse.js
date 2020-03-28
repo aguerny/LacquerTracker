@@ -19,7 +19,6 @@ app.get('/browse', function(req, res) {
         data.browsebrand = '';
         data.browsecolorcat = '';
         data.browsetype = '';
-        data.browseindie = '';
         data.recent = true;
         data.types = PolishTypes;
         data.colors = PolishColors;
@@ -75,7 +74,6 @@ app.post('/browse', function(req, res) {
         data.browsebrand = req.body.brand;
         data.browsecolorcat = req.body.colorcat;
         data.browsetype = req.body.type;
-        data.browseindie = req.body.indie;
         data.types = PolishTypes;
         data.colors = PolishColors;
 

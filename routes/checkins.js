@@ -81,6 +81,15 @@ app.get('/nailsoftheday/add', isLoggedIn, function(req, res) {
 });
 
 
+// app.post('/allpolish', isLoggedIn, function(req, res) {
+//     console.log(req.body.query);
+//     Polish.find({name:{"$regex":req.body.query, "$options":"i"}}).sort({brand: 1}).sort({name: 1}).exec(function (err, polishes) {
+//         console.log(polishes);
+//         res.send(polishes);
+//     })
+// });
+
+
 app.post('/nailsoftheday/add', isLoggedIn, function(req, res) {
     Checkin.findOne({user: req.user}).sort({creationdate: -1}).exec(function(err, checkin) {
         if (checkin == null) {

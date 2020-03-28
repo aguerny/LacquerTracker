@@ -27,7 +27,6 @@ app.get('/polish/:brand/:name', function(req, res) {
             data.pcolorcat = polish.colorcat;
             data.pswatch = polish.swatch;
             data.ptype = polish.type;
-            data.bindie = polish.indie;
             data.pcode = polish.code;
             data.pid = polish.id;
             data.pdupes = polish.dupes;
@@ -117,7 +116,6 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                 data.pcolorcat = polish.colorcat;
                 data.pswatch = polish.swatch;
                 data.ptype = polish.type;
-                data.bindie = polish.indie;
                 data.pcode = polish.code;
                 data.pid = polish.id;
                 data.pdupes = markdown(polish.dupes);
@@ -342,11 +340,11 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                         keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
                         dateupdated: new Date(),
                         dupes: sanitizer.sanitize(req.body.dupes),
-                        indie: false,
                         swatch: '',
                     });
                     newPolish.save(function(err) {
                         if (err) {
+                            console.log(err);
                             res.redirect('/error');
                         } else {
                             if (req.body.type !== undefined) {
@@ -362,16 +360,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                             newPolish.save(function(err) {
                                 Brand.findOne({name: polishBrandToFind}, function(err, brand) {
                                     //check if brand is already in brand database
-                                    if (brand) {
-                                        if (brand.indie === true) {
-                                            newPolish.indie = "on";
-                                        } else {
-                                            newPolish.indie = "off";
-                                        }
-                                        newPolish.save(function(err) {
-                                            res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
-                                        })
-                                    } else {
+                                    if (!brand) {
                                         var newBrand = new Brand ({
                                             name: polishBrandToFind,
                                             website: '',
