@@ -24,7 +24,7 @@ function confirm_alert(node) {
                     <% for (i=0; i<checkinpolish.length; i++) { %>
                         &#8226; <a href='/polish/<%= checkinpolish[i].brand.replace(/ /g,"_") %>/<%= checkinpolish[i].name.replace(/ /g,"_") %>'><%= checkinpolish[i].brand %> - <%= checkinpolish[i].name %></a>
                     <% } %>
-            </p><hr><br><br>
+            </p><hr><br>
             <b>Comments (<%= checkincomment.length %>)</b> | <a href="/checkin/<%= checkinid %>/add">Add a comment</a><br><br>
 
 
@@ -34,7 +34,7 @@ function confirm_alert(node) {
                 <br>
                 <div>
                     <%if (checkincomment[i].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[i].user.profilephoto %>">&nbsp;<%}%>
-                    <b><a href="/profile/<%= checkincomment[i].user.username %>"><% if (checkinuser.username === checkincomment[i].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[i].user.username %><% if (checkinuser.username === checkincomment[i].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[i].date %></font>
+                    <b><a href="/profile/<%= checkincomment[i].user.username %>"><% if (checkinuser.username === checkincomment[i].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[i].user.username %><% if (checkinuser.username === checkincomment[i].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= moment(checkincomment[i].date).format('MMM D YYYY, h:mm a') %></font>
                     <% if (isAuthenticated) { %>
                         <% if (user.username === checkincomment[i].user.username || user.level === "admin") { %>
                             <a href="/checkin/<%= checkinid %>/<%= checkincomment[i].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
@@ -62,7 +62,7 @@ function confirm_alert(node) {
                         <br>
                         <div class="replycomment" style="margin-left:4%"><div style="padding-left:1%"><br>
                             <%if (checkincomment[j].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[j].user.profilephoto %>">&nbsp;<%}%>
-                            <b><a href="/profile/<%= checkincomment[j].user.username %>"><% if (checkinuser.username === checkincomment[j].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[j].user.username %><% if (checkinuser.username === checkincomment[j].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[j].date %></font>
+                            <b><a href="/profile/<%= checkincomment[j].user.username %>"><% if (checkinuser.username === checkincomment[j].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[j].user.username %><% if (checkinuser.username === checkincomment[j].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= moment(checkincomment[j].date).format('MMM D YYYY, h:mm a') %></font>
                             <% if (isAuthenticated) { %>
                                 <% if (user.username === checkincomment[j].user.username || user.level === "admin") { %>
                                     <a href="/checkin/<%= checkinid %>/<%= checkincomment[j].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
@@ -88,7 +88,7 @@ function confirm_alert(node) {
                                 <% if (checkincomment[k].parentid === checkincomment[j].id) { %>
                                     <br><div style="padding-left:10%">
                                     <%if (checkincomment[k].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[k].user.profilephoto %>">&nbsp;<%}%>
-                                    <b><a href="/profile/<%= checkincomment[k].user.username %>"><% if (checkinuser.username === checkincomment[k].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[k].user.username %><% if (checkinuser.username === checkincomment[k].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[k].date %></font>
+                                    <b><a href="/profile/<%= checkincomment[k].user.username %>"><% if (checkinuser.username === checkincomment[k].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[k].user.username %><% if (checkinuser.username === checkincomment[k].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= moment(checkincomment[k].date).format('MMM D YYYY, h:mm a') %></font>
                                     <% if (isAuthenticated) { %>
                                         <% if (user.username === checkincomment[k].user.username || user.level === "admin") { %>
                                             <a href="/checkin/<%= checkinid %>/<%= checkincomment[k].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
@@ -114,7 +114,7 @@ function confirm_alert(node) {
                                     <% if (checkincomment[l].parentid === checkincomment[k].id) { %>
                                         <br><div class="replycomment" style="margin-left:14%"><div style="padding-left:1%"><br>
                                             <%if (checkincomment[l].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[l].user.profilephoto %>">&nbsp;<%}%>
-                                            <b><a href="/profile/<%= checkincomment[l].user.username %>"><% if (checkinuser.username === checkincomment[l].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[l].user.username %><% if (checkinuser.username === checkincomment[l].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[l].date %></font>
+                                            <b><a href="/profile/<%= checkincomment[l].user.username %>"><% if (checkinuser.username === checkincomment[l].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[l].user.username %><% if (checkinuser.username === checkincomment[l].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= moment(checkincomment[l].date).format('MMM D YYYY, h:mm a') %></font>
                                             <% if (isAuthenticated) { %>
                                                 <% if (user.username === checkincomment[l].user.username || user.level === "admin") { %>
                                                     <a href="/checkin/<%= checkinid %>/<%= checkincomment[l].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
@@ -140,7 +140,7 @@ function confirm_alert(node) {
                                         <% if (checkincomment[m].parentid === checkincomment[l].id) { %>
                                             <br><div style="padding-left:20%">
                                             <%if (checkincomment[m].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[m].user.profilephoto %>">&nbsp;<%}%>
-                                            <b><a href="/profile/<%= checkincomment[m].user.username %>"><% if (checkinuser.username === checkincomment[m].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[m].user.username %><% if (checkinuser.username === checkincomment[m].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[m].date %></font>
+                                            <b><a href="/profile/<%= checkincomment[m].user.username %>"><% if (checkinuser.username === checkincomment[m].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[m].user.username %><% if (checkinuser.username === checkincomment[m].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= moment(checkincomment[m].date).format('MMM D YYYY, h:mm a') %></font>
                                             <% if (isAuthenticated) { %>
                                                 <% if (user.username === checkincomment[m].user.username || user.level === "admin") { %>
                                                     <a href="/checkin/<%= checkinid %>/<%= checkincomment[m].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
@@ -166,7 +166,7 @@ function confirm_alert(node) {
                                             <% if (checkincomment[n].parentid === checkincomment[m].id) { %>
                                                 <br><div class="replycomment" style="margin-left:24%"><div style="padding-left:1%"><br>
                                                     <%if (checkincomment[n].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[n].user.profilephoto %>">&nbsp;<%}%>
-                                                    <b><a href="/profile/<%= checkincomment[n].user.username %>"><% if (checkinuser.username === checkincomment[n].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[n].user.username %><% if (checkinuser.username === checkincomment[n].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[n].date %></font>
+                                                    <b><a href="/profile/<%= checkincomment[n].user.username %>"><% if (checkinuser.username === checkincomment[n].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[n].user.username %><% if (checkinuser.username === checkincomment[n].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= moment(checkincomment[n].date).format('MMM D YYYY, h:mm a') %></font>
                                                     <% if (isAuthenticated) { %>
                                                         <% if (user.username === checkincomment[n].user.username || user.level === "admin") { %>
                                                             <a href="/checkin/<%= checkinid %>/<%= checkincomment[n].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
@@ -192,7 +192,7 @@ function confirm_alert(node) {
                                                 <% if (checkincomment[o].parentid === checkincomment[n].id) { %>
                                                     <br><div style="padding-left:30%">
                                                     <%if (checkincomment[o].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[o].user.profilephoto %>">&nbsp;<%}%>
-                                                    <b><a href="/profile/<%= checkincomment[o].user.username %>"><% if (checkinuser.username === checkincomment[o].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[o].user.username %><% if (checkinuser.username === checkincomment[o].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[o].date %></font>
+                                                    <b><a href="/profile/<%= checkincomment[o].user.username %>"><% if (checkinuser.username === checkincomment[o].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[o].user.username %><% if (checkinuser.username === checkincomment[o].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= moment(checkincomment[o].date).format('MMM D YYYY, h:mm a') %></font>
                                                     <% if (isAuthenticated) { %>
                                                         <% if (user.username === checkincomment[o].user.username || user.level === "admin") { %>
                                                             <a href="/checkin/<%= checkinid %>/<%= checkincomment[o].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
@@ -218,7 +218,7 @@ function confirm_alert(node) {
                                                     <% if (checkincomment[p].parentid === checkincomment[o].id) { %>
                                                         <br><div class="replycomment" style="margin-left:34%"><div style="padding-left:1%"><br>
                                                             <%if (checkincomment[p].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[p].user.profilephoto %>">&nbsp;<%}%>
-                                                            <b><a href="/profile/<%= checkincomment[p].user.username %>"><% if (checkinuser.username === checkincomment[p].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[p].user.username %><% if (checkinuser.username === checkincomment[p].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[p].date %></font>
+                                                            <b><a href="/profile/<%= checkincomment[p].user.username %>"><% if (checkinuser.username === checkincomment[p].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[p].user.username %><% if (checkinuser.username === checkincomment[p].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= moment(checkincomment[p].date).format('MMM D YYYY, h:mm a') %></font>
                                                             <% if (isAuthenticated) { %>
                                                                 <% if (user.username === checkincomment[p].user.username || user.level === "admin") { %>
                                                                     <a href="/checkin/<%= checkinid %>/<%= checkincomment[p].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
@@ -244,7 +244,7 @@ function confirm_alert(node) {
                                                         <% if (checkincomment[q].parentid === checkincomment[p].id) { %>
                                                             <br><div style="padding-left:30%">
                                                             <%if (checkincomment[q].user.profilephoto.length > 0) {%><img class="profilephotocomment" src="<%= checkincomment[q].user.profilephoto %>">&nbsp;<%}%>
-                                                            <b><a href="/profile/<%= checkincomment[q].user.username %>"><% if (checkinuser.username === checkincomment[q].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[q].user.username %><% if (checkinuser.username === checkincomment[q].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[q].date %></font>
+                                                            <b><a href="/profile/<%= checkincomment[q].user.username %>"><% if (checkinuser.username === checkincomment[q].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[q].user.username %><% if (checkinuser.username === checkincomment[q].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= moment(checkincomment[q].date).format('MMM D YYYY, h:mm a') %></font>
                                                             <% if (isAuthenticated) { %>
                                                                 <% if (user.username === checkincomment[q].user.username || user.level === "admin") { %>
                                                                     <a href="/checkin/<%= checkinid %>/<%= checkincomment[q].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
@@ -275,7 +275,7 @@ function confirm_alert(node) {
                             <% } %>
                 <% } %>
             <% } %>
-            <br><hr><br><br>
+            <hr><br><br>
             <% if (isAuthenticated) { %>
                 <b><a name="addcomment"><font color="#000000">Add a Comment:</font></b><br><br>
                 <form action="/checkin/<%= checkinid %>/<%= checkinid %>/add" method="post">

@@ -230,6 +230,7 @@ app.get('/checkin/:id', function(req, res) {
                     return x;
                 })
                 data.checkincomment = allcomments;
+                data.moment = moment;
                 res.render('checkins/viewonecheckin.ejs', data);
             })
         }
