@@ -1,0 +1,25 @@
+<%- include('../layoutTop'); %>
+
+<script type="text/javascript">
+function confirm_alert(node) {
+    return prompt("Please enter a reason for flagging this photo.");
+}
+</script>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    	<section>
+    		<div>
+                <form action="/checkin/<%= checkin.id %>/flag" method="post">
+	     		    <br><h3>Flag check-in:</h3><br>
+                    <br><img class="polishphotosmall" src="<%= checkin.photolocation %>"><br><br>
+                    Reason: <input name="pendingreason" class="width50" required autofocus><br><br>
+                    <input type="submit" value="Submit" class="button">
+                </form>
+            </div>
+    	</section>
+    </div>
+</div>
+
+<%- include('../layoutBottom'); %>

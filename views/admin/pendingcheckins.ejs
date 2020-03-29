@@ -1,0 +1,19 @@
+<%- include('../layoutTop'); %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    	<section>
+    		<div>
+	     		<br><h3>Check-ins Pending Delete:</h3><br>
+                <% for (i=0; i < pendingcheckins.length; i++) { %>
+                    <br><br><br><img class="polishphotosmall" src="<%= pendingcheckins[i].photolocation %>"><br>
+                    Reason: <%=pendingcheckins[i].pendingcheckins%><br>
+                    <a href="/checkin/<%= pendingcheckins[i].id %>/remove">Delete check-in</a> | <a href="/admin/pendingcheckins/<%= pendingcheckins[i].id %>/restore">Restore Check-in</a>
+                <% } %>
+            </div>
+    	</section>
+    </div>
+</div>
+
+<%- include('../layoutBottom'); %>

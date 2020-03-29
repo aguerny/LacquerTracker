@@ -3,6 +3,7 @@ var moment = require('moment-timezone');
 var Polish = require('../app/models/polish');
 var Photo = require('../app/models/photo');
 var Brand = require('../app/models/brand');
+var Checkin = require('../app/models/checkin');
 var fs = require('node-fs');
 var path = require('path');
 var Review = require('../app/models/review');
@@ -103,6 +104,41 @@ app.get('/admin/pending/:pid/:id/:action', isLoggedIn, function(req, res) {
         }
     });
 });
+
+
+
+//check-ins pending delete
+app.get('/admin/pendingcheckins', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        Checkin.find({pendingdelete:true}).exec(function(err, checkins) {
+            data = {};
+            data.title = 'Check-ins Pending Delete - Lacquer Tracker';
+            data.pendingcheckins = checkins;
+            res.render('admin/pendingcheckins.ejs', data);
+        })
+    } else {
+        res.redirect('/error');
+    }
+});
+
+//restore pending check-in
+app.get('/admin/pendingcheckins/:id/restore', isLoggedIn, function(req, res) {
+    Checkin.findById(req.params.id).exec(function(err, checkin) {
+        if (checkin === null || checkin === undefined) {
+            res.redirect('/error');
+        } else if (req.params.action === "restore") {
+            checkin.pendingdelete = false;
+            checkin.save(function(err) {
+                res.redirect('/admin/pendingcheckins');
+            })
+        } else {
+            res.redirect('/error');
+        }
+    });
+});
+
+
+
 
 
 //admin combine polishes

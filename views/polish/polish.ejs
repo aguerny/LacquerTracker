@@ -134,10 +134,8 @@ $(window).load(function () {
                     <b>Type:</b> <%= ptype.replace(/,/g,", ") %>
                 <% } %>
             </div>
-            </section>
-            <section>
                 <div id="container" class="clear">
-                    <br><% if (isAuthenticated) { %>
+                        <br><% if (isAuthenticated) { %>
                         <hr><br>
                         <h4 style="display:inline">Your Review:</h4> <i><a href="/review/edit/<%= pid %>">Edit</a></i><br><br>
                         <% if (userreview.length > 0 || rating.length > 0) { %>
@@ -167,7 +165,7 @@ $(window).load(function () {
                         <br><br><hr><br><h4>Recent Check-Ins:</h4><br>
                         <div class="collage">
                             <% for (i=0; i<checkins.length; i++) { %>
-                                <a href="/nailsoftheday/<%=checkins[i].id%>"><img src="<%= checkins[i].photolocation %>"></a>
+                                <a href="/checkin/<%=checkins[i].id%>"><img src="<%= checkins[i].photolocation %>"></a>
                             <% } %>
                         </div>
                     <% } %>
@@ -177,7 +175,7 @@ $(window).load(function () {
                         <br><br><br><hr><br><h4>Recent Check-Ins:</h4><br>
                         <div>
                             <% for (i=0; i<checkins.length; i++) { %>
-                                <a href="/nailsoftheday/<%=checkins[i].id%>"><img style="max-width:100%" src="<%= checkins[i].photolocation %>"></a>
+                                <a href="/checkin/<%=checkins[i].id%>"><img style="max-width:100%" src="<%= checkins[i].photolocation %>"></a>
                             <% } %>
                         </div>
                     <% } %>

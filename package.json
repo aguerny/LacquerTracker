@@ -36,8 +36,6 @@
     "sanitizer": "0.1.3",
     "serve-favicon": "2.5.0",
     "stream-counter": "1.0.0",
-    // "vue": "2.6.11",
-    // "vue-multiselect": "2.1.6",
     "ya-csv": "0.10.1"
   }
 }

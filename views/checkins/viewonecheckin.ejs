@@ -12,9 +12,10 @@ function confirm_alert(node) {
     <section>
         <div class="forumpost">
         <h2><%= checkinuser.username %>'s Nails of the Day</h2><br>
-            <i>Posted on <%= checkindate %></i><% if (isAuthenticated) { %>
+            <i>Posted on <%= checkindate %></i>: <a href="/checkin/<%=checkinid%>/flag">Flag</a>
+                <% if (isAuthenticated) { %>
                     <% if (user.username === checkinuser.username || user.level === "admin") { %>
-                        : <a href="/nailsoftheday/<%=checkinid%>/edit">Edit</a> | <a href="/nailsoftheday/<%=checkinid%>/remove" onclick="return confirm_alert(this);">Delete</a>
+                        | <a href="/checkin/<%=checkinid%>/edit">Edit</a> | <a href="/checkin/<%=checkinid%>/remove" onclick="return confirm_alert(this);">Delete</a>
                     <% } %>
                 <% } %><br><br>
             <p style="white-space: pre;">
@@ -24,7 +25,7 @@ function confirm_alert(node) {
                         &#8226; <a href='/polish/<%= checkinpolish[i].brand.replace(/ /g,"_") %>/<%= checkinpolish[i].name.replace(/ /g,"_") %>'><%= checkinpolish[i].brand %> - <%= checkinpolish[i].name %></a>
                     <% } %>
             </p><hr><br><br>
-            <b>Comments (<%= checkincomment.length %>)</b> | <a href="/nailsoftheday/<%= checkinid %>/add">Add a comment</a><br><br>
+            <b>Comments (<%= checkincomment.length %>)</b> | <a href="/checkin/<%= checkinid %>/add">Add a comment</a><br><br>
 
 
             <% for (i=0; i<checkincomment.length; i++) { %>
@@ -36,7 +37,7 @@ function confirm_alert(node) {
                     <b><a href="/profile/<%= checkincomment[i].user.username %>"><% if (checkinuser.username === checkincomment[i].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[i].user.username %><% if (checkinuser.username === checkincomment[i].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[i].date %></font>
                     <% if (isAuthenticated) { %>
                         <% if (user.username === checkincomment[i].user.username || user.level === "admin") { %>
-                            <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[i].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                            <a href="/checkin/<%= checkinid %>/<%= checkincomment[i].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                         <% } %>
                     <% } %>
                     <br>
@@ -44,12 +45,12 @@ function confirm_alert(node) {
                         <p style="white-space: pre; padding-left: 3em"><%- checkincomment[i].message %></p>
                         <% if (isAuthenticated) { %>
                             <div class="replylink"><a href="#">Reply</a></div>
-                            <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[i].id %>/add" method="post">
+                            <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[i].id %>/add" method="post">
                                 <textarea name="message" placeholder="Reply here." class="width40" rows="5" required autofocus></textarea><br><br>
                                 <input type="submit" value="Submit" class="button">
                             </form></div>
                         <% } else { %>
-                            <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                            <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                         <% } %>
                     </div>
                 </div>
@@ -64,7 +65,7 @@ function confirm_alert(node) {
                             <b><a href="/profile/<%= checkincomment[j].user.username %>"><% if (checkinuser.username === checkincomment[j].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[j].user.username %><% if (checkinuser.username === checkincomment[j].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[j].date %></font>
                             <% if (isAuthenticated) { %>
                                 <% if (user.username === checkincomment[j].user.username || user.level === "admin") { %>
-                                    <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[j].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                    <a href="/checkin/<%= checkinid %>/<%= checkincomment[j].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                 <% } %>
                             <% } %>
                             <br>
@@ -72,12 +73,12 @@ function confirm_alert(node) {
                                 <p style="white-space: pre; padding-left: 3em"><%- checkincomment[j].message %></p>
                                 <% if (isAuthenticated) { %>
                                     <div class="replylink"><a href="#">Reply</a></div>
-                                    <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[j].id %>/add" method="post">
+                                    <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[j].id %>/add" method="post">
                                         <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
                                         <input type="submit" value="Submit" class="button">
                                     </form></div>
                                 <% } else { %>
-                                    <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                                    <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                                 <% } %>
                             </div>
                             <br></div></div><br>
@@ -90,7 +91,7 @@ function confirm_alert(node) {
                                     <b><a href="/profile/<%= checkincomment[k].user.username %>"><% if (checkinuser.username === checkincomment[k].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[k].user.username %><% if (checkinuser.username === checkincomment[k].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[k].date %></font>
                                     <% if (isAuthenticated) { %>
                                         <% if (user.username === checkincomment[k].user.username || user.level === "admin") { %>
-                                            <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[k].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                            <a href="/checkin/<%= checkinid %>/<%= checkincomment[k].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                         <% } %>
                                     <% } %>
                                 <br>
@@ -98,12 +99,12 @@ function confirm_alert(node) {
                                     <p style="white-space: pre; padding-left: 3em"><%- checkincomment[k].message %></p>
                                     <% if (isAuthenticated) { %>
                                         <div class="replylink"><a href="#">Reply</a></div>
-                                        <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[k].id %>/add" method="post">
+                                        <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[k].id %>/add" method="post">
                                             <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
                                             <input type="submit" value="Submit" class="button">
                                         </form></div>
                                     <% } else { %>
-                                        <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                                        <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                                     <% } %>
                                 </div>
                                 </div><br>
@@ -116,7 +117,7 @@ function confirm_alert(node) {
                                             <b><a href="/profile/<%= checkincomment[l].user.username %>"><% if (checkinuser.username === checkincomment[l].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[l].user.username %><% if (checkinuser.username === checkincomment[l].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[l].date %></font>
                                             <% if (isAuthenticated) { %>
                                                 <% if (user.username === checkincomment[l].user.username || user.level === "admin") { %>
-                                                    <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[l].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                    <a href="/checkin/<%= checkinid %>/<%= checkincomment[l].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                 <% } %>
                                             <% } %>
                                     <br>
@@ -124,12 +125,12 @@ function confirm_alert(node) {
                                         <p style="white-space: pre; padding-left: 3em"><%- checkincomment[l].message %></p>
                                         <% if (isAuthenticated) { %>
                                             <div class="replylink"><a href="#">Reply</a></div>
-                                            <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[l].id %>/add" method="post">
+                                            <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[l].id %>/add" method="post">
                                                 <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
                                                 <input type="submit" value="Submit" class="button">
                                             </form></div>
                                         <% } else { %>
-                                            <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                                            <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                                         <% } %>
                                     </div>
                                     <br></div></div><br>
@@ -142,7 +143,7 @@ function confirm_alert(node) {
                                             <b><a href="/profile/<%= checkincomment[m].user.username %>"><% if (checkinuser.username === checkincomment[m].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[m].user.username %><% if (checkinuser.username === checkincomment[m].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[m].date %></font>
                                             <% if (isAuthenticated) { %>
                                                 <% if (user.username === checkincomment[m].user.username || user.level === "admin") { %>
-                                                    <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[m].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                    <a href="/checkin/<%= checkinid %>/<%= checkincomment[m].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                 <% } %>
                                             <% } %>
                                         <br>
@@ -150,12 +151,12 @@ function confirm_alert(node) {
                                             <p style="white-space: pre; padding-left: 3em"><%- checkincomment[m].message %></p>
                                             <% if (isAuthenticated) { %>
                                                 <div class="replylink"><a href="#">Reply</a></div>
-                                                <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[m].id %>/add" method="post">
+                                                <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[m].id %>/add" method="post">
                                                     <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
                                                     <input type="submit" value="Submit" class="button">
                                                 </form></div>
                                             <% } else { %>
-                                                <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                                                <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                                             <% } %>
                                         </div>
                                         </div><br>
@@ -168,7 +169,7 @@ function confirm_alert(node) {
                                                     <b><a href="/profile/<%= checkincomment[n].user.username %>"><% if (checkinuser.username === checkincomment[n].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[n].user.username %><% if (checkinuser.username === checkincomment[n].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[n].date %></font>
                                                     <% if (isAuthenticated) { %>
                                                         <% if (user.username === checkincomment[n].user.username || user.level === "admin") { %>
-                                                            <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[n].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                            <a href="/checkin/<%= checkinid %>/<%= checkincomment[n].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                         <% } %>
                                                     <% } %>
                                             <br>
@@ -176,12 +177,12 @@ function confirm_alert(node) {
                                                 <p style="white-space: pre; padding-left: 3em"><%- checkincomment[n].message %></p>
                                                 <% if (isAuthenticated) { %>
                                                     <div class="replylink"><a href="#">Reply</a></div>
-                                                    <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[n].id %>/add" method="post">
+                                                    <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[n].id %>/add" method="post">
                                                         <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
                                                         <input type="submit" value="Submit" class="button">
                                                     </form></div>
                                                 <% } else { %>
-                                                    <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                                                    <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                                                 <% } %>
                                             </div>
                                             <br></div></div><br>
@@ -194,7 +195,7 @@ function confirm_alert(node) {
                                                     <b><a href="/profile/<%= checkincomment[o].user.username %>"><% if (checkinuser.username === checkincomment[o].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[o].user.username %><% if (checkinuser.username === checkincomment[o].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[o].date %></font>
                                                     <% if (isAuthenticated) { %>
                                                         <% if (user.username === checkincomment[o].user.username || user.level === "admin") { %>
-                                                            <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[o].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                            <a href="/checkin/<%= checkinid %>/<%= checkincomment[o].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                         <% } %>
                                                     <% } %>
                                                 <br>
@@ -202,12 +203,12 @@ function confirm_alert(node) {
                                                     <p style="white-space: pre; padding-left: 3em"><%- checkincomment[o].message %></p>
                                                     <% if (isAuthenticated) { %>
                                                         <div class="replylink"><a href="#">Reply</a></div>
-                                                        <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[o].id %>/add" method="post">
+                                                        <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[o].id %>/add" method="post">
                                                             <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
                                                             <input type="submit" value="Submit" class="button">
                                                         </form></div>
                                                     <% } else { %>
-                                                        <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                                                        <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                                                     <% } %>
                                                 </div>
                                                 </div><br>
@@ -220,7 +221,7 @@ function confirm_alert(node) {
                                                             <b><a href="/profile/<%= checkincomment[p].user.username %>"><% if (checkinuser.username === checkincomment[p].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[p].user.username %><% if (checkinuser.username === checkincomment[p].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[p].date %></font>
                                                             <% if (isAuthenticated) { %>
                                                                 <% if (user.username === checkincomment[p].user.username || user.level === "admin") { %>
-                                                                    <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[p].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                                    <a href="/checkin/<%= checkinid %>/<%= checkincomment[p].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                                 <% } %>
                                                             <% } %>
                                                     <br>
@@ -228,12 +229,12 @@ function confirm_alert(node) {
                                                         <p style="white-space: pre; padding-left: 3em"><%- checkincomment[p].message %></p>
                                                         <% if (isAuthenticated) { %>
                                                             <div class="replylink"><a href="#">Reply</a></div>
-                                                            <div class="replybox"><br><form action="/nailsoftheday/<%= checkinid %>/<%= checkincomment[p].id %>/add" method="post">
+                                                            <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[p].id %>/add" method="post">
                                                                 <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
                                                                 <input type="submit" value="Submit" class="button">
                                                             </form></div>
                                                         <% } else { %>
-                                                            <div><a href="/nailsoftheday/<%= checkinid %>/addreply">Reply</a></div>
+                                                            <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                                                         <% } %>
                                                     </div>
                                                     <br></div></div><br>
@@ -246,7 +247,7 @@ function confirm_alert(node) {
                                                             <b><a href="/profile/<%= checkincomment[q].user.username %>"><% if (checkinuser.username === checkincomment[q].user.username) {%><p style="display:inline; background-color:#9ED9CF;"><%}%><%= checkincomment[q].user.username %><% if (checkinuser.username === checkincomment[q].user.username) {%></p><%}%></a></b>&nbsp;&nbsp;<font color="#6E6B69"><%= checkincomment[q].date %></font>
                                                             <% if (isAuthenticated) { %>
                                                                 <% if (user.username === checkincomment[q].user.username || user.level === "admin") { %>
-                                                                    <a href="/nailsoftheday/<%= checkinid %>/<%= checkincomment[q].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
+                                                                    <a href="/checkin/<%= checkinid %>/<%= checkincomment[q].id %>/remove" onclick="return confirm_alert(this);">Delete</a>
                                                                 <% } %>
                                                             <% } %>
                                                         <br>
@@ -277,7 +278,7 @@ function confirm_alert(node) {
             <br><hr><br><br>
             <% if (isAuthenticated) { %>
                 <b><a name="addcomment"><font color="#000000">Add a Comment:</font></b><br><br>
-                <form action="/nailsoftheday/<%= checkinid %>/<%= checkinid %>/add" method="post">
+                <form action="/checkin/<%= checkinid %>/<%= checkinid %>/add" method="post">
                     <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
                     <input type="submit" value="Submit" class="button">
                 </form>

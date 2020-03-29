@@ -22,7 +22,7 @@ $(window).load(function () {
             <h3 style="display:inline-block"><%= username %>'s Profile</h3>
             <% if (isAuthenticated) { %>
                 <% if (user.username === username) { %>
-                    - <a href="/profile/<%= username %>/edit">Edit your profile</a> | <!-- <a href="/import">Import owned polish</a> -->
+                    - <a href="/profile/<%= username %>/edit">Edit your profile</a><!-- | <a href="/import">Import owned polish</a> -->
                 <% } else if (useremail === "on") {%>
                     - <a href="/email/<%= username %>">Send a message</a>
                 <% } %>
@@ -125,7 +125,7 @@ $(window).load(function () {
                 <br><br><h4><%= username %>'s Check-Ins (<%= checkins.length %>):</h4><br>
                 <div class="collage">
                     <% for (i=0; i<checkins.length; i++) { %>
-                        <a href="/nailsoftheday/<%=checkins[i].id%>"><img src="<%= checkins[i].photolocation %>"></a>
+                        <a href="/checkin/<%=checkins[i].id%>"><img src="<%= checkins[i].photolocation %>"></a>
                     <% } %>
                 </div>
             <% } %>
@@ -135,7 +135,7 @@ $(window).load(function () {
                 <br><br><h4><%= username %>'s Check-Ins (<%= checkins.length %>):</h4><br>
                 <div>
                     <% for (i=0; i<checkins.length; i++) { %>
-                        <a href="/nailsoftheday/<%=checkins[i].id%>"><img style="max-width:100%" src="<%= checkins[i].photolocation %>"></a>
+                        <a href="/checkin/<%=checkins[i].id%>"><img style="max-width:100%" src="<%= checkins[i].photolocation %>"></a>
                     <% } %>
                 </div>
             <% } %>

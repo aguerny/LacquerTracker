@@ -394,7 +394,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
 
 //edit polish
 app.get('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
-    Polish.findById(req.params.id).exec(function(err, p) {
+    Polish.findById(req.params.id).populate('dupes').exec(function(err, p) {
         if (p === null || err) {
             res.redirect('/error');
         } else {
@@ -405,7 +405,6 @@ app.get('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
                 data.editname = p.name;
                 data.editbrand = p.brand;
                 data.editdupes = p.dupes;
-                console.log(p.dupes);
                 data.polish = polishes;
                 res.render('polish/edit.ejs', data);
             })
@@ -436,9 +435,34 @@ app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
                     }
                 });
             }
-            p.dupes = req.body.dupes;
+            if (Array.isArray(req.body.dupes)) {
+                for (i=0; i<req.body.dupes.length; i++) {
+                    Polish.findById(req.body.dupes[i], function (err, dupepolish) {
+                        if (dupepolish.dupes.indexOf(p.id) > -1) {
+                            //already in dupes
+                        } else {
+                            dupepolish.dupes.push(p.id);
+                            dupepolish.save(function(err){
+                                //check next one!
+                            })
+                        }
+                    })
+                }
+            } else if (req.body.dupes !== undefined) {
+                Polish.findById(req.body.dupes, function (err, dupepolish) {
+                    if (dupepolish.dupes.indexOf(p.id) > -1) {
+                        //already in dupes
+                    } else {
+                        dupepolish.dupes.push(p.id);
+                        dupepolish.save(function(err){
+                            //check next one!
+                        })
+                    }
+                })
+            }
             p.dateupdated = new Date();
             p.save(function(err) {
+                p.dupes = req.body.dupes;
                 p.keywords = sanitizer.sanitize(p.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.batch) + " " + sanitizer.sanitize(p.code);
                 p.save(function(err) {
                     res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));;

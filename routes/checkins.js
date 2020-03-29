@@ -16,8 +16,8 @@ module.exports = function(app, passport) {
 
 
 //recent checkins
-app.get('/nailsoftheday', function(req, res) {
-    Checkin.find({}).sort({creationdate: -1}).limit(10).populate('user').populate('polish').exec(function(err, posts) {
+app.get('/checkin', function(req, res) {
+    Checkin.find({pendingdelete:false}).sort({creationdate: -1}).limit(10).populate('user').populate('polish').exec(function(err, posts) {
         data = {};
         data.title = 'Nails of the Day - Lacquer Tracker';
         data.page = 1;
@@ -37,7 +37,7 @@ app.get('/nailsoftheday', function(req, res) {
 });
 
 
-app.get('/nailsoftheday/page/:page', function(req, res) {
+app.get('/checkin/page/:page', function(req, res) {
     data = {};
     data.title = 'Nails of the Day - Lacquer Tracker';
 
@@ -71,26 +71,29 @@ app.get('/nailsoftheday/page/:page', function(req, res) {
 
 
 //add a new check-in
-app.get('/nailsoftheday/add', isLoggedIn, function(req, res) {
+app.get('/checkin/add', isLoggedIn, function(req, res) {
+    data = {}
+    data.title = 'Check In Your Mani - Lacquer Tracker';
+    res.render('checkins/add.ejs', data);
+});
+
+
+app.post('/allpolish', isLoggedIn, function(req, res) {
+    console.log(req.body.term.term);
+    var polish = [];
     Polish.find({}).sort({brand: 1}).sort({name: 1}).exec(function (err, polishes) {
-        data = {}
-        data.title = 'Check In Your Mani - Lacquer Tracker';
-        data.polish = polishes;
-        res.render('checkins/add.ejs', data);
+        for (i=0; i<polishes.length; i++) {
+            if (polishes[i].brand.toLowerCase().indexOf(req.body.term.term.toLowerCase()) > -1 || polishes[i].name.toLowerCase().indexOf(req.body.term.term.toLowerCase()) > -1) {
+                polish.push({polishid:polishes[i].id,brandandname:polishes[i].brand+" - "+polishes[i].name});
+            }
+        }
+        console.log(polish);
+        res.send(polish);
     })
 });
 
 
-// app.post('/allpolish', isLoggedIn, function(req, res) {
-//     console.log(req.body.query);
-//     Polish.find({name:{"$regex":req.body.query, "$options":"i"}}).sort({brand: 1}).sort({name: 1}).exec(function (err, polishes) {
-//         console.log(polishes);
-//         res.send(polishes);
-//     })
-// });
-
-
-app.post('/nailsoftheday/add', isLoggedIn, function(req, res) {
+app.post('/checkin/add', isLoggedIn, function(req, res) {
     Checkin.findOne({user: req.user}).sort({creationdate: -1}).exec(function(err, checkin) {
         if (checkin == null) {
             // need to update below as well if under 12 hours
@@ -132,7 +135,7 @@ app.post('/nailsoftheday/add', isLoggedIn, function(req, res) {
                                             fs.unlink(req.files.photo.tempFilePath, function() {
                                                 newCheckin.photolocation = '/images/checkins/' + newCheckin.id + ext;
                                                 newCheckin.save(function(err) {
-                                                    res.redirect('/nailsoftheday');
+                                                    res.redirect('/checkin');
                                                 })
                                             })
                                         }
@@ -200,7 +203,7 @@ app.post('/nailsoftheday/add', isLoggedIn, function(req, res) {
                                             fs.unlink(req.files.photo.tempFilePath, function() {
                                                 newCheckin.photolocation = '/images/checkins/' + newCheckin.id + ext;
                                                 newCheckin.save(function(err) {
-                                                    res.redirect('/nailsoftheday');
+                                                    res.redirect('/checkin');
                                                 })
                                             })
                                         }
@@ -227,7 +230,7 @@ app.post('/nailsoftheday/add', isLoggedIn, function(req, res) {
 
 
 //view specific check-in
-app.get('/nailsoftheday/:id', function(req, res) {
+app.get('/checkin/:id', function(req, res) {
     data = {};
     Checkin.findById(req.params.id).populate('comments').populate('user').populate('polish').exec(function (err, post) {
         if (post === null || post === undefined || post.pendingdelete == true) {
@@ -263,7 +266,7 @@ app.get('/nailsoftheday/:id', function(req, res) {
 
 
 //reply to specific comment
-app.post('/nailsoftheday/:id/:cid/add', isLoggedIn, function(req, res) {
+app.post('/checkin/:id/:cid/add', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id).populate('user').exec(function (err, post){
         var newCheckinComment = new CheckinComment ({
             checkinid: post.id,
@@ -286,7 +289,7 @@ app.post('/nailsoftheday/:id/:cid/add', isLoggedIn, function(req, res) {
                             from: "polishrobot@lacquertracker.com",
                             to: comment.user.email,
                             subject: 'New reply to your check-in comment',
-                            text: "Hey " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on check-in.\n\nCome check it out here: http://www.lacquertracker.com/nailsoftheday/" + post.id + "\n\n\nThanks,\nLacquer Tracker",
+                            text: "Hey " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on check-in.\n\nCome check it out here: http://www.lacquertracker.com/checkin/" + post.id + "\n\n\nThanks,\nLacquer Tracker",
                         }
 
                         transport.sendMail(mailOptions, function(error, response) {
@@ -306,7 +309,7 @@ app.post('/nailsoftheday/:id/:cid/add', isLoggedIn, function(req, res) {
                         from: "polishrobot@lacquertracker.com",
                         to: post.user.email,
                         subject: 'New reply to your check-in',
-                        text: "Hey " + post.user.username + ",\n\n" + req.user.username + " just replied to your check-in.\n\nCome check it out here: http://www.lacquertracker.com/nailsoftheday/" + post.id + "\n\n\nThanks,\nLacquer Tracker",
+                        text: "Hey " + post.user.username + ",\n\n" + req.user.username + " just replied to your check-in.\n\nCome check it out here: http://www.lacquertracker.com/checkin/" + post.id + "\n\n\nThanks,\nLacquer Tracker",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {
@@ -320,12 +323,12 @@ app.post('/nailsoftheday/:id/:cid/add', isLoggedIn, function(req, res) {
                         parent.childid.push(newCheckinComment.id);
                         post.save(function(err) {
                             parent.save(function(err) {
-                                res.redirect('/nailsoftheday/' + post.id)
+                                res.redirect('/checkin/' + post.id)
                             })
                         })
                     } else {
                         post.save(function(err) {
-                            res.redirect('/nailsoftheday/' + post.id)
+                            res.redirect('/checkin/' + post.id)
                         })
                     }
                 })
@@ -338,11 +341,11 @@ app.post('/nailsoftheday/:id/:cid/add', isLoggedIn, function(req, res) {
 
 
 //edit check-in
-app.get('/nailsoftheday/:id/edit', isLoggedIn, function(req, res) {
+app.get('/checkin/:id/edit', isLoggedIn, function(req, res) {
     data = {};
     Polish.find({}).sort({brand: 1}).sort({name: 1}).exec(function (err, polishes) {
         data.polish = polishes;
-        Checkin.findById(req.params.id).exec(function (err, post) {
+        Checkin.findById(req.params.id).populate('polish').exec(function (err, post) {
             if (post === null || post === undefined) {
                 res.redirect('/error');
             } else {
@@ -360,13 +363,13 @@ app.get('/nailsoftheday/:id/edit', isLoggedIn, function(req, res) {
     })
 });
 
-app.post('/nailsoftheday/:id/edit', isLoggedIn, function(req, res) {
+app.post('/checkin/:id/edit', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id, function (err, post){
         if (post.user == req.user.id) {
             post.polish = req.body.polish;
             post.editdate = new Date;
             post.save();
-            res.redirect('/nailsoftheday/' + post.id);
+            res.redirect('/checkin/' + post.id);
         } else {
             res.redirect('/error');
         }
@@ -377,19 +380,19 @@ app.post('/nailsoftheday/:id/edit', isLoggedIn, function(req, res) {
 
 
 
-app.get('/nailsoftheday/:id/add', isLoggedIn, function(req, res) {
-    res.redirect('/nailsoftheday/' + req.params.id + "#addcomment")
+app.get('/checkin/:id/add', isLoggedIn, function(req, res) {
+    res.redirect('/checkin/' + req.params.id + "#addcomment")
 });
 
-app.get('/nailsoftheday/:id/addreply', isLoggedIn, function(req, res) {
-    res.redirect('/nailsoftheday/' + req.params.id)
+app.get('/checkin/:id/addreply', isLoggedIn, function(req, res) {
+    res.redirect('/checkin/' + req.params.id)
 });
 
 
 
 
 //remove comment
-app.get('/nailsoftheday/:id/:cid/remove', isLoggedIn, function(req, res) {
+app.get('/checkin/:id/:cid/remove', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id, function(err, post) {
         CheckinComment.findById(req.params.cid, function(err, comment) {
             if (comment === null || comment === undefined) {
@@ -399,7 +402,7 @@ app.get('/nailsoftheday/:id/:cid/remove', isLoggedIn, function(req, res) {
                     if (comment.childid.length > 0) {
                         comment.message = sanitizer.sanitize(markdown("_deleted_"));
                         comment.save(function(err) {
-                            res.redirect("/nailsoftheday/" + req.params.id);
+                            res.redirect("/checkin/" + req.params.id);
                         })
                     } else {
                         post.comments.remove(req.params.cid);
@@ -409,12 +412,12 @@ app.get('/nailsoftheday/:id/:cid/remove', isLoggedIn, function(req, res) {
                                     parentcomment.childid.remove(req.params.cid);
                                     parentcomment.save();
                                     CheckinComment.findByIdAndRemove(req.params.cid, function(err) {
-                                        res.redirect("/nailsoftheday/" + req.params.id);
+                                        res.redirect("/checkin/" + req.params.id);
                                     })
                                 })
                             } else {
                                 CheckinComment.findByIdAndRemove(req.params.cid, function(err) {
-                                    res.redirect("/nailsoftheday/" + req.params.id);
+                                    res.redirect("/checkin/" + req.params.id);
                                 })
                             }
                         })
@@ -431,7 +434,7 @@ app.get('/nailsoftheday/:id/:cid/remove', isLoggedIn, function(req, res) {
 
 
 //delete check-in
-app.get('/nailsoftheday/:id/remove', isLoggedIn, function(req, res) {
+app.get('/checkin/:id/remove', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id, function(err, post) {
         if (post === null || post === undefined) {
             res.redirect('/error');
@@ -441,8 +444,11 @@ app.get('/nailsoftheday/:id/remove', isLoggedIn, function(req, res) {
                     for (i=0; i < comments.length; i++) {
                         comments[i].remove();
                     }
-                    Checkin.findByIdAndRemove(req.params.id, function(err) {
-                        res.redirect('/nailsoftheday');
+                    fs.unlink(post.photolocation, function(err) {
+                        console.log(err);
+                        Checkin.findByIdAndRemove(req.params.id, function(err) {
+                            res.redirect('/checkin');
+                        })
                     })
                 })
             } else {
@@ -450,6 +456,52 @@ app.get('/nailsoftheday/:id/remove', isLoggedIn, function(req, res) {
             }
         }
     })
+});
+
+
+
+//user flags a check-in
+app.get('/checkin/:id/flag', isLoggedIn, function(req, res) {
+    Checkin.findById(req.params.id).exec(function(err, checkin) {
+        if (checkin === null || checkin === undefined) {
+            res.redirect('/error');
+        } else {
+            data = {};
+            data.title = "Flag Check-in - Lacquer Tracker";
+            data.checkin = checkin;
+            res.render('checkins/flag.ejs', data);
+        }
+    });
+});
+
+
+app.post('/checkin/:id/flag', isLoggedIn, function(req, res) {
+    Checkin.findById(req.params.id).exec(function(err, checkin) {
+        if (checkin === null || checkin === undefined) {
+            res.redirect('/error');
+        } else {
+            checkin.pendingdelete = true;
+            checkin.pendingreason = sanitizer.sanitize(req.body.pendingreason) + " - " + req.user.username;
+            checkin.save(function(err) {
+                var transport = nodemailer.createTransport({
+                    sendmail: true,
+                    path: "/usr/sbin/sendmail"
+                });
+
+                var mailOptions = {
+                    from: "polishrobot@lacquertracker.com",
+                    to: 'lacquertrackermailer@gmail.com',
+                    subject: 'Flagged Check-in',
+                    text: req.user.username + " has flagged a check-in.\n\n\nwww.lacquertracker.com/admin/pendingcheckins",
+                }
+
+                transport.sendMail(mailOptions, function(error, response) {
+                    transport.close();
+                });
+                res.redirect('/checkin');
+            })
+        }
+    });
 });
 
 

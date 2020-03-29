@@ -7,11 +7,14 @@
             <div>
         		<form action="/polishedit/<%= editid %>/dupes" method="post">
     	     		<h3>Add dupes:</h3><br><br>
-        			Name:<br><input type="text" name="name" value="<%= editname %>" class="width45" <% if (isAuthenticated) { if (user.level !== "admin" || user.adminview !== true) { %> readonly="readonly" <% } } %> required><br><br><br>
-                    Brand:<br><input type="text" name="brand" value="<%= editbrand %>" class="width45" <% if (isAuthenticated) { if (user.level !== "admin" || user.adminview !== true) { %> readonly="readonly" <% } } %> required><br><br><br>
-                    Dupes:<br><select name="dupes" id="select-polish" class="width50" multiple>
-                        <% for (i=0; i<polish.length; i++) { %>
-                            <option value="<%=polish[i].id%>" <%if (editdupes.indexOf(polish[i].id) > -1) {%>selected<%}%>><%= polish[i].brand %> - <%= polish[i].name %></option>
+        			Name:<br>
+                    <input type="text" name="name" value="<%= editname %>" class="width45" <% if (isAuthenticated) { if (user.level !== "admin" || user.adminview !== true) { %> readonly="readonly" <% } } %> required><br><br><br>
+                    Brand:<br>
+                    <input type="text" name="brand" value="<%= editbrand %>" class="width45" <% if (isAuthenticated) { if (user.level !== "admin" || user.adminview !== true) { %> readonly="readonly" <% } } %> required><br><br><br>
+                    Dupes:<br>
+                    <select multiple name="dupes" id="select-polish" style="width:300px">
+                        <% for (i=0; i<editdupes.length; i++) { %>
+                            <option value="<%=editdupes[i].id%>" selected><%= editdupes[i].brand %> - <%= editdupes[i].name %></option>
                         <% } %>
                     </select>
                     <br><br><br>
@@ -23,13 +26,26 @@
 </div>
 
 <script>
-$('#select-polish').selectize({
-        create: false,
-        closeAfterSelect: true,
-        highlight: false,
-        maxOptions: 100,
-        dropdownParent: 'body'
-    })
+$("#select-polish").select2({
+    placeholder: 'Type here to search',
+    minimumInputLength: 2,
+    ajax: {
+        url: '/allpolish',
+        type: 'POST',
+        data: function(term) {
+            return {
+                term:term
+            }
+        },
+        processResults: function (data) {
+            return {
+                results: $.map(data, function(obj) {
+                    return { id: obj.polishid, text: obj.brandandname };
+                })
+            };
+        }
+    }
+});
 </script>
 
 <%- include('../layoutBottom'); %>

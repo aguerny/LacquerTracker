@@ -4,15 +4,16 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
-        <form action="/nailsoftheday/<%= checkinid %>/edit" method="post">
+        <form action="/checkin/<%= checkinid %>/edit" method="post">
             <h3>Edit your check-in:</h3><br><br>
                 <img src=<%= checkinphotolocation %>><br><br><br>
                 Edit your polishes used:<br>
-                <select name="polish" id="select-polish" class="width50" multiple>
-                    <% for (i=0; i<polish.length; i++) { %>
-                        <option value="<%=polish[i].id%>" <%if (checkinpolish.indexOf(polish[i].id) > -1) {%>selected<%}%>><%= polish[i].brand %> - <%= polish[i].name %></option>
+                <select multiple name="polish" id="select-polish" style="width:300px">
+                    <% for (i=0; i<checkinpolish.length; i++) { %>
+                        <option value="<%=checkinpolish[i].id%>" selected><%= checkinpolish[i].brand %> - <%= checkinpolish[i].name %></option>
                     <% } %>
-                    </select><br><br><br>
+                </select>
+                <br><br><br>
                 <input type="submit" value="Submit" class="button">
         </form>
     </section>
@@ -20,13 +21,26 @@
 </div>
 
 <script>
-$('#select-polish').selectize({
-        create: false,
-        closeAfterSelect: true,
-        highlight: false,
-        maxOptions: 100,
-        dropdownParent: 'body'
-    })
+$("#select-polish").select2({
+    placeholder: 'Type here to search',
+    minimumInputLength: 2,
+    ajax: {
+        url: '/allpolish',
+        type: 'POST',
+        data: function(term) {
+            return {
+                term:term
+            }
+        },
+        processResults: function (data) {
+            return {
+                results: $.map(data, function(obj) {
+                    return { id: obj.polishid, text: obj.brandandname };
+                })
+            };
+        }
+    }
+});
 </script>
 
 <%- include('../layoutBottom'); %>

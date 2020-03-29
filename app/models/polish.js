@@ -14,7 +14,6 @@ var polishSchema = mongoose.Schema({
     dateupdated: Date,
     dupes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Polish'}],
     photos: [{type: mongoose.Schema.Types.ObjectId, ref: 'Photo'}],
-    checkins: [{type: mongoose.Schema.Types.ObjectId, ref: 'Checkin'}],
     swatch: String,
     flagged: Boolean,
     flaggedreason: String,
