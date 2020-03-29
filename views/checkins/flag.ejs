@@ -13,7 +13,7 @@ function confirm_alert(node) {
     		<div>
                 <form action="/checkin/<%= checkin.id %>/flag" method="post">
 	     		    <br><h3>Flag check-in:</h3><br>
-                    <br><img class="polishphotosmall" src="<%= checkin.photolocation %>"><br><br>
+                    <br><img class="polishphotosmall" src="<%= checkin.photo %>"><br><br>
                     Reason: <input name="pendingreason" class="width50" required autofocus><br><br>
                     <input type="submit" value="Submit" class="button">
                 </form>

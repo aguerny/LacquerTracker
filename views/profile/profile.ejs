@@ -125,7 +125,7 @@ $(window).load(function () {
                 <br><br><h4><%= username %>'s Check-Ins (<%= checkins.length %>):</h4><br>
                 <div class="collage">
                     <% for (i=0; i<checkins.length; i++) { %>
-                        <a href="/checkin/<%=checkins[i].id%>"><img src="<%= checkins[i].photolocation %>"></a>
+                        <a href="/checkin/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>"></a>
                     <% } %>
                 </div>
             <% } %>
@@ -135,7 +135,7 @@ $(window).load(function () {
                 <br><br><h4><%= username %>'s Check-Ins (<%= checkins.length %>):</h4><br>
                 <div>
                     <% for (i=0; i<checkins.length; i++) { %>
-                        <a href="/checkin/<%=checkins[i].id%>"><img style="max-width:100%" src="<%= checkins[i].photolocation %>"></a>
+                        <a href="/checkin/<%=checkins[i].id%>"><img style="max-width:100%" src="<%= checkins[i].photo %>"></a>
                     <% } %>
                 </div>
             <% } %>

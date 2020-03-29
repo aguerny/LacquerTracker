@@ -7,7 +7,7 @@ var checkinSchema = mongoose.Schema({
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     creationdate: Date,
     editdate: Date,
-    photolocation: String,
+    photo: String,
     polish: [{type: mongoose.Schema.Types.ObjectId, ref: 'Polish'}],
     pendingdelete: Boolean,
     pendingreason: String,

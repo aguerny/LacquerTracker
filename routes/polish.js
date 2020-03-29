@@ -68,18 +68,18 @@ app.get('/polish/:brand/:name', function(req, res) {
                         }
 
 
-                        Review.findOne({user:req.user.id, polishid:polish.id}).populate('user').exec(function (err, review) {
+                        Review.findOne({user:req.user.id, polish:polish.id}).populate('user').exec(function (err, review) {
                             if (review) {
                             data.rating = review.rating;
-                            data.userreview = review.userreview;
+                            data.review = review.review;
                             data.notes = review.notes;
                             } else {
                             data.rating = "";
-                            data.userreview = "";
+                            data.review = "";
                             data.notes = "";
                             }
 
-                        Review.find({polishid:polish.id}).populate('user').exec(function(err, r) {
+                        Review.find({polish:polish.id}).populate('user').exec(function(err, r) {
                             data.allreviews = r;
                             res.render('polish/polish.ejs', data);
                         })
@@ -87,10 +87,10 @@ app.get('/polish/:brand/:name', function(req, res) {
                         })
                     } else {
                         data.rating = "";
-                        data.userreview = "";
+                        data.review = "";
                         data.notes = "";
                         data.status = "none";
-                        Review.find({polishid:polish.id}).populate('user').exec(function(err, r) {
+                        Review.find({polish:polish.id}).populate('user').exec(function(err, r) {
                             data.allreviews = r;
                             res.render('polish/polish.ejs', data);
                         })
@@ -154,18 +154,18 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                         }
 
 
-                        Review.findOne({user:req.user.id, polishid:polish.id}).populate('user').exec(function (err, review) {
+                        Review.findOne({user:req.user.id, polish:polish.id}).populate('user').exec(function (err, review) {
                             if (review) {
                             data.rating = review.rating;
-                            data.userreview = review.userreview;
+                            data.review = review.review;
                             data.notes = review.notes;
                             } else {
                             data.rating = "";
-                            data.userreview = "";
+                            data.review = "";
                             data.notes = "";
                             }
 
-                        Review.find({polishid:polish.id}).populate('user').exec(function(err, r) {
+                        Review.find({polish:polish.id}).populate('user').exec(function(err, r) {
                             data.allreviews = r;
                             res.render('polish/polish.ejs', data);
                         })
@@ -173,10 +173,10 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                         })
                     } else {
                         data.rating = "";
-                        data.userreview = "";
+                        data.review = "";
                         data.notes = "";
                         data.status = "none";
-                        Review.find({polishid:polish.id}).populate('user').exec(function(err, r) {
+                        Review.find({polish:polish.id}).populate('user').exec(function(err, r) {
                             data.allreviews = r;
                             res.render('polish/polish.ejs', data);
                         })

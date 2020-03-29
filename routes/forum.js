@@ -117,13 +117,13 @@ app.post('/forums/:forum/add', isLoggedIn, function(req, res) {
         dateupdatedsort: new Date(),
         forum: req.body.forum,
         comments: [],
-        photolocation: '',
+        photo: '',
     });
     newForumPost.save(function(err) {
         if (req.files.photo.name.length > 0) {
             if (req.files.photo.mimetype.startsWith("image")) {
                 var ext = path.extname(req.files.photo.name);
-                    gm(req.files.photo.tempFilePath).resize(400).write(path.resolve('./public/images/forumphotos/' + newForumPost.id + ext), function (err) {
+                    gm(req.files.photo.tempFilePath).strip().interlace('Plane').samplingFactor(4,2,0).quality(50).resize(60,60,"%").write(path.resolve('./public/images/forumphotos/' + newForumPost.id + ext), function (err) {
                         if (err) {
                             fs.unlink(req.files.photo.tempFilePath, function(err) {
                                 newForumPost.remove();
@@ -131,7 +131,7 @@ app.post('/forums/:forum/add', isLoggedIn, function(req, res) {
                             })
                         } else {
                             fs.unlink(req.files.photo.tempFilePath, function() {
-                                newForumPost.photolocation = '/images/forumphotos/' + newForumPost.id + ext;
+                                newForumPost.photo = '/images/forumphotos/' + newForumPost.id + ext;
                                 newForumPost.save(function(err) {
                                     res.redirect('/forums/' + newForumPost.forum + '/' + newForumPost.id);
                                 })
@@ -164,7 +164,7 @@ app.get('/forums/:forum/:id', function(req, res) {
             data.posttitle = post.title;
             data.postuser = post.user;
             data.postmessage = markdown(post.message);
-            data.postphotolocation = post.photolocation;
+            data.postphoto = post.photo;
             if (req.isAuthenticated() && req.user.timezone.length > 0) {
                 data.postdate = moment(post.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
             } else {
@@ -277,7 +277,7 @@ app.get('/forums/:forum/:id/edit', isLoggedIn, function(req, res) {
                 data.posttitle = post.title;
                 data.postmessage = post.message;
                 data.postforum = post.forum;
-                data.postphotolocation = post.photolocation;
+                data.postphoto = post.photo;
                 res.render('forums/edit.ejs', data);
             } else {
                 res.redirect('/error');
@@ -354,7 +354,7 @@ app.get('/forums/:forum/:id/:cid/remove', isLoggedIn, function(req, res) {
 
 
 
-//remove forum post
+//delete forum post
 app.get('/forums/:forum/:id/remove', isLoggedIn, function(req, res) {
     ForumPost.findById(req.params.id, function(err, post) {
         if (post === null || post === undefined) {
@@ -365,8 +365,10 @@ app.get('/forums/:forum/:id/remove', isLoggedIn, function(req, res) {
                     for (i=0; i < comments.length; i++) {
                         comments[i].remove();
                     }
-                    ForumPost.findByIdAndRemove(req.params.id, function(err) {
-                        res.redirect('/forums');
+                    fs.unlink(path.resolve('./public/'+post.photo), function(err) {
+                        ForumPost.findByIdAndRemove(req.params.id, function(err) {
+                            res.redirect('/forums');
+                        })
                     })
                 })
             } else {

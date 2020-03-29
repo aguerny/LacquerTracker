@@ -28,7 +28,6 @@ app.get('/browse', function(req, res) {
         Polish.find({})
         .sort({dateupdated: -1})
         .limit(10)
-        .populate('photos')
         .exec(function (err, polishes) {
             var statuses = [];
 

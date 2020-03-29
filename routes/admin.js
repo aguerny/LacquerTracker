@@ -88,7 +88,7 @@ app.get('/admin/pending/:pid/:id/:action', isLoggedIn, function(req, res) {
                     res.redirect('/admin/pending');
                 })
             } else if (req.params.action === "remove") {
-                fs.unlink('./public' + photo.location, function(err) {
+                fs.unlink(path.resolve('./public/'+photo.location), function(err) {
                     if (err) throw err;
                 })
                 photo.remove();
@@ -183,9 +183,9 @@ app.post('/admin/combine', isLoggedIn, function(req, res) {
                         }
                     })
 
-                    Review.find({polishid:remove.id}, function(err, reviews) {
+                    Review.find({polish:remove.id}, function(err, reviews) {
                         for (var j=0; j<reviews.length; j++) {
-                            reviews[j].polishid = keep.id;
+                            reviews[j].polish = keep.id;
                             reviews[j].save();
                         }
                     })

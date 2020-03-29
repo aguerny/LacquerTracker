@@ -40,7 +40,7 @@ $("#select-polish").select2({
         processResults: function (data) {
             return {
                 results: $.map(data, function(obj) {
-                    return { id: obj.polishid, text: obj.brandandname };
+                    return { id: obj._id, text: obj.brand+" - "+obj.name};
                 })
             };
         }

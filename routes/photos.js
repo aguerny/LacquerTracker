@@ -54,7 +54,7 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                     p.dateupdated = new Date();
                     p.photos.push(newPhoto.id);
                     p.save();
-                    gm(req.files.photo.tempFilePath).size(function(err, value) {
+                    gm(req.files.photo.tempFilePath).strip().resize(600).write(path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ext), function (err) {
                         if (err) {
                             fs.unlink(req.files.photo.tempFilePath, function(err) {
                                 newPhoto.remove();
@@ -63,55 +63,18 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                                     res.redirect('/error');
                                 })
                             })
-                        } else if (value.width > 400) {
-                            gm(req.files.photo.tempFilePath).resize(400).write(path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ext), function (err) {
-                                if (err) {
-                                    fs.unlink(req.files.photo.tempFilePath, function(err) {
-                                        newPhoto.remove();
-                                        p.photos.remove(newPhoto.id);
-                                        p.save(function(err) {
-                                            res.redirect('/error');
-                                        })
-                                    })
-                                } else {
-                                    fs.unlink(req.files.photo.tempFilePath, function() {
-                                        newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
-                                        newPhoto.save(function(err) {
-                                            fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
-                                                if (exists === false) {
-                                                    res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
-                                                } else {
-                                                    res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                                                }
-                                            })
-                                        })
-                                    })
-                                }
-                            })
                         } else {
-                            fs.rename(req.files.photo.tempFilePath, path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ext), function(err) {
-                                if (err) {
-                                    fs.unlink(req.files.photo.tempFilePath, function(err) {
-                                        newPhoto.remove();
-                                        p.photos.remove(newPhoto.id);
-                                        p.save(function(err) {
-                                            res.redirect('/error');
-                                        })
+                            fs.unlink(req.files.photo.tempFilePath, function() {
+                                newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
+                                newPhoto.save(function(err) {
+                                    fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
+                                        if (exists === false) {
+                                            res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
+                                        } else {
+                                            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                        }
                                     })
-                                } else {
-                                    fs.unlink(req.files.photo.tempFilePath, function() {
-                                        newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
-                                        newPhoto.save(function(err) {
-                                            fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
-                                                if (exists === false) {
-                                                    res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
-                                                } else {
-                                                    res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                                                }
-                                            })
-                                        })
-                                    })
-                                }
+                                })
                             })
                         }
                     })
@@ -148,7 +111,7 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                                 res.redirect('/error');
                             })
                         } else {
-                            gm(targetPath).size(function(err, value) {
+                            gm(targetPath).strip().resize(600).write(targetPath, function (err) {
                                 if (err) {
                                     fs.unlink(targetPath, function() {
                                         newPhoto.remove();
@@ -156,29 +119,6 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                                         p.save(function(err) {
                                             res.redirect('/error');
                                         })
-                                    })
-                                } else if (value.width > 400) {
-                                    gm(targetPath).resize(400).write(targetPath, function (err) {
-                                        if (err) {
-                                            fs.unlink(targetPath, function() {
-                                                newPhoto.remove();
-                                                p.photos.remove(newPhoto.id);
-                                                p.save(function(err) {
-                                                    res.redirect('/error');
-                                                })
-                                            })
-                                        } else {
-                                            newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
-                                            newPhoto.save(function(err) {
-                                                fs.exists(path.resolve('./public/images/swatches/' + p.id + '.jpg'), function(exists) {
-                                                    if (exists === false) {
-                                                        res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
-                                                    } else {
-                                                        res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                                                    }
-                                                })
-                                            })
-                                        }
                                     })
                                 } else {
                                     newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
@@ -329,7 +269,7 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
                             })
                         })
                     } else {
-                        gm(req.files.photo.tempFilePath).resize(400).write(path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function (err) {
+                        gm(req.files.photo.tempFilePath).strip().resize(600).write(path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function (err) {
                             if (err) {
                                 fs.unlink(req.files.photo.tempFilePath, function(err) {
                                     newUserPhoto.remove();
@@ -373,7 +313,7 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
                                 })
                             } else {
                                 gm(targetPath).size(function(err, value) {
-                                    gm(targetPath).resize(400).write(targetPath, function (err) {
+                                    gm(targetPath).strip().resize(600).write(targetPath, function (err) {
                                         if (err) {
                                             fs.unlink(targetPath, function(err) {
                                                 newUserPhoto.remove();
@@ -418,7 +358,7 @@ app.post('/photo/profile', isLoggedIn, function(req, res) {
             var ext = path.extname(req.files.photo.name);
             var tempPath = req.files.photo.tempFilePath;
             var targetPath = path.resolve('./public/images/profilephotos/' + req.user.username + ext);
-            gm(tempPath).resize(200).write(targetPath, function (err) {
+            gm(tempPath).strip().resize(200).write(targetPath, function (err) {
                 if (err) {
                     fs.unlink(tempPath, function(err) {
                         res.redirect('/error');
@@ -446,7 +386,7 @@ app.post('/photo/profile', isLoggedIn, function(req, res) {
             if (err) {
                 res.redirect('/error');
             } else {
-                gm(tempPath).resize(200).write(targetPath, function(err) {
+                gm(tempPath).strip().resize(200).write(targetPath, function(err) {
                     if (err) {
                         fs.unlink(tempPath, function(err) {
                             res.redirect('/error');
@@ -483,7 +423,7 @@ app.post('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
                 var ext = path.extname(req.files.photo.name);
                 var tempPath = req.files.photo.tempFilePath;
                 var targetPath = path.resolve('./public/images/brandphotos/' + brand.id + ext);
-                gm(tempPath).resize(200).write(targetPath, function (err) {
+                gm(tempPath).strip().resize(200).write(targetPath, function (err) {
                     if (err) {
                         fs.unlink(tempPath, function(err) {
                             res.redirect('/error');
@@ -511,7 +451,7 @@ app.post('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
                 if (err) {
                     res.redirect('/error');
                 } else {
-                    gm(tempPath).resize(200).write(targetPath, function(err) {
+                    gm(tempPath).strip().resize(200).write(targetPath, function(err) {
                         if (err) {
                             fs.unlink(tempPath, function(err) {
                                 res.redirect('/error');

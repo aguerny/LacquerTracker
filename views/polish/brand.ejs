@@ -88,7 +88,7 @@ $(window).load(function () {
                     <br><br><br><hr><br><h4>Recent Check-Ins:</h4><br>
                     <div class="collage">
                         <% for (i=0; i<checkins.length; i++) { %>
-                            <a href="/checkin/<%=checkins[i].id%>"><img src="<%= checkins[i].photolocation %>"></a>
+                            <a href="/checkin/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>"></a>
                         <% } %>
                     </div>
                 <% } %>
@@ -98,7 +98,7 @@ $(window).load(function () {
                     <br><br><br><hr><br><h4>Recent Check-Ins:</h4><br>
                     <div>
                         <% for (i=0; i<checkins.length; i++) { %>
-                            <a href="/checkin/<%=checkins[i].id%>"><img style="max-width:100%" src="<%= checkins[i].photolocation %>"></a>
+                            <a href="/checkin/<%=checkins[i].id%>"><img style="max-width:100%" src="<%= checkins[i].photo %>"></a>
                         <% } %>
                     </div>
                 <% } %>

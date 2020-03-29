@@ -39,7 +39,7 @@ app.get('/checkin', function(req, res) {
 
 app.get('/checkin/page/:page', function(req, res) {
     data = {};
-    data.title = 'Nails of the Day - Lacquer Tracker';
+    data.title = 'Fresh Coats - Lacquer Tracker';
 
     if (typeof req.params.page === "undefined") {
         var page = 1;
@@ -79,16 +79,8 @@ app.get('/checkin/add', isLoggedIn, function(req, res) {
 
 
 app.post('/allpolish', isLoggedIn, function(req, res) {
-    console.log(req.body.term.term);
-    var polish = [];
-    Polish.find({}).sort({brand: 1}).sort({name: 1}).exec(function (err, polishes) {
-        for (i=0; i<polishes.length; i++) {
-            if (polishes[i].brand.toLowerCase().indexOf(req.body.term.term.toLowerCase()) > -1 || polishes[i].name.toLowerCase().indexOf(req.body.term.term.toLowerCase()) > -1) {
-                polish.push({polishid:polishes[i].id,brandandname:polishes[i].brand+" - "+polishes[i].name});
-            }
-        }
-        console.log(polish);
-        res.send(polish);
+    Polish.find({name:new RegExp(req.body.term.term, 'i')}).select('id brand name').exec(function (err, polishes) {
+        res.send(polishes);
     })
 });
 
@@ -104,7 +96,7 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                         user: req.user.id,
                         creationdate: new Date,
                         editdate: new Date,
-                        photolocation: "",
+                        photo: "",
                         polish: req.body.polish,
                         pendingdelete: false,
                         pendingreason: "",
@@ -118,27 +110,18 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                                 })
                             })
                         } else {
-                            gm(req.files.photo.tempFilePath).size(function(err, value) {
+                            gm(req.files.photo.tempFilePath).strip().interlace('Plane').samplingFactor(4,2,0).quality(50).resize(60,60,"%").write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function (err) {
                                 if (err) {
                                     fs.unlink(req.files.photo.tempFilePath, function(err) {
                                         newCheckin.remove();
                                         res.redirect('/error');
                                     })
                                 } else {
-                                    gm(req.files.photo.tempFilePath).resize(400).write(path.resolve('./public/images/checkins/' + newCheckin.id + ext), function (err) {
-                                        if (err) {
-                                            fs.unlink(req.files.photo.tempFilePath, function(err) {
-                                                newCheckin.remove();
-                                                res.redirect('/error');
-                                            })
-                                        } else {
-                                            fs.unlink(req.files.photo.tempFilePath, function() {
-                                                newCheckin.photolocation = '/images/checkins/' + newCheckin.id + ext;
-                                                newCheckin.save(function(err) {
-                                                    res.redirect('/checkin');
-                                                })
-                                            })
-                                        }
+                                    fs.unlink(req.files.photo.tempFilePath, function() {
+                                        newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
+                                        newCheckin.save(function(err) {
+                                            res.redirect('/checkin');
+                                        })
                                     })
                                 }
                             })
@@ -172,7 +155,7 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                         user: req.user.id,
                         creationdate: new Date,
                         editdate: new Date,
-                        photolocation: "",
+                        photo: "",
                         polish: req.body.polish,
                         pendingdelete: false,
                         pendingreason: "",
@@ -186,27 +169,18 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                                 })
                             })
                         } else {
-                            gm(req.files.photo.tempFilePath).size(function(err, value) {
+                            gm(req.files.photo.tempFilePath).strip().interlace('Plane').samplingFactor(4,2,0).quality(50).resize(60,60,"%").write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function (err) {
                                 if (err) {
                                     fs.unlink(req.files.photo.tempFilePath, function(err) {
                                         newCheckin.remove();
                                         res.redirect('/error');
                                     })
                                 } else {
-                                    gm(req.files.photo.tempFilePath).resize(400).write(path.resolve('./public/images/checkins/' + newCheckin.id + ext), function (err) {
-                                        if (err) {
-                                            fs.unlink(req.files.photo.tempFilePath, function(err) {
-                                                newCheckin.remove();
-                                                res.redirect('/error');
-                                            })
-                                        } else {
-                                            fs.unlink(req.files.photo.tempFilePath, function() {
-                                                newCheckin.photolocation = '/images/checkins/' + newCheckin.id + ext;
-                                                newCheckin.save(function(err) {
-                                                    res.redirect('/checkin');
-                                                })
-                                            })
-                                        }
+                                    fs.unlink(req.files.photo.tempFilePath, function() {
+                                        newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
+                                        newCheckin.save(function(err) {
+                                            res.redirect('/checkin');
+                                        })
                                     })
                                 }
                             })
@@ -239,7 +213,7 @@ app.get('/checkin/:id', function(req, res) {
             data.title = "View Check-in - Lacquer Tracker";
             data.checkinuser = post.user;
             data.checkinid = post.id;
-            data.checkinphotolocation = post.photolocation;
+            data.checkinphoto = post.photo;
             data.checkinpolish = post.polish;
             if (req.isAuthenticated() && req.user.timezone.length > 0) {
                 data.checkindate = moment(post.creationdate).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
@@ -265,7 +239,7 @@ app.get('/checkin/:id', function(req, res) {
 
 
 
-//reply to specific comment
+//reply to a checkin or comment
 app.post('/checkin/:id/:cid/add', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id).populate('user').exec(function (err, post){
         var newCheckinComment = new CheckinComment ({
@@ -352,7 +326,7 @@ app.get('/checkin/:id/edit', isLoggedIn, function(req, res) {
                 if (post.user == req.user.id) {
                     data.title = "Edit Check-in - Lacquer Tracker";
                     data.checkinid = post.id;
-                    data.checkinphotolocation = post.photolocation;
+                    data.checkinphoto = post.photo;
                     data.checkinpolish = post.polish;
                     res.render('checkins/edit.ejs', data);
                 } else {
@@ -437,24 +411,23 @@ app.get('/checkin/:id/:cid/remove', isLoggedIn, function(req, res) {
 app.get('/checkin/:id/remove', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id, function(err, post) {
         if (post === null || post === undefined) {
-            res.redirect('/error');
-        } else {
-            if (post.user == req.user.id || req.user.level === "admin") {
-                CheckinComment.find({checkinid:req.params.id}, function(err, comments) {
-                    for (i=0; i < comments.length; i++) {
-                        comments[i].remove();
-                    }
-                    fs.unlink(post.photolocation, function(err) {
-                        console.log(err);
+             res.redirect('/error');
+         } else {
+             if (post.user == req.user.id || req.user.level === "admin") {
+                 CheckinComment.find({checkinid:req.params.id}, function(err, comments) {
+                     for (i=0; i < comments.length; i++) {
+                         comments[i].remove();
+                     }
+                    fs.unlink(path.resolve('./public/'+post.photo), function(err) {
                         Checkin.findByIdAndRemove(req.params.id, function(err) {
                             res.redirect('/checkin');
                         })
                     })
-                })
-            } else {
-                res.redirect('/error');
-            }
-        }
+                 })
+             } else {
+                 res.redirect('/error');
+             }
+         }
     })
 });
 
@@ -473,7 +446,6 @@ app.get('/checkin/:id/flag', isLoggedIn, function(req, res) {
         }
     });
 });
-
 
 app.post('/checkin/:id/flag', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id).exec(function(err, checkin) {

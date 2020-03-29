@@ -77,7 +77,7 @@ app.post('/swatch/add/:id', isLoggedIn, function(req, res) {
 
 //crop happens here
 app.post('/swatch/crop/:id', isLoggedIn, function(req, res) {
-    gm(path.resolve('./public/' +req.body.location))
+    gm(path.resolve('./public/' + req.body.location))
     .crop(req.body.w, req.body.h, req.body.x, req.body.y)
     .resize(200)
     .write(path.resolve('./public/images/swatches/' + req.params.id + req.body.ext), function (err) {

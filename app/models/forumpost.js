@@ -7,7 +7,7 @@ var forumpostSchema = mongoose.Schema({
 	user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
 	title: String,
 	message: String,
-    photolocation: String,
+    photo: String,
 	date: String,  //oops too late now
     dateupdated: String,  //oops too late now
 	dateupdatedsort: Date,

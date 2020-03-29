@@ -10,8 +10,8 @@ function confirm_alert(node) {
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
-        <div class="forumpost">
-        <h2><%= checkinuser.username %>'s Nails of the Day</h2><br>
+        <div class="photo500">
+        <h2><%= checkinuser.username %>'s Fresh Coat</h2><br>
             <i>Posted on <%= checkindate %></i>: <a href="/checkin/<%=checkinid%>/flag">Flag</a>
                 <% if (isAuthenticated) { %>
                     <% if (user.username === checkinuser.username || user.level === "admin") { %>
@@ -19,7 +19,7 @@ function confirm_alert(node) {
                     <% } %>
                 <% } %><br><br>
             <p style="white-space: pre;">
-                <img src=<%= checkinphotolocation %>><br><br>
+                <img src=<%= checkinphoto %>><br><br>
                 Polish Used:
                     <% for (i=0; i<checkinpolish.length; i++) { %>
                         &#8226; <a href='/polish/<%= checkinpolish[i].brand.replace(/ /g,"_") %>/<%= checkinpolish[i].name.replace(/ /g,"_") %>'><%= checkinpolish[i].brand %> - <%= checkinpolish[i].name %></a>

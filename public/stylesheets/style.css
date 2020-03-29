@@ -192,7 +192,7 @@
         max-width: 200px;
     }
 
-    .forumpost img {max-width: 500px;}
+    .photo500 img {max-width: 500px;}
 
     .profilephoto {
         max-height: 150px;
@@ -335,7 +335,7 @@
         max-width: 200px;
     }
 
-    .forumpost img {max-width:100%; height:auto; width:auto;}
+    .photo500 img {max-width:100%; height:auto; width:auto;}
 
     .profilephoto {
         max-height: 85px;

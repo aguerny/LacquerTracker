@@ -138,8 +138,8 @@ $(window).load(function () {
                         <br><% if (isAuthenticated) { %>
                         <hr><br>
                         <h4 style="display:inline">Your Review:</h4> <i><a href="/review/edit/<%= pid %>">Edit</a></i><br><br>
-                        <% if (userreview.length > 0 || rating.length > 0) { %>
-                            <%if (rating >= 1) {%><img class="staradjust" src="/images/stars/<%=rating%>star.png"/> - <%}%><%= userreview %>
+                        <% if (review.length > 0 || rating.length > 0) { %>
+                            <%if (rating >= 1) {%><img class="staradjust" src="/images/stars/<%=rating%>star.png"/> - <%}%><%= review %>
                         <% } %>
                         <br><br><br>
                         <h4 style="display:inline">Your Notes:</h4> <i><a href="/review/edit/<%= pid %>">Edit</a><br><br>(Notes are only visible to you.)</i><br><br>
@@ -150,8 +150,8 @@ $(window).load(function () {
                     <hr><br>
                     <h4 style="display:inline">User Reviews:</h4><br><br>
                     <% for (i=0; i<allreviews.length; i++) {%>
-                        <% if (allreviews[i].userreview.length > 0) { %>
-                            <%if (allreviews[i].rating >= 1) {%><img class="staradjust" src="/images/stars/<%=allreviews[i].rating%>star.png"/> - <%}%><%= allreviews[i].userreview %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+                        <% if (allreviews[i].review.length > 0) { %>
+                            <%if (allreviews[i].rating >= 1) {%><img class="staradjust" src="/images/stars/<%=allreviews[i].rating%>star.png"/> - <%}%><%= allreviews[i].review %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
                         <% } %>
                     <% } %>
                     <br><br>
@@ -165,7 +165,7 @@ $(window).load(function () {
                         <br><br><hr><br><h4>Recent Check-Ins:</h4><br>
                         <div class="collage">
                             <% for (i=0; i<checkins.length; i++) { %>
-                                <a href="/checkin/<%=checkins[i].id%>"><img src="<%= checkins[i].photolocation %>"></a>
+                                <a href="/checkin/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>"></a>
                             <% } %>
                         </div>
                     <% } %>
@@ -175,7 +175,7 @@ $(window).load(function () {
                         <br><br><br><hr><br><h4>Recent Check-Ins:</h4><br>
                         <div>
                             <% for (i=0; i<checkins.length; i++) { %>
-                                <a href="/checkin/<%=checkins[i].id%>"><img style="max-width:100%" src="<%= checkins[i].photolocation %>"></a>
+                                <a href="/checkin/<%=checkins[i].id%>"><img style="max-width:100%" src="<%= checkins[i].photo %>"></a>
                             <% } %>
                         </div>
                     <% } %>

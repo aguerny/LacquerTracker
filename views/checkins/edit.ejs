@@ -4,9 +4,10 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
-        <form action="/checkin/<%= checkinid %>/edit" method="post">
-            <h3>Edit your check-in:</h3><br><br>
-                <img src=<%= checkinphotolocation %>><br><br><br>
+        <div class="photo500">
+            <form action="/checkin/<%= checkinid %>/edit" method="post">
+                <h3>Edit your check-in:</h3><br><br>
+                <img src=<%= checkinphoto %>><br><br><br>
                 Edit your polishes used:<br>
                 <select multiple name="polish" id="select-polish" style="width:300px">
                     <% for (i=0; i<checkinpolish.length; i++) { %>
@@ -15,7 +16,8 @@
                 </select>
                 <br><br><br>
                 <input type="submit" value="Submit" class="button">
-        </form>
+            </form>
+        </div>
     </section>
     </div>
 </div>
@@ -35,7 +37,7 @@ $("#select-polish").select2({
         processResults: function (data) {
             return {
                 results: $.map(data, function(obj) {
-                    return { id: obj.polishid, text: obj.brandandname };
+                    return { id: obj._id, text: obj.brand+" - "+obj.name};
                 })
             };
         }
