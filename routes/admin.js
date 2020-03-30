@@ -402,7 +402,6 @@ app.post('/admin/brandedit/:id', isLoggedIn, function(req, res) {
             if (brand === null || brand === undefined) {
                 res.redirect('/error');
             } else {
-                brand.website = sanitizer.sanitize(req.body.website);
                 brand.bio = sanitizer.sanitize(req.body.bio);
                 brand.official = sanitizer.sanitize(req.body.official);
                 brand.polishlock = sanitizer.sanitize(req.body.polishlock);
@@ -485,9 +484,27 @@ app.get('/admin/portal', isLoggedIn, function(req, res) {
 
 
 
+
+
+
+//push reviews to polishes
+app.get('/admin/fixreviews', isLoggedIn, function(req, res) {
+    Review.find({}, function(err, reviews) {
+        for (i=0; i<reviews.length; i++) {
+            var review = reviews[i]
+            Polish.findById(reviews[i].polish).exec(function(err, polish){
+                polish.reviews.push(review.id);
+                polish.save();
+            })
+        }
+    })
+});
+
+
+
+
+
 };
-
-
 
 //route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {

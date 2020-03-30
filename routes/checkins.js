@@ -17,22 +17,20 @@ module.exports = function(app, passport) {
 
 //recent checkins
 app.get('/checkin', function(req, res) {
-    Checkin.find({pendingdelete:false}).sort({creationdate: -1}).limit(10).populate('user').populate('polish').exec(function(err, posts) {
+    Checkin.find({pendingdelete:false}).sort({creationdate: -1}).limit(10).populate('user', 'username').populate('polish', 'name brand').exec(function(err, posts) {
         data = {};
         data.title = 'Nails of the Day - Lacquer Tracker';
         data.page = 1;
-        User.populate(posts, {path:'comments.user'}, function(err) {
-            var allposts = posts.map(function(x) {
-                if (req.isAuthenticated() && req.user.timezone.length > 0) {
-                    x.date = moment(x.creationdate).tz(req.user.timezone).format('llll');
-                } else {
-                    x.date = moment(x.creationdate).tz("America/New_York").format('llll');
-                }
-                return x;
-            })
-            data.checkins = allposts;
-            res.render('checkins/recentcheckins.ejs', data);
+        var allposts = posts.map(function(x) {
+            if (req.isAuthenticated() && req.user.timezone.length > 0) {
+                x.date = moment(x.creationdate).tz(req.user.timezone).format('llll');
+            } else {
+                x.date = moment(x.creationdate).tz("America/New_York").format('llll');
+            }
+            return x;
         })
+        data.checkins = posts;
+        res.render('checkins/recentcheckins.ejs', data);
     })
 });
 
@@ -51,19 +49,17 @@ app.get('/checkin/page/:page', function(req, res) {
 
     Checkin.countDocuments({}, function (err, count) {
         data.count = count;
-        Checkin.find({}).sort({creationdate: -1}).skip((page-1)*10).limit(10).populate('user').populate('polish').exec(function(err, posts) {
-            User.populate(posts, {path:'comments.user'}, function(err) {
-                var allposts = posts.map(function(x) {
-                    if (req.isAuthenticated() && req.user.timezone.length > 0) {
-                        x.date = moment(x.creationdate).tz(req.user.timezone).format('llll');
-                    } else {
-                        x.date = moment(x.creationdate).tz("America/New_York").format('llll');
-                    }
-                    return x;
-                })
-                data.checkins = allposts;
-                res.render('checkins/recentcheckins.ejs', data);
+        Checkin.find({pendingdelete:false}).sort({creationdate: -1}).skip((page-1)*10).limit(10).populate('user', 'username').populate('polish', 'name brand').exec(function(err, posts) {
+            var allposts = posts.map(function(x) {
+                if (req.isAuthenticated() && req.user.timezone.length > 0) {
+                    x.date = moment(x.creationdate).tz(req.user.timezone).format('llll');
+                } else {
+                    x.date = moment(x.creationdate).tz("America/New_York").format('llll');
+                }
+                return x;
             })
+            data.checkins = allposts;
+            res.render('checkins/recentcheckins.ejs', data);
         })
     })
 });
@@ -206,7 +202,7 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
 //view specific check-in
 app.get('/checkin/:id', function(req, res) {
     data = {};
-    Checkin.findById(req.params.id).populate('comments').populate('user').populate('polish').exec(function (err, post) {
+    Checkin.findById(req.params.id).populate({path: 'comments', populate:{path:'user', select: 'username profilephoto'}}).populate('user', 'username').populate('polish', 'brand name').exec(function (err, post) {
         if (post === null || post === undefined || post.pendingdelete == true) {
             res.redirect('/error');
         } else {
@@ -220,19 +216,21 @@ app.get('/checkin/:id', function(req, res) {
             } else {
                 data.checkindate = moment(post.creationdate).tz("America/New_York").format('MMM D YYYY, h:mm a');
             }
-            User.populate(post, {path:'comments.user'}, function(err) {
-                var allcomments = post.comments.map(function(x) {
-                    if (req.isAuthenticated() && req.user.timezone.length > 0) {
-                        x.date = moment(x.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
-                    } else {
-                        x.date = moment(x.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
-                    }
-                    return x;
-                })
-                data.checkincomment = allcomments;
-                data.moment = moment;
-                res.render('checkins/viewonecheckin.ejs', data);
+            var allcomments = post.comments.map(function(x) {
+                if (req.isAuthenticated() && req.user.timezone.length > 0) {
+                    x.date = moment(x.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
+                } else {
+                    x.date = moment(x.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
+                }
+                if (x.message == "<p><em>comment deleted</em></p>\n") {
+                    x.user.username = '';
+                    x.user.profilephoto = '';
+                }
+                return x;
             })
+            data.checkincomment = allcomments;
+            data.moment = moment;
+            res.render('checkins/viewonecheckin.ejs', data);
         }
     })
 });
@@ -320,7 +318,7 @@ app.get('/checkin/:id/edit', isLoggedIn, function(req, res) {
     data = {};
     Polish.find({}).sort({brand: 1}).sort({name: 1}).exec(function (err, polishes) {
         data.polish = polishes;
-        Checkin.findById(req.params.id).populate('polish').exec(function (err, post) {
+        Checkin.findById(req.params.id).populate('polish', 'name brand').exec(function (err, post) {
             if (post === null || post === undefined) {
                 res.redirect('/error');
             } else {
@@ -375,7 +373,7 @@ app.get('/checkin/:id/:cid/remove', isLoggedIn, function(req, res) {
             } else {
                 if (comment.user == req.user.id || req.user.level === "admin") {
                     if (comment.childid.length > 0) {
-                        comment.message = sanitizer.sanitize(markdown("_deleted_"));
+                        comment.message = sanitizer.sanitize(markdown("_comment deleted_"));
                         comment.save(function(err) {
                             res.redirect("/checkin/" + req.params.id);
                         })

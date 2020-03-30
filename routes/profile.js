@@ -27,7 +27,7 @@ app.get('/profile', isLoggedIn, function(req, res) {
 
 //profile specific
 app.get('/profile/:username', function(req, res) {
-    User.findOne({username: req.params.username}).populate('photos').populate('checkins').populate('ownedpolish').populate('wantedpolish').exec(function(err, user) {
+    User.findOne({username: req.params.username}).populate('ownedpolish').populate('wantedpolish').exec(function(err, user) {
         if (!user || user.username==="admin" || user.username==="lacquertracker") {
             res.redirect('/error');
         } else {
@@ -73,7 +73,7 @@ app.get('/profile/edit', isLoggedIn, function(req, res) {
 
 app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
     if (req.params.username === req.user.username) {
-        User.findOne({username : req.params.username}).populate('photos').exec(function(err, user) {
+        User.findOne({username : req.params.username}).exec(function(err, user) {
         var data = {};
             data.title = 'Edit Your Profile - Lacquer Tracker';
             data.userid = user.id;

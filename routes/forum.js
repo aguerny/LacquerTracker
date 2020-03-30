@@ -14,89 +14,84 @@ var http = require('http');
 
 module.exports = function(app, passport) {
 
-//all forums together
-app.get('/forums', function(req, res) {
-    ForumPost.find({}).sort({dateupdatedsort: -1}).populate('comments').populate('user').exec(function(err, posts) {
-        data = {};
-        data.title = 'Forums - Lacquer Tracker';
-        User.populate(posts, {path:'comments.user'}, function(err) {
-            var allposts = posts.map(function(x) {
-                if (req.isAuthenticated() && req.user.timezone.length > 0) {
-                    x.dateupdated = moment(x.dateupdated).tz(req.user.timezone).calendar();
-                } else {
-                    x.dateupdated = moment(x.dateupdated).tz("America/New_York").calendar();
-                }
-                return x;
-            })
-            data.forumposts = allposts;
-            res.render('forums/allforums.ejs', data);
-        })
-    })
-});
-
-
-
-// //forums split out
+// //all forums together
 // app.get('/forums', function(req, res) {
-//     ForumPost.find({}).sort({dateupdatedsort: -1}).exec(function(err, posts) {
+//     ForumPost.find({}).sort({dateupdatedsort: -1}).populate('user', 'username').exec(function(err, posts) {
 //         data = {};
 //         data.title = 'Forums - Lacquer Tracker';
-//         var latest = [];
-//         var latestdates = [];
-//         latest.push(_.find(posts, {'forum':'intro'}));
-//         latest.push(_.find(posts, {'forum':'general'}));
-//         latest.push(_.find(posts, {'forum':'notd'}));
-//         latest.push(_.find(posts, {'forum':'contests'}));
-//         latest.push(_.find(posts, {'forum':'tutorials'}));
-//         latest.push(_.find(posts, {'forum':'lt'}));
-//         latest.push(_.find(posts, {'forum':'offtopic'}));
-//         for (i=0; i < latest.length; i++) {
-//             if (latest[i] !== undefined) {
-//                 if (req.isAuthenticated() && req.user.timezone.length > 0) {
-//                     latestdates.push("Updated " + moment(latest[i].dateupdated).tz(req.user.timezone).calendar());
-//                 } else {
-//                     latestdates.push("Updated " + moment(latest[i].dateupdated).tz("America/New_York").calendar());
-//                 }
+//         var allposts = posts.map(function(x) {
+//             if (req.isAuthenticated() && req.user.timezone.length > 0) {
+//                 x.dateupdated = moment(x.dateupdated).tz(req.user.timezone).calendar();
 //             } else {
-//                 latestdates.push("Be the first!");
+//                 x.dateupdated = moment(x.dateupdated).tz("America/New_York").calendar();
 //             }
-//         }
-//         data.latest = latestdates;
-//         res.render('forums/forums.ejs', data);
+//             return x;
+//         })
+//         data.forumposts = allposts;
+//         res.render('forums/allforums.ejs', data);
 //     })
 // });
 
 
-// //view specific forum
-// app.get('/forums/:forum', function(req, res) {
-//     if (req.params.forum === "intro" || req.params.forum === "general" || req.params.forum === "notd" || req.params.forum === "contests" || req.params.forum === "tutorials" || req.params.forum === "offtopic" || req.params.forum === "lt") {
-//         data = {}
-//         var allforums = ['intro', 'general', 'notd', 'contests', 'tutorials', 'offtopic', 'lt'];
-//         var forumtitles = ['Introductions', 'General Polish Discussion', 'Nails of the Day', 'Contests and Giveaways', 'Tutorials', 'Off Topic', 'Lacquer Tracker Discussion'];
-//         for (i=0; i<allforums.length; i++) {
-//             if (req.params.forum === allforums[i]) {
-//                 data.title = forumtitles[i] + ' - Lacquer Tracker';
-//             }
-//         }
-//         data.forumcat = req.params.forum;
-//         ForumPost.find({forum: req.params.forum}).sort({dateupdatedsort: -1}).populate('comments').populate('user').exec(function(err, posts) {
-//             User.populate(posts, {path:'comments.user'}, function(err) {
-//                 var allposts = posts.map(function(x) {
-//                     if (req.isAuthenticated() && req.user.timezone.length > 0) {
-//                         x.dateupdated = moment(x.dateupdated).tz(req.user.timezone).calendar();
-//                     } else {
-//                         x.dateupdated = moment(x.dateupdated).tz("America/New_York").calendar();
-//                     }
-//                     return x;
-//                 })
-//                 data.forumposts = allposts;
-//                 res.render('forums/oneforum.ejs', data);
-//             })
-//         })
-//     } else {
-//         res.redirect('/error');
-//     }
-// });
+
+//forums split out
+app.get('/forums', function(req, res) {
+    ForumPost.find({}).sort({dateupdatedsort: -1}).exec(function(err, posts) {
+        data = {};
+        data.title = 'Forums - Lacquer Tracker';
+        var latest = [];
+        var latestdates = [];
+        latest.push(_.find(posts, {'forum':'general'}));
+        latest.push(_.find(posts, {'forum':'intro'}));
+        latest.push(_.find(posts, {'forum':'offtopic'}));
+        latest.push(_.find(posts, {'forum':'lt'}));
+        for (i=0; i < latest.length; i++) {
+            if (latest[i] !== undefined) {
+                if (req.isAuthenticated() && req.user.timezone.length > 0) {
+                    latestdates.push("Updated " + moment(latest[i].dateupdated).tz(req.user.timezone).calendar());
+                } else {
+                    latestdates.push("Updated " + moment(latest[i].dateupdated).tz("America/New_York").calendar());
+                }
+            } else {
+                latestdates.push("Be the first!");
+            }
+        }
+        data.latest = latestdates;
+        res.render('forums/forums.ejs', data);
+    })
+});
+
+
+//view specific forum
+app.get('/forums/:forum', function(req, res) {
+    if (req.params.forum === "intro" || req.params.forum === "general" || req.params.forum === "notd" || req.params.forum === "contests" || req.params.forum === "tutorials" || req.params.forum === "offtopic" || req.params.forum === "lt") {
+        data = {}
+        var allforums = ['intro', 'general', 'offtopic', 'lt'];
+        var forumtitles = ['Introductions', 'General Polish Discussion', 'Off Topic', 'Lacquer Tracker Discussion'];
+        for (i=0; i<allforums.length; i++) {
+            if (req.params.forum === allforums[i]) {
+                data.title = forumtitles[i] + ' - Lacquer Tracker';
+            }
+        }
+        data.forumcat = req.params.forum;
+        ForumPost.find({forum: req.params.forum}).sort({dateupdatedsort: -1}).populate('comments').populate('user').exec(function(err, posts) {
+            User.populate(posts, {path:'comments.user'}, function(err) {
+                var allposts = posts.map(function(x) {
+                    if (req.isAuthenticated() && req.user.timezone.length > 0) {
+                        x.dateupdated = moment(x.dateupdated).tz(req.user.timezone).calendar();
+                    } else {
+                        x.dateupdated = moment(x.dateupdated).tz("America/New_York").calendar();
+                    }
+                    return x;
+                })
+                data.forumposts = allposts;
+                res.render('forums/oneforum.ejs', data);
+            })
+        })
+    } else {
+        res.redirect('/error');
+    }
+});
 
 
 //add forum post
@@ -155,7 +150,7 @@ app.post('/forums/:forum/add', isLoggedIn, function(req, res) {
 //view specific forum post
 app.get('/forums/:forum/:id', function(req, res) {
     data = {};
-    ForumPost.findById(req.params.id).populate('comments').populate('user').exec(function (err, post) {
+    ForumPost.findById(req.params.id).populate({path: 'comments', populate:{path:'user', select: 'username profilephoto'}}).populate('user', 'username').exec(function (err, post) {
         if (post === null || post === undefined) {
             res.redirect('/error');
         } else {
@@ -171,18 +166,20 @@ app.get('/forums/:forum/:id', function(req, res) {
                 data.postdate = moment(post.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
             }
             data.postforum = post.forum;
-            User.populate(post, {path:'comments.user'}, function(err) {
-                var allcomments = post.comments.map(function(x) {
-                    if (req.isAuthenticated() && req.user.timezone.length > 0) {
-                        x.date = moment(x.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
-                    } else {
-                        x.date = moment(x.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
-                    }
-                    return x;
-                })
-                data.postcomments = allcomments;
-                res.render('forums/view.ejs', data);
+            var allcomments = post.comments.map(function(x) {
+                if (req.isAuthenticated() && req.user.timezone.length > 0) {
+                    x.date = moment(x.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
+                } else {
+                    x.date = moment(x.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
+                }
+                if (x.message == "<p><em>comment deleted</em></p>\n") {
+                    x.user.username = '';
+                    x.user.profilephoto = '';
+                }
+                return x;
             })
+            data.postcomments = allcomments;
+            res.render('forums/view.ejs', data);
         }
     })
 });
@@ -322,7 +319,7 @@ app.get('/forums/:forum/:id/:cid/remove', isLoggedIn, function(req, res) {
             } else {
                 if (comment.user == req.user.id || req.user.level === "admin") {
                     if (comment.childid.length > 0) {
-                        comment.message = sanitizer.sanitize(markdown("_deleted_"));
+                        comment.message = sanitizer.sanitize(markdown("_comment deleted_"));
                         comment.save(function(err) {
                             res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
                         })

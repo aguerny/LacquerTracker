@@ -26,6 +26,8 @@ app.post('/signup', function(req, res) {
                     res.redirect('/error');
                 } else if (user) {
                     res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'That username is already taken.', email:sanitizer.sanitize(req.body.email), username:''});
+                } else if (req.body.username.length > 20) {
+                    res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Username max length is 15 characters.', email:sanitizer.sanitize(req.body.email), username:''});
                 } else {
                     if (sanitizer.sanitize(req.body.password) === sanitizer.sanitize(req.body.confirm)) {
 

@@ -12,7 +12,7 @@ function confirm_alert(node) {
     <section>
         <div class="photo500">
         <h2><%= checkinuser.username %>'s Fresh Coat</h2><br>
-            <i>Posted on <%= checkindate %></i>: <a href="/checkin/<%=checkinid%>/flag">Flag</a>
+            <i>Posted on <%= checkindate %></i> <a href="/checkin/<%=checkinid%>/flag">Flag</a>
                 <% if (isAuthenticated) { %>
                     <% if (user.username === checkinuser.username || user.level === "admin") { %>
                         | <a href="/checkin/<%=checkinid%>/edit">Edit</a> | <a href="/checkin/<%=checkinid%>/remove" onclick="return confirm_alert(this);">Delete</a>

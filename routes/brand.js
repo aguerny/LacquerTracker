@@ -20,7 +20,6 @@ app.get('/brand/:brandname', function(req, res) {
             data = {};
             data.title = thisbrand + ' - Lacquer Tracker';
             data.bname = thisbrand;
-            data.bwebsite = '';
             data.bbio = '';
             data.bphoto = '';
             data.bofficial = '';
@@ -34,7 +33,6 @@ app.get('/brand/:brandname', function(req, res) {
             data = {};
             data.title = brand.name + ' - Lacquer Tracker';
             data.bname = brand.name;
-            data.bwebsite = brand.website;
             data.bbio = markdown(brand.bio);
             data.bphoto = brand.photo;
             data.bofficial = brand.official;

@@ -61,6 +61,7 @@ app.post('/review/edit/:id', isLoggedIn, function(req, res) {
             });
             newReview.save(function(err) {
                 polish.dateupdated = new Date();
+                polish.reviews.push(newReview.id);
                 polish.save(function(err) {
                     res.redirect('/polish/' + polishbrand.replace(/ /g,"_") + "/" + polishname.replace(/ /g,"_"));
                 })

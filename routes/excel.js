@@ -41,7 +41,6 @@ module.exports = function(app, passport) {
 //                         polishBrandToFind = polishBrandEntered;
 //                         var newBrand = new Brand ({
 //                             name: polishBrandToFind,
-//                             website: '',
 //                             bio: '',
 //                             photo: '',
 //                             official: false,
@@ -215,7 +214,6 @@ module.exports = function(app, passport) {
 //                         polishBrandToFind = polishBrandEntered;
 //                         var newBrand = new Brand ({
 //                             name: polishBrandToFind,
-//                             website: '',
 //                             bio: '',
 //                             photo: '',
 //                             official: false,

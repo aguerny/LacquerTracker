@@ -6,20 +6,14 @@
     <section>
         <a href="/forums/">&#8592; Back to Forums</a>
         <center><h3>
-            <% if (forumcat === "intro") { %>
-                Introductions</h3><br>New to Lacquer Tracker? Tell us about yourself!<%}%>
             <% if (forumcat === "general") { %>
                 General Polish Dicussion</h3><br>Any discussion related to polish is welcome here.<%}%>
-            <% if (forumcat === "notd") { %>
-                Nails of the Day</h3><br>Post a photo of what you're wearing today. Be sure to include the colors you used!<%}%>
-            <% if (forumcat === "contests") { %>
-                Contests and Giveaways</h3><br>Spread the polish love by hosting a contest or giveaway.<%}%>
-            <% if (forumcat === "tutorials") { %>
-                Tutorials</h3><br>Post nail art tutorials or link to great ones you've found elsewhere.<%}%>
-            <% if (forumcat === "offtopic") { %>
-                Off Topic Discussion</h3><br>Anything goes here!<%}%>
+            <% if (forumcat === "intro") { %>
+                Introductions</h3><br>New to Lacquer Tracker? Introduce yourself here.<%}%>
             <% if (forumcat === "lt") { %>
                 Feedback/Suggestions</h3><br>Let's talk Lacquer Tracker.<%}%>
+            <% if (forumcat === "offtopic") { %>
+                Off Topic Discussion</h3><br>Anything goes here!<%}%>
         <br><br><a href="/forums/<%= forumcat %>/add">Add a post</a><br><br><br><br>
         <table class="forumtable">
             <col width="35%">

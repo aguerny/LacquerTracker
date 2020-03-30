@@ -15,7 +15,7 @@ module.exports = function(app, passport) {
 
 app.get('/polish/:brand/:name', function(req, res) {
 
-    Polish.findOne({brand: req.params.brand.replace(/_/g," "), name:req.params.name.replace(/_/g," ")}).populate('dupes').exec(function(err, polish) {
+    Polish.findOne({brand: req.params.brand.replace(/_/g," "), name:req.params.name.replace(/_/g," ")}).populate('dupes', 'brand name').exec(function(err, polish) {
         if (polish === null) {
             res.redirect('/error');
         } else {
@@ -68,7 +68,7 @@ app.get('/polish/:brand/:name', function(req, res) {
                         }
 
 
-                        Review.findOne({user:req.user.id, polish:polish.id}).populate('user').exec(function (err, review) {
+                        Review.findOne({user:req.user.id, polish:polish.id}).populate('user', 'username').exec(function (err, review) {
                             if (review) {
                             data.rating = review.rating;
                             data.review = review.review;
@@ -79,7 +79,7 @@ app.get('/polish/:brand/:name', function(req, res) {
                             data.notes = "";
                             }
 
-                        Review.find({polish:polish.id}).populate('user').exec(function(err, r) {
+                        Review.find({polish:polish.id}).populate('user', 'username').exec(function(err, r) {
                             data.allreviews = r;
                             res.render('polish/polish.ejs', data);
                         })
@@ -90,7 +90,7 @@ app.get('/polish/:brand/:name', function(req, res) {
                         data.review = "";
                         data.notes = "";
                         data.status = "none";
-                        Review.find({polish:polish.id}).populate('user').exec(function(err, r) {
+                        Review.find({polish:polish.id}).populate('user', 'username').exec(function(err, r) {
                             data.allreviews = r;
                             res.render('polish/polish.ejs', data);
                         })
@@ -118,7 +118,7 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                 data.ptype = polish.type;
                 data.pcode = polish.code;
                 data.pid = polish.id;
-                data.pdupes = markdown(polish.dupes);
+                data.pdupes = polish.dupes;
                 data.linkbrand = polish.brand.replace("%20"," ");
                 data.linkname = polish.name.replace("%20"," ");
 
@@ -132,55 +132,59 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                 });
                 data.colors = formattedColors;
 
-                Photo.find({polishid : polish.id, pendingdelete:false}, function(err, photo) {
-                    if (photo.length < 1) {
-                        data.numphotos = 0;
-                    } else {
-                        var allphotos = photo.map(function(x) {
-                            return x;
-                        })
-                        data.allphotos = _.shuffle(allphotos);
-                        data.numphotos = allphotos.length;
-                    }
+                Checkin.find({polish:polish}, function(err, checkin) {
+                    data.checkins = checkin;
 
-                    if (req.isAuthenticated()) {
-
-                        if (req.user.ownedpolish.indexOf(polish.id) > -1) {
-                            data.status = "owned";
-                        } else if (req.user.wantedpolish.indexOf(polish.id) > -1) {
-                            data.status = "wanted";
+                    Photo.find({polishid : polish.id, pendingdelete:false}, function(err, photo) {
+                        if (photo.length < 1) {
+                            data.numphotos = 0;
                         } else {
-                            data.status = "none";
+                            var allphotos = photo.map(function(x) {
+                                return x;
+                            })
+                            data.allphotos = _.shuffle(allphotos);
+                            data.numphotos = allphotos.length;
                         }
 
+                        if (req.isAuthenticated()) {
 
-                        Review.findOne({user:req.user.id, polish:polish.id}).populate('user').exec(function (err, review) {
-                            if (review) {
-                            data.rating = review.rating;
-                            data.review = review.review;
-                            data.notes = review.notes;
+                            if (req.user.ownedpolish.indexOf(polish.id) > -1) {
+                                data.status = "owned";
+                            } else if (req.user.wantedpolish.indexOf(polish.id) > -1) {
+                                data.status = "wanted";
                             } else {
+                                data.status = "none";
+                            }
+
+
+                            Review.findOne({user:req.user.id, polish:polish.id}).populate('user', 'username').exec(function (err, review) {
+                                if (review) {
+                                data.rating = review.rating;
+                                data.review = review.review;
+                                data.notes = review.notes;
+                                } else {
+                                data.rating = "";
+                                data.review = "";
+                                data.notes = "";
+                                }
+
+                            Review.find({polish:polish.id}).populate('user', 'username').exec(function(err, r) {
+                                data.allreviews = r;
+                                res.render('polish/polish.ejs', data);
+                            })
+
+                            })
+                        } else {
                             data.rating = "";
                             data.review = "";
                             data.notes = "";
-                            }
-
-                        Review.find({polish:polish.id}).populate('user').exec(function(err, r) {
-                            data.allreviews = r;
-                            res.render('polish/polish.ejs', data);
-                        })
-
-                        })
-                    } else {
-                        data.rating = "";
-                        data.review = "";
-                        data.notes = "";
-                        data.status = "none";
-                        Review.find({polish:polish.id}).populate('user').exec(function(err, r) {
-                            data.allreviews = r;
-                            res.render('polish/polish.ejs', data);
-                        })
-                    }
+                            data.status = "none";
+                            Review.find({polish:polish.id}).populate('user', 'username').exec(function(err, r) {
+                                data.allreviews = r;
+                                res.render('polish/polish.ejs', data);
+                            })
+                        }
+                    })
                 })
             }
         })
@@ -339,6 +343,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                         code: sanitizer.sanitize(req.body.code.replace(/^\s+|\s+$/g,'')),
                         keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
                         dateupdated: new Date(),
+                        createdby: req.user.id,
                         dupes: sanitizer.sanitize(req.body.dupes),
                         swatch: '',
                     });
@@ -363,7 +368,6 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                                     if (!brand) {
                                         var newBrand = new Brand ({
                                             name: polishBrandToFind,
-                                            website: '',
                                             bio: '',
                                             photo: '',
                                             official: false,
@@ -394,7 +398,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
 
 //edit polish
 app.get('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
-    Polish.findById(req.params.id).populate('dupes').exec(function(err, p) {
+    Polish.findById(req.params.id).populate('dupes', 'brand name').exec(function(err, p) {
         if (p === null || err) {
             res.redirect('/error');
         } else {
@@ -424,7 +428,6 @@ app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
                     if (brand === null || brand === undefined) {
                         var newBrand = new Brand ({
                             name: sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-"))),
-                            website: '',
                             bio: '',
                             photo: '',
                             official: false,
