@@ -8,6 +8,9 @@
             <form action="/checkin/<%= checkinid %>/edit" method="post">
                 <h3>Edit your check-in:</h3><br><br>
                 <img src=<%= checkinphoto %>><br><br><br>
+                Edit short description:<br>
+                <input type="type" name="description" maxlength="150" value="<%=checkindescription %>" class="width50">
+                <br><br><br>
                 Edit your polishes used:<br>
                 <select multiple name="polish" id="select-polish" style="width:300px">
                     <% for (i=0; i<checkinpolish.length; i++) { %>

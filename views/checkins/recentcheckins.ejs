@@ -9,15 +9,16 @@
             <a href="/checkin/add">Check in your mani by adding a photo of what you're wearing today!</a><br><br><hr><br>
                 <% for (i=0; i<checkins.length; i++) { %>
                     Posted on <%= checkins[i].date %> by <a href="/profile/<%= checkins[i].user.username %>"><%= checkins[i].user.username %></a><br><br>
-                    <a href="/checkin/<%= checkins[i].id %>"><%= checkins[i].comments.length %> Comment<% if (checkins[i].comments.length !== 1) {%>s<%}%> | Add a comment | Options
-                    </a>
-                    <br><br>
-                    <img src=<%= checkins[i].photo %>><br><br>
+                    <img src=<%= checkins[i].photo %>><br><br><br>
+                    <% if (checkins[i].description.length > 0) {%><%= checkins[i].description%><br><br><br><%}%>
                     <% if (checkins[i].polish.length === 0) { %>Polish Used: ?<%} else {%>
                     Polish Used:
                     <% for (j=0; j<checkins[i].polish.length; j++) { %>
                         <br>&#8226; <a href='/polish/<%= checkins[i].polish[j].brand.replace(/ /g,"_") %>/<%= checkins[i].polish[j].name.replace(/ /g,"_") %>'><%= checkins[i].polish[j].brand %> - <%= checkins[i].polish[j].name %></a>
-                    <% }} %><br><br><hr><br>
+                    <% }} %>
+                    <br><br><br>
+                    <a href="/checkin/<%= checkins[i].id %>"><%= checkins[i].comments.length %> Comment<% if (checkins[i].comments.length !== 1) {%>s<%}%></a> | <a href="/checkin/<%= checkins[i].id %>">Add a comment</a> | <a href="/checkin/<%= checkins[i].id %>">Options</a><br><br>
+                    <hr><br>
                 <% } %>
             <div style="clear: both;">
                 <% if (checkins.length === 10) { %>

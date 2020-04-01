@@ -12,19 +12,20 @@ function confirm_alert(node) {
     <section>
         <div class="photo500">
         <h2><%= checkinuser.username %>'s Fresh Coat</h2><br>
-            <i>Posted on <%= checkindate %></i> <a href="/checkin/<%=checkinid%>/flag">Flag</a>
+            Posted on <%= checkindate %> | <a href="/checkin/<%=checkinid%>/flag">Flag</a>
                 <% if (isAuthenticated) { %>
                     <% if (user.username === checkinuser.username || user.level === "admin") { %>
                         | <a href="/checkin/<%=checkinid%>/edit">Edit</a> | <a href="/checkin/<%=checkinid%>/remove" onclick="return confirm_alert(this);">Delete</a>
                     <% } %>
-                <% } %><br><br>
-            <p style="white-space: pre;">
-                <img src=<%= checkinphoto %>><br><br>
-                Polish Used:
-                    <% for (i=0; i<checkinpolish.length; i++) { %>
-                        &#8226; <a href='/polish/<%= checkinpolish[i].brand.replace(/ /g,"_") %>/<%= checkinpolish[i].name.replace(/ /g,"_") %>'><%= checkinpolish[i].brand %> - <%= checkinpolish[i].name %></a>
-                    <% } %>
-            </p><hr><br>
+                <% } %>
+            <br><br><br>
+            <img src=<%= checkinphoto %>><br><br><br>
+            <% if (checkindescription.length > 0) {%><%= checkindescription %><br><br><br><%}%>
+            Polish Used:
+                <% for (i=0; i<checkinpolish.length; i++) { %>
+                    <br>&#8226; <a href='/polish/<%= checkinpolish[i].brand.replace(/ /g,"_") %>/<%= checkinpolish[i].name.replace(/ /g,"_") %>'><%= checkinpolish[i].brand %> - <%= checkinpolish[i].name %></a>
+                <% } %>
+            <br><br><br><hr><br>
             <b>Comments (<%= checkincomment.length %>)</b> | <a href="/checkin/<%= checkinid %>/add">Add a comment</a><br><br>
 
 
@@ -287,12 +288,5 @@ function confirm_alert(node) {
     </section>
     </div>
 </div>
-
-<script>
-$(".replylink").click(function(){
-    $(this).siblings(".replybox").show();
-    return false;
-});
-</script>
 
 <%- include('../layoutBottom'); %>

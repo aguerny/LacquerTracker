@@ -19,7 +19,7 @@ module.exports = function(app, passport) {
 app.get('/checkin', function(req, res) {
     Checkin.find({pendingdelete:false}).sort({creationdate: -1}).limit(10).populate('user', 'username').populate('polish', 'name brand').exec(function(err, posts) {
         data = {};
-        data.title = 'Nails of the Day - Lacquer Tracker';
+        data.title = 'Fresh Coats - Lacquer Tracker';
         data.page = 1;
         var allposts = posts.map(function(x) {
             if (req.isAuthenticated() && req.user.timezone.length > 0) {
@@ -29,7 +29,7 @@ app.get('/checkin', function(req, res) {
             }
             return x;
         })
-        data.checkins = posts;
+        data.checkins = allposts;
         res.render('checkins/recentcheckins.ejs', data);
     })
 });
@@ -97,6 +97,7 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                         pendingdelete: false,
                         pendingreason: "",
                         comments: [],
+                        description: sanitizer.sanitize(req.body.description),
                     })
                     newCheckin.save(function(err) {
                         if (err) {
@@ -156,6 +157,7 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                         pendingdelete: false,
                         pendingreason: "",
                         comments: [],
+                        description: sanitizer.sanitize(req.body.description),
                     })
                     newCheckin.save(function(err) {
                         if (err) {
@@ -211,6 +213,7 @@ app.get('/checkin/:id', function(req, res) {
             data.checkinid = post.id;
             data.checkinphoto = post.photo;
             data.checkinpolish = post.polish;
+            data.checkindescription = post.description;
             if (req.isAuthenticated() && req.user.timezone.length > 0) {
                 data.checkindate = moment(post.creationdate).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
             } else {
@@ -327,6 +330,7 @@ app.get('/checkin/:id/edit', isLoggedIn, function(req, res) {
                     data.checkinid = post.id;
                     data.checkinphoto = post.photo;
                     data.checkinpolish = post.polish;
+                    data.checkindescription = post.description;
                     res.render('checkins/edit.ejs', data);
                 } else {
                     res.redirect('/error');
@@ -341,6 +345,7 @@ app.post('/checkin/:id/edit', isLoggedIn, function(req, res) {
         if (post.user == req.user.id) {
             post.polish = req.body.polish;
             post.editdate = new Date;
+            post.description = sanitizer.sanitize(req.body.description);
             post.save();
             res.redirect('/checkin/' + post.id);
         } else {
@@ -474,6 +479,7 @@ app.post('/checkin/:id/flag', isLoggedIn, function(req, res) {
         }
     });
 });
+
 
 
 };

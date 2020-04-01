@@ -13,9 +13,9 @@ function confirm_alert(node) {
         <div class="photo500">
         <a href="/forums">&#8592; Back to Forums</a><br><br>
         <h2><%= posttitle %></h2><br>
-            <i>Posted by <a href="/profile/<%= postuser.username%>"><%= postuser.username %></a> on <%= postdate %></i><% if (isAuthenticated) { %>
+            Posted by <a href="/profile/<%= postuser.username%>"><%= postuser.username %></a> on <%= postdate %><% if (isAuthenticated) { %>
                     <% if (user.username === postuser.username || user.level === "admin") { %>
-                        : <a href="/forums/<%=postforum%>/<%=postid%>/edit">Edit</a> | <a href="/forums/<%=postforum%>/<%=postid%>/remove" onclick="return confirm_alert(this);">Delete</a>
+                        | <a href="/forums/<%=postforum%>/<%=postid%>/edit">Edit</a> | <a href="/forums/<%=postforum%>/<%=postid%>/remove" onclick="return confirm_alert(this);">Delete</a>
                     <% } %>
                 <% } %><br><br><br>
             <p style="white-space: pre;"><%- postmessage %><% if (postphoto !== undefined) {%><br><br><img src=<%=postphoto%>><%}%></p><br><hr><br>

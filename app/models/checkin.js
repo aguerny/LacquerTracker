@@ -12,6 +12,7 @@ var checkinSchema = mongoose.Schema({
     pendingdelete: Boolean,
     pendingreason: String,
     comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'CheckinComment'}],
+    description: String,
 });
 
 
