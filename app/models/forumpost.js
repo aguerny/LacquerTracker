@@ -8,9 +8,8 @@ var forumpostSchema = mongoose.Schema({
 	title: String,
 	message: String,
     photo: String,
-	date: String,  //oops too late now
-    dateupdated: String,  //oops too late now
-	dateupdatedsort: Date,
+	date: Date,
+    dateupdated: Date,
 	forum: String,
 	comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'ForumComment'}],
 });

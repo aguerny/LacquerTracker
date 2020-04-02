@@ -193,13 +193,11 @@ app.post('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
 app.get('/photo/edit/:pid', isLoggedIn, function(req, res) {
     data = {};
     data.title = 'Edit Polish Photos - Lacquer Tracker';
-    Photo.find({polishid: req.params.pid, pendingdelete:false}, function(err, photo) {
-        data.allphotos = photo;
-        Polish.findById(req.params.pid, function(err, p) {
-            data.urlbrand = p.brand.replace(/ /g,"_");
-            data.urlname = p.name.replace(/ /g,"_");
-            res.render('photos/polishedit.ejs', data)
-        })
+    Polish.findById(req.params.pid).populate('photos').exec(function(err, polish) {
+        data.allphotos = polish.photos;
+        data.urlbrand = polish.brand.replace(/ /g,"_");
+        data.urlname = polish.name.replace(/ /g,"_");
+        res.render('photos/polishedit.ejs', data);
     })
 });
 

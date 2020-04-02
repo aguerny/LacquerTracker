@@ -8,7 +8,7 @@ var forumcommentSchema = mongoose.Schema({
 	parentid: String,
 	user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
 	message: String,
-	date: String,  //oops too late now
+	date: Date,
 	childid: [{type: mongoose.Schema.Types.ObjectId, ref: 'ForumComment'}],
 });
 

@@ -16,7 +16,7 @@ module.exports = function(app, passport) {
 
 // //all forums together
 // app.get('/forums', function(req, res) {
-//     ForumPost.find({}).sort({dateupdatedsort: -1}).populate('user', 'username').exec(function(err, posts) {
+//     ForumPost.find({}).sort({dateupdated: -1}).populate('user', 'username').exec(function(err, posts) {
 //         data = {};
 //         data.title = 'Forums - Lacquer Tracker';
 //         var allposts = posts.map(function(x) {
@@ -36,7 +36,7 @@ module.exports = function(app, passport) {
 
 //forums split out
 app.get('/forums', function(req, res) {
-    ForumPost.find({}).sort({dateupdatedsort: -1}).exec(function(err, posts) {
+    ForumPost.find({}).sort({dateupdated: -1}).exec(function(err, posts) {
         data = {};
         data.title = 'Forums - Lacquer Tracker';
         var latest = [];
@@ -64,7 +64,7 @@ app.get('/forums', function(req, res) {
 
 //view specific forum
 app.get('/forums/:forum', function(req, res) {
-    if (req.params.forum === "intro" || req.params.forum === "general" || req.params.forum === "notd" || req.params.forum === "contests" || req.params.forum === "tutorials" || req.params.forum === "offtopic" || req.params.forum === "lt") {
+    if (req.params.forum === "intro" || req.params.forum === "general" || req.params.forum === "offtopic" || req.params.forum === "lt") {
         data = {}
         var allforums = ['intro', 'general', 'offtopic', 'lt'];
         var forumtitles = ['Introductions', 'General Polish Discussion', 'Off Topic', 'Lacquer Tracker Discussion'];
@@ -74,13 +74,13 @@ app.get('/forums/:forum', function(req, res) {
             }
         }
         data.forumcat = req.params.forum;
-        ForumPost.find({forum: req.params.forum}).sort({dateupdatedsort: -1}).populate('comments').populate('user').exec(function(err, posts) {
+        ForumPost.find({forum: req.params.forum}).sort({dateupdated: -1}).populate('comments').populate('user').exec(function(err, posts) {
             User.populate(posts, {path:'comments.user'}, function(err) {
                 var allposts = posts.map(function(x) {
                     if (req.isAuthenticated() && req.user.timezone.length > 0) {
-                        x.dateupdated = moment(x.dateupdated).tz(req.user.timezone).calendar();
+                        x.dateupdatednew = moment(x.dateupdated).tz(req.user.timezone).calendar();
                     } else {
-                        x.dateupdated = moment(x.dateupdated).tz("America/New_York").calendar();
+                        x.dateupdatednew = moment(x.dateupdated).tz("America/New_York").calendar();
                     }
                     return x;
                 })
@@ -109,7 +109,6 @@ app.post('/forums/:forum/add', isLoggedIn, function(req, res) {
         message: sanitizer.sanitize(req.body.postmessage),
         date: new Date(),
         dateupdated: new Date(),
-        dateupdatedsort: new Date(),
         forum: req.body.forum,
         comments: [],
         photo: '',
@@ -168,9 +167,9 @@ app.get('/forums/:forum/:id', function(req, res) {
             data.postforum = post.forum;
             var allcomments = post.comments.map(function(x) {
                 if (req.isAuthenticated() && req.user.timezone.length > 0) {
-                    x.date = moment(x.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
+                    x.datenew = moment(x.date).tz(req.user.timezone).format('MMM D YYYY, h:mm a');
                 } else {
-                    x.date = moment(x.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
+                    x.datenew = moment(x.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
                 }
                 if (x.message == "<p><em>comment deleted</em></p>\n") {
                     x.user.username = '';
@@ -238,7 +237,6 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
                 }
 
                 post.dateupdated = new Date();
-                post.dateupdatedsort = new Date();
                 post.comments.push(newForumComment.id);
                 ForumComment.findById(req.params.cid, function(err, parent) {
                     if (parent) {
@@ -290,7 +288,6 @@ app.post('/forums/:forum/:id/edit', isLoggedIn, function(req, res) {
             post.title = sanitizer.sanitize(req.body.posttitle);
             post.message = sanitizer.sanitize(req.body.postmessage);
             post.dateupdated = new Date();
-            post.dateupdatedsort = new Date();
             post.save();
             res.redirect('/forums/' + post.forum + '/' + post.id);
         } else {

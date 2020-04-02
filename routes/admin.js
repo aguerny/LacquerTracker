@@ -4,9 +4,9 @@ var Polish = require('../app/models/polish');
 var Photo = require('../app/models/photo');
 var Brand = require('../app/models/brand');
 var Checkin = require('../app/models/checkin');
+var Review = require('../app/models/review');
 var fs = require('node-fs');
 var path = require('path');
-var Review = require('../app/models/review');
 var mongoose = require('mongoose');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
@@ -482,23 +482,15 @@ app.get('/admin/portal', isLoggedIn, function(req, res) {
 
 
 
-
-
-
-//push reviews to polishes
-app.get('/admin/fixreviews', isLoggedIn, function(req, res) {
-    Review.find({}, function(err, reviews) {
-        for (i=0; i<reviews.length; i++) {
-            var review = reviews[i]
-            Polish.findById(reviews[i].polish).exec(function(err, polish){
-                polish.reviews.push(review.id);
-                polish.save();
-            })
-        }
-    })
-});
-
-
+// //fix things in mongo
+// app.get('/admin/fixforumcomments', isLoggedIn, function(req, res) {
+//     ForumComment.find({}, function(err, comments) {
+//         for (i=0; i<comments.length; i++) {
+//             comments[i].datenew = comments[i].date;
+//             comments[i].save();
+//         }
+//     })
+// });
 
 
 

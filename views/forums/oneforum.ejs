@@ -25,7 +25,7 @@
                 <tr><td><a href="/forums/<%= forumcat %>/<%= forumposts[i].id %>"><span><%= forumposts[i].title %></span></a></td>
                 <td><a href='/profile/<%= forumposts[i].user.username %>'><span><%= forumposts[i].user.username %></span></a></td>
                 <td><% if (forumposts[i].comments.length === 1) {%><span><%= forumposts[i].comments.length %> Reply</span><%} else {%><span><%= forumposts[i].comments.length %> Replies</span><%}%></td>
-                <td><span><%= forumposts[i].dateupdated %></span></td></tr>
+                <td><span><%= forumposts[i].dateupdatednew %></span></td></tr>
             <% } %>
         </table>
         </center>

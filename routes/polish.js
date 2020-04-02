@@ -15,7 +15,7 @@ module.exports = function(app, passport) {
 
 app.get('/polish/:brand/:name', function(req, res) {
 
-    Polish.findOne({brand: req.params.brand.replace(/_/g," "), name:req.params.name.replace(/_/g," ")}).populate('dupes', 'brand name').populate('checkins', 'photo pendingdelete').exec(function(err, polish) {
+    Polish.findOne({brand: req.params.brand.replace(/_/g," "), name:req.params.name.replace(/_/g," ")}).populate('dupes', 'brand name').populate('checkins', 'photo pendingdelete').populate('photos').exec(function(err, polish) {
         if (polish === null) {
             res.redirect('/error');
         } else {
@@ -44,12 +44,99 @@ app.get('/polish/:brand/:name', function(req, res) {
             });
             data.colors = formattedColors;
 
-            Photo.find({polishid : polish.id, pendingdelete:false}, function(err, photo) {
-                if (photo.length < 1) {
+            if (polish.photos.length < 1) {
+                data.numphotos = 0;
+            } else {
+                var allphotos = polish.photos.map(function(x) {
+                    if (x.pendingdelete === false) {
+                        return x;
+                    }
+                })
+                data.allphotos = _.shuffle(allphotos);
+                data.numphotos = allphotos.length;
+            }
+
+            if (req.isAuthenticated()) {
+
+                if (req.user.ownedpolish.indexOf(polish.id) > -1) {
+                    data.status = "owned";
+                } else if (req.user.wantedpolish.indexOf(polish.id) > -1) {
+                    data.status = "wanted";
+                } else {
+                    data.status = "none";
+                }
+
+
+                Review.findOne({user:req.user.id, polish:polish.id}).populate('user', 'username').exec(function (err, review) {
+                    if (review) {
+                    data.rating = review.rating;
+                    data.review = review.review;
+                    data.notes = review.notes;
+                    } else {
+                    data.rating = "";
+                    data.review = "";
+                    data.notes = "";
+                    }
+
+                Review.find({polish:polish.id}).populate('user', 'username').exec(function(err, r) {
+                    data.allreviews = r;
+                    res.render('polish/polish.ejs', data);
+                })
+
+                })
+            } else {
+                data.rating = "";
+                data.review = "";
+                data.notes = "";
+                data.status = "none";
+                Review.find({polish:polish.id}).populate('user', 'username').exec(function(err, r) {
+                    data.allreviews = r;
+                    res.render('polish/polish.ejs', data);
+                })
+            }
+        }
+    });
+});
+
+
+app.get('/polishid/:id', isLoggedIn, function(req, res) {
+    if (req.user.level === "admin") {
+        Polish.findById(req.params.id, function(err, polish) {
+            if (polish === null) {
+                res.redirect('/error');
+            } else {
+                data = {};
+                data.title = polish.name + ' - ' + polish.brand + ' - Lacquer Tracker'
+                data.pname = polish.name;
+                data.pbrand = polish.brand;
+                data.pbatch = polish.batch;
+                data.pcolorcat = polish.colorcat;
+                data.pswatch = polish.swatch;
+                data.ptype = polish.type;
+                data.pcode = polish.code;
+                data.pid = polish.id;
+                data.pdupes = polish.dupes;
+                data.linkbrand = polish.brand.replace("%20"," ");
+                data.linkname = polish.name.replace("%20"," ");
+                data.checkins = polish.checkins;
+
+                var formattedTypes = PolishTypes.map(function(type) {
+                    return {value: type, text: type};
+                });
+                data.types = formattedTypes;
+
+                var formattedColors = PolishColors.map(function(color) {
+                    return {value: color, text: color};
+                });
+                data.colors = formattedColors;
+
+                if (polish.photos.length < 1) {
                     data.numphotos = 0;
                 } else {
-                    var allphotos = photo.map(function(x) {
-                        return x;
+                    var allphotos = polish.photos.map(function(x) {
+                        if (x.pendingdelete === false) {
+                            return x;
+                        }
                     })
                     data.allphotos = _.shuffle(allphotos);
                     data.numphotos = allphotos.length;
@@ -93,93 +180,6 @@ app.get('/polish/:brand/:name', function(req, res) {
                         res.render('polish/polish.ejs', data);
                     })
                 }
-            })
-        }
-    });
-});
-
-
-app.get('/polishid/:id', isLoggedIn, function(req, res) {
-    if (req.user.level === "admin") {
-        Polish.findById(req.params.id, function(err, polish) {
-            if (polish === null) {
-                res.redirect('/error');
-            } else {
-                data = {};
-                data.title = polish.name + ' - ' + polish.brand + ' - Lacquer Tracker'
-                data.pname = polish.name;
-                data.pbrand = polish.brand;
-                data.pbatch = polish.batch;
-                data.pcolorcat = polish.colorcat;
-                data.pswatch = polish.swatch;
-                data.ptype = polish.type;
-                data.pcode = polish.code;
-                data.pid = polish.id;
-                data.pdupes = polish.dupes;
-                data.linkbrand = polish.brand.replace("%20"," ");
-                data.linkname = polish.name.replace("%20"," ");
-                data.checkins = polish.checkins;
-
-                var formattedTypes = PolishTypes.map(function(type) {
-                    return {value: type, text: type};
-                });
-                data.types = formattedTypes;
-
-                var formattedColors = PolishColors.map(function(color) {
-                    return {value: color, text: color};
-                });
-                data.colors = formattedColors;
-
-                Photo.find({polishid : polish.id, pendingdelete:false}, function(err, photo) {
-                    if (photo.length < 1) {
-                        data.numphotos = 0;
-                    } else {
-                        var allphotos = photo.map(function(x) {
-                            return x;
-                        })
-                        data.allphotos = _.shuffle(allphotos);
-                        data.numphotos = allphotos.length;
-                    }
-
-                    if (req.isAuthenticated()) {
-
-                        if (req.user.ownedpolish.indexOf(polish.id) > -1) {
-                            data.status = "owned";
-                        } else if (req.user.wantedpolish.indexOf(polish.id) > -1) {
-                            data.status = "wanted";
-                        } else {
-                            data.status = "none";
-                        }
-
-
-                        Review.findOne({user:req.user.id, polish:polish.id}).populate('user', 'username').exec(function (err, review) {
-                            if (review) {
-                            data.rating = review.rating;
-                            data.review = review.review;
-                            data.notes = review.notes;
-                            } else {
-                            data.rating = "";
-                            data.review = "";
-                            data.notes = "";
-                            }
-
-                        Review.find({polish:polish.id}).populate('user', 'username').exec(function(err, r) {
-                            data.allreviews = r;
-                            res.render('polish/polish.ejs', data);
-                        })
-
-                        })
-                    } else {
-                        data.rating = "";
-                        data.review = "";
-                        data.notes = "";
-                        data.status = "none";
-                        Review.find({polish:polish.id}).populate('user', 'username').exec(function(err, r) {
-                            data.allreviews = r;
-                            res.render('polish/polish.ejs', data);
-                        })
-                    }
-                })
             }
         })
     } else {

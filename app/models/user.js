@@ -17,7 +17,7 @@ var userSchema = mongoose.Schema({
 	adminview    : Boolean,
 	notifications: String,
 	useremail    : String,
-	creationdate : String, //oops too late now
+	creationdate : Date,
 	lastlogindate: Date,
 	country      : String,
 	timezone     : String,

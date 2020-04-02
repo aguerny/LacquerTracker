@@ -4,8 +4,8 @@ var mongoose = require('mongoose');
 
 //define the schema for our model
 var photoSchema = mongoose.Schema({
-	polishid: String,
-	userid: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    polishid: {type: mongoose.Schema.Types.ObjectId, ref: 'Polish'},
+    userid: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     location: String,
     creditname: String,
     creditlink: String,
