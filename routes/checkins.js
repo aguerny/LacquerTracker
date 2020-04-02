@@ -117,6 +117,14 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                                     fs.unlink(req.files.photo.tempFilePath, function() {
                                         newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
                                         newCheckin.save(function(err) {
+                                            req.user.checkins.addToSet(newCheckin.id);
+                                            req.user.save();
+                                            for (i=0; i<newCheckin.polish.length; i++) {
+                                                Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
+                                                    polish.checkins.addToSet(newCheckin.id);
+                                                    polish.save();
+                                                })
+                                            }
                                             res.redirect('/checkin');
                                         })
                                     })
@@ -177,6 +185,14 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                                     fs.unlink(req.files.photo.tempFilePath, function() {
                                         newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
                                         newCheckin.save(function(err) {
+                                            req.user.checkins.addToSet(newCheckin.id);
+                                            req.user.save();
+                                            for (i=0; i<newCheckin.polish.length; i++) {
+                                                Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
+                                                    polish.checkins.addToSet(newCheckin.id);
+                                                    polish.save();
+                                                })
+                                            }
                                             res.redirect('/checkin');
                                         })
                                     })
@@ -342,12 +358,35 @@ app.get('/checkin/:id/edit', isLoggedIn, function(req, res) {
 
 app.post('/checkin/:id/edit', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id, function (err, post){
+        var currentPolish = post.polish;
         if (post.user == req.user.id) {
+            for (i=0; i<currentPolish.length; i++) {
+                Polish.findById(currentPolish[i]).exec(function(err, polish) {
+                    polish.checkins.remove(req.params.id);
+                    polish.save();
+                })
+            }
             post.polish = req.body.polish;
             post.editdate = new Date;
             post.description = sanitizer.sanitize(req.body.description);
-            post.save();
-            res.redirect('/checkin/' + post.id);
+            post.save(function(err) {
+                if (req.body.polish) {
+                    if (Array.isArray(req.body.polish) === false) {
+                        Polish.findById(req.body.polish).exec(function(err, polish) {
+                            polish.checkins.addToSet(req.params.id);
+                            polish.save();
+                        })
+                    } else {
+                        for (j=0; j<req.body.polish.length; j++) {
+                            Polish.findById(req.body.polish[j]).exec(function(err, polish) {
+                                polish.checkins.addToSet(req.params.id);
+                                polish.save();
+                            })
+                        }
+                    }
+                }
+                res.redirect('/checkin/' + post.id);
+            })
         } else {
             res.redirect('/error');
         }
@@ -423,7 +462,15 @@ app.get('/checkin/:id/remove', isLoggedIn, function(req, res) {
                          comments[i].remove();
                      }
                     fs.unlink(path.resolve('./public/'+post.photo), function(err) {
+                        for (i=0; i<post.polish.length; i++) {
+                            Polish.findById(post.polish[i]).exec(function(err, polish) {
+                                polish.checkins.remove(req.params.id);
+                                polish.save();
+                            })
+                        }
                         Checkin.findByIdAndRemove(req.params.id, function(err) {
+                            req.user.checkins.remove(req.params.id);
+                            req.user.save();
                             res.redirect('/checkin');
                         })
                     })

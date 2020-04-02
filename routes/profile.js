@@ -27,35 +27,33 @@ app.get('/profile', isLoggedIn, function(req, res) {
 
 //profile specific
 app.get('/profile/:username', function(req, res) {
-    User.findOne({username: req.params.username}).populate('ownedpolish').populate('wantedpolish').exec(function(err, user) {
+    User.findOne({username: req.params.username}).populate('ownedpolish').populate('wantedpolish').populate('checkins', 'photo pendingdelete').exec(function(err, user) {
         if (!user || user.username==="admin" || user.username==="lacquertracker") {
             res.redirect('/error');
         } else {
-            Checkin.find({user:user}, function(err, checkin) {
-                var data = {};
-                data.title = user.username + "'s Profile - Lacquer Tracker";
-                var osort = user.ownedpolish.sort(function (a, b) {return a.name.toLowerCase().localeCompare(b.name.toLowerCase());});
-                var osort2 = _.sortBy(osort, function(b) {return b.brand.toLowerCase();});
-                var wsort = user.wantedpolish.sort(function (a, b) {return a.name.toLowerCase().localeCompare(b.name.toLowerCase());});
-                var wsort2 = _.sortBy(wsort, function(b) {return b.brand.toLowerCase();});
-                data.opolishes = osort2;
-                data.wpolishes = wsort2;
-                data.username = user.username;
-                data.about = markdown(user.about);
-                data.profilephoto = user.profilephoto;
-                data.notifications = user.notifications;
-                data.useremail = user.useremail;
-                data.colors = PolishColors;
-                data.checkins = checkin;
-                var oreviews = [];
-                Review.find({user:user.id}, function(err, reviews) {
-                    for (i=0; i<reviews.length; i++) {
-                        var thisindex = _.findIndex(osort2, {'id':reviews[i].polish});
-                        oreviews[thisindex] = reviews[i];
-                    }
-                    data.oreviews = oreviews;
-                    res.render('profile/profile.ejs', data);
-                })
+            var data = {};
+            data.title = user.username + "'s Profile - Lacquer Tracker";
+            var osort = user.ownedpolish.sort(function (a, b) {return a.name.toLowerCase().localeCompare(b.name.toLowerCase());});
+            var osort2 = _.sortBy(osort, function(b) {return b.brand.toLowerCase();});
+            var wsort = user.wantedpolish.sort(function (a, b) {return a.name.toLowerCase().localeCompare(b.name.toLowerCase());});
+            var wsort2 = _.sortBy(wsort, function(b) {return b.brand.toLowerCase();});
+            data.opolishes = osort2;
+            data.wpolishes = wsort2;
+            data.username = user.username;
+            data.about = markdown(user.about);
+            data.profilephoto = user.profilephoto;
+            data.notifications = user.notifications;
+            data.useremail = user.useremail;
+            data.colors = PolishColors;
+            data.checkins = user.checkins;
+            var oreviews = [];
+            Review.find({user:user.id}, function(err, reviews) {
+                for (i=0; i<reviews.length; i++) {
+                    var thisindex = _.findIndex(osort2, {'id':reviews[i].polish});
+                    oreviews[thisindex] = reviews[i];
+                }
+                data.oreviews = oreviews;
+                res.render('profile/profile.ejs', data);
             })
         }
     });

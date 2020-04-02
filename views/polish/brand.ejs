@@ -80,26 +80,6 @@ $(window).load(function () {
                 <br><br><br><i>Please <a href="/contact">contact us</a> to update the information about your brand.</i>
             <% } %>
             <% if (isAuthenticated) {%><% if (user.adminview === true) { %><% if (bid) {%><br><br><br><a href="/admin/brandedit/<%=bid%>">Admin Edit Brand</a><%}%><%}%><%}%>
-            <div id="biglayout">
-                <% if (checkins.length > 0) { %>
-                    <br><br><br><hr><br><h4>Recent Check-Ins:</h4><br>
-                    <div class="collage">
-                        <% for (i=0; i<checkins.length; i++) { %>
-                            <a href="/checkin/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>"></a>
-                        <% } %>
-                    </div>
-                <% } %>
-            </div>
-            <div id="smalllayout">
-                <% if (checkins.length > 0) { %>
-                    <br><br><br><hr><br><h4>Recent Check-Ins:</h4><br>
-                    <div>
-                        <% for (i=0; i<checkins.length; i++) { %>
-                            <a href="/checkin/<%=checkins[i].id%>"><img style="max-width:100%" src="<%= checkins[i].photo %>"></a>
-                        <% } %>
-                    </div>
-                <% } %>
-            </div>
         </section>
     </div>
 </div>

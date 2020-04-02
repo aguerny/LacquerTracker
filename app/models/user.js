@@ -21,6 +21,7 @@ var userSchema = mongoose.Schema({
 	lastlogindate: Date,
 	country      : String,
 	timezone     : String,
+	checkins     : [{type: mongoose.Schema.Types.ObjectId, ref: 'Checkin'}],
 });
 
 userSchema.plugin(autoIncrement.plugin, {

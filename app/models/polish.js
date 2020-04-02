@@ -19,6 +19,7 @@ var polishSchema = mongoose.Schema({
     swatch: String,
     flagged: Boolean,
     flaggedreason: String,
+    checkins: [{type: mongoose.Schema.Types.ObjectId, ref: 'Checkin'}],
 });
 
 

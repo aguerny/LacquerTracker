@@ -126,13 +126,11 @@ app.get('/admin/pendingcheckins/:id/restore', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id).exec(function(err, checkin) {
         if (checkin === null || checkin === undefined) {
             res.redirect('/error');
-        } else if (req.params.action === "restore") {
+        } else {
             checkin.pendingdelete = false;
             checkin.save(function(err) {
                 res.redirect('/admin/pendingcheckins');
             })
-        } else {
-            res.redirect('/error');
         }
     });
 });
