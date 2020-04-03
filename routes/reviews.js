@@ -22,18 +22,15 @@ app.get('/review/edit/:id', isLoggedIn, function(req, res) {
             if (review) { //if review already exists
                 data.rating = review.rating;
                 data.review = review.review;
-                data.notes = review.notes;
-                res.render('polish/reviewedit.ejs', data);
+                res.render('polish/review.ejs', data);
             } else { //the review doesn't exist yet.
                 data.rating = "";
                 data.review = "";
-                data.notes = "";
-                res.render('polish/reviewedit.ejs', data);
+                res.render('polish/review.ejs', data);
             }
         })
     })
 });
-
 
 app.post('/review/edit/:id', isLoggedIn, function(req, res) {
     Polish.findById(req.params.id, function(err, polish) {
@@ -44,7 +41,6 @@ app.post('/review/edit/:id', isLoggedIn, function(req, res) {
         if (review) { //if review already exists
             review.rating = req.body.rating;
             review.review = sanitizer.sanitize(req.body.review);
-            review.notes = sanitizer.sanitize(req.body.notes);
             review.save(function(err) {
                 polish.dateupdated = new Date();
                 polish.save(function(err) {
@@ -57,10 +53,66 @@ app.post('/review/edit/:id', isLoggedIn, function(req, res) {
                 user: req.user.id,
                 rating: req.body.rating,
                 review: sanitizer.sanitize(req.body.review),
-                notes: sanitizer.sanitize(req.body.notes),
             });
             newReview.save(function(err) {
                 polish.dateupdated = new Date();
+                polish.reviews.push(newReview.id);
+                polish.save(function(err) {
+                    res.redirect('/polish/' + polishbrand.replace(/ /g,"_") + "/" + polishname.replace(/ /g,"_"));
+                })
+            });
+            }
+        })
+    })
+});
+
+
+
+
+//add or edit notes
+app.get('/notes/edit/:id', isLoggedIn, function(req, res) {
+    var data = {};
+    data.title = 'Edit Your Notes - Lacquer Tracker';
+    data.polish = req.params.id;
+    data.user = req.user;
+
+    Polish.findById(req.params.id, function(err, polish) {
+        data.polishname = polish.name;
+        data.polishbrand = polish.brand;
+
+        Review.findOne({polish: req.params.id, user:req.user.id}).exec(function(err, review) {
+            if (review) { //if review already exists
+                data.notes = review.notes;
+                res.render('polish/notes.ejs', data);
+            } else { //the review doesn't exist yet.
+                data.notes = "";
+                res.render('polish/notes.ejs', data);
+            }
+        })
+    })
+});
+
+
+app.post('/notes/edit/:id', isLoggedIn, function(req, res) {
+    Polish.findById(req.params.id, function(err, polish) {
+        var polishname = polish.name;
+        var polishbrand = polish.brand;
+
+        Review.findOne({polish: req.params.id, user:req.user.id}, function(err, review) {
+        if (review) { //if review already exists
+            review.notes = sanitizer.sanitize(req.body.notes);
+            review.save(function(err) {
+                polish.save(function(err) {
+                    res.redirect('/polish/' + polishbrand.replace(/ /g,"_") + "/" + polishname.replace(/ /g,"_"));
+                })
+            });
+        } else {
+            var newReview = new Review ({
+                polish: req.params.id,
+                user: req.user.id,
+                notes: sanitizer.sanitize(req.body.notes),
+            });
+            newReview.save(function(err) {
                 polish.reviews.push(newReview.id);
                 polish.save(function(err) {
                     res.redirect('/polish/' + polishbrand.replace(/ /g,"_") + "/" + polishname.replace(/ /g,"_"));

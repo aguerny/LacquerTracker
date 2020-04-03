@@ -47,9 +47,9 @@ app.get('/profile/:username', function(req, res) {
             data.colors = PolishColors;
             data.checkins = user.checkins;
             var oreviews = [];
-            Review.find({user:user.id}, function(err, reviews) {
+            Review.find({user:user.id}).populate('polish').exec(function(err, reviews) {
                 for (i=0; i<reviews.length; i++) {
-                    var thisindex = _.findIndex(osort2, {'id':reviews[i].polish});
+                    var thisindex = _.findIndex(osort2, {'id':reviews[i].polish.id});
                     oreviews[thisindex] = reviews[i];
                 }
                 data.oreviews = oreviews;

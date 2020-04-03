@@ -19,7 +19,7 @@ $(window).load(function () {
             <% } %>
         </div>
         <div id="biglayout">
-            <h3 style="display:inline-block"><%= username %>'s Profile</h3>
+            <h2 style="display:inline-block"><%= username %>'s Profile</h2>
             <% if (isAuthenticated) { %>
                 <% if (user.username === username) { %>
                     - <a href="/profile/<%= username %>/edit">Edit your profile</a><!-- | <a href="/import">Import owned polish</a> -->

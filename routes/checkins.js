@@ -360,11 +360,13 @@ app.post('/checkin/:id/edit', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id, function (err, post){
         var currentPolish = post.polish;
         if (post.user == req.user.id) {
-            for (i=0; i<currentPolish.length; i++) {
-                Polish.findById(currentPolish[i]).exec(function(err, polish) {
-                    polish.checkins.remove(req.params.id);
-                    polish.save();
-                })
+            if (post.polish === undefined) {
+                for (i=0; i<currentPolish.length; i++) {
+                    Polish.findById(currentPolish[i]).exec(function(err, polish) {
+                        polish.checkins.remove(req.params.id);
+                        polish.save();
+                    })
+                }
             }
             post.polish = req.body.polish;
             post.editdate = new Date;

@@ -491,6 +491,9 @@ app.get('/admin/portal', isLoggedIn, function(req, res) {
 //         }
 //     })
 // });
+//for above:
+//db.forumcomments.update({}, {$unset:{"date":""}}, false, true)
+//db.forumcomments.update({}, {$rename:{"datenew":"date"}}, false, true)
 
 
 

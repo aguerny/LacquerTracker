@@ -1,0 +1,17 @@
+<%- include('../layoutTop'); %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    	<section>
+    		<form action="/notes/edit/<%= polish %>" method="post">
+	     		<h3>Edit Review for: <%= polishbrand %> - <%= polishname %>:</h3><br><br>
+                Notes: <i>(Will only be visible to you.)</i><br> <textarea  class="width50" rows="5" name="notes" required><%= notes %></textarea><br><br><br>
+                <input type="submit" value="Submit" class="button">
+            </form>
+            </div>
+        </section>
+    </div>
+</div>
+
+<%- include('../layoutBottom'); %>

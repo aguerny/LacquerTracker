@@ -142,7 +142,7 @@ $(window).load(function () {
                             <%if (rating >= 1) {%><img class="staradjust" src="/images/stars/<%=rating%>star.png"/> - <%}%><%= review %>
                         <% } %>
                         <br><br><br>
-                        <h4 style="display:inline">Your Notes:</h4> <i><a href="/review/edit/<%= pid %>">Edit</a><br><br>(Notes are only visible to you.)</i><br><br>
+                        <h4 style="display:inline">Your Notes:</h4> <i><a href="/notes/edit/<%= pid %>">Edit</a><br><br>(Notes are only visible to you.)</i><br><br>
                         <% if (notes.length > 0) { %>
                             <%= notes %><br><br>
                         <% } %>

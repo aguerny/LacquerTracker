@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 
 //define the schema for our model
 var userphotoSchema = mongoose.Schema({
-	user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+	user: String,
     location: String,
 });
 

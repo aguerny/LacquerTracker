@@ -7,12 +7,16 @@ var Checkin = require('../app/models/checkin');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
 var _ = require('lodash');
+var fs = require('node-fs');
+var path = require('path');
 var PolishTypes = require('../app/constants/polishTypes');
 var PolishColors = require('../app/constants/polishColors');
 
 module.exports = function(app, passport) {
 
 
+
+//view a polish by name
 app.get('/polish/:brand/:name', function(req, res) {
 
     Polish.findOne({brand: req.params.brand.replace(/_/g," "), name:req.params.name.replace(/_/g," ")}).populate('dupes', 'brand name').populate('checkins', 'photo pendingdelete').populate('photos').exec(function(err, polish) {
@@ -44,17 +48,15 @@ app.get('/polish/:brand/:name', function(req, res) {
             });
             data.colors = formattedColors;
 
-            if (polish.photos.length < 1) {
-                data.numphotos = 0;
-            } else {
-                var allphotos = polish.photos.map(function(x) {
-                    if (x.pendingdelete === false) {
-                        return x;
-                    }
-                })
-                data.allphotos = _.shuffle(allphotos);
-                data.numphotos = allphotos.length;
-            }
+            var allphotos = [];
+            polish.photos.map(function(x) {
+                if (x.pendingdelete === false) {
+                    allphotos.push(x);
+                }
+            })
+            data.allphotos = _.shuffle(allphotos);
+            data.numphotos = allphotos.length;
+            data.numphotos = allphotos.length;
 
             if (req.isAuthenticated()) {
 
@@ -99,6 +101,7 @@ app.get('/polish/:brand/:name', function(req, res) {
 });
 
 
+//view a polish by id
 app.get('/polishid/:id', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
         Polish.findById(req.params.id, function(err, polish) {
@@ -188,6 +191,9 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
 });
 
 
+//////////////////////////////////////////////////////////////////////////////
+
+
 //add own polish
 app.get('/addown/:id', isLoggedIn, function(req, res) {
     req.user.wantedpolish.remove(req.params.id);
@@ -212,7 +218,6 @@ app.get('/addwant/:id', isLoggedIn, function(req, res) {
         })
     })
 });
-
 
 //add own polish browse
 app.post('/addownbrowse/:id', isLoggedIn, function(req, res) {
@@ -257,6 +262,9 @@ app.get('/removewant/:id', isLoggedIn, function(req, res) {
     })
 });
 
+
+///////////////////////////////////////////////////////////////////////////
+
 //delete polish by view page
 app.get('/polish/:brand/:name/delete', isLoggedIn, function(req, res) {
     if (req.user.level !== "admin") {
@@ -266,7 +274,31 @@ app.get('/polish/:brand/:name/delete', isLoggedIn, function(req, res) {
             if (polish === null) {
                 res.redirect('/error');
             } else {
-                polish.remove();
+                // req.user.ownedpolish.remove(polish.id);
+                // req.user.wantedpolish.remove(polish.id);
+                // req.user.save();
+                // fs.unlink(path.resolve('./public/'+polish.swatch), function(err) {
+                //     //removing
+                // })
+                // Checkin.find({polish:polish.id}, function (err, checkins) {
+                //     for (i=0; i<checkins.length; i++) {
+                //         checkins[i].polish.remove(polish.id);
+                //         checkins[i].save();
+                //     }
+                // })
+                Photo.find({polishid:polish.id}, function(err, photos) {
+                    console.log(photos);
+                    for (j=0; j<photos.length; j++) {
+                        fs.unlink(path.resolve('./public/'+photos[j].location), function(err) {
+                            //removing
+                        })
+                        photos[j].remove();
+                    }
+                })
+                // Review.deleteMany({polish:polish.id}, function(err){
+                //     //removing
+                // });
+                // polish.remove();
                 res.redirect('/browse');
             }
         })
@@ -278,12 +310,35 @@ app.get('/polishid/:id/delete', isLoggedIn, function(req, res) {
     if (req.user.level !== "admin") {
         res.redirect('/error')
     } else if (req.user.level === "admin") {
-        Polish.findById(req.params.id, function(err, polish) {
+        Polish.findById(req.params.id).exec(function(err, polish) {
             if (polish === null) {
                 res.redirect('/error');
             } else {
-                polish.remove();
-                res.redirect('/browse');
+                req.user.ownedpolish.remove(req.params.id);
+                req.user.wantedpolish.remove(req.params.id);
+                req.user.save();
+                fs.unlink(path.resolve('./public/'+polish.swatch), function(err) {
+                    //removing
+                })
+                Checkin.find({polish:req.params.id}, function (err, checkins) {
+                    for (i=0; i<checkins.length; i++) {
+                        checkins[i].polish.remove(polish.id);
+                        checkins[i].save();
+                    }
+                    Photo.find({polishid:req.params.id}, function(err, photos) {
+                        console.log(photos);
+                        for (j=0; j<photos.length; j++) {
+                            fs.unlink(path.resolve('./public/'+photos[j].location), function(err) {
+                                //removing
+                            })
+                            photos[j].remove();
+                        }
+                        Review.deleteMany({polish:req.params.id}, function(err){
+                            polish.remove();
+                            res.redirect('/browse');
+                        });
+                    })
+                })
             }
         })
     }
