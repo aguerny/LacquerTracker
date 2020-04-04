@@ -12,6 +12,7 @@ var download = function(uri, filename, callback){
         request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
     });
 };
+var ColorThief = require('color-thief');
 
 
 module.exports = function(app, passport) {
@@ -88,6 +89,8 @@ app.post('/swatch/crop/:id', isLoggedIn, function(req, res) {
         } else {
             fs.unlink(path.resolve('./public/' +req.body.location), function(err) {
                 Polish.findById(req.params.id, function(err, p) {
+                    var colorThief = new ColorThief();
+                    p.colors = colorThief.getColor(path.resolve('./public/images/swatches/' + req.params.id + req.body.ext));
                     p.dateupdated = new Date();
                     p.swatch = '/images/swatches/' + req.params.id + req.body.ext;
                     p.save(function(err) {
@@ -134,6 +137,8 @@ app.post('/swatch/edit/:pid/:id', isLoggedIn, function(req, res) {
                 if (err) {
                     res.redirect('/error');
                 } else {
+                    var colorThief = new ColorThief();
+                    polish.colors = colorThief.getColor(path.resolve('./public/images/swatches/' + req.params.pid + req.body.ext));
                     polish.dateupdated = new Date();
                     polish.swatch = '/images/swatches/' + polish.id + req.body.ext;
                     polish.save(function(err) {

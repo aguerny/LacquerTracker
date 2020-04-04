@@ -12,6 +12,7 @@ var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
 var _ = require('lodash');
 var nodemailer = require('nodemailer');
+var ColorThief = require('color-thief');
 
 module.exports = function(app, passport) {
 
@@ -494,6 +495,22 @@ app.get('/admin/portal', isLoggedIn, function(req, res) {
 //for above:
 //db.forumcomments.update({}, {$unset:{"date":""}}, false, true)
 //db.forumcomments.update({}, {$rename:{"datenew":"date"}}, false, true)
+
+
+//add dominant color for mongo
+app.get('/admin/adddominantcolor', isLoggedIn, function(req, res) {
+    Polish.find({}, function (err, polish) {
+        for (i=0; i<polish.length; i++) {
+            if (polish[i].swatch) {
+                if (polish[i].swatch.length > 0) {
+                    var colorThief = new ColorThief();
+                    polish[i].colors = colorThief.getPalette(path.resolve('./public/' + polish[i].swatch), 2);
+                    polish[i].save();
+                }
+            }
+        }
+    })
+});
 
 
 

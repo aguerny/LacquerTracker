@@ -274,20 +274,19 @@ app.get('/polish/:brand/:name/delete', isLoggedIn, function(req, res) {
             if (polish === null) {
                 res.redirect('/error');
             } else {
-                // req.user.ownedpolish.remove(polish.id);
-                // req.user.wantedpolish.remove(polish.id);
-                // req.user.save();
-                // fs.unlink(path.resolve('./public/'+polish.swatch), function(err) {
-                //     //removing
-                // })
-                // Checkin.find({polish:polish.id}, function (err, checkins) {
-                //     for (i=0; i<checkins.length; i++) {
-                //         checkins[i].polish.remove(polish.id);
-                //         checkins[i].save();
-                //     }
-                // })
+                req.user.ownedpolish.remove(polish.id);
+                req.user.wantedpolish.remove(polish.id);
+                req.user.save();
+                fs.unlink(path.resolve('./public/'+polish.swatch), function(err) {
+                    //removing
+                })
+                Checkin.find({polish:polish.id}, function (err, checkins) {
+                    for (i=0; i<checkins.length; i++) {
+                        checkins[i].polish.remove(polish.id);
+                        checkins[i].save();
+                    }
+                })
                 Photo.find({polishid:polish.id}, function(err, photos) {
-                    console.log(photos);
                     for (j=0; j<photos.length; j++) {
                         fs.unlink(path.resolve('./public/'+photos[j].location), function(err) {
                             //removing
@@ -295,10 +294,10 @@ app.get('/polish/:brand/:name/delete', isLoggedIn, function(req, res) {
                         photos[j].remove();
                     }
                 })
-                // Review.deleteMany({polish:polish.id}, function(err){
-                //     //removing
-                // });
-                // polish.remove();
+                Review.deleteMany({polish:polish.id}, function(err){
+                    //removing
+                });
+                polish.remove();
                 res.redirect('/browse');
             }
         })
@@ -314,31 +313,31 @@ app.get('/polishid/:id/delete', isLoggedIn, function(req, res) {
             if (polish === null) {
                 res.redirect('/error');
             } else {
-                req.user.ownedpolish.remove(req.params.id);
-                req.user.wantedpolish.remove(req.params.id);
+                req.user.ownedpolish.remove(polish.id);
+                req.user.wantedpolish.remove(polish.id);
                 req.user.save();
                 fs.unlink(path.resolve('./public/'+polish.swatch), function(err) {
                     //removing
                 })
-                Checkin.find({polish:req.params.id}, function (err, checkins) {
+                Checkin.find({polish:polish.id}, function (err, checkins) {
                     for (i=0; i<checkins.length; i++) {
                         checkins[i].polish.remove(polish.id);
                         checkins[i].save();
                     }
-                    Photo.find({polishid:req.params.id}, function(err, photos) {
-                        console.log(photos);
-                        for (j=0; j<photos.length; j++) {
-                            fs.unlink(path.resolve('./public/'+photos[j].location), function(err) {
-                                //removing
-                            })
-                            photos[j].remove();
-                        }
-                        Review.deleteMany({polish:req.params.id}, function(err){
-                            polish.remove();
-                            res.redirect('/browse');
-                        });
-                    })
                 })
+                Photo.find({polishid:polish.id}, function(err, photos) {
+                    for (j=0; j<photos.length; j++) {
+                        fs.unlink(path.resolve('./public/'+photos[j].location), function(err) {
+                            //removing
+                        })
+                        photos[j].remove();
+                    }
+                })
+                Review.deleteMany({polish:polish.id}, function(err){
+                    //removing
+                });
+                polish.remove();
+                res.redirect('/browse');
             }
         })
     }
