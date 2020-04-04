@@ -37,19 +37,9 @@ $(window).load(function () {
                         <tr><td><a id='tablelink' href='/polish/<%= polishes[i].brand.replace(/ /g,"_") %>/<%= polishes[i].name.replace(/ /g,"_") %>'><span><%= polishes[i].name %></span></a></td>
                         <td><span><%= polishes[i].brand %></span></td>
                         <td><span><%= polishes[i].batch %></span></td>
-                        <td class="colorcat nomargin"><p><%= polishes[i].colorcat %></p>
-                            <% if (polishes[i].colorcat.length > 0) {%>
-                                <% if (polishes[i].colorcat.indexOf(",") == -1) { %>
-                                    <img src="/images/colors/<%= polishes[i].colorcat %>.png"/>
-                                <% } else { %>
-                                    <% for (j=0; j<colors.length; j++) { %>
-                                        <% if (polishes[i].colorcat.indexOf(colors[j]) !== -1) { %>
-                                            <img src="/images/colors/<%= colors[j] %>.png"/>
-                                        <% } %>
-                                    <% } %>
-                                <% } %>
-                            <%}%>
-                        </td>
+                        <td <%#class="colorcat"%>><p><%= polishes[i].colorsname[0] %><br>
+                        <%= polishes[i].colorsname[1] %><br>
+                        <%= polishes[i].colorsname[2] %></p></td>
                         <td class="tableswatch"><% if (polishes[i].swatch.length > 0) {%>
                                 <img src="<%=polishes[i].swatch%>"/>
                             <%} else {%>

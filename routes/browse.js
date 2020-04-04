@@ -17,11 +17,11 @@ app.get('/browse', function(req, res) {
         data.brands = allbrands;
         data.browsekeywords = '';
         data.browsebrand = '';
-        data.browsecolorcat = '';
+        data.browsecolor = '';
         data.browsetype = '';
         data.recent = true;
         data.types = PolishTypes;
-        data.colors = PolishColors;
+        data.colorlist = PolishColors;
 
         data.page = 1;
 
@@ -71,10 +71,10 @@ app.post('/browse', function(req, res) {
         data.brands = allbrands;
         data.browsekeywords = req.body.keywords;
         data.browsebrand = req.body.brand;
-        data.browsecolorcat = req.body.colorcat;
+        data.browsecolor = req.body.colorsname;
         data.browsetype = req.body.type;
         data.types = PolishTypes;
-        data.colors = PolishColors;
+        data.colorlist = PolishColors;
 
         data.recent = false;
 

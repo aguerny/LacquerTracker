@@ -13,7 +13,6 @@ var _ = require('lodash');
 var nodemailer = require('nodemailer');
 var csv = require('ya-csv');
 var PolishTypes = require('../app/constants/polishTypes');
-var PolishColors = require('../app/constants/polishColors');
 var mime = require('mime-types');
 
 module.exports = function(app, passport) {
@@ -64,23 +63,6 @@ module.exports = function(app, passport) {
 //                                     }
 //                                 }
 //                             }
-//                             if (polish[0].colorcat.length === 0) {
-//                                 if (data.color) {
-//                                     if (data.color.length > 0) {
-//                                         var input = sanitizer.sanitize(data.color.toLowerCase().split(" "));
-//                                         var formatted = [];
-//                                         var colors = PolishColors;
-//                                         for (i=0; i<colors.length; i++) {
-//                                             if (input.indexOf(colors[i]) !== -1) {
-//                                                 formatted.push(colors[i]);
-//                                             }
-//                                         }
-//                                         polish[0].colorcat = formatted.toString();
-//                                         polish[0].dateupdated = new Date();
-//                                         polish[0].save();
-//                                     }
-//                                 }
-//                             }
 //                             if (polish[0].type.length === 0) {
 //                                 if (data.type) {
 //                                     if (data.type.length > 0) {
@@ -114,7 +96,6 @@ module.exports = function(app, passport) {
 //                                 brand: polishBrandToFind,
 //                                 keywords: polishNameToFind + " " + polishBrandToFind,
 //                                 batch: '',
-//                                 colorcat: '',
 //                                 type: '',
 //                                 code: '',
 //                                 swatch: '',
@@ -128,20 +109,6 @@ module.exports = function(app, passport) {
 //                                     if (data.collection.length > 0) {
 //                                         newPolish.batch = sanitizer.sanitize(data.collection);
 //                                         newPolish.keywords = newPolish.name + " " + newPolish.brand + " " + sanitizer.sanitize(data.collection) + " " + newPolish.code;
-//                                         newPolish.save();
-//                                     }
-//                                 }
-//                                 if (data.color) {
-//                                     if (data.color.length > 0) {
-//                                         var input = sanitizer.sanitize(data.color.toLowerCase().split(" "));
-//                                         var formatted = [];
-//                                         var colors = PolishColors;
-//                                         for (i=0; i<colors.length; i++) {
-//                                             if (input.indexOf(colors[i]) !== -1) {
-//                                                 formatted.push(colors[i]);
-//                                             }
-//                                         }
-//                                         newPolish.colorcat = formatted.toString();
 //                                         newPolish.save();
 //                                     }
 //                                 }
@@ -234,23 +201,6 @@ module.exports = function(app, passport) {
 //                                     }
 //                                 }
 //                             }
-//                             if (polish[0].colorcat.length === 0) {
-//                                 if (data.color) {
-//                                     if (data.color.length > 0) {
-//                                         var input = sanitizer.sanitize(data.color.toLowerCase().split(" "));
-//                                         var formatted = [];
-//                                         var colors = PolishColors;
-//                                         for (i=0; i<colors.length; i++) {
-//                                             if (input.indexOf(colors[i]) !== -1) {
-//                                                 formatted.push(colors[i]);
-//                                             }
-//                                         }
-//                                         polish[0].colorcat = formatted.toString();
-//                                         polish[0].dateupdated = new Date();
-//                                         polish[0].save();
-//                                     }
-//                                 }
-//                             }
 //                             if (polish[0].type.length === 0) {
 //                                 if (data.type) {
 //                                     if (data.type.length > 0) {
@@ -284,7 +234,6 @@ module.exports = function(app, passport) {
 //                                 brand: polishBrandToFind,
 //                                 keywords: polishNameToFind + " " + polishBrandToFind,
 //                                 batch: '',
-//                                 colorcat: '',
 //                                 type: '',
 //                                 code: '',
 //                                 swatch: '',
@@ -296,20 +245,6 @@ module.exports = function(app, passport) {
 //                                     if (data.collection.length > 0) {
 //                                         newPolish.batch = sanitizer.sanitize(data.collection);
 //                                         newPolish.keywords = newPolish.name + " " + newPolish.brand + " " + sanitizer.sanitize(data.collection) + " " + newPolish.code;
-//                                         newPolish.save();
-//                                     }
-//                                 }
-//                                 if (data.color) {
-//                                     if (data.color.length > 0) {
-//                                         var input = sanitizer.sanitize(data.color.toLowerCase().split(" "));
-//                                         var formatted = [];
-//                                         var colors = PolishColors;
-//                                         for (i=0; i<colors.length; i++) {
-//                                             if (input.indexOf(colors[i]) !== -1) {
-//                                                 formatted.push(colors[i]);
-//                                             }
-//                                         }
-//                                         newPolish.colorcat = formatted.toString();
 //                                         newPolish.save();
 //                                     }
 //                                 }

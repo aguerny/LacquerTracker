@@ -19,10 +19,10 @@
                                 <% } %>
                             </select>
                             <br><br><br>
-                            <select name="colorcat" class="width80">
+                            <select name="colorsname" class="width80">
                                 <option value="">All Colors</option>
-                                <% for (i=0; i<colors.length; i++) { %>
-                                    <option value="<%=colors[i]%>" <% if (browsecolorcat === colors[i]) { %> selected="selected" <% } %>><%=colors[i]%></option>
+                                <% for (i=0; i<colorlist.length; i++) { %>
+                                    <option value="<%=colorlist[i].name%>" style="background-color: <%=colorlist[i].hex%>" <% if (browsecolor === colorlist[i].name) { %> selected="selected" <% } %>><%=colorlist[i].name%></option>
                                 <% } %>
                             </select>
                             <br><br><br>
@@ -56,10 +56,10 @@
                             <% } %>
                         </select>
                         <br><br><br>
-                        <select name="colorcat" class="width80">
+                        <select name="color" class="width80">
                             <option value="">All Colors</option>
-                            <% for (i=0; i<colors.length; i++) { %>
-                                <option value="<%=colors[i]%>" <% if (browsecolorcat === colors[i]) { %> selected="selected" <% } %>><%=colors[i]%></option>
+                            <% for (i=0; i<colorlist.length; i++) { %>
+                                <option value="<%=colorlist[i].name%>" <% if (browsecolor === colorlist[i].name) { %> selected="selected" <% } %>><%=colorlist[i].name%></option>
                             <% } %>
                         </select>
                         <br><br><br>
@@ -90,17 +90,11 @@
                         <tr><td><a id='tablelink' href='/polish/<%= polishes[i].brand.replace(/ /g,"_") %>/<%= polishes[i].name.replace(/ /g,"_") %>'><span><%= polishes[i].name %></span></a></td>
                         <td><a id='tablelink' href='/brand/<%= polishes[i].brand.replace(/ /g,"_") %>'><span><%= polishes[i].brand %></span></a></td>
                         <td><span><%= polishes[i].batch %></span></td>
-                        <td class="colorcat nomargin"><p><%= polishes[i].colorcat %></p>
-                            <% if (polishes[i].colorcat.length > 0) {%>
-                                <% if (polishes[i].colorcat.indexOf(",") == -1) { %>
-                                    <img src="/images/colors/<%= polishes[i].colorcat %>.png"/>
-                                <% } else { %>
-                                    <% for (j=0; j<colors.length; j++) { %>
-                                        <% if (polishes[i].colorcat.indexOf(colors[j]) !== -1) { %>
-                                            <img src="/images/colors/<%= colors[j] %>.png"/>
-                                        <% } %>
-                                    <% } %>
-                                <% } %>
+                        <td class="color nomargin"><p><%= polishes[i].color %></p>
+                            <% if (polishes[i].colorsname.length > 0) {%>
+                                <%= polishes[i].colorsname[0]%><br>
+                                <%= polishes[i].colorsname[1]%><br>
+                                <%= polishes[i].colorsname[2]%>
                             <%}%>
                         </td>
                         <td class="tableswatch"><% if (polishes[i].swatch.length > 0) {%>

@@ -50,19 +50,9 @@ $(window).load(function () {
                     <tr><td><a id='tablelink' href='/polish/<%= opolishes[i].brand.replace(/ /g,"_") %>/<%= opolishes[i].name.replace(/ /g,"_") %>'><span><%= opolishes[i].name %></span></a></td>
                     <td><a id='tablelink' href='/brand/<%= opolishes[i].brand.replace(/ /g,"_") %>'><span><%= opolishes[i].brand %></span></a></td>
                     <td><span><%= opolishes[i].batch %></span></td>
-                    <td class="colorcat"><p><%= opolishes[i].colorcat %></p>
-                        <% if (opolishes[i].colorcat.length > 0) {%>
-                            <% if (opolishes[i].colorcat.indexOf(",") == -1) { %>
-                                <img src="/images/colors/<%= opolishes[i].colorcat %>.png"/>
-                            <% } else { %>
-                                <% for (j=0; j<colors.length; j++) { %>
-                                    <% if (opolishes[i].colorcat.indexOf(colors[j]) !== -1) { %>
-                                        <img src="/images/colors/<%= colors[j] %>.png"/>
-                                    <% } %>
-                                <% } %>
-                            <% } %>
-                        <%}%>
-                    </td>
+                    <td <%#class="colorcat"%>><p><%= opolishes[i].colorsname[0] %><br>
+                    <%= opolishes[i].colorsname[1] %><br>
+                    <%= opolishes[i].colorsname[2] %></p></td>
                     <td class="tableswatch"><% if (opolishes[i].swatch.length > 0) {%>
                             <img src="<%=opolishes[i].swatch%>"/>
                         <%} else {%>
@@ -94,19 +84,9 @@ $(window).load(function () {
                         <tr><td><a id='tablelink' href='/polish/<%= wpolishes[i].brand.replace(/ /g,"_") %>/<%= wpolishes[i].name.replace(/ /g,"_") %>'><span><%= wpolishes[i].name %></span></a></td>
                         <td><a id='tablelink' href='/brand/<%= wpolishes[i].brand.replace(/ /g,"_") %>'><span><%= wpolishes[i].brand %></span></a></td>
                         <td><span><%= wpolishes[i].batch %></span></td>
-                        <td class="colorcat"><p><%= wpolishes[i].colorcat %></p>
-                            <% if (wpolishes[i].colorcat.length > 0) {%>
-                                <% if (wpolishes[i].colorcat.indexOf(",") == -1) { %>
-                                    <img src="/images/colors/<%= wpolishes[i].colorcat %>.png"/>
-                                <% } else { %>
-                                    <% for (j=0; j<colors.length; j++) { %>
-                                        <% if (wpolishes[i].colorcat.indexOf(colors[j]) !== -1) { %>
-                                            <img src="/images/colors/<%= colors[j] %>.png"/>
-                                        <% } %>
-                                    <% } %>
-                                <% } %>
-                            <%}%>
-                        </td>
+                        <td <%#class="colorcat"%>><p><%= wpolishes[i].colorsname[0] %><br>
+                        <%= wpolishes[i].colorsname[1] %><br>
+                        <%= wpolishes[i].colorsname[2] %></p></td>
                         <td class="tableswatch"><% if (wpolishes[i].swatch.length > 0) {%>
                                 <img src="<%=wpolishes[i].swatch%>"/>
                             <%} else {%>

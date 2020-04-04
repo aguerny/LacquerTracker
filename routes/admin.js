@@ -13,6 +13,8 @@ var markdown = require('markdown-css');
 var _ = require('lodash');
 var nodemailer = require('nodemailer');
 var ColorThief = require('color-thief');
+var {rgb2lab, lab2rgb, deltaE} = require('rgb-lab');
+var PolishColors = require('../app/constants/polishColors');
 
 module.exports = function(app, passport) {
 
@@ -203,18 +205,6 @@ app.post('/admin/combine', isLoggedIn, function(req, res) {
                             keep.keywords = keep.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.batch + " " + keep.code;
                             keep.save();
                         }
-                    }
-
-                    if (remove.colorcat.length) {
-                        var input = remove.colorcat.split(",");
-                        var formatted = keep.colorcat.split(",");
-                        for (j=0; j<input.length; j++) {
-                            if (formatted.indexOf(input[j]) == -1) {
-                                formatted.push(input[j]);
-                            }
-                        }
-                        keep.colorcat = formatted.toString().replace(/^,/, '');
-                        keep.save();
                     }
 
                     if (remove.type.length) {
@@ -497,14 +487,27 @@ app.get('/admin/portal', isLoggedIn, function(req, res) {
 //db.forumcomments.update({}, {$rename:{"datenew":"date"}}, false, true)
 
 
-//add dominant color for mongo
-app.get('/admin/adddominantcolor', isLoggedIn, function(req, res) {
+//update colors based on current swatches and color list
+app.get('/admin/updatecolors', isLoggedIn, function(req, res) {
     Polish.find({}, function (err, polish) {
         for (i=0; i<polish.length; i++) {
             if (polish[i].swatch) {
                 if (polish[i].swatch.length > 0) {
                     var colorThief = new ColorThief();
-                    polish[i].colors = colorThief.getPalette(path.resolve('./public/' + polish[i].swatch), 2);
+                    var colorsrgb = colorThief.getPalette(path.resolve('./public/' + polish[i].swatch), 2);
+                    var colorslab = [];
+                    var colorsname = [];
+                    for (j=0; j<colorsrgb.length; j++) {
+                        colorslab.push(rgb2lab(colorsrgb[j]));
+                        var deltas = [];
+                        for (k=0; k<PolishColors.length; k++) {
+                            deltas.push(deltaE(rgb2lab(PolishColors[k].rgb), rgb2lab(colorsrgb[j])));
+                        }
+                        colorsname.push(PolishColors[deltas.indexOf(Math.min(...deltas))].name);
+                    }
+                    polish[i].colorsrgb = colorsrgb;
+                    polish[i].colorslab = colorslab;
+                    polish[i].colorsname = colorsname;
                     polish[i].save();
                 }
             }

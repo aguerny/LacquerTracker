@@ -10,10 +10,9 @@ var _ = require('lodash');
 var fs = require('node-fs');
 var path = require('path');
 var PolishTypes = require('../app/constants/polishTypes');
-var PolishColors = require('../app/constants/polishColors');
+
 
 module.exports = function(app, passport) {
-
 
 
 //view a polish by name
@@ -28,8 +27,8 @@ app.get('/polish/:brand/:name', function(req, res) {
             data.pname = polish.name;
             data.pbrand = polish.brand;
             data.pbatch = polish.batch;
-            data.pcolorcat = polish.colorcat;
             data.pswatch = polish.swatch;
+            data.pcolors = polish.colorsname;
             data.ptype = polish.type;
             data.pcode = polish.code;
             data.pid = polish.id;
@@ -42,11 +41,6 @@ app.get('/polish/:brand/:name', function(req, res) {
                 return {value: type, text: type};
             });
             data.types = formattedTypes;
-
-            var formattedColors = PolishColors.map(function(color) {
-                return {value: color, text: color};
-            });
-            data.colors = formattedColors;
 
             var allphotos = [];
             polish.photos.map(function(x) {
@@ -113,9 +107,9 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                 data.pname = polish.name;
                 data.pbrand = polish.brand;
                 data.pbatch = polish.batch;
-                data.pcolorcat = polish.colorcat;
                 data.pswatch = polish.swatch;
                 data.ptype = polish.type;
+                data.pcolors = polish.colorsname;
                 data.pcode = polish.code;
                 data.pid = polish.id;
                 data.pdupes = polish.dupes;
@@ -127,11 +121,6 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                     return {value: type, text: type};
                 });
                 data.types = formattedTypes;
-
-                var formattedColors = PolishColors.map(function(color) {
-                    return {value: color, text: color};
-                });
-                data.colors = formattedColors;
 
                 if (polish.photos.length < 1) {
                     data.numphotos = 0;
@@ -355,7 +344,6 @@ app.get('/polishadd', isLoggedIn, function(req, res) {
         data.title = 'Add a Polish - Lacquer Tracker';
         data.brands = allbrands;
         data.types = PolishTypes;
-        data.colors = PolishColors;
         res.render('polish/add.ejs', data);
     })
 });
@@ -380,7 +368,6 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                         data.message = 'That polish already exists in the database.';
                         data.brands = allbrands;
                         data.types = PolishTypes;
-                        data.colors = PolishColors;
                         res.render('polish/add.ejs', data);
                     })
                 } else {
@@ -406,11 +393,6 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                             } else {
                                 newPolish.type = '';
                             }
-                            if (req.body.colorcat !== undefined) {
-                                newPolish.colorcat = sanitizer.sanitize(req.body.colorcat);
-                            } else {
-                                newPolish.colorcat = '';
-                            }
                             newPolish.save(function(err) {
                                 Brand.findOne({name: polishBrandToFind}, function(err, brand) {
                                     //check if brand is already in brand database
@@ -426,6 +408,8 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                                         newBrand.save(function(err) {
                                             res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
                                         })
+                                    } else {
+                                        res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
                                     }
                                 })
                             })
@@ -553,25 +537,6 @@ app.post('/polishedit/:id/batch', isLoggedIn, function(req, res) {
                 p.save(function(err) {
                     res.end();
                 })
-            });
-        }
-    });
-});
-
-app.post('/polishedit/:id/colorcat', isLoggedIn, function(req, res) {
-    Polish.findById(req.params.id, function(err, p) {
-        if (!p) {
-            res.redirect('/error');
-        } else {
-            if (req.body.value !== undefined) {
-                p.colorcat = sanitizer.sanitize(req.body.value);
-                p.dateupdated = new Date();
-            } else {
-                p.dateupdated = new Date();
-                p.colorcat = '';
-            }
-            p.save(function(err) {
-                res.end();
             });
         }
     });

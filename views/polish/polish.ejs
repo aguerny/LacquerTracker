@@ -34,13 +34,13 @@ $(window).load(function () {
                         <% if (isAuthenticated) { %>
                             <b>Code:</b> <a href="#" id="code" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/code"><% if (pcode.length > 0) {%><%= pcode %><%}else{%>?<%}%></a><br><br>
                             <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch"><% if (pbatch.length > 0) {%><%= pbatch %><%}else{%>?<%}%></a><br><br>
-                            <b>Color:</b> <a href="#" id="colorcat" data-pk="1" class="editablecolorcat" data-type="checklist" data-url="/polishedit/<%= pid %>/colorcat" data-value="<%= pcolorcat %>" data-defaultValue="?" data-separator=","><% if (pcolorcat.length > 0) {%><%= pcolorcat.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
+                            <b>Color:</b> <%= pcolors %><br><br>
                             <b>Type:</b> <a href="#" id="type" data-pk="1" class="editabletype" data-type="checklist" data-url="/polishedit/<%= pid %>/type" data-value="<%= ptype %>" data-defaultValue="?" data-separator=","><% if (ptype.length > 0) {%><%= ptype.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
                             <span class="smallfont"><i>(Click value to edit polish information.)</i></span>
                         <% } else { %>
                             <b>Code:</b> <%= pcode %><br><br>
                             <b>Collection:</b> <%= pbatch %><br><br>
-                            <b>Color:</b> <%= pcolorcat.replace(/,/g,", ") %><br><br>
+                            <b>Color:</b> <%= pcolors %><br><br>
                             <b>Type:</b> <%= ptype.replace(/,/g,", ") %>
                         <% } %>
                     </div>
@@ -124,13 +124,13 @@ $(window).load(function () {
                 <% if (isAuthenticated) { %>
                     <b>Code:</b> <a href="#" id="code" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/code"><% if (pcode.length > 0) {%><%= pcode %><%}else{%>?<%}%></a><br><br>
                     <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch"><% if (pbatch.length > 0) {%><%= pbatch %><%}else{%>?<%}%></a><br><br>
-                    <b>Color:</b> <a href="#" id="colorcat" data-pk="1" class="editablecolorcat" data-type="checklist" data-url="/polishedit/<%= pid %>/colorcat" data-value="<%= pcolorcat %>" data-defaultValue="?" data-separator=","><% if (pcolorcat.length > 0) {%><%= pcolorcat.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
+                    <b>Color:</b> <%= pcolors %><br><br>
                     <b>Type:</b> <a href="#" id="type" data-pk="1" class="editabletype" data-type="checklist" data-url="/polishedit/<%= pid %>/type" data-value="<%= ptype %>" data-defaultValue="?" data-separator=","><% if (ptype.length > 0) {%><%= ptype.replace(/,/g,", ") %><%} else {%>?<%}%></a><br><br>
                     <span class="smallfont"><i>(Click value to edit polish information.)</i></span>
                 <% } else { %>
                     <b>Code:</b> <%= pcode %><br><br>
                     <b>Collection:</b> <%= pbatch %><br><br>
-                    <b>Color:</b> <%= pcolorcat.replace(/,/g,", ") %><br><br>
+                    <b>Color:</b> <%= pcolors %><br><br>
                     <b>Type:</b> <%= ptype.replace(/,/g,", ") %>
                 <% } %>
             </div>
@@ -222,11 +222,6 @@ var speed = 100;
     $.fn.editable.defaults.mode = 'inline';
     $(document).ready(function() {
         $('.editable').editable({});
-        $(function(){
-            $('.editablecolorcat').editable({
-                source: <%- JSON.stringify(colors)%>
-            });
-        });
         $(function(){
             $('.editabletype').editable({
                 source: <%- JSON.stringify(types)%>

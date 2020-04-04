@@ -14,11 +14,6 @@
         			Brand:<br><input type="text" list="brands" name="brand" class="width45" required><br><br><br>
                     Collection:<br><input type="text" name="batch" class="width45"><br><i>Please format like: 2013 Off Shore (Summer)</i><br><br><br>
                     Code:<br><input type="text" name="code" class="width45"><br><br><br>
-                    Color Category: <br><ul>
-                    <% for (i=0; i<colors.length; i++) { %>
-                        <input type="checkbox" name="colorcat" value="<%=colors[i]%>"><%=colors[i]%><br>
-                    <% } %>
-                    </ul><br><br>
                     Types:<br><ul>
                     <% for (i=0; i<types.length; i++) { %>
                         <input type="checkbox" name="type" value="<%=types[i]%>"><%=types[i]%><br>
