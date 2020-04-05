@@ -495,10 +495,8 @@ app.get('/admin/updatecolors', isLoggedIn, function(req, res) {
                 if (polish[i].swatch.length > 0) {
                     var colorThief = new ColorThief();
                     var colorsrgb = colorThief.getPalette(path.resolve('./public/' + polish[i].swatch), 2);
-                    var colorslab = [];
                     var colorsname = [];
                     for (j=0; j<colorsrgb.length; j++) {
-                        colorslab.push(rgb2lab(colorsrgb[j]));
                         var deltas = [];
                         for (k=0; k<PolishColors.length; k++) {
                             deltas.push(deltaE(rgb2lab(PolishColors[k].rgb), rgb2lab(colorsrgb[j])));
@@ -506,7 +504,6 @@ app.get('/admin/updatecolors', isLoggedIn, function(req, res) {
                         colorsname.push(PolishColors[deltas.indexOf(Math.min(...deltas))].name);
                     }
                     polish[i].colorsrgb = colorsrgb;
-                    polish[i].colorslab = colorslab;
                     polish[i].colorsname = colorsname;
                     polish[i].save();
                 }

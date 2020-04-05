@@ -21,7 +21,6 @@ var polishSchema = mongoose.Schema({
     flaggedreason: String,
     checkins: [{type: mongoose.Schema.Types.ObjectId, ref: 'Checkin'}],
     colorsrgb: [],
-    colorslab: [],
     colorsname: [],
 });
 

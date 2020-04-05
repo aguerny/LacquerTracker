@@ -356,19 +356,21 @@ app.post('/photo/profile', isLoggedIn, function(req, res) {
             var ext = path.extname(req.files.photo.name);
             var tempPath = req.files.photo.tempFilePath;
             var targetPath = path.resolve('./public/images/profilephotos/' + req.user.username + ext);
-            gm(tempPath).strip().resize(200).write(targetPath, function (err) {
-                if (err) {
-                    fs.unlink(tempPath, function(err) {
-                        res.redirect('/error');
-                    })
-                } else {
-                    fs.unlink(tempPath, function() {
-                        req.user.profilephoto = '/images/profilephotos/' + req.user.username + ext,
-                        req.user.save(function(err) {
-                            res.redirect('/profile/' + req.user.username);
+            fs.unlink(path.resolve('./public/'+req.user.profilephoto), function() {
+                gm(tempPath).strip().resize(200).write(targetPath, function (err) {
+                    if (err) {
+                        fs.unlink(tempPath, function(err) {
+                            res.redirect('/error');
                         })
-                    })
-                }
+                    } else {
+                        fs.unlink(tempPath, function() {
+                            req.user.profilephoto = '/images/profilephotos/' + req.user.username + ext,
+                            req.user.save(function(err) {
+                                res.redirect('/profile/' + req.user.username);
+                            })
+                        })
+                    }
+                })
             })
         } else {
             fs.unlink(req.files.photo.tempFilePath, function() {
@@ -384,19 +386,21 @@ app.post('/photo/profile', isLoggedIn, function(req, res) {
             if (err) {
                 res.redirect('/error');
             } else {
-                gm(tempPath).strip().resize(200).write(targetPath, function(err) {
-                    if (err) {
-                        fs.unlink(tempPath, function(err) {
-                            res.redirect('/error');
-                        })
-                    } else {
-                        fs.unlink(tempPath, function() {
-                            req.user.profilephoto = '/images/profilephotos/' + req.user.username + ext,
-                            req.user.save(function(err) {
-                                res.redirect('/profile/' + req.user.username);
+                fs.unlink(path.resolve('./public/'+req.user.profilephoto), function() {
+                    gm(tempPath).strip().resize(200).write(targetPath, function(err) {
+                        if (err) {
+                            fs.unlink(tempPath, function(err) {
+                                res.redirect('/error');
                             })
-                        })
-                    }
+                        } else {
+                            fs.unlink(tempPath, function() {
+                                req.user.profilephoto = '/images/profilephotos/' + req.user.username + ext,
+                                req.user.save(function(err) {
+                                    res.redirect('/profile/' + req.user.username);
+                                })
+                            })
+                        }
+                    })
                 })
             }
         })
@@ -421,19 +425,21 @@ app.post('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
                 var ext = path.extname(req.files.photo.name);
                 var tempPath = req.files.photo.tempFilePath;
                 var targetPath = path.resolve('./public/images/brandphotos/' + brand.id + ext);
-                gm(tempPath).strip().resize(200).write(targetPath, function (err) {
-                    if (err) {
-                        fs.unlink(tempPath, function(err) {
-                            res.redirect('/error');
-                        })
-                    } else {
-                        fs.unlink(tempPath, function() {
-                            brand.photo = '/images/brandphotos/' + brand.id + ext,
-                            brand.save(function(err) {
-                                res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
+                fs.unlink(path.resolve('./public/'+brand.photo), function() {
+                    gm(tempPath).strip().resize(200).write(targetPath, function (err) {
+                        if (err) {
+                            fs.unlink(tempPath, function(err) {
+                                res.redirect('/error');
                             })
-                        })
-                    }
+                        } else {
+                            fs.unlink(tempPath, function() {
+                                brand.photo = '/images/brandphotos/' + brand.id + ext,
+                                brand.save(function(err) {
+                                    res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
+                                })
+                            })
+                        }
+                    })
                 })
             } else {
                 fs.unlink(req.files.photo.tempFilePath, function () {
@@ -449,19 +455,21 @@ app.post('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
                 if (err) {
                     res.redirect('/error');
                 } else {
-                    gm(tempPath).strip().resize(200).write(targetPath, function(err) {
-                        if (err) {
-                            fs.unlink(tempPath, function(err) {
-                                res.redirect('/error');
-                            })
-                        } else {
-                            fs.unlink(tempPath, function() {
-                                brand.photo = '/images/brandphotos/' + brand.id + ext,
-                                brand.save(function(err) {
-                                    res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
+                    fs.unlink(path.resolve('./public/'+brand.photo), function() {
+                        gm(tempPath).strip().resize(200).write(targetPath, function(err) {
+                            if (err) {
+                                fs.unlink(tempPath, function(err) {
+                                    res.redirect('/error');
                                 })
-                            })
-                        }
+                            } else {
+                                fs.unlink(tempPath, function() {
+                                    brand.photo = '/images/brandphotos/' + brand.id + ext,
+                                    brand.save(function(err) {
+                                        res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
+                                    })
+                                })
+                            }
+                        })
                     })
                 }
             })

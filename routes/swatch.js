@@ -80,40 +80,39 @@ app.post('/swatch/add/:id', isLoggedIn, function(req, res) {
 
 //crop happens here
 app.post('/swatch/crop/:id', isLoggedIn, function(req, res) {
-    gm(path.resolve('./public/' + req.body.location))
-    .crop(req.body.w, req.body.h, req.body.x, req.body.y)
-    .resize(200)
-    .write(path.resolve('./public/images/swatches/' + req.params.id + req.body.ext), function (err) {
-        if (err) {
-            fs.unlink(path.resolve('./public/' +req.body.location), function(err) {
-                res.redirect('/error');
-            })
-        } else {
-            fs.unlink(path.resolve('./public/' +req.body.location), function(err) {
-                Polish.findById(req.params.id, function(err, p) {
-                    var colorThief = new ColorThief();
-                    var colorsrgb = colorThief.getPalette(path.resolve('./public/images/swatches/' + req.params.pid + req.body.ext), 2);
-                    var colorslab = [];
-                    var colorsname = [];
-                    for (i=0; i<colorsrgb.length; i++) {
-                        colorslab.push(rgb2lab(colorsrgb[i]));
-                        var deltas = [];
-                        for (j=0; j<PolishColors.length; j++) {
-                            deltas.push(deltaE(rgb2lab(PolishColors[j].rgb), rgb2lab(colorsrgb[i])));
-                        }
-                        colorsname.push(PolishColors[deltas.indexOf(Math.min(...deltas))].name);
-                    }
-                    p.colorsrgb = colorsrgb;
-                    p.colorslab = colorslab;
-                    p.colorsname = colorsname;
-                    p.dateupdated = new Date();
-                    p.swatch = '/images/swatches/' + req.params.id + req.body.ext;
-                    p.save(function(err) {
-                        res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+    Polish.findById(req.params.id, function(err, polish) {
+        fs.unlink(path.resolve('./public/'+polish.swatch), function() {
+            gm(path.resolve('./public/' + req.body.location))
+            .crop(req.body.w, req.body.h, req.body.x, req.body.y)
+            .resize(200)
+            .write(path.resolve('./public/images/swatches/' + req.params.id + req.body.ext), function (err) {
+                if (err) {
+                    fs.unlink(path.resolve('./public/' +req.body.location), function(err) {
+                        res.redirect('/error');
                     })
-                })
+                } else {
+                    fs.unlink(path.resolve('./public/' +req.body.location), function(err) {
+                        var colorThief = new ColorThief();
+                        var colorsrgb = colorThief.getPalette(path.resolve('./public/images/swatches/' + req.params.polishid + req.body.ext), 2);
+                        var colorsname = [];
+                        for (i=0; i<colorsrgb.length; i++) {
+                            var deltas = [];
+                            for (j=0; j<PolishColors.length; j++) {
+                                deltas.push(deltaE(rgb2lab(PolishColors[j].rgb), rgb2lab(colorsrgb[i])));
+                            }
+                            colorsname.push(PolishColors[deltas.indexOf(Math.min(...deltas))].name);
+                        }
+                        polish.colorsrgb = colorsrgb;
+                        polish.colorsname = colorsname;
+                        polish.dateupdated = new Date();
+                        polish.swatch = '/images/swatches/' + req.params.id + req.body.ext;
+                        polish.save(function(err) {
+                            res.redirect('/polish/' + polish.brand.replace(/ /g,"_") + "/" + polish.name.replace(/ /g,"_"));
+                        })
+                    })
+                }
             })
-        }
+        })
     })
 });
 
@@ -145,34 +144,33 @@ app.get('/photo/swatch/:pid/:id', isLoggedIn, function(req, res) {
 //crop happens here
 app.post('/swatch/edit/:pid/:id', isLoggedIn, function(req, res) {
     Polish.findById(req.params.pid, function (err, polish) {
-        gm(path.resolve('./public/' + req.body.location))
-        .crop(req.body.w, req.body.h, req.body.x, req.body.y)
-        .resize(200)
-        .write(path.resolve('./public/images/swatches/' + req.params.pid + req.body.ext), function (err) {
-            if (err) {
-                res.redirect('/error');
-            } else {
-                var colorThief = new ColorThief();
-                var colorsrgb = colorThief.getPalette(path.resolve('./public/images/swatches/' + req.params.pid + req.body.ext), 2);
-                var colorslab = [];
-                var colorsname = [];
-                for (i=0; i<colorsrgb.length; i++) {
-                    colorslab.push(rgb2lab(colorsrgb[i]));
-                    var deltas = [];
-                    for (j=0; j<PolishColors.length; j++) {
-                        deltas.push(deltaE(rgb2lab(PolishColors[j].rgb), rgb2lab(colorsrgb[i])));
+        fs.unlink(path.resolve('./public/'+polish.swatch), function() {
+            gm(path.resolve('./public/' + req.body.location))
+            .crop(req.body.w, req.body.h, req.body.x, req.body.y)
+            .resize(200)
+            .write(path.resolve('./public/images/swatches/' + req.params.pid + req.body.ext), function (err) {
+                if (err) {
+                    res.redirect('/error');
+                } else {
+                    var colorThief = new ColorThief();
+                    var colorsrgb = colorThief.getPalette(path.resolve('./public/images/swatches/' + req.params.pid + req.body.ext), 2);
+                    var colorsname = [];
+                    for (i=0; i<colorsrgb.length; i++) {
+                        var deltas = [];
+                        for (j=0; j<PolishColors.length; j++) {
+                            deltas.push(deltaE(rgb2lab(PolishColors[j].rgb), rgb2lab(colorsrgb[i])));
+                        }
+                        colorsname.push(PolishColors[deltas.indexOf(Math.min(...deltas))].name);
                     }
-                    colorsname.push(PolishColors[deltas.indexOf(Math.min(...deltas))].name);
+                    polish.colorsrgb = colorsrgb;
+                    polish.colorsname = colorsname;
+                    polish.dateupdated = new Date();
+                    polish.swatch = '/images/swatches/' + polish.id + req.body.ext;
+                    polish.save(function(err) {
+                        res.redirect('/polish/' + polish.brand.replace(/ /g,"_") + "/" + polish.name.replace(/ /g,"_"));
+                    })
                 }
-                polish.colorsrgb = colorsrgb;
-                polish.colorslab = colorslab;
-                polish.colorsname = colorsname;
-                polish.dateupdated = new Date();
-                polish.swatch = '/images/swatches/' + polish.id + req.body.ext;
-                polish.save(function(err) {
-                    res.redirect('/polish/' + polish.brand.replace(/ /g,"_") + "/" + polish.name.replace(/ /g,"_"));
-                })
-            }
+            })
         })
     })
 });
