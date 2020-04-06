@@ -3,6 +3,7 @@ var User = require('../app/models/user');
 var _ = require('lodash');
 var PolishTypes = require('../app/constants/polishTypes');
 var PolishColors = require('../app/constants/polishColors');
+var {rgb2lab, lab2rgb, deltaE} = require('rgb-lab');
 
 
 module.exports = function(app, passport) {
@@ -63,6 +64,38 @@ app.get('/browse', function(req, res) {
 
 
 app.post('/browse', function(req, res) {
+
+    if (req.body.allcolors) {
+        var search = {
+            keywords:req.body.keywords,
+            brand:req.body.brand,
+            type:req.body.type,
+            page:req.body.page
+        }
+    } else {
+        function hexToRgb(hex) {
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+        var selectedColorRGB = [hexToRgb(req.body.selectcolor).r, hexToRgb(req.body.selectcolor).g, hexToRgb(req.body.selectcolor).b];
+
+        var deltas = [];
+        for (i=0; i<PolishColors.length; i++) {
+            deltas.push(deltaE(rgb2lab(PolishColors[i].rgb), rgb2lab(selectedColorRGB)));
+        }
+        var search = {
+            keywords:req.body.keywords,
+            brand:req.body.brand,
+            type:req.body.type,
+            colorsname: PolishColors[deltas.indexOf(Math.min(...deltas))].name,
+            page:req.body.page
+        }
+    }
+
     Polish.find().distinct('brand', function(error, brands) {
         var allbrands = _.sortBy(brands, function(b) {return b.toLowerCase();});
 
@@ -92,7 +125,7 @@ app.post('/browse', function(req, res) {
         }
 
 
-        var filterOptions = _.transform(req.body, function(result, value, key) {
+        var filterOptions = _.transform(search, function(result, value, key) {
             var valueWithCharactersStripped = value.replace(/[^A-Za-z 0-9!é()'.-]/g,'');
             var valueWithCharactersStrippedAndEscaped = valueWithCharactersStripped.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
             result[key] = new RegExp(valueWithCharactersStrippedAndEscaped, "i");

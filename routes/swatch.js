@@ -22,15 +22,15 @@ module.exports = function(app, passport) {
 
 //add swatch
 app.get('/swatch/add/:id', isLoggedIn, function(req, res) {
-    Polish.findById(req.params.id, function(err, p) {
-        if (p === null) {
+    Polish.findById(req.params.id, function(err, polish) {
+        if (polish === null) {
             res.redirect('/error');
         } else {
             var data = {};
                 data.title = 'Add a Swatch - Lacquer Tracker';
-                data.pname = p.name;
-                data.pbrand = p.brand;
-                data.pid = p.id;
+                data.pname = polish.name;
+                data.pbrand = polish.brand;
+                data.pid = polish.id;
             res.render('swatch/upload.ejs', data);
     }
     })

@@ -50,7 +50,6 @@ app.get('/polish/:brand/:name', function(req, res) {
             })
             data.allphotos = _.shuffle(allphotos);
             data.numphotos = allphotos.length;
-            data.numphotos = allphotos.length;
 
             if (req.isAuthenticated()) {
 
@@ -98,7 +97,7 @@ app.get('/polish/:brand/:name', function(req, res) {
 //view a polish by id
 app.get('/polishid/:id', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
-        Polish.findById(req.params.id, function(err, polish) {
+        Polish.findById(req.params.id).populate('dupes', 'brand name').populate('checkins', 'photo pendingdelete').populate('photos').exec(function(err, polish) {
             if (polish === null) {
                 res.redirect('/error');
             } else {
@@ -122,17 +121,14 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                 });
                 data.types = formattedTypes;
 
-                if (polish.photos.length < 1) {
-                    data.numphotos = 0;
-                } else {
-                    var allphotos = polish.photos.map(function(x) {
-                        if (x.pendingdelete === false) {
-                            return x;
-                        }
-                    })
-                    data.allphotos = _.shuffle(allphotos);
-                    data.numphotos = allphotos.length;
-                }
+                var allphotos = [];
+                polish.photos.map(function(x) {
+                    if (x.pendingdelete === false) {
+                        allphotos.push(x);
+                    }
+                })
+                data.allphotos = _.shuffle(allphotos);
+                data.numphotos = allphotos.length;
 
                 if (req.isAuthenticated()) {
 

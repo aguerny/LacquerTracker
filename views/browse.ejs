@@ -6,60 +6,15 @@
         <section>
             <div id="browse-wrap">
             <div id="browse-left_col">
-                <div id="biglayout">
-                    <div id="sidebr">
-                        <h3>Browse by:</h3><br>
-                        <form action="/browse" method="post" id="browseform">
-                            <input type="text" name="keywords" <% if (browsekeywords.length > 0) { %> value="<%=browsekeywords%>" <% } %>placeholder="Keyword/Code" class="width80" autofocus>
-                            <br><br><br>
-                            <select name="brand" class="width80">
-                                <option value="">All Brands</option>
-                                <% for (i=0; i<brands.length; i++) { %>
-                                    <option value="<%= brands[i] %>" <% if (browsebrand === brands[i]) { %> selected="selected" <% } %>><%= brands[i] %></option>
-                                <% } %>
-                            </select>
-                            <br><br><br>
-                            <select name="colorsname" class="width80">
-                                <option value="">All Colors</option>
-                                <% for (i=0; i<colorlist.length; i++) { %>
-                                    <option value="<%=colorlist[i].name%>" style="background-color: <%=colorlist[i].hex%>" <% if (browsecolor === colorlist[i].name) { %> selected="selected" <% } %>><%=colorlist[i].name%></option>
-                                <% } %>
-                            </select>
-                            <br><br><br>
-                            <select name="type" class="width80">
-                                <option value="">All Types</option>
-                                <% for (i=0; i<types.length; i++) { %>
-                                    <option value="<%=types[i]%>" <% if (browsetype === types[i]) { %> selected="selected" <% } %>><%=types[i]%></option>
-                                <% } %>
-                            </select>
-                            <br><br><br>
-                            <% if (isAuthenticated) { %>
-                                <input type="checkbox" name="owned" <% if (browseowned === "on") { %> checked <% } %>>Owned polishes<br><br><br>
-                                <input type="checkbox" name="wanted" <% if (browsewanted === "on") { %> checked <% } %>>Wanted polishes<br><br><br>
-                            <% } %>
-                            <input type="submit" class="button" name="browse" value="Browse">
-                            <input style="visibility:hidden;" name="page" value="<%=page%>">
-                            <input type="submit" style="visibility:hidden;" name="nextpage" value="nextpage" id="nextpage">
-                            <input type="submit" style="visibility:hidden;" name="prevpage" value="prevpage" id="prevpage">
-                        </form>
-                    </div>
-                </div>
-                <div id="smalllayout">
+                <div id="sidebar">
                     <h3>Browse by:</h3><br>
                     <form action="/browse" method="post" id="browseform">
-                        <input type="text" name="keywords" <% if (browsekeywords) { %> value="<%=browsekeywords%>" <% } %>placeholder="Keyword/Code" class="width80">
+                        <input type="text" name="keywords" <% if (browsekeywords.length > 0) { %> value="<%=browsekeywords%>" <% } %>placeholder="Keyword/Code" class="width80" autofocus>
                         <br><br><br>
                         <select name="brand" class="width80">
                             <option value="">All Brands</option>
                             <% for (i=0; i<brands.length; i++) { %>
                                 <option value="<%= brands[i] %>" <% if (browsebrand === brands[i]) { %> selected="selected" <% } %>><%= brands[i] %></option>
-                            <% } %>
-                        </select>
-                        <br><br><br>
-                        <select name="color" class="width80">
-                            <option value="">All Colors</option>
-                            <% for (i=0; i<colorlist.length; i++) { %>
-                                <option value="<%=colorlist[i].name%>" <% if (browsecolor === colorlist[i].name) { %> selected="selected" <% } %>><%=colorlist[i].name%></option>
                             <% } %>
                         </select>
                         <br><br><br>
@@ -70,6 +25,16 @@
                             <% } %>
                         </select>
                         <br><br><br>
+                        <!-- <select name="colorsname" class="width80">
+                            <option value="">All Colors</option>
+                            <% for (i=0; i<colorlist.length; i++) { %>
+                                <option value="<%=colorlist[i].name%>" style="background-color: <%=colorlist[i].hex%>" <% if (browsecolor === colorlist[i].name) { %> selected="selected" <% } %>><%=colorlist[i].name%></option>
+                            <% } %>
+                        </select>
+                        <br><br><br> --->
+                        <input type="checkbox" name="allcolors" id="allcolors" checked>All Colors<br>
+                        <input type="color" name="selectcolor" id="selectcolor" value="#008080" style="display:none">
+                        <br><br>
                         <% if (isAuthenticated) { %>
                             <input type="checkbox" name="owned" <% if (browseowned === "on") { %> checked <% } %>>Owned polishes<br><br><br>
                             <input type="checkbox" name="wanted" <% if (browsewanted === "on") { %> checked <% } %>>Wanted polishes<br><br><br>
@@ -79,7 +44,9 @@
                         <input type="submit" style="visibility:hidden;" name="nextpage" value="nextpage" id="nextpage">
                         <input type="submit" style="visibility:hidden;" name="prevpage" value="prevpage" id="prevpage">
                     </form>
-                    <hr><br>
+                    <div id="smalllayout">
+                        <hr><br>
+                    </div>
                 </div>
             </div>
             <div id="browse-right_col">
@@ -211,6 +178,15 @@ $(document).ready(function() {
         })
         $(this).parent().parent().replaceWith('<div><center><span>&#10084;</span></center></div>');
         e.preventDefault();
+    });
+
+
+    $('#allcolors').change(function(){
+      if($(this).prop("checked")) {
+        $('#selectcolor').hide();
+      } else {
+        $('#selectcolor').show();
+      }
     });
 
 });

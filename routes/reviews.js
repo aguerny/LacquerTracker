@@ -14,7 +14,7 @@ app.get('/review/edit/:id', isLoggedIn, function(req, res) {
     data.polish = req.params.id;
     data.user = req.user;
 
-    Polish.findById(req.params.id, function(err, polish) {
+    Polish.findById(req.params.id).select('name brand').exec(function(err, polish) {
         data.polishname = polish.name;
         data.polishbrand = polish.brand;
 
@@ -76,7 +76,7 @@ app.get('/notes/edit/:id', isLoggedIn, function(req, res) {
     data.polish = req.params.id;
     data.user = req.user;
 
-    Polish.findById(req.params.id, function(err, polish) {
+    Polish.findById(req.params.id).select('name brand').exec(function(err, polish) {
         data.polishname = polish.name;
         data.polishbrand = polish.brand;
 
