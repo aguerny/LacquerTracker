@@ -25,15 +25,23 @@
                             <% } %>
                         </select>
                         <br><br><br>
-                        <!-- <select name="colorsname" class="width80">
+                        <select name="colorcategory" id="colorcategory" class="width80">
                             <option value="">All Colors</option>
-                            <% for (i=0; i<colorlist.length; i++) { %>
-                                <option value="<%=colorlist[i].name%>" style="background-color: <%=colorlist[i].hex%>" <% if (browsecolor === colorlist[i].name) { %> selected="selected" <% } %>><%=colorlist[i].name%></option>
-                            <% } %>
+                            <option value="Black" <%if (browsecolorcategory=="Black"){%> selected="selected" <%}%>>Black</option>
+                            <option value="Blue" <%if (browsecolorcategory=="Blue"){%> selected="selected" <%}%>>Blue</option>
+                            <option value="Brown" <%if (browsecolorcategory=="Brown"){%> selected="selected" <%}%>>Brown</option>
+                            <option value="Gray" <%if (browsecolorcategory=="Gray"){%> selected="selected" <%}%>>Gray</option>
+                            <option value="Green" <%if (browsecolorcategory=="Green"){%> selected="selected" <%}%>>Green</option>
+                            <option value="Orange" <%if (browsecolorcategory=="Orange"){%> selected="selected" <%}%>>Orange</option>
+                            <option value="Pink" <%if (browsecolorcategory=="Pink"){%> selected="selected" <%}%>>Pink</option>
+                            <option value="Purple" <%if (browsecolorcategory=="Purple"){%> selected="selected" <%}%>>Purple</option>
+                            <option value="Red" <%if (browsecolorcategory=="Red"){%> selected="selected" <%}%>>Red</option>
+                            <option value="White" <%if (browsecolorcategory=="White"){%> selected="selected" <%}%>>White</option>
+                            <option value="Yellow" <%if (browsecolorcategory=="Yellow"){%> selected="selected" <%}%>>Yellow</option>
+                            <option value="Choose" <%if (browsecolorcategory=="Choose"){%> selected="selected" <%}%>>Choose a color</option>
                         </select>
-                        <br><br><br> --->
-                        <input type="checkbox" name="allcolors" id="allcolors" checked>All Colors<br>
-                        <input type="color" name="selectcolor" id="selectcolor" value="#008080" style="display:none">
+                        <br>
+                        <input type="color" name="selectcolor" id="selectcolor" value="<%=browseselectcolor%>" <%if (browsecolorcategory!=="Choose"){%> style="display:none" <%}%>>
                         <br><br>
                         <% if (isAuthenticated) { %>
                             <input type="checkbox" name="owned" <% if (browseowned === "on") { %> checked <% } %>>Owned polishes<br><br><br>
@@ -52,18 +60,11 @@
             <div id="browse-right_col">
                 <% if (recent === true) { %><h4>Recently updated polishes:</h3><br><%}%>
                 <table id="polishbrowse" class="sortable browsetable" style="width:100%">
-                    <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="color"><span>Color</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><% if (isAuthenticated) {%><th class="info"><span>Info</span></th><%}%></tr>
+                    <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><% if (isAuthenticated) {%><th class="info"><span>Info</span></th><%}%></tr>
                     <% for(var i=0; i<polishes.length; i++) {%>
                         <tr><td><a id='tablelink' href='/polish/<%= polishes[i].brand.replace(/ /g,"_") %>/<%= polishes[i].name.replace(/ /g,"_") %>'><span><%= polishes[i].name %></span></a></td>
                         <td><a id='tablelink' href='/brand/<%= polishes[i].brand.replace(/ /g,"_") %>'><span><%= polishes[i].brand %></span></a></td>
                         <td><span><%= polishes[i].batch %></span></td>
-                        <td class="color nomargin"><p><%= polishes[i].color %></p>
-                            <% if (polishes[i].colorsname.length > 0) {%>
-                                <%= polishes[i].colorsname[0]%><br>
-                                <%= polishes[i].colorsname[1]%><br>
-                                <%= polishes[i].colorsname[2]%>
-                            <%}%>
-                        </td>
                         <td class="tableswatch"><% if (polishes[i].swatch.length > 0) {%>
                                 <img src="<%=polishes[i].swatch%>"/>
                             <%} else {%>
@@ -126,21 +127,21 @@ $(document).ready(function() {
     });
 
 
-    var $sidebar   = $("#sidebar"),
-        $window    = $(window),
-        offset     = $sidebar.offset(),
-        topPadding = 15;
-    $window.scroll(function() {
-        if ($window.scrollTop() > offset.top) {
-            $sidebar.stop().animate({
-                marginTop: $window.scrollTop() - offset.top + topPadding
-            });
-        } else {
-            $sidebar.stop().animate({
-                marginTop: 0
-            });
-        }
-    });
+    // var $sidebar   = $("#sidebar"),
+    //     $window    = $(window),
+    //     offset     = $sidebar.offset(),
+    //     topPadding = 15;
+    // $window.scroll(function() {
+    //     if ($window.scrollTop() > offset.top) {
+    //         $sidebar.stop().animate({
+    //             marginTop: $window.scrollTop() - offset.top + topPadding
+    //         });
+    //     } else {
+    //         $sidebar.stop().animate({
+    //             marginTop: 0
+    //         });
+    //     }
+    // });
 
 
     $(function() {
@@ -181,12 +182,12 @@ $(document).ready(function() {
     });
 
 
-    $('#allcolors').change(function(){
-      if($(this).prop("checked")) {
-        $('#selectcolor').hide();
-      } else {
-        $('#selectcolor').show();
-      }
+    $('#colorcategory').change(function(){
+        if($(this).val() == "Choose"){
+            $('#selectcolor').show();
+        } else {
+            $('#selectcolor').hide();
+        }
     });
 
 });

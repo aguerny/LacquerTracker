@@ -389,6 +389,9 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                             } else {
                                 newPolish.type = '';
                             }
+                            if (req.body.colorcategory !== undefined) {
+                                newPolish.colorscategory = sanitizer.sanitize(req.body.colorcategory.split(','));
+                            }
                             newPolish.save(function(err) {
                                 Brand.findOne({name: polishBrandToFind}, function(err, brand) {
                                     //check if brand is already in brand database

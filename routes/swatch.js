@@ -95,15 +95,18 @@ app.post('/swatch/crop/:id', isLoggedIn, function(req, res) {
                         var colorThief = new ColorThief();
                         var colorsrgb = colorThief.getPalette(path.resolve('./public/images/swatches/' + req.params.polishid + req.body.ext), 2);
                         var colorsname = [];
+                        var colorscategory = [];
                         for (i=0; i<colorsrgb.length; i++) {
                             var deltas = [];
                             for (j=0; j<PolishColors.length; j++) {
                                 deltas.push(deltaE(rgb2lab(PolishColors[j].rgb), rgb2lab(colorsrgb[i])));
                             }
                             colorsname.push(PolishColors[deltas.indexOf(Math.min(...deltas))].name);
+                            colorscategory.push(PolishColors[deltas.indexOf(Math.min(...deltas))].category);
                         }
                         polish.colorsrgb = colorsrgb;
                         polish.colorsname = colorsname;
+                        polish.colorscategory = colorscategory;
                         polish.dateupdated = new Date();
                         polish.swatch = '/images/swatches/' + req.params.id + req.body.ext;
                         polish.save(function(err) {
@@ -155,15 +158,18 @@ app.post('/swatch/edit/:pid/:id', isLoggedIn, function(req, res) {
                     var colorThief = new ColorThief();
                     var colorsrgb = colorThief.getPalette(path.resolve('./public/images/swatches/' + req.params.pid + req.body.ext), 2);
                     var colorsname = [];
+                    var colorscategory = [];
                     for (i=0; i<colorsrgb.length; i++) {
                         var deltas = [];
                         for (j=0; j<PolishColors.length; j++) {
                             deltas.push(deltaE(rgb2lab(PolishColors[j].rgb), rgb2lab(colorsrgb[i])));
                         }
                         colorsname.push(PolishColors[deltas.indexOf(Math.min(...deltas))].name);
+                        colorscategory.push(PolishColors[deltas.indexOf(Math.min(...deltas))].category);
                     }
                     polish.colorsrgb = colorsrgb;
                     polish.colorsname = colorsname;
+                    polish.colorscategory = colorscategory;
                     polish.dateupdated = new Date();
                     polish.swatch = '/images/swatches/' + polish.id + req.body.ext;
                     polish.save(function(err) {

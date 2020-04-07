@@ -18,11 +18,11 @@ app.get('/browse', function(req, res) {
         data.brands = allbrands;
         data.browsekeywords = '';
         data.browsebrand = '';
-        data.browsecolor = '';
+        data.browsecolorcategory = '';
+        data.browseselectcolor = "#008080";
         data.browsetype = '';
         data.recent = true;
         data.types = PolishTypes;
-        data.colorlist = PolishColors;
 
         data.page = 1;
 
@@ -64,13 +64,21 @@ app.get('/browse', function(req, res) {
 
 
 app.post('/browse', function(req, res) {
-
-    if (req.body.allcolors) {
+    console.log(req.body.colorcategory);
+    if (req.body.colorcategory == "") {
         var search = {
             keywords:req.body.keywords,
             brand:req.body.brand,
             type:req.body.type,
             page:req.body.page
+        }
+    } else if (req.body.colorcategory !== "Choose") {
+        var search = {
+            keywords:req.body.keywords,
+            brand:req.body.brand,
+            type:req.body.type,
+            page:req.body.page,
+            colorscategory: req.body.colorcategory
         }
     } else {
         function hexToRgb(hex) {
@@ -104,10 +112,11 @@ app.post('/browse', function(req, res) {
         data.brands = allbrands;
         data.browsekeywords = req.body.keywords;
         data.browsebrand = req.body.brand;
-        data.browsecolor = req.body.colorsname;
+        data.browsecolorcategory = req.body.colorcategory;
+        data.browseselectcolor = req.body.selectcolor
+        data.browse
         data.browsetype = req.body.type;
         data.types = PolishTypes;
-        data.colorlist = PolishColors;
 
         data.recent = false;
 
