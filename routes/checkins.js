@@ -368,7 +368,7 @@ app.post('/checkin/:id/edit', isLoggedIn, function(req, res) {
                     })
                 }
             }
-            post.polish = sanitizer.sanitize(req.body.polish);
+            post.polish = sanitizer.sanitize(req.body.polish).split(',');
             post.editdate = new Date;
             post.description = sanitizer.sanitize(req.body.description);
             post.save(function(err) {
@@ -517,7 +517,7 @@ app.post('/checkin/:id/flag', isLoggedIn, function(req, res) {
                     from: "polishrobot@lacquertracker.com",
                     to: 'lacquertrackermailer@gmail.com',
                     subject: 'Flagged Check-in',
-                    text: req.user.username + " has flagged a check-in.\n\n\nwww.lacquertracker.com/admin/pendingcheckins",
+                    text: req.user.username + " has flagged a check-in.\n\n\nwww.lacquertracker.com/admin/flaggedcheckins",
                 }
 
                 transport.sendMail(mailOptions, function(error, response) {

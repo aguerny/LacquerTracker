@@ -176,7 +176,7 @@ app.post('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
                         from: "polishrobot@lacquertracker.com",
                         to: 'lacquertrackermailer@gmail.com',
                         subject: 'Flagged Photo',
-                        text: req.user.username + " has flagged a photo.\n\n\nwww.lacquertracker.com/admin/pending",
+                        text: req.user.username + " has flagged a photo.\n\n\nwww.lacquertracker.com/admin/flaggedphotos",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {

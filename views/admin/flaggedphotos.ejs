@@ -1,0 +1,21 @@
+<%- include('../layoutTop'); %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    	<section>
+    		<div>
+	     		<br><h3>Photos Pending Delete:</h3><br>
+                <% for (i=0; i < flaggedphotos.length; i++) { %>
+                    <br><br><br><img class="polishphotosmall" src="<%= flaggedphotos[i].location %>"><br>
+                    Credit name: <%=flaggedphotos[i].creditname%><br>
+                    Credit link: <%=flaggedphotos[i].creditlink%><br>
+                    Reason: <%=flaggedphotos[i].pendingreason%><br>
+                    <a href="/admin/pending/<%= flaggedphotos[i].polishid %>/<%= flaggedphotos[i].id %>/remove">Delete photo</a> | <a href="/admin/pending/<%= flaggedphotos[i].polishid %>/<%= flaggedphotos[i].id %>/restore">Restore Photo</a>
+                <% } %>
+            </div>
+    	</section>
+    </div>
+</div>
+
+<%- include('../layoutBottom'); %>
