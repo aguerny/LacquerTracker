@@ -13,7 +13,7 @@ app.get('/contact', function(req, res) {
 app.post('/contact', function (req, res) {
 
     if (req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
-        res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Captcha wrong. Please try again.', inputname:req.body.name, inputemail:req.body.email, inputmessage:req.body.usermessage});
+        res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Captcha wrong. Please try again.', inputname:sanitizer.sanitize(req.body.name), inputemail:sanitizer.sanitize(req.body.email), inputmessage:sanitizer.sanitize(req.body.usermessage)});
     }
     // Put your secret key here.
     var secretKey = "6LcxIzgUAAAAAA-GeS9omdvbuGvc6eNLCmH09-TN";
@@ -24,7 +24,7 @@ app.post('/contact', function (req, res) {
         body = JSON.parse(body);
         // Success will be true or false depending upon captcha validation.
         if(body.success !== undefined && !body.success) {
-            res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Captcha wrong. Try again.', inputname:req.body.name, inputemail:req.body.email, inputmessage:req.body.usermessage});
+            res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Captcha wrong. Try again.', inputname:sanitizer.sanitize(req.body.name), inputemail:sanitizer.sanitize(req.body.email), inputmessage:sanitizer.sanitize(req.body.usermessage)});
         }
         if (body.success === true) {
             var transport = nodemailer.createTransport({
@@ -49,7 +49,7 @@ app.post('/contact', function (req, res) {
                 transport.close();
             });
         } else {
-            res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Could not send feedback. Please try again later.', inputname:req.body.name, inputemail:req.body.email, inputmessage:req.body.usermessage});
+            res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Could not send feedback. Please try again later.', inputname:sanitizer.sanitize(req.body.name), inputemail:sanitizer.sanitize(req.body.email), inputmessage:sanitizer.sanitize(req.body.usermessage)});
         }
     });
 });

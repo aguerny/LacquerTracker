@@ -156,8 +156,8 @@ app.get('/admin/combine', isLoggedIn, function(req, res) {
 app.post('/admin/combine', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
         if (req.body.keepid.length > 0 && req.body.removeid.length > 0) {
-            Polish.findById(mongoose.Types.ObjectId(req.body.keepid), function(err, keep) {
-                Polish.findById(mongoose.Types.ObjectId(req.body.removeid), function(err, remove) {
+            Polish.findById(mongoose.Types.ObjectId(sanitizer.sanitize(req.body.keepid)), function(err, keep) {
+                Polish.findById(mongoose.Types.ObjectId(sanitizer.sanitize(req.body.removeid)), function(err, remove) {
                     User.find({ownedpolish:remove.id}, function(err, users) {
                         for (var j=0; j<users.length; j++) {
                             users[j].ownedpolish.remove(remove.id);
@@ -236,7 +236,7 @@ app.post('/admin/combine', isLoggedIn, function(req, res) {
                     }
                     data = {};
                     data.title = 'Combine Polishes - Lacquer Tracker';
-                    data.message = 'Polishes successfully combined. Please remember to delete the polish you wish to remove.<br><br>Would you like to remove that now? Click here: <a href="http://www.lacquertracker.com/polishid/' + req.body.removeid + '/delete">Delete!</a>';
+                    data.message = 'Polishes successfully combined. Please remember to delete the polish you wish to remove.<br><br>Would you like to remove that now? Click here: <a href="https://www.lacquertracker.com/polishid/' + sanitizer.sanitize(req.body.removeid) + '/delete">Delete!</a>';
                     res.render('admin/combine.ejs', data);
                 })
             })
@@ -266,7 +266,7 @@ app.get('/admin/duplicate', isLoggedIn, function(req, res) {
 
 app.post('/admin/duplicate', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
-        Polish.find({name:req.body.polishname, brand:req.body.polishbrand}, function(err, polishes) {
+        Polish.find({name:sanitizer.sanitize(req.body.polishname), brand:sanitizer.sanitize(req.body.polishbrand)}, function(err, polishes) {
             data = {};
             data.title = 'Combine Polishes - Lacquer Tracker';
             data.polishes = polishes;

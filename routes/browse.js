@@ -1,6 +1,7 @@
 var Polish = require('../app/models/polish');
 var User = require('../app/models/user');
 var _ = require('lodash');
+var sanitizer = require('sanitizer');
 var PolishTypes = require('../app/constants/polishTypes');
 var PolishColors = require('../app/constants/polishColors');
 var {rgb2lab, lab2rgb, deltaE} = require('rgb-lab');
@@ -34,8 +35,8 @@ app.get('/browse', function(req, res) {
 
             if (req.isAuthenticated()) {
 
-                data.browseowned = req.body.owned;
-                data.browsewanted = req.body.wanted;
+                data.browseowned = sanitizer.sanitize(req.body.owned);
+                data.browsewanted = sanitizer.sanitize(req.body.wanted);
 
                 for (i=0; i < polishes.length; i++) {
                     if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
@@ -64,21 +65,21 @@ app.get('/browse', function(req, res) {
 
 
 app.post('/browse', function(req, res) {
-    console.log(req.body.colorcategory);
+
     if (req.body.colorcategory == "") {
         var search = {
-            keywords:req.body.keywords,
-            brand:req.body.brand,
-            type:req.body.type,
-            page:req.body.page
+            keywords:sanitizer.sanitize(req.body.keywords),
+            brand:sanitizer.sanitize(req.body.brand),
+            type:sanitizer.sanitize(req.body.type),
+            page:sanitizer.sanitize(req.body.page)
         }
     } else if (req.body.colorcategory !== "Choose") {
         var search = {
-            keywords:req.body.keywords,
-            brand:req.body.brand,
-            type:req.body.type,
-            page:req.body.page,
-            colorscategory: req.body.colorcategory
+            keywords:sanitizer.sanitize(req.body.keywords),
+            brand:sanitizer.sanitize(req.body.brand),
+            type:sanitizer.sanitize(req.body.type),
+            page:sanitizer.sanitize(req.body.page),
+            colorscategory:sanitizer.sanitize(req.body.colorcategory)
         }
     } else {
         function hexToRgb(hex) {
@@ -89,18 +90,18 @@ app.post('/browse', function(req, res) {
                 b: parseInt(result[3], 16)
             } : null;
         }
-        var selectedColorRGB = [hexToRgb(req.body.selectcolor).r, hexToRgb(req.body.selectcolor).g, hexToRgb(req.body.selectcolor).b];
+        var selectedColorRGB = [hexToRgb(sanitizer.sanitize(req.body.selectcolor)).r, hexToRgb(sanitizer.sanitize(req.body.selectcolor)).g, hexToRgb(sanitizer.sanitize(req.body.selectcolor)).b];
 
         var deltas = [];
         for (i=0; i<PolishColors.length; i++) {
             deltas.push(deltaE(rgb2lab(PolishColors[i].rgb), rgb2lab(selectedColorRGB)));
         }
         var search = {
-            keywords:req.body.keywords,
-            brand:req.body.brand,
-            type:req.body.type,
+            keywords:sanitizer.sanitize(req.body.keywords),
+            brand:sanitizer.sanitize(req.body.brand),
+            type:sanitizer.sanitize(req.body.type),
             colorsname: PolishColors[deltas.indexOf(Math.min(...deltas))].name,
-            page:req.body.page
+            page:sanitizer.sanitize(req.body.page)
         }
     }
 
@@ -110,12 +111,12 @@ app.post('/browse', function(req, res) {
         data = {};
         data.title = 'Browse - Lacquer Tracker';
         data.brands = allbrands;
-        data.browsekeywords = req.body.keywords;
-        data.browsebrand = req.body.brand;
-        data.browsecolorcategory = req.body.colorcategory;
-        data.browseselectcolor = req.body.selectcolor
+        data.browsekeywords = sanitizer.sanitize(req.body.keywords);
+        data.browsebrand = sanitizer.sanitize(req.body.brand);
+        data.browsecolorcategory = sanitizer.sanitize(req.body.colorcategory);
+        data.browseselectcolor = sanitizer.sanitize(req.body.selectcolor);
         data.browse
-        data.browsetype = req.body.type;
+        data.browsetype = sanitizer.sanitize(req.body.type);
         data.types = PolishTypes;
 
         data.recent = false;
@@ -125,11 +126,11 @@ app.post('/browse', function(req, res) {
             data.page = 1;
 
         } else if (typeof req.body.nextpage !== "undefined") {
-            var page = parseInt(req.body.page) + 1;
+            var page = parseInt(sanitizer.sanitize(req.body.page)) + 1;
             data.page = page;
 
         } else if (typeof req.body.prevpage !== "undefined") {
-            var page = parseInt(req.body.page) - 1;
+            var page = parseInt(sanitizer.sanitize(req.body.page)) - 1;
             data.page = page;
         }
 
@@ -149,8 +150,8 @@ app.post('/browse', function(req, res) {
 
         if (req.isAuthenticated()) {
 
-            data.browseowned = req.body.owned;
-            data.browsewanted = req.body.wanted;
+            data.browseowned = sanitizer.sanitize(req.body.owned);
+            data.browsewanted = sanitizer.sanitize(req.body.wanted);
 
             if (req.body.owned === "on" && req.body.wanted === "on") {
                 Polish.find(polishFilter).sort('brand name').exec(function(err, polishes) {

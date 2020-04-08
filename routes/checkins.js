@@ -75,7 +75,7 @@ app.get('/checkin/add', isLoggedIn, function(req, res) {
 
 
 app.post('/allpolish', isLoggedIn, function(req, res) {
-    Polish.find({name:new RegExp(req.body.term.term, 'i')}).select('id brand name').exec(function (err, polishes) {
+    Polish.find({name:new RegExp(sanitizer.sanitize(req.body.term.term), 'i')}).select('id brand name').exec(function (err, polishes) {
         res.send(polishes);
     })
 });
@@ -93,7 +93,7 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                         creationdate: new Date,
                         editdate: new Date,
                         photo: "",
-                        polish: req.body.polish,
+                        polish: sanitizer.sanitize(req.body.polish),
                         pendingdelete: false,
                         pendingreason: "",
                         comments: [],
@@ -161,7 +161,7 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                         creationdate: new Date,
                         editdate: new Date,
                         photo: "",
-                        polish: req.body.polish,
+                        polish: sanitizer.sanitize(req.body.polish),
                         pendingdelete: false,
                         pendingreason: "",
                         comments: [],
@@ -264,7 +264,7 @@ app.post('/checkin/:id/:cid/add', isLoggedIn, function(req, res) {
             checkinid: post.id,
             parentid: req.params.cid,
             user: req.user.id,
-            message: markdown(req.body.message),
+            message: markdown(sanitizer.sanitize(req.body.message)),
             date: new Date(),
         })
         newCheckinComment.save(function(err) {
@@ -281,7 +281,7 @@ app.post('/checkin/:id/:cid/add', isLoggedIn, function(req, res) {
                             from: "polishrobot@lacquertracker.com",
                             to: comment.user.email,
                             subject: 'New reply to your check-in comment',
-                            text: "Hey " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on check-in.\n\nCome check it out here: http://www.lacquertracker.com/checkin/" + post.id + "\n\n\nThanks,\nLacquer Tracker",
+                            text: "Hey " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on check-in.\n\nCome check it out here: https://www.lacquertracker.com/checkin/" + post.id + "\n\n\nThanks,\nLacquer Tracker",
                         }
 
                         transport.sendMail(mailOptions, function(error, response) {
@@ -301,7 +301,7 @@ app.post('/checkin/:id/:cid/add', isLoggedIn, function(req, res) {
                         from: "polishrobot@lacquertracker.com",
                         to: post.user.email,
                         subject: 'New reply to your check-in',
-                        text: "Hey " + post.user.username + ",\n\n" + req.user.username + " just replied to your check-in.\n\nCome check it out here: http://www.lacquertracker.com/checkin/" + post.id + "\n\n\nThanks,\nLacquer Tracker",
+                        text: "Hey " + post.user.username + ",\n\n" + req.user.username + " just replied to your check-in.\n\nCome check it out here: https://www.lacquertracker.com/checkin/" + post.id + "\n\n\nThanks,\nLacquer Tracker",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {
@@ -368,19 +368,19 @@ app.post('/checkin/:id/edit', isLoggedIn, function(req, res) {
                     })
                 }
             }
-            post.polish = req.body.polish;
+            post.polish = sanitizer.sanitize(req.body.polish);
             post.editdate = new Date;
             post.description = sanitizer.sanitize(req.body.description);
             post.save(function(err) {
                 if (req.body.polish) {
                     if (Array.isArray(req.body.polish) === false) {
-                        Polish.findById(req.body.polish).exec(function(err, polish) {
+                        Polish.findById(sanitizer.sanitize(req.body.polish)).exec(function(err, polish) {
                             polish.checkins.addToSet(req.params.id);
                             polish.save();
                         })
                     } else {
                         for (j=0; j<req.body.polish.length; j++) {
-                            Polish.findById(req.body.polish[j]).exec(function(err, polish) {
+                            Polish.findById(sanitizer.sanitize(req.body.polish[j])).exec(function(err, polish) {
                                 polish.checkins.addToSet(req.params.id);
                                 polish.save();
                             })
@@ -471,8 +471,8 @@ app.get('/checkin/:id/remove', isLoggedIn, function(req, res) {
                             })
                         }
                         Checkin.findByIdAndRemove(req.params.id, function(err) {
-                            req.user.checkins.remove(req.params.id);
-                            req.user.save();
+                            post.user.checkins.remove(req.params.id);
+                            post.user.save();
                             res.redirect('/checkin');
                         })
                     })

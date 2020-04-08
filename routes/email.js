@@ -25,7 +25,7 @@ app.get('/email/:username', isLoggedIn, function(req, res) {
 app.post('/email/:username', isLoggedIn, function(req, res) {
 
     if (req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
-        res.render('profile/emailuser.ejs', {title: 'Send Message - Lacquer Tracker', message: 'Captcha wrong. Try again.', emailmessage:req.body.emailmessage, username:user.username});
+        res.render('profile/emailuser.ejs', {title: 'Send Message - Lacquer Tracker', message: 'Captcha wrong. Try again.', emailmessage:sanitizer.sanitize(req.body.emailmessage), username:user.username});
     }
     // Put your secret key here.
     var secretKey = "6LcxIzgUAAAAAA-GeS9omdvbuGvc6eNLCmH09-TN";
@@ -36,7 +36,7 @@ app.post('/email/:username', isLoggedIn, function(req, res) {
         body = JSON.parse(body);
         // Success will be true or false depending upon captcha validation.
         if(body.success !== undefined && !body.success) {
-            res.render('profile/emailuser.ejs', {title: 'Send Message - Lacquer Tracker', message: 'Captcha wrong. Try again.', emailmessage:req.body.emailmessage, username:user.username});
+            res.render('profile/emailuser.ejs', {title: 'Send Message - Lacquer Tracker', message: 'Captcha wrong. Try again.', emailmessage:sanitizer.sanitize(req.body.emailmessage), username:user.username});
         }
         if (body.success === true) {
             //send e-mail
@@ -54,7 +54,7 @@ app.post('/email/:username', isLoggedIn, function(req, res) {
 
             transport.sendMail(mailOptions, function(error, response) {
                 if (error) {
-                    res.render('profile/emailuser.ejs', {title: 'Send Message - Lacquer Tracker', message:'Error sending message. Please try again later.', emailmessage:req.body.emailmessage, username:user.username});
+                    res.render('profile/emailuser.ejs', {title: 'Send Message - Lacquer Tracker', message:'Error sending message. Please try again later.', emailmessage:sanitizer.sanitize(req.body.emailmessage), username:user.username});
                 } else {
                     res.render('profile/emailuser.ejs', {title: 'Send Message - Lacquer Tracker', message: 'Success! Message sent.', username:user.username});
                 }
@@ -62,7 +62,7 @@ app.post('/email/:username', isLoggedIn, function(req, res) {
                 transport.close();
             });
         } else {
-            res.render('profile/emailuser.ejs', {title: 'Send Message - Lacquer Tracker', message:'Error sending message. Please try again later.', emailmessage:req.body.emailmessage, username:user.username});
+            res.render('profile/emailuser.ejs', {title: 'Send Message - Lacquer Tracker', message:'Error sending message. Please try again later.', emailmessage:sanitizer.sanitize(req.body.emailmessage), username:user.username});
         }
     });
 });

@@ -62,6 +62,7 @@ app.post('/signup', function(req, res) {
                                 newUser.creationdate = new Date();
                                 newUser.country = "";
                                 newUser.timezone = "America/New_York";
+                                newUser.deleted = false;
 
                                 //save the user
                                 newUser.save(function(err) {
@@ -78,7 +79,7 @@ app.post('/signup', function(req, res) {
                                             from: "polishrobot@lacquertracker.com",
                                             to: newUser.email,
                                             subject: 'Welcome to Lacquer Tracker',
-                                            text: "Hey " + newUser.username + ",\n\nWelcome to Lacquer Tracker! Please visit the link below to validate your account and get started.\n\nhttp://www.lacquertracker.com/validate/" + newUser.id + "\n\n\nThanks,\nLacquer Tracker",
+                                            text: "Hey " + newUser.username + ",\n\nWelcome to Lacquer Tracker! Please visit the link below to validate your account and get started.\n\nhttps://www.lacquertracker.com/validate/" + newUser.id + "\n\n\nThanks,\nLacquer Tracker",
                                         }
 
                                         transport.sendMail(mailOptions, function(error, response) {
@@ -139,7 +140,7 @@ app.post('/revalidate', function(req, res) {
         } else {
             if (user) {
                 if (user.isvalidated === true) {
-                    res.render('account/login.ejs', {title: 'Login - Lacquer Tracker', message:'Your account has already been validated. Please log in.'});
+                    res.render('account/login.ejs', {title: 'Login - Lacquer Tracker', message:'This account has already been validated or does not exist.'});
                 } else {
                     var transport = nodemailer.createTransport({
                         sendmail: true,
@@ -150,7 +151,7 @@ app.post('/revalidate', function(req, res) {
                         from: "polishrobot@lacquertracker.com",
                         to: user.email,
                         subject: 'Validation E-mail',
-                        text: "Hey " + user.username + ",\n\nLost your welcome e-mail? No worries! Please visit the link below to validate your account and get started.\n\nhttp://www.lacquertracker.com/validate/" + user.id + "\n\n\nThanks,\nLacquer Tracker",
+                        text: "Hey " + user.username + ",\n\nLost your welcome e-mail? No worries! Please visit the link below to validate your account and get started.\n\nhttps://www.lacquertracker.com/validate/" + user.id + "\n\n\nThanks,\nLacquer Tracker",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {
@@ -165,7 +166,7 @@ app.post('/revalidate', function(req, res) {
                     });
                 }
             } else {
-                res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Username not found.'});
+                res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'This account has already been validated or does not exist.'});
             }
         }
     })
@@ -199,7 +200,7 @@ app.get('/passwordreset', function(req, res) {
 app.post('/passwordreset', function(req, res) {
     User.findOne({username: sanitizer.sanitize(req.body.username)}, function(err, user) {
         if (err) {
-            res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Unknown error. Please try again later.'});
+            res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error. Please try again later.'});
         } else {
             if (user) {
                 if (user.email) {
@@ -221,24 +222,24 @@ app.post('/passwordreset', function(req, res) {
                         from: "polishrobot@lacquertracker.com",
                         to: user.email,
                         subject: 'Password Reset',
-                        text: "Hey " + user.username + ",\n\nYour reset password link is: http://www.lacquertracker.com/reset/" + newResetKey.id + "\n\nYou have 24 hours until this key expires.\n\n\nThanks,\nLacquer Tracker",
+                        text: "Hey " + user.username + ",\n\nYour reset password link is: https://www.lacquertracker.com/reset/" + newResetKey.id + "\n\nYou have 24 hours until this key expires.\n\n\nThanks,\nLacquer Tracker",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {
                         if (error) {
-                            res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error sending e-mail. Please try again later.'});
+                            res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error. Please try again later.'});
                         }
                         else {
-                            res.render('account/successmessage.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Password reset e-mail successfully sent.'});
+                            res.render('account/successmessage.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'If this account exists, a password reset e-mail has successfully sent.'});
                         }
 
                         transport.close();
                     });
                 } else {
-                    res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'No e-mail address associated with this username.'});
+                    res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'If this account exists, a password reset e-mail has successfully sent.'});
                 }
             } else {
-                res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Username not found.'});
+                res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'If this account exists, a password reset e-mail has successfully sent.'});
             }
         }
     })

@@ -109,7 +109,7 @@ app.post('/forums/:forum/add', isLoggedIn, function(req, res) {
         message: sanitizer.sanitize(req.body.postmessage),
         date: new Date(),
         dateupdated: new Date(),
-        forum: req.body.forum,
+        forum: sanitizer.sanitize(req.body.forum),
         comments: [],
         photo: '',
     });
@@ -191,7 +191,7 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
             postid: post.id,
             parentid: req.params.cid,
             user: req.user.id,
-            message: markdown(req.body.message),
+            message: markdown(sanitizer.sanitize(req.body.message)),
             date: new Date(),
         })
         newForumComment.save(function(err) {
@@ -208,7 +208,7 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
                             from: "polishrobot@lacquertracker.com",
                             to: comment.user.email,
                             subject: 'New reply to your forum comment',
-                            text: "Hey " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on forum post: " + post.title + "\n\nCome check it out here: http://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nThanks,\nLacquer Tracker",
+                            text: "Hey " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on forum post: " + post.title + "\n\nCome check it out here: https://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nThanks,\nLacquer Tracker",
                         }
 
                         transport.sendMail(mailOptions, function(error, response) {
@@ -228,7 +228,7 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
                         from: "polishrobot@lacquertracker.com",
                         to: post.user.email,
                         subject: 'New reply to your post',
-                        text: "Hey " + post.user.username + ",\n\n" + req.user.username + " just replied to your forum post: " + post.title + "\n\nCome check it out here: http://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nThanks,\nLacquer Tracker",
+                        text: "Hey " + post.user.username + ",\n\n" + req.user.username + " just replied to your forum post: " + post.title + "\n\nCome check it out here: https://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nThanks,\nLacquer Tracker",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {
@@ -284,7 +284,7 @@ app.get('/forums/:forum/:id/edit', isLoggedIn, function(req, res) {
 app.post('/forums/:forum/:id/edit', isLoggedIn, function(req, res) {
     ForumPost.findById(req.params.id, function (err, post){
         if (post.user == req.user.id) {
-            post.forum = req.body.forum;
+            post.forum = sanitizer.sanitize(req.body.forum);
             post.title = sanitizer.sanitize(req.body.posttitle);
             post.message = sanitizer.sanitize(req.body.postmessage);
             post.dateupdated = new Date();

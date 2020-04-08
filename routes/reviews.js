@@ -39,7 +39,7 @@ app.post('/review/edit/:id', isLoggedIn, function(req, res) {
 
         Review.findOne({polish: req.params.id, user:req.user.id}, function(err, review) {
         if (review) { //if review already exists
-            review.rating = req.body.rating;
+            review.rating = sanitizer.sanitize(req.body.rating);
             review.review = sanitizer.sanitize(req.body.review);
             review.save(function(err) {
                 polish.dateupdated = new Date();
@@ -51,8 +51,9 @@ app.post('/review/edit/:id', isLoggedIn, function(req, res) {
             var newReview = new Review ({
                 polish: req.params.id,
                 user: req.user.id,
-                rating: req.body.rating,
+                rating: sanitizer.sanitize(req.body.rating),
                 review: sanitizer.sanitize(req.body.review),
+                notes: '',
             });
             newReview.save(function(err) {
                 polish.dateupdated = new Date();
@@ -110,6 +111,8 @@ app.post('/notes/edit/:id', isLoggedIn, function(req, res) {
             var newReview = new Review ({
                 polish: req.params.id,
                 user: req.user.id,
+                rating: '',
+                review: '',
                 notes: sanitizer.sanitize(req.body.notes),
             });
             newReview.save(function(err) {

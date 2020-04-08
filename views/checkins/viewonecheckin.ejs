@@ -289,4 +289,11 @@ function confirm_alert(node) {
     </div>
 </div>
 
+<script>
+$(".replylink").click(function(){
+    $(this).siblings(".replybox").show();
+    return false;
+});
+</script>
+
 <%- include('../layoutBottom'); %>

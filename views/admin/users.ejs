@@ -5,7 +5,7 @@
     <div id="container" class="clear">
     <section>
         <table class="sortable">
-            <tr><th>#</th><th>Username</th><th>E-mail</th><th>Country/Timezone</th><th>Created</th><th>Last Login</th><th>Validated</th></tr>
+            <tr><th>#</th><th>Username</th><th>E-mail</th><th>Country/Timezone</th><th>Created</th><th>Last Login</th><th>Validated</th><th>User Level</th></tr>
             <% for (i=0; i < allusers.length; i++) { %>
                 <tr>
                     <td><%=allusers[i].usernumber%></td>
@@ -15,6 +15,7 @@
                     <td><%= moment(allusers[i].creationdate).tz("America/New_York").calendar() %></td>
                     <td><%= moment(allusers[i].lastlogindate).tz("America/New_York").calendar() %></td>
                     <td><%= allusers[i].isvalidated %></td>
+                    <td><%= allusers[i].level %></td>
                 </tr>
             <% } %>
         </table>

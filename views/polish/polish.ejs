@@ -176,7 +176,7 @@ $(window).load(function () {
                         <div>
                             <% for (i=0; i<checkins.length; i++) { %>
                                 <% if (checkins[i].pendingdelete === false) {%>
-                                    <a href="/checkin/<%=checkins[i].id%>"><img style="max-width:100%" src="<%= checkins[i].photo %>"></a>
+                                    <a href="/checkin/<%=checkins[i].id%>"><img style="max-width:50%" src="<%= checkins[i].photo %>"></a>
                                 <% } %>
                             <% } %>
                         </div>
@@ -205,16 +205,6 @@ var speed = 100;
             next = now.next();
             next = next.index() == -1 ? first : next;
         now.fadeOut(speed, function() {next.fadeIn(speed);});
-    });
-
-    $(document).on("pageinit", function(){
-        $(".gallery").on("swipeleft", function() {
-            $(this).parent().children(".next").trigger('click');
-        });
-
-        $(".gallery").on("swiperight", function() {
-            $(this).parent().children(".prev").trigger('click');
-        });
     });
 
     $.fn.editable.defaults.mode = 'inline';

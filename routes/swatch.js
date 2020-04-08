@@ -4,6 +4,7 @@ var Photo = require('../app/models/photo');
 var UserPhoto = require('../app/models/userphoto');
 var fs = require('fs');
 var path = require('path');
+var sanitizer = require('sanitizer');
 var gm = require('gm').subClass({ imageMagick: true });
 var http = require('http');
 var request = require('request');
@@ -57,9 +58,9 @@ app.post('/swatch/add/:id', isLoggedIn, function(req, res) {
         }
     } else if (req.body.url.length > 0) {
         fs.unlink(req.files.photo.tempFilePath);
-        var ext = path.extname(req.body.url);
+        var ext = path.extname(sanitizer.sanitize(req.body.url));
         var tempPath = path.resolve('./public/images/tmp/' + req.user.username + ext);
-        download(req.body.url, tempPath, function(err) {
+        download(sanitizer.sanitize(req.body.url), tempPath, function(err) {
             if (err) {
                 res.redirect('/error');
             } else {
@@ -82,18 +83,18 @@ app.post('/swatch/add/:id', isLoggedIn, function(req, res) {
 app.post('/swatch/crop/:id', isLoggedIn, function(req, res) {
     Polish.findById(req.params.id, function(err, polish) {
         fs.unlink(path.resolve('./public/'+polish.swatch), function() {
-            gm(path.resolve('./public/' + req.body.location))
-            .crop(req.body.w, req.body.h, req.body.x, req.body.y)
+            gm(path.resolve('./public/' + sanitizer.sanitize(req.body.location)))
+            .crop(sanitizer.sanitize(req.body.w), sanitizer.sanitize(req.body.h), sanitizer.sanitize(req.body.x), sanitizer.sanitize(req.body.y))
             .resize(200)
-            .write(path.resolve('./public/images/swatches/' + req.params.id + req.body.ext), function (err) {
+            .write(path.resolve('./public/images/swatches/' + req.params.id + sanitizer.sanitize(req.body.ext)), function (err) {
                 if (err) {
-                    fs.unlink(path.resolve('./public/' +req.body.location), function(err) {
+                    fs.unlink(path.resolve('./public/' + sanitizer.sanitize(req.body.location)), function(err) {
                         res.redirect('/error');
                     })
                 } else {
-                    fs.unlink(path.resolve('./public/' +req.body.location), function(err) {
+                    fs.unlink(path.resolve('./public/' + sanitizer.sanitize(req.body.location)), function(err) {
                         var colorThief = new ColorThief();
-                        var colorsrgb = colorThief.getPalette(path.resolve('./public/images/swatches/' + req.params.polishid + req.body.ext), 2);
+                        var colorsrgb = colorThief.getPalette(path.resolve('./public/images/swatches/' + req.params.polishid + sanitizer.sanitize(req.body.ext)), 2);
                         var colorsname = [];
                         var colorscategory = [];
                         for (i=0; i<colorsrgb.length; i++) {
@@ -108,7 +109,7 @@ app.post('/swatch/crop/:id', isLoggedIn, function(req, res) {
                         polish.colorsname = colorsname;
                         polish.colorscategory = colorscategory;
                         polish.dateupdated = new Date();
-                        polish.swatch = '/images/swatches/' + req.params.id + req.body.ext;
+                        polish.swatch = '/images/swatches/' + req.params.id + sanitizer.sanitize(req.body.ext);
                         polish.save(function(err) {
                             res.redirect('/polish/' + polish.brand.replace(/ /g,"_") + "/" + polish.name.replace(/ /g,"_"));
                         })
@@ -148,15 +149,15 @@ app.get('/photo/swatch/:pid/:id', isLoggedIn, function(req, res) {
 app.post('/swatch/edit/:pid/:id', isLoggedIn, function(req, res) {
     Polish.findById(req.params.pid, function (err, polish) {
         fs.unlink(path.resolve('./public/'+polish.swatch), function() {
-            gm(path.resolve('./public/' + req.body.location))
-            .crop(req.body.w, req.body.h, req.body.x, req.body.y)
+            gm(path.resolve('./public/' + sanitizer.sanitize(req.body.location)))
+            .crop(sanitizer.sanitize(req.body.w), sanitizer.sanitize(req.body.h), sanitizer.sanitize(req.body.x), sanitizer.sanitize(req.body.y))
             .resize(200)
-            .write(path.resolve('./public/images/swatches/' + req.params.pid + req.body.ext), function (err) {
+            .write(path.resolve('./public/images/swatches/' + req.params.pid + sanitizer.sanitize(req.body.ext)), function (err) {
                 if (err) {
                     res.redirect('/error');
                 } else {
                     var colorThief = new ColorThief();
-                    var colorsrgb = colorThief.getPalette(path.resolve('./public/images/swatches/' + req.params.pid + req.body.ext), 2);
+                    var colorsrgb = colorThief.getPalette(path.resolve('./public/images/swatches/' + req.params.pid + sanitizer.sanitize(req.body.ext)), 2);
                     var colorsname = [];
                     var colorscategory = [];
                     for (i=0; i<colorsrgb.length; i++) {
@@ -171,7 +172,7 @@ app.post('/swatch/edit/:pid/:id', isLoggedIn, function(req, res) {
                     polish.colorsname = colorsname;
                     polish.colorscategory = colorscategory;
                     polish.dateupdated = new Date();
-                    polish.swatch = '/images/swatches/' + polish.id + req.body.ext;
+                    polish.swatch = '/images/swatches/' + polish.id + sanitizer.sanitize(req.body.ext);
                     polish.save(function(err) {
                         res.redirect('/polish/' + polish.brand.replace(/ /g,"_") + "/" + polish.name.replace(/ /g,"_"));
                     })
