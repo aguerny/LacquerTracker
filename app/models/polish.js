@@ -8,7 +8,7 @@ var polishSchema = mongoose.Schema({
     brand: String,
     name: String,
     colorcat: String,
-    type: String,
+    type: [],
     code: String,
     keywords: String,
     dateupdated: Date,

@@ -18,10 +18,8 @@ function confirm_alert(node) {
                         | <a href="/forums/<%=postforum%>/<%=postid%>/edit">Edit</a> | <a href="/forums/<%=postforum%>/<%=postid%>/remove" onclick="return confirm_alert(this);">Delete</a>
                     <% } %>
                 <% } %><br><br><br>
-            <p style="white-space: pre;"><%- postmessage %><% if (postphoto !== undefined) {%><br><br><img src=<%=postphoto%>><%}%></p><br><hr><br>
+            <p style="white-space: pre;"><%- postmessage %><% if (postphoto !== undefined) { if (postphoto.length>0) {%><br><br><img src=<%=postphoto%>><%}}%></p><br><hr><br>
             <b>Comments (<%= postcomments.length %>)</b> | <a href="/forums/<%= postforum %>/<%= postid %>/add">Add a comment</a><br><br>
-
-
             <% for (i=0; i<postcomments.length; i++) { %>
             <% if (postcomments[i].parentid === postcomments[i].postid) { %>
                 <hr style="border-top: dotted 3px; color: #D8D8D8;" />

@@ -44,7 +44,7 @@ $(window).load(function () {
                             <%}%>
                         </td>
                         <td>
-                            <span><%= polishes[i].type.replace(/,/g,", ") %></span>
+                            <span><%= polishes[i].type.toString().replace(/,/g,", ") %></span>
                         </td>
                         <% if (isAuthenticated) { %><td class="nomargin">
                                 <% if (status[i] === "owned") { %>

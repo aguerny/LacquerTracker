@@ -385,9 +385,9 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                             res.redirect('/error');
                         } else {
                             if (req.body.type !== undefined) {
-                                newPolish.type = sanitizer.sanitize(req.body.type);
+                                newPolish.type = sanitizer.sanitize(req.body.type).split(',');
                             } else {
-                                newPolish.type = '';
+                                newPolish.type = [];
                             }
                             if (req.body.colorcategory !== undefined) {
                                 newPolish.colorscategory = sanitizer.sanitize(req.body.colorcategory.split(','));
@@ -449,13 +449,14 @@ app.get('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
 });
 
 app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
-    Polish.findById(req.params.id, function(err, p) {
-        if (!p) {
+    Polish.findById(req.params.id, function(err, polish) {
+        var currentDupes = polish.dupes;
+        if (!polish) {
             res.redirect('/error');
         } else {
             if (req.user.level === "admin") {
-                p.name = sanitizer.sanitize((req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")));
-                p.brand = sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")));
+                polish.name = sanitizer.sanitize((req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")));
+                polish.brand = sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")));
                 Brand.findOne({alternatenames:sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")).toLowerCase())}, function(err, brand) {
                     if (brand === null || brand === undefined) {
                         var newBrand = new Brand ({
@@ -470,37 +471,32 @@ app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
                     }
                 });
             }
-            if (Array.isArray(req.body.dupes)) {
-                for (i=0; i<req.body.dupes.length; i++) {
-                    Polish.findById(sanitizer.sanitize(req.body.dupes[i]), function (err, dupepolish) {
-                        if (dupepolish.dupes.indexOf(p.id) > -1) {
-                            //already in dupes
-                        } else {
-                            dupepolish.dupes.push(p.id);
-                            dupepolish.save(function(err){
-                                //check next one!
-                            })
-                        }
-                    })
-                }
-            } else if (req.body.dupes !== undefined) {
-                Polish.findById(sanitizer.sanitize(req.body.dupes), function (err, dupepolish) {
-                    if (dupepolish.dupes.indexOf(p.id) > -1) {
-                        //already in dupes
-                    } else {
-                        dupepolish.dupes.push(p.id);
-                        dupepolish.save(function(err){
-                            //check next one!
-                        })
-                    }
+            for (i=0; i<currentDupes.length; i++) {
+                Polish.findById(currentDupes[i]).exec(function(err, polish) {
+                    polish.dupes.remove(req.params.id);
+                    polish.save();
                 })
             }
-            p.dateupdated = new Date();
-            p.save(function(err) {
-                p.dupes = sanitizer.sanitize(req.body.dupes);
-                p.keywords = sanitizer.sanitize(p.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.batch) + " " + sanitizer.sanitize(p.code);
-                p.save(function(err) {
-                    res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));;
+            if (req.body.dupes) {
+                polish.dupes = sanitizer.sanitize(req.body.dupes).split(',');
+                var newDupes = sanitizer.sanitize(req.body.dupes).split(',');
+            } else {
+                polish.dupes = [];
+                var newDupes = [];
+            }
+            polish.dateupdated = new Date();
+            polish.save(function(err) {
+                if (req.body.dupes) {
+                    for (j=0; j<newDupes.length; j++) {
+                        Polish.findById(newDupes[j]).exec(function(err, dupepolish) {
+                            dupepolish.dupes.push(req.params.id);
+                            dupepolish.save();
+                        })
+                    }
+                }
+                polish.keywords = sanitizer.sanitize(polish.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(polish.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(polish.batch) + " " + sanitizer.sanitize(polish.code);
+                polish.save(function(err) {
+                    res.redirect('/polish/' + polish.brand.replace(/ /g,"_") + "/" + polish.name.replace(/ /g,"_"));;
                 })
             });
         }
@@ -547,11 +543,11 @@ app.post('/polishedit/:id/type', isLoggedIn, function(req, res) {
             res.redirect('/error');
         } else {
             if (req.body.value !== undefined) {
-                p.type = sanitizer.sanitize(req.body.value);
+                p.type = sanitizer.sanitize(req.body.value).split(',')
                 p.dateupdated = new Date();
             } else {
                 p.dateupdated = new Date();
-                p.type = '';
+                p.type = [];
             }
             p.save(function(err) {
                 res.end();

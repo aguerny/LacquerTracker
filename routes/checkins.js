@@ -360,31 +360,28 @@ app.post('/checkin/:id/edit', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id, function (err, post){
         var currentPolish = post.polish;
         if (post.user == req.user.id) {
-            if (post.polish === undefined) {
-                for (i=0; i<currentPolish.length; i++) {
-                    Polish.findById(currentPolish[i]).exec(function(err, polish) {
-                        polish.checkins.remove(req.params.id);
-                        polish.save();
-                    })
-                }
+            for (i=0; i<currentPolish.length; i++) {
+                Polish.findById(currentPolish[i]).exec(function(err, polish) {
+                    polish.checkins.remove(req.params.id);
+                    polish.save();
+                })
             }
-            post.polish = sanitizer.sanitize(req.body.polish).split(',');
+            if (req.body.polish) {
+                post.polish = sanitizer.sanitize(req.body.polish).split(',');
+                var newPolish = sanitizer.sanitize(req.body.polish).split(',');
+            } else {
+                post.polish = [];
+                var newPolish = [];
+            }
             post.editdate = new Date;
             post.description = sanitizer.sanitize(req.body.description);
             post.save(function(err) {
                 if (req.body.polish) {
-                    if (Array.isArray(req.body.polish) === false) {
-                        Polish.findById(sanitizer.sanitize(req.body.polish)).exec(function(err, polish) {
+                    for (j=0; j<newPolish.length; j++) {
+                        Polish.findById(sanitizer.sanitize(newPolish[j])).exec(function(err, polish) {
                             polish.checkins.addToSet(req.params.id);
                             polish.save();
                         })
-                    } else {
-                        for (j=0; j<req.body.polish.length; j++) {
-                            Polish.findById(sanitizer.sanitize(req.body.polish[j])).exec(function(err, polish) {
-                                polish.checkins.addToSet(req.params.id);
-                                polish.save();
-                            })
-                        }
                     }
                 }
                 res.redirect('/checkin/' + post.id);

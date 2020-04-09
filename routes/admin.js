@@ -246,14 +246,14 @@ app.post('/admin/combine', isLoggedIn, function(req, res) {
                     }
 
                     if (remove.type.length) {
-                        var input = remove.type.split(",");
-                        var formatted = keep.type.split(",");
+                        var input = remove.type;
+                        var formatted = keep.type;
                         for (j=0; j<input.length; j++) {
                             if (formatted.indexOf(input[j]) == -1) {
                                 formatted.push(input[j]);
                             }
                         }
-                        keep.type = formatted.toString().replace(/^,/, '');
+                        keep.type = formatted;
                     }
 
                     if (!keep.dupes.length) {
@@ -508,17 +508,25 @@ app.get('/admin/portal', isLoggedIn, function(req, res) {
 
 
 // //fix things in mongo
-// app.get('/admin/fixforumcomments', isLoggedIn, function(req, res) {
-//     ForumComment.find({}, function(err, comments) {
-//         for (i=0; i<comments.length; i++) {
-//             comments[i].datenew = comments[i].date;
-//             comments[i].save();
+// app.get('/admin/fixtypes', isLoggedIn, function(req, res) {
+//     Polish.find({}, function(err, polish) {
+//         for (i=0; i<polish.length; i++) {
+//             if (polish[i].type) {
+//                 if (polish[i].type.length > 0) {
+//                     polish[i].typenew = polish[i].type.split(',');
+//                     polish[i].save();
+//                 } else {
+//                     polish[i].typenew = [];
+//                 }
+//             } else {
+//                 polish[i].typenew = [];
+//             }
 //         }
 //     })
 // });
 //for above:
-//db.forumcomments.update({}, {$unset:{"date":""}}, false, true)
-//db.forumcomments.update({}, {$rename:{"datenew":"date"}}, false, true)
+//db.polishes.update({}, {$unset:{"type":""}}, false, true)
+//db.polishes.update({}, {$rename:{"typenew":"type"}}, false, true)
 
 
 //update colors based on current swatches and color list

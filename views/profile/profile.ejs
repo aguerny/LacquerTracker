@@ -57,7 +57,7 @@ $(window).load(function () {
                         <%}%>
                     </td>
                     <td>
-                        <span><%= opolishes[i].type.replace(/,/g,", ") %></span>
+                        <span><%= opolishes[i].type.toString().replace(/,/g,", ") %></span>
                     </td>
                     <td>
                         <% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
@@ -88,7 +88,7 @@ $(window).load(function () {
                             <%}%>
                         </td>
                         <td>
-                            <span><%= wpolishes[i].type.replace(/,/g,", ") %></span>
+                            <span><%= wpolishes[i].type.toString().replace(/,/g,", ") %></span>
                         </td>
                     <% } %>
                     </table>

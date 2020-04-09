@@ -133,7 +133,7 @@ app.get('/profile/:username/delete', isLoggedIn, function(req, res) {
             } else {
                 user.deleted = true;
                 user.password = bcrypt.hashSync(Math.random().toString(36).substring(20), bcrypt.genSaltSync(8), null);
-                user.email = '';
+                user.email = user.email+".deleted";
                 user.about = '';
                 user.ownedpolish = [];
                 user.wantedpolish = [];
