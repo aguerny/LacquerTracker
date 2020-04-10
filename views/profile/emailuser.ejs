@@ -19,7 +19,7 @@
             <h3>Send message to <%= username %>:</h3><br><i>Be sure to include a reply e-mail if you need a response.</i><br><br><br><br>
             <form action="/email/<%=username%>" method="post">
                 <textarea autofocus rows="10" class="width50" type="text" name="emailmessage" required <%if (typeof emailmessage !== "undefined") {%>value="<%=emailmessage%>" <%}%>><%if (typeof emailmessage !== "undefined") {%><%=emailmessage%><%}%></textarea><br><br><br>
-                <div class="g-recaptcha" data-sitekey="6LcxIzgUAAAAADxJGbb-7gsJwj5oGxoZWbBaJZlC"></div><br><br><br><br><br>
+                <div class="g-recaptcha" data-sitekey="6LcSeegUAAAAACSmq6y9_hXYCgEXdGknDqg99b__"></div><br><br><br><br><br>
                 <input type="submit" value="Submit" class="button">
             </form>
         </div>

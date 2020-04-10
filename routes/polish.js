@@ -390,7 +390,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                                 newPolish.type = [];
                             }
                             if (req.body.colorcategory !== undefined) {
-                                newPolish.colorscategory = sanitizer.sanitize(req.body.colorcategory.split(','));
+                                newPolish.colorscategory = sanitizer.sanitize(req.body.colorcategory).split(',');
                             }
                             newPolish.save(function(err) {
                                 Brand.findOne({name: polishBrandToFind}, function(err, brand) {
@@ -401,7 +401,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                                             bio: '',
                                             photo: '',
                                             official: false,
-                                            indie: false,
+                                            polishlock: false,
                                             alternatenames: [polishBrandToFind.toLowerCase()]
                                         })
                                         newBrand.save(function(err) {

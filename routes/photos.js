@@ -51,7 +51,7 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                     pendingreason: '',
                 })
                 newPhoto.save(function(err) {
-                    p.dateupdated = new Date();
+                    p.date = new Date();
                     p.photos.push(newPhoto.id);
                     p.save();
                     gm(req.files.photo.tempFilePath).strip().resize(600).write(path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ext), function (err) {
@@ -100,7 +100,7 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                 })
                 newPhoto.save(function(err) {
                     var targetPath = path.resolve('./public/images/polish/' + req.params.id + '-' + newPhoto.id + ext);
-                    p.dateupdated = new Date();
+                    p.date = new Date();
                     p.photos.push(newPhoto.id);
                     p.save();
                     download(sanitizer.sanitize(req.body.url), targetPath, function(err) {
@@ -176,7 +176,7 @@ app.post('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
                         from: "polishrobot@lacquertracker.com",
                         to: 'lacquertrackermailer@gmail.com',
                         subject: 'Flagged Photo',
-                        text: req.user.username + " has flagged a photo.\n\n\nwww.lacquertracker.com/admin/flaggedphotos",
+                        text: req.user.username + " has flagged a photo.\n\n\nhttps://www.lacquertracker.com/admin/flaggedphotos",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {
@@ -193,7 +193,7 @@ app.post('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
 app.get('/photo/edit/:pid', isLoggedIn, function(req, res) {
     data = {};
     data.title = 'Edit Polish Photos - Lacquer Tracker';
-    Polish.findById(req.params.pid).populate('photos').exec(function(err, polish) {
+    Polish.findById(req.params.pid).populate({path:'photos', match:{pendingdelete:false}}).exec(function(err, polish) {
         data.allphotos = polish.photos;
         data.urlbrand = polish.brand.replace(/ /g,"_");
         data.urlname = polish.name.replace(/ /g,"_");

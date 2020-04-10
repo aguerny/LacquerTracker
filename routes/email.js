@@ -28,7 +28,7 @@ app.post('/email/:username', isLoggedIn, function(req, res) {
         res.render('profile/emailuser.ejs', {title: 'Send Message - Lacquer Tracker', message: 'Captcha wrong. Try again.', emailmessage:sanitizer.sanitize(req.body.emailmessage), username:user.username});
     }
     // Put your secret key here.
-    var secretKey = "6LcxIzgUAAAAAA-GeS9omdvbuGvc6eNLCmH09-TN";
+    var secretKey = process.env.LTRECAPTCHASECRETKEY;
     // req.connection.remoteAddress will provide IP address of connected user.
     var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
     // Hitting GET request to the URL, Google will respond with success or error scenario.

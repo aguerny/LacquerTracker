@@ -71,7 +71,7 @@ app.get('/admin/flaggedphotos', isLoggedIn, function(req, res) {
             data = {};
             data.title = 'Photos Pending Delete - Lacquer Tracker';
             data.flaggedphotos = photos;
-            res.render('admin/pending.ejs', data);
+            res.render('admin/flaggedphotos.ejs', data);
         })
     } else {
         res.redirect('/error');
@@ -87,6 +87,7 @@ app.get('/admin/flaggedphotos/:pid/:id/:action', isLoggedIn, function(req, res) 
         } else {
             if (req.params.action === "restore") {
                 photo.pendingdelete = false;
+                photo.pendingreason = '';
                 photo.save(function(err) {
                     res.redirect('/admin/flaggedphotos');
                 })
@@ -131,6 +132,7 @@ app.get('/admin/flaggedcheckins/:id/restore', isLoggedIn, function(req, res) {
             res.redirect('/error');
         } else {
             checkin.pendingdelete = false;
+            checkin.pendingreason = '';
             checkin.save(function(err) {
                 res.redirect('/admin/flaggedcheckins');
             })
@@ -355,7 +357,7 @@ app.post('/polishid/:id/flag', isLoggedIn, function(req, res) {
                 from: "polishrobot@lacquertracker.com",
                 to: 'lacquertrackermailer@gmail.com',
                 subject: 'Flagged Polish',
-                text: req.user.username + " has flagged a polish: " + polish.brand + " - " + polish.name + "\n\n\nwww.lacquertracker.com/admin/flaggedpolish",
+                text: req.user.username + " has flagged a polish: " + polish.brand + " - " + polish.name + "\n\n\nhttp://www.lacquertracker.com/admin/flaggedpolish",
             }
 
             transport.sendMail(mailOptions, function(error, response) {

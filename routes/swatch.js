@@ -21,23 +21,7 @@ var PolishColors = require('../app/constants/polishColors');
 module.exports = function(app, passport) {
 
 
-//add swatch
-app.get('/swatch/add/:id', isLoggedIn, function(req, res) {
-    Polish.findById(req.params.id, function(err, polish) {
-        if (polish === null) {
-            res.redirect('/error');
-        } else {
-            var data = {};
-                data.title = 'Add a Swatch - Lacquer Tracker';
-                data.pname = polish.name;
-                data.pbrand = polish.brand;
-                data.pid = polish.id;
-            res.render('swatch/upload.ejs', data);
-    }
-    })
-});
-
-//upload image
+//show image to crop
 app.post('/swatch/add/:id', isLoggedIn, function(req, res) {
     if (req.files.photo.name.length > 0) {
         if (req.files.photo.mimetype.startsWith("image")) {

@@ -514,7 +514,7 @@ app.post('/checkin/:id/flag', isLoggedIn, function(req, res) {
                     from: "polishrobot@lacquertracker.com",
                     to: 'lacquertrackermailer@gmail.com',
                     subject: 'Flagged Check-in',
-                    text: req.user.username + " has flagged a check-in.\n\n\nwww.lacquertracker.com/admin/flaggedcheckins",
+                    text: req.user.username + " has flagged a check-in.\n\n\nhttps://www.lacquertracker.com/admin/flaggedcheckins",
                 }
 
                 transport.sendMail(mailOptions, function(error, response) {

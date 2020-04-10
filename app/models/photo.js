@@ -11,6 +11,7 @@ var photoSchema = mongoose.Schema({
     creditlink: String,
     pendingdelete: Boolean,
     pendingreason: String,
+    date: Date,
 });
 
 
