@@ -18,7 +18,7 @@ module.exports = function(app, passport) {
 //view a polish by name
 app.get('/polish/:brand/:name', function(req, res) {
 
-    Polish.findOne({brand: req.params.brand.replace(/_/g," "), name:req.params.name.replace(/_/g," ")}).populate('dupes', 'brand name').populate('checkins', 'photo pendingdelete').populate('photos').exec(function(err, polish) {
+    Polish.findOne({brand: req.params.brand.replace(/_/g," "), name:req.params.name.replace(/_/g," ")}).populate('dupes', 'brand name').populate('checkins', 'photo pendingdelete creationdate', null, {sort:{creationdate:-1}}).populate('photos').exec(function(err, polish) {
         if (polish === null) {
             res.redirect('/error');
         } else {

@@ -6,12 +6,14 @@
         <section>
             <div>
                 <form action="/swatch/crop/<%= pid %>" method="post" enctype='multipart/form-data'>
-                    <h3>Photo successfully uploaded! Now, crop a small area (just polish) for the swatch thumbnail:</h3><br>
+                    <h3>Photo successfully uploaded! Now, crop a small area for the swatch:</h3><br>
+                    Try to get just polish (not skin or white highlights) as Lacquer Tracker will use this swatch to automatically categorize the polish's colors.<br><br>
                     <img src="<%= location %>" id="jcrop_target" /><br><br>
                     <input id="x" type="text" name="x" style="display:none">
                     <input id="y" type="text" name="y" style="display:none">
                     <input id="w" type="text" name="w" style="display:none">
                     <input id="h" type="text" name="h" style="display:none">
+                    <input id="cropsize" type="text" name="cropsize" style="display:none">
                     <input name="location" style="display:none" value="<%= location %>">
                     <input name="ext" style="display:none" value="<%= ext %>">
                     <input type="submit" value="Submit" class="button">
@@ -63,6 +65,7 @@ $(window).load(function() {
         $('#y').val(c.y);
         $('#w').val(c.w);
         $('#h').val(c.h);
+        $('#cropsize').val(mq.matches);
     };
 });
 

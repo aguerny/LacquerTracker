@@ -33,7 +33,7 @@ app.get('/profile', isLoggedIn, function(req, res) {
 
 //profile specific
 app.get('/profile/:username', function(req, res) {
-    User.findOne({username: req.params.username, level:{$ne:"deleted"}}).populate('ownedpolish').populate('wantedpolish').populate('checkins', 'photo pendingdelete').exec(function(err, user) {
+    User.findOne({username: req.params.username, level:{$ne:"deleted"}}).populate('ownedpolish').populate('wantedpolish').populate('checkins', 'photo pendingdelete creationdate', null, {sort:{creationdate:-1}}).exec(function(err, user) {
         if (!user || user.username==="admin" || user.username==="lacquertracker") {
             res.redirect('/error');
         } else {

@@ -65,10 +65,15 @@ app.post('/swatch/add/:id', isLoggedIn, function(req, res) {
 
 //crop happens here
 app.post('/swatch/crop/:id', isLoggedIn, function(req, res) {
+    if (req.body.cropsize === "true") {
+        var cropsize = 1;
+    } else {
+        var cropsize = 1.33;
+    }
     Polish.findById(req.params.id, function(err, polish) {
         fs.unlink(path.resolve('./public/'+polish.swatch), function() {
             gm(path.resolve('./public/' + sanitizer.sanitize(req.body.location)))
-            .crop(sanitizer.sanitize(req.body.w), sanitizer.sanitize(req.body.h), sanitizer.sanitize(req.body.x), sanitizer.sanitize(req.body.y))
+            .crop(sanitizer.sanitize(req.body.w)*cropsize, sanitizer.sanitize(req.body.h)*cropsize, sanitizer.sanitize(req.body.x)*cropsize, sanitizer.sanitize(req.body.y)*cropsize)
             .resize(200)
             .write(path.resolve('./public/images/swatches/' + req.params.id + sanitizer.sanitize(req.body.ext)), function (err) {
                 if (err) {
@@ -131,10 +136,15 @@ app.get('/photo/swatch/:pid/:id', isLoggedIn, function(req, res) {
 
 //crop happens here
 app.post('/swatch/edit/:pid/:id', isLoggedIn, function(req, res) {
+    if (req.body.cropsize === "true") {
+        var cropsize = 1;
+    } else {
+        var cropsize = 1.33;
+    }
     Polish.findById(req.params.pid, function (err, polish) {
         fs.unlink(path.resolve('./public/'+polish.swatch), function() {
             gm(path.resolve('./public/' + sanitizer.sanitize(req.body.location)))
-            .crop(sanitizer.sanitize(req.body.w), sanitizer.sanitize(req.body.h), sanitizer.sanitize(req.body.x), sanitizer.sanitize(req.body.y))
+            .crop(sanitizer.sanitize(req.body.w)*cropsize, sanitizer.sanitize(req.body.h)*cropsize, sanitizer.sanitize(req.body.x)*cropsize, sanitizer.sanitize(req.body.y)*cropsize)
             .resize(200)
             .write(path.resolve('./public/images/swatches/' + req.params.pid + sanitizer.sanitize(req.body.ext)), function (err) {
                 if (err) {

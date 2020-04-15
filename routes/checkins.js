@@ -93,13 +93,16 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                         creationdate: new Date,
                         editdate: new Date,
                         photo: "",
-                        polish: sanitizer.sanitize(req.body.polish),
+                        polish: [],
                         pendingdelete: false,
                         pendingreason: "",
                         comments: [],
                         description: sanitizer.sanitize(req.body.description),
                     })
                     newCheckin.save(function(err) {
+                        if (req.body.polish) {
+                            newCheckin.polish = sanitizer.sanitize(req.body.polish).split(',');
+                        }
                         if (err) {
                             fs.unlink(req.files.photo.tempFilePath, function(err) {
                                 newCheckin.remove(function(err) {
@@ -161,13 +164,16 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                         creationdate: new Date,
                         editdate: new Date,
                         photo: "",
-                        polish: sanitizer.sanitize(req.body.polish),
+                        polish: [],
                         pendingdelete: false,
                         pendingreason: "",
                         comments: [],
                         description: sanitizer.sanitize(req.body.description),
                     })
                     newCheckin.save(function(err) {
+                        if (req.body.polish) {
+                            newCheckin.polish = sanitizer.sanitize(req.body.polish).split(',');
+                        }
                         if (err) {
                             fs.unlink(req.files.photo.tempFilePath, function(err) {
                                 newCheckin.remove(function(err) {
@@ -451,7 +457,7 @@ app.get('/checkin/:id/:cid/remove', isLoggedIn, function(req, res) {
 
 //delete check-in
 app.get('/checkin/:id/remove', isLoggedIn, function(req, res) {
-    Checkin.findById(req.params.id, function(err, post) {
+    Checkin.findById(req.params.id).populate('user').exec(function(err, post) {
         if (post === null || post === undefined) {
              res.redirect('/error');
          } else {
