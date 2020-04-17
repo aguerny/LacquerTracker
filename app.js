@@ -31,15 +31,6 @@ app.engine('html', require('ejs').renderFile);
 
 app.enable('trust proxy');
 
-app.get(function (req, res, next) {
-	if ('/robots.txt' == req.url) {
-    	res.type('text/plain')
-    	res.send("User-agent: *\nDisallow: /admin\nDisallow: /email\nDisallow: /forums/*/add\nDisallow: /forums/*/edit\nDisallow: /forums/*/remove\nDisallow: /nailsoftheday/*/add\nDisallow: /nailsoftheday/*/edit\nDisallow: /nailsoftheday/*/remove\nDisallow: /photo\nDisallow: /swatch\nDisallow: /addown\nDisallow: /addwant\nDisallow: /addownbrowse\nDisallow: /addwantbrowse\nDisallow: /removeown\nDisallow: /removewant\nDisallow: /polish/*/delete\nDisallow: /polishedit\nDisallow: /profile/*/edit\nDisallow: /profile/*/remove\nDisallow: /profile/*/add\nDisallow: /profile/*/delete\nDisallow: /review\nDisallow: /validate\nDisallow: /revalidate\nDisallow: /reset\nDisallow: /logout\nDisallow: /scripts\nDisallow: /stylesheets\nDisallow: /polishsuccessful\nDisallow: /polishid");
-	} else {
-    	next();
-	}
-});
-
 app.use(express.static(__dirname+'/public')); // Catch static files
 app.use(morgan('dev')); // log every request to the console
 var cookieSecret = process.env.LTCOOKIESECRET || "Development Cookie Secret";
