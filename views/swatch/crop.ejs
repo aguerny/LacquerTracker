@@ -13,7 +13,6 @@
                     <input id="y" type="text" name="y" style="display:none">
                     <input id="w" type="text" name="w" style="display:none">
                     <input id="h" type="text" name="h" style="display:none">
-                    <input id="cropsize" type="text" name="cropsize" style="display:none">
                     <input name="location" style="display:none" value="<%= location %>">
                     <input name="ext" style="display:none" value="<%= ext %>">
                     <input type="submit" value="Submit" class="button">
@@ -65,7 +64,6 @@ $(window).load(function() {
         $('#y').val(c.y);
         $('#w').val(c.w);
         $('#h').val(c.h);
-        $('#cropsize').val(mq.matches);
     };
 });
 

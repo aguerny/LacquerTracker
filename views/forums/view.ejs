@@ -11,7 +11,6 @@ function confirm_alert(node) {
     <div id="container" class="clear">
     <section>
         <div class="photo500">
-        <a href="/forums">&#8592; Back to Forums</a><br><br>
         <h2><%= posttitle %></h2><br>
             Posted by <a href="/profile/<%= postuser.username%>"><%= postuser.username %></a> on <%= postdate %><% if (isAuthenticated) { %>
                     <% if (user.username === postuser.username || user.level === "admin") { %>

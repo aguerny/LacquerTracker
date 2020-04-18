@@ -41,7 +41,10 @@
                             <option value="Choose" <%if (browsecolorcategory=="Choose"){%> selected="selected" <%}%>>Choose a color</option>
                         </select>
                         <br>
-                        <input type="color" name="selectcolor" id="selectcolor" value="<%=browseselectcolor%>" <%if (browsecolorcategory!=="Choose"){%> style="display:none" <%}%>>
+                        <span id="colorselector" <%if (browsecolorcategory!=="Choose"){%> style="display:none" <%}%>>
+                            <input name="selectcolor" type="hidden" id="color_value" value="<%=browseselectcolor%>">
+                            <input type="button" class="jscolor {valueElement: 'color_value'}" style="width:50px; height:20px;">
+                        </span>
                         <br><br>
                         <% if (isAuthenticated) { %>
                             <input type="checkbox" name="owned" <% if (browseowned === "on") { %> checked <% } %>>Owned polishes<br><br><br>
@@ -184,9 +187,9 @@ $(document).ready(function() {
 
     $('#colorcategory').change(function(){
         if($(this).val() == "Choose"){
-            $('#selectcolor').show();
+            $('#colorselector').show();
         } else {
-            $('#selectcolor').hide();
+            $('#colorselector').hide();
         }
     });
 

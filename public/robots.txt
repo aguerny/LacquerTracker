@@ -17,6 +17,8 @@ Disallow: /removeown
 Disallow: /removewant
 Disallow: /polish/*/delete
 Disallow: /polishedit
+Disallow: /polishsuccessful
+Disallow: /polishid
 Disallow: /profile/*/edit
 Disallow: /profile/*/remove
 Disallow: /profile/*/add
@@ -28,5 +30,3 @@ Disallow: /reset
 Disallow: /logout
 Disallow: /scripts
 Disallow: /stylesheets
-Disallow: /polishsuccessful
-Disallow: /polishid
