@@ -46,9 +46,10 @@ $(window).load(function() {
             });
         }
         else {
+            var windowsize = $(window).width()*.94;
             $(function(){
                 $('#jcrop_target').Jcrop({
-                    boxWidth: 300,
+                    boxWidth: windowsize,
                     onChange: showCoords,
                     onSelect: showCoords,
                     aspectRatio: 1
