@@ -13,17 +13,272 @@ var _ = require('lodash');
 var nodemailer = require('nodemailer');
 var csv = require('ya-csv');
 var PolishTypes = require('../app/constants/polishTypes');
-var mime = require('mime-types');
+var PolishColors = require('../app/constants/polishColors');
+var nodemailer = require('nodemailer');
+var request = require('request');
+var http = require('http');
+
 
 module.exports = function(app, passport) {
 
 
-//Import owned polish from CSV
-// app.get('/import', isLoggedIn, function(req, res) {
-//     data = {};
-//     data.title = 'Import Owned Polish - Lacquer Tracker';
-//     res.render('polish/import.ejs', data);
-// });
+//User sends request to import polish from CSV
+app.get('/import', isLoggedIn, function(req, res) {
+    data = {};
+    data.title = 'Import Polish - Lacquer Tracker';
+    res.render('polish/importuser.ejs', data);
+});
+
+
+app.post('/import', isLoggedIn, function(req, res) {
+    if (req.files.spreadsheet.name.length > 0) {
+        if (req.files.spreadsheet.mimetype.startsWith("text/csv") || req.files.spreadsheet.mimetype.startsWith("application/vnd.ms-excel")) {
+            //send import request e-mail
+            var transport = nodemailer.createTransport({
+                sendmail: true,
+                path: "/usr/sbin/sendmail"
+            });
+            var mailOptions = {
+                from: "polishrobot@lacquertracker.com",
+                to: 'lacquertrackermailer@gmail.com',
+                subject: 'Import Polish Request',
+                text: req.user.username + " has requested to add the attached polish.\n\nOwnership option: " + req.body.ownership,
+                attachments: {
+                    filename: req.user.username + '.csv',
+                    content: fs.createReadStream(req.files.spreadsheet.tempFilePath)
+                }
+            }
+            transport.sendMail(mailOptions, function(error, response) {
+                if (error) {
+                    fs.unlink(req.files.spreadsheet.tempFilePath, function(err) {
+                        res.render('polish/importuser.ejs', {title: 'Import Polish - Lacquer Tracker', message:'Error. Please try again later.'});
+                    })
+                }
+                else {
+                    fs.unlink(req.files.spreadsheet.tempFilePath, function(err) {
+                        res.render('polish/importuser.ejs', {title: 'Import Polish - Lacquer Tracker', message: "Success! Your polish file has been sent for validation. Please allow time for review."});
+                    })
+                }
+                transport.close();
+            });
+        } else {
+            fs.unlink(req.files.spreadsheet.tempFilePath, function(err) {
+                res.render('polish/importuser.ejs', {title: 'Import Polish - Lacquer Tracker', message:'Error: Filetype not .CSV'});
+            })
+        }
+    } else {
+        fs.unlink(req.files.spreadsheet.tempFilePath, function(err) {
+            res.render('polish/importuser.ejs', {title: 'Import Polish - Lacquer Tracker', message:'Error: Filetype not .CSV'});
+        })
+    }
+})
+
+
+
+//admin validates CSV file and proceeds to upload
+app.get('/admin/import', isLoggedIn, function(req, res) {
+    if (req.user.level == "admin") {
+        data = {};
+        data.title = 'Admin Import Polish - Lacquer Tracker';
+        res.render('polish/importadmin.ejs', data);
+    } else {
+        res.redirect('/error');
+    }
+});
+
+
+
+app.post('/admin/import', isLoggedIn, function(req, res) {
+    if (req.files.spreadsheet.name.length > 0) {
+        if (req.files.spreadsheet.mimetype.startsWith("text/csv") || req.files.spreadsheet.mimetype.startsWith("application/vnd.ms-excel")) {
+            var reader = csv.createCsvFileReader(req.files.spreadsheet.tempFilePath, {columnsFromHeader:true, 'separator': ','});
+            reader.addListener('data', function(data, err) {
+                if (data.name.length > 0 && data.brand.length > 0) {
+                    var polishNameToFind = sanitizer.sanitize(data.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,''));
+                    var polishBrandEntered = sanitizer.sanitize(data.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,''));
+                    var polishBrandToFind;
+                    Brand.findOne({alternatenames:polishBrandEntered.toLowerCase()}, function(err, brand) {
+                        if (brand) {
+                            polishBrandToFind = brand.name;
+                        } else {
+                            polishBrandToFind = polishBrandEntered;
+                        }
+                        Polish.findOne({name: new RegExp("^"+polishNameToFind+"$","i"), brand: new RegExp("^"+polishBrandToFind+"$", "i")}, function(err, polish) {
+                            if (polish !== null) {
+                                if (req.body.ownership == "yes") {
+                                    User.findOne({'username':req.body.user}, function(err, user) {
+                                        if (user !== null) {
+                                            user.wantedpolish.remove(polish.id);
+                                            user.ownedpolish.addToSet(polish.id);
+                                            user.save();
+                                        }
+                                    })
+                                }
+
+                                if ((data.collection) && (polish.batch == '')) {
+                                    polish.batch = sanitizer.sanitize(data.collection);
+                                }
+
+                                if ((data.code) && (polish.code == '')) {
+                                    polish.code = sanitizer.sanitize(data.code);
+                                }
+
+                                if (data.type) {
+                                    if (data.type.length > 0) {
+                                        var input = sanitizer.sanitize(data.type).toLowerCase().replace("cream","creme").split(',');
+                                        var formatted = polish.type;
+                                        var types = PolishTypes;
+                                        for (i=0; i<types.length; i++) {
+                                            if ((input.indexOf(types[i]) !== -1) && (formatted.indexOf(types[i]) === -1)) {
+                                                formatted.push(types[i]);
+                                            }
+                                        }
+                                        polish.type = formatted;
+                                    }
+                                }
+
+                                if (data.color) {
+                                    if (data.color.length > 0) {
+                                        var input = sanitizer.sanitize(data.color).toLowerCase().split(',');
+                                        if (polish.colorscategory) {
+                                            var formatted = polish.colorscategory;
+                                        } else {
+                                            var formatted = [];
+                                        }
+                                        var colors = PolishColors;
+                                        for (i=0; i<colors.length; i++) {
+                                            if ((input.indexOf(colors[i].category) !== -1) && (formatted.indexOf(colors[i]) == -1)) {
+                                                formatted.push(colors[i].category);
+                                            }
+                                        }
+                                        polish.colorscategory = formatted;
+                                    }
+                                }
+
+                                polish.save(function (err) {
+                                    polish.keywords = polish.name + " " + polish.brand + " " + polish.batch + " " + polish.code;
+                                    polish.dateupdated = new Date();
+                                    polish.save();
+                                })
+                            } else {
+                                User.findOne({'username':req.body.user}, function(err, user) {
+
+                                    var newPolish = new Polish ({
+                                        name: polishNameToFind,
+                                        brand: polishBrandToFind,
+                                        dateupdated: new Date(),
+                                        createdby: user.id,
+                                        createdmethod: 'excel',
+                                        dupes: [],
+                                        photos: [],
+                                        reviews: [],
+                                        swatch: '',
+                                        flagged: false,
+                                        falggedreason: '',
+                                        checkins: [],
+                                    })
+
+                                    if (data.collection) {
+                                        if (data.collection.length > 0) {
+                                            newPolish.batch = sanitizer.sanitize(data.collection);
+                                        } else {
+                                            newPolish.batch = '';
+                                        }
+                                    }
+
+                                    if (data.code) {
+                                        if (data.code.length > 0) {
+                                            newPolish.code = sanitizer.sanitize(data.code);
+                                        } else {
+                                            newPolish.code = '';
+                                        }
+                                    }
+
+                                    if (data.type) {
+                                        if (data.type.length > 0) {
+                                            var input = sanitizer.sanitize(data.type).toLowerCase().replace("cream","creme").split(',');
+                                            var formatted = [];
+                                            var types = PolishTypes;
+                                            for (i=0; i<types.length; i++) {
+                                                if (input.indexOf(types[i]) !== -1) {
+                                                    formatted.push(types[i]);
+                                                }
+                                            }
+                                            newPolish.type = formatted;
+                                        } else {
+                                            newPolish.type = [];
+                                        }
+                                    }
+
+                                    if (data.color) {
+                                        if (data.color.length > 0) {
+                                            var input = sanitizer.sanitize(data.color).toLowerCase().split(',');
+                                            var formatted = [];
+                                            var colors = PolishColors;
+                                            for (i=0; i<colors.length; i++) {
+                                                if (input.indexOf(colors[i].category) !== -1) {
+                                                    formatted.push(colors[i].category);
+                                                }
+                                            }
+                                            newPolish.colorscategory = formatted;
+                                        } else {
+                                            newPolish.colorscategory = [];
+                                        }
+                                    }
+
+                                    newPolish.save(function(err) {
+                                        newPolish.keywords = newPolish.name + " " + newPolish.brand + " " + newPolish.batch + " " + newPolish.code;
+                                        if (req.body.ownership == "yes") {
+                                            User.findOne({'username':req.body.user}, function(err, user) {
+                                                if (user !== null) {
+                                                    user.wantedpolish.remove(newPolish.id);
+                                                    user.ownedpolish.addToSet(newPolish.id);
+                                                    user.save();
+                                                }
+                                            })
+                                        }
+                                        newPolish.save(function(err) {
+                                            Brand.findOne({name: polishBrandToFind}, function(err, brand) {
+                                                //check if brand is already in brand database
+                                                if (!brand) {
+                                                    var newBrand = new Brand ({
+                                                        name: polishBrandToFind,
+                                                        bio: '',
+                                                        photo: '',
+                                                        official: false,
+                                                        polishlock: false,
+                                                        alternatenames: [polishBrandToFind.toLowerCase()]
+                                                    })
+                                                    newBrand.save();
+                                                }
+                                            })
+                                        })
+                                    })
+                                })
+                            }
+                        })
+                    })
+                }
+            })
+            reader.addListener('end', function(){
+                fs.unlink(req.files.spreadsheet.tempFilePath, function(err) {
+                    res.render('polish/importadmin.ejs', {title: 'Admin Import Polish - Lacquer Tracker', message: "Success! The polishes have been added."});
+                })
+            })
+        } else {
+            fs.unlink(req.files.spreadsheet.tempFilePath, function(err) {
+                res.render('polish/importadmin.ejs', {title: 'Import Polish - Lacquer Tracker', message:'Error: Filetype not .CSV'});
+            })
+        }
+    } else {
+        fs.unlink(req.files.spreadsheet.tempFilePath, function(err) {
+            res.render('polish/importadmin.ejs', {title: 'Import Polish - Lacquer Tracker', message:'Error: Filetype not .CSV'});
+        })
+    }
+});
+
+
+
 
 // app.post('/import', isLoggedIn, function(req, res) {
 //     if (mime.contentType(req.files.spreadsheet.path).startsWith("text/csv")) {

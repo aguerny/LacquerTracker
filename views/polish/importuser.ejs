@@ -1,0 +1,32 @@
+<%- include('../layoutTop'); %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+        <section>
+            <% if (typeof message !== "undefined") { %>
+                <center><b><%= message %></b><br><br><br><br></center>
+            <% } %>
+            <form action="/import" method="post" enctype='multipart/form-data'>
+                <h3>Import Polish</h3><br><br>
+                <b>Please follow all instructions very carefully!<br><br><br></b>
+                * Must be a .CSV file<br><br>
+                * Must contain a header row with all header titles in lowercase.<br><br>
+                * Required columns are "name" and "brand"<br><br>
+                * Optional columns are "code", "collection", "color", and "type"<br><br>
+                * Any information you do not know, leave the cell blank.<br><br>
+                * Once submitted, please be patient as our admin team will validate the file before processing.<br><br><br><br><br>
+                File for upload: <input type="file" value="spreadsheet" name="spreadsheet" class="width50" required><br><br><br>
+                Option: <select name="ownership" required>
+                    <option disabled selected value>Choose an option</option>
+                    <option value="yes">Add these polish to my owned list</option>
+                    <option value="no">Do NOT add these polish to my owned list</option>
+                    </select>
+                <br><br><br>
+                <input type="submit" value="Submit" class="button">
+            </form>
+        </section>
+    </div>
+</div>
+
+<%- include('../layoutBottom'); %>

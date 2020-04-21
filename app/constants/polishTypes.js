@@ -19,8 +19,6 @@ var types = [
 	"magnetic",
 	"matte",
 	"metallic",
-	"microglitter",
-	"microshimmer",
 	"multichrome",
 	"neon",
 	"pearl",

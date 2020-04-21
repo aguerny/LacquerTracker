@@ -78,7 +78,7 @@ app.post('/browse', function(req, res) {
             keywords:sanitizer.sanitize(req.body.keywords),
             brand:sanitizer.sanitize(req.body.brand),
             page:sanitizer.sanitize(req.body.page),
-            colorscategory:sanitizer.sanitize(req.body.colorcategory)
+            colorscategory:sanitizer.sanitize(req.body.colorcategory).toLowerCase()
         }
     } else {
         function hexToRgb(hex) {
@@ -138,7 +138,7 @@ app.post('/browse', function(req, res) {
 
 
         var filterOptions = _.transform(search, function(result, value, key) {
-            var valueWithCharactersStripped = value.replace(/[^A-Za-z 0-9!é()'.-]/g,'');
+            var valueWithCharactersStripped = value.replace(/[^A-Za-z 0-9!é•()'.-]/g,'');
             var valueWithCharactersStrippedAndEscaped = valueWithCharactersStripped.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
             result[key] = new RegExp(valueWithCharactersStrippedAndEscaped, "i");
         });

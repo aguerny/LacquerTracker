@@ -22,7 +22,7 @@ $(window).load(function () {
             <h2 style="display:inline-block"><%= username %>'s Profile</h2>
             <% if (isAuthenticated) { %>
                 <% if (user.username === username) { %>
-                    - <a href="/profile/<%= username %>/edit">Edit your profile</a><!-- | <a href="/import">Import owned polish</a> -->
+                    - <a href="/profile/<%= username %>/edit">Edit your profile</a> | <a href="/import">Import owned polish</a>
                 <% } else if (useremail === "on") {%>
                     - <a href="/email/<%= username %>">Send a message</a>
                 <% } %>

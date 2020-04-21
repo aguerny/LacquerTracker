@@ -56,7 +56,7 @@ app.post('/admin/settings', isLoggedIn, function(req, res) {
                     user.adminview = false;
                 }
                 user.save(function(err) {
-                    res.redirect('/');
+                    res.redirect('/admin/portal');
                 });
             }
         });
@@ -444,7 +444,7 @@ app.get('/admin/brandalternate', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
         Polish.find().distinct('brand', function(error, brands) {
             var allbrands = _.sortBy(brands, function(b) {return b.toLowerCase();});
-            Brand.find({alternatenames: {$exists: true, $not: {$size: 0}}}, function (error, somebrands) {
+            Brand.find({alternatenames: {$exists: true, $not: {$size: 0}}}).sort('name').exec(function (error, somebrands) {
                 data = {};
                 data.brandnames = allbrands;
                 data.brands = somebrands;
