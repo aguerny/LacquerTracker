@@ -2,7 +2,7 @@ module.exports = function(app, passport) {
 
 
 app.get('/', function(req, res) {
-    // console.log(req.headers['x-real-ip'] || req.connection.remoteAddress);
+    //console.log(req.headers['x-real-ip'] || req.connection.remoteAddress);
 	res.render('main.ejs', {title: 'Lacquer Tracker'});
 });
 

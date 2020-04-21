@@ -65,19 +65,18 @@ app.get('/browse', function(req, res) {
 
 
 app.post('/browse', function(req, res) {
+    console.log(req.body.type);
 
     if (req.body.colorcategory == "") {
         var search = {
             keywords:sanitizer.sanitize(req.body.keywords),
             brand:sanitizer.sanitize(req.body.brand),
-            type:sanitizer.sanitize(req.body.type),
             page:sanitizer.sanitize(req.body.page)
         }
     } else if (req.body.colorcategory !== "Choose") {
         var search = {
             keywords:sanitizer.sanitize(req.body.keywords),
             brand:sanitizer.sanitize(req.body.brand),
-            type:sanitizer.sanitize(req.body.type),
             page:sanitizer.sanitize(req.body.page),
             colorscategory:sanitizer.sanitize(req.body.colorcategory)
         }
@@ -99,10 +98,13 @@ app.post('/browse', function(req, res) {
         var search = {
             keywords:sanitizer.sanitize(req.body.keywords),
             brand:sanitizer.sanitize(req.body.brand),
-            type:sanitizer.sanitize(req.body.type),
             colorsname: PolishColors[deltas.indexOf(Math.min(...deltas))].name,
             page:sanitizer.sanitize(req.body.page)
         }
+    }
+
+    if (req.body.type !== "") {
+        search.type = sanitizer.sanitize(req.body.type);
     }
 
     Polish.find().distinct('brand', function(error, brands) {
