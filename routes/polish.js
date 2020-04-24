@@ -332,7 +332,7 @@ app.get('/polishid/:id/delete', isLoggedIn, function(req, res) {
 ///////////////////////////////////////////////////////////////////////////
 
 
-//add polish
+//add a polish
 app.get('/polishadd', isLoggedIn, function(req, res) {
     Polish.find().distinct('brand', function(error, brands) {
         var allbrands = _.sortBy(brands, function(b) {return b.toLowerCase();});

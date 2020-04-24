@@ -9,11 +9,12 @@
             <% } %>
             <form action="/import" method="post" enctype='multipart/form-data'>
                 <h3>Import Polish</h3><br><br>
-                <b>Please follow all instructions very carefully!<br><br><br></b>
+                <b>Please follow the below instructions carefully!<br><br><br></b>
                 * Must be a .CSV file<br><br>
                 * Must contain a header row with all header titles in lowercase.<br><br>
                 * Required columns are "name" and "brand"<br><br>
                 * Optional columns are "code", "collection", "color", and "type"<br><br>
+                * Use commas between items when there are multiple colors or types<br><br>
                 * Any information you do not know, leave the cell blank.<br><br>
                 * Once submitted, please be patient as our admin team will validate the file before processing.<br><br><br><br><br>
                 File for upload: <input type="file" value="spreadsheet" name="spreadsheet" class="width50" required><br><br><br>

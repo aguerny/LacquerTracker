@@ -125,6 +125,7 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                                             for (i=0; i<newCheckin.polish.length; i++) {
                                                 Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
                                                     polish.checkins.addToSet(newCheckin.id);
+                                                    polish.dateupdated = new Date();
                                                     polish.save();
                                                 })
                                             }
@@ -196,6 +197,7 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                                             for (i=0; i<newCheckin.polish.length; i++) {
                                                 Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
                                                     polish.checkins.addToSet(newCheckin.id);
+                                                    polish.dateupdated = new Date();
                                                     polish.save();
                                                 })
                                             }
@@ -386,6 +388,7 @@ app.post('/checkin/:id/edit', isLoggedIn, function(req, res) {
                     for (j=0; j<newPolish.length; j++) {
                         Polish.findById(sanitizer.sanitize(newPolish[j])).exec(function(err, polish) {
                             polish.checkins.addToSet(req.params.id);
+                            polish.dateupdated = new Date();
                             polish.save();
                         })
                     }

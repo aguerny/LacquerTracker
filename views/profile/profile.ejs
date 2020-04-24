@@ -34,7 +34,7 @@ $(window).load(function () {
             <% if (isAuthenticated) { %>
                 <% if (user.username === username) { %>
                     <br><br><a href="/profile/<%= username %>/edit">Edit your profile</a>
-                    <!-- <br><br><a href="/import">Import owned polish</a> -->
+                    <br><br><a href="/import">Import owned polish</a>
                 <% } else if (useremail === "on") {%>
                     <br><br><a href="/email/<%= username %>">Send a message</a>
                 <% } %>

@@ -12,10 +12,11 @@ var PolishColors = require('../app/constants/polishColors');
 module.exports = function(app, passport) {
 
 
+//view a brand
 app.get('/brand/:brandname', function(req, res) {
 
     Brand.findOne({alternatenames: req.params.brandname.toLowerCase().replace(/_/g, " ")}, function(err, brand) {
-        var thisbrand = req.params.brandname.replace(/_/g, " ");
+        var thisbrand = brand.name
         if (brand === null) {
             data = {};
             data.title = thisbrand + ' - Lacquer Tracker';
@@ -68,6 +69,32 @@ app.get('/brand/:brandname', function(req, res) {
         }
     });
 });
+
+
+
+//delete a brand
+app.get('/brand/:brandname/delete', isLoggedIn, function(req, res) {
+    if (req.user.level !== "admin") {
+        res.redirect('/error')
+    } else if (req.user.level === "admin") {
+        Brand.findOne({name: req.params.brandname.replace(/_/g, " ")}, function(err, brand) {
+             if (brand == null) {
+                res.redirect('/error');
+             }
+            Polish.find({brand: req.params.brandname.replace(/_/g," ")}, function(err, polish) {
+                console.log(polish);
+                if (polish.length > 0) {
+                    res.redirect('/brand/'+req.params.brandname);
+                } else {
+                    brand.remove();
+                    res.redirect('/browse');
+                }
+            })
+        })
+    }
+});
+
+
 
 
 };

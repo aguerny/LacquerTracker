@@ -23,6 +23,7 @@ var types = [
 	"neon",
 	"pearl",
 	"pen",
+    "powder",
 	"satin",
 	"scented",
 	"sheer",
