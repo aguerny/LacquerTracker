@@ -560,6 +560,24 @@ app.get('/admin/updatecolors', isLoggedIn, function(req, res) {
 });
 
 
+//add polishes to brands (works in test but not prod)
+app.get('/admin/addpolishestobrands', isLoggedIn, function(req, res) {
+    Polish.find({}, function(err, polish) {
+        for (i=0; i<polish.length; i++) {
+            var thispolish = polish[i];
+            Brand.findOne({name:thispolish.brand}, function(err, brand) {
+                thispolish.createddate = thispolish.id.getTimestamp();
+                thispolish.brandid = brand.id;
+                thispolish.save();
+                brand.polish.addToSet(thispolish.id);
+                brand.save();
+            })
+        }
+        res.redirect('/browse');
+    })
+});
+
+
 
 };
 

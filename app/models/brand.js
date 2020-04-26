@@ -11,6 +11,7 @@ var brandSchema = mongoose.Schema({
     polishlock: Boolean,
     alternatenames: [String],
     indie: Boolean,
+    polish: [{type: mongoose.Schema.Types.ObjectId, ref: 'Polish'}],
 });
 
 

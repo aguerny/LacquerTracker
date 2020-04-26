@@ -282,6 +282,10 @@ app.get('/polish/:brand/:name/delete', isLoggedIn, function(req, res) {
                 Review.deleteMany({polish:polish.id}, function(err){
                     //removing
                 });
+                Brand.findOne({name:polish.brand}, function (err, brand) {
+                    brand.polish.remove(polish.id);
+                    brand.save();
+                })
                 polish.remove();
                 res.redirect('/browse');
             }
@@ -321,6 +325,10 @@ app.get('/polishid/:id/delete', isLoggedIn, function(req, res) {
                 Review.deleteMany({polish:polish.id}, function(err){
                     //removing
                 });
+                Brand.findOne({name:polish.brand}, function (err, brand) {
+                    brand.polish.remove(polish.id);
+                    brand.save();
+                })
                 polish.remove();
                 res.redirect('/browse');
             }
@@ -374,6 +382,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                         code: sanitizer.sanitize(req.body.code.replace(/^\s+|\s+$/g,'')),
                         keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
                         dateupdated: new Date(),
+                        createddate: new Date(),
                         createdby: req.user.id,
                         dupes: sanitizer.sanitize(req.body.dupes),
                         swatch: '',
@@ -381,7 +390,6 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                     });
                     newPolish.save(function(err) {
                         if (err) {
-                            console.log(err);
                             res.redirect('/error');
                         } else {
                             if (req.body.type !== undefined) {
@@ -402,13 +410,20 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                                             photo: '',
                                             official: false,
                                             polishlock: false,
-                                            alternatenames: [polishBrandToFind.toLowerCase()]
+                                            alternatenames: [polishBrandToFind.toLowerCase()],
+                                            polish: [],
                                         })
                                         newBrand.save(function(err) {
-                                            res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
+                                            newBrand.polish.addToSet(newPolish.id);
+                                            newBrand.save(function(err) {
+                                                res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
+                                            });
                                         })
                                     } else {
-                                        res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
+                                        brand.polish.addToSet(newPolish.id);
+                                        brand.save(function(err) {
+                                            res.render('polish/addsuccessful.ejs', {title:'Add another? - Lacquer Tracker', url:'/polish/' + newPolish.brand.replace(/ /g,"_") + "/" + newPolish.name.replace(/ /g,"_"), polishid:newPolish.id});
+                                        });
                                     }
                                 })
                             })
@@ -451,12 +466,17 @@ app.get('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
 app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
     Polish.findById(req.params.id, function(err, polish) {
         var currentDupes = polish.dupes;
+        var currentBrand = polish.brand;
         if (!polish) {
             res.redirect('/error');
         } else {
             if (req.user.level === "admin") {
                 polish.name = sanitizer.sanitize((req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")));
                 polish.brand = sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")));
+                Brand.findOne({name:currentBrand}, function (err, brand) {
+                    brand.polish.remove(req.params.id);
+                    brand.save();
+                })
                 Brand.findOne({alternatenames:sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")).toLowerCase())}, function(err, brand) {
                     if (brand === null || brand === undefined) {
                         var newBrand = new Brand ({
@@ -465,9 +485,16 @@ app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
                             photo: '',
                             official: false,
                             polishlock: false,
-                            alternatenames: [sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")).toLowerCase())]
+                            alternatenames: [sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")).toLowerCase())],
+                            polish: [],
                         })
-                        newBrand.save();
+                        newBrand.save(function(err) {
+                            newBrand.polish.addToSet(polish.id);
+                            newBrand.save();
+                        });
+                    } else {
+                        brand.polish.addToSet(polish.id);
+                        brand.save();
                     }
                 });
             }

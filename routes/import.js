@@ -88,7 +88,49 @@ app.get('/admin/import', isLoggedIn, function(req, res) {
 
 
 
-app.post('/admin/import', isLoggedIn, function(req, res) {
+app.post('/admin/importbrands', isLoggedIn, function(req, res) {
+    if (req.files.spreadsheet.name.length > 0) {
+        if (req.files.spreadsheet.mimetype.startsWith("text/csv") || req.files.spreadsheet.mimetype.startsWith("application/vnd.ms-excel")) {
+            var reader = csv.createCsvFileReader(req.files.spreadsheet.tempFilePath, {columnsFromHeader:true, 'separator': ','});
+            reader.addListener('data', function(data, err) {
+                if (data.brand.length > 0) {
+                    var polishBrandEntered = sanitizer.sanitize(data.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,''));
+                    Brand.findOne({alternatenames:polishBrandEntered.toLowerCase()}, function(err, brand) {
+                        if (!brand) {
+                            var newBrand = new Brand ({
+                                name: polishBrandEntered,
+                                bio: '',
+                                photo: '',
+                                official: false,
+                                polishlock: false,
+                                alternatenames: [polishBrandEntered.toLowerCase()],
+                                polish: [],
+                            })
+                            newBrand.save();
+                        }
+                    })
+                }
+            })
+            reader.addListener('end', function(){
+                fs.unlink(req.files.spreadsheet.tempFilePath, function(err) {
+                    res.render('polish/importadmin.ejs', {title: 'Admin Import Polish - Lacquer Tracker', message: "Success! The brands have been added. Continue to step 2."});
+                })
+            })
+        } else {
+            fs.unlink(req.files.spreadsheet.tempFilePath, function(err) {
+                res.render('polish/importadmin.ejs', {title: 'Import Polish - Lacquer Tracker', message:'Error: Filetype not .CSV'});
+            })
+        }
+    } else {
+        fs.unlink(req.files.spreadsheet.tempFilePath, function(err) {
+            res.render('polish/importadmin.ejs', {title: 'Import Polish - Lacquer Tracker', message:'Error: Filetype not .CSV'});
+        })
+    }
+});
+
+
+
+app.post('/admin/importpolish', isLoggedIn, function(req, res) {
     if (req.files.spreadsheet.name.length > 0) {
         if (req.files.spreadsheet.mimetype.startsWith("text/csv") || req.files.spreadsheet.mimetype.startsWith("application/vnd.ms-excel")) {
             var reader = csv.createCsvFileReader(req.files.spreadsheet.tempFilePath, {columnsFromHeader:true, 'separator': ','});
@@ -98,11 +140,7 @@ app.post('/admin/import', isLoggedIn, function(req, res) {
                     var polishBrandEntered = sanitizer.sanitize(data.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,''));
                     var polishBrandToFind;
                     Brand.findOne({alternatenames:polishBrandEntered.toLowerCase()}, function(err, brand) {
-                        if (brand) {
-                            polishBrandToFind = brand.name;
-                        } else {
-                            polishBrandToFind = polishBrandEntered;
-                        }
+                        polishBrandToFind = brand.name;
                         Polish.findOne({name: new RegExp("^"+polishNameToFind+"$","i"), brand: new RegExp("^"+polishBrandToFind+"$", "i")}, function(err, polish) {
                             if (polish !== null) {
                                 if (req.body.ownership == "yes") {
@@ -125,7 +163,7 @@ app.post('/admin/import', isLoggedIn, function(req, res) {
 
                                 if (data.type) {
                                     if (data.type.length > 0) {
-                                        var input = sanitizer.sanitize(data.type).toLowerCase().replace("cream","creme").split(',');
+                                        var input = sanitizer.sanitize(data.type).toLowerCase().replace("cream","creme").replace("crème","creme").split(',');
                                         input = input.map(function (item) {
                                           return item.trim();
                                         });
@@ -162,6 +200,8 @@ app.post('/admin/import', isLoggedIn, function(req, res) {
                                 }
 
                                 polish.save(function (err) {
+                                    brand.polish.addToSet(polish.id);
+                                    brand.save();
                                     polish.keywords = polish.name + " " + polish.brand + " " + polish.batch + " " + polish.code;
                                     polish.dateupdated = new Date();
                                     polish.save();
@@ -176,6 +216,7 @@ app.post('/admin/import', isLoggedIn, function(req, res) {
                                         code: '',
                                         type: [],
                                         dateupdated: new Date(),
+                                        createddate: new Date(),
                                         createdby: user.id,
                                         createdmethod: 'excel',
                                         dupes: [],
@@ -253,20 +294,8 @@ app.post('/admin/import', isLoggedIn, function(req, res) {
                                             })
                                         }
                                         newPolish.save(function(err) {
-                                            Brand.findOne({name: polishBrandToFind}, function(err, brand) {
-                                                //check if brand is already in brand database
-                                                if (!brand) {
-                                                    var newBrand = new Brand ({
-                                                        name: polishBrandToFind,
-                                                        bio: '',
-                                                        photo: '',
-                                                        official: false,
-                                                        polishlock: false,
-                                                        alternatenames: [polishBrandToFind.toLowerCase()]
-                                                    })
-                                                    newBrand.save();
-                                                }
-                                            })
+                                            brand.polish.addToSet(newPolish.id);
+                                            brand.save();
                                         })
                                     })
                                 })

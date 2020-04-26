@@ -11,10 +11,10 @@
                 <h3>Add a new polish:</h3><br><br>
                 <i>Have a spreadsheet of many polishes to add all at once? <a href="/import">Import them here.</a><br><br></i><br>
         		<form action="/polishadd" method="post">
-        			Name:<br><input type="text" name="name" class="width45" required autofocus><br><br><br>
-        			Brand:<br><input type="text" list="brands" name="brand" class="width45" required><br><br><br>
-                    Collection:<br><input type="text" name="batch" class="width45"><br><i>Please format like: 2013 Off Shore (Summer)</i><br><br><br>
-                    Code:<br><input type="text" name="code" class="width45"><br><br><br>
+        			Name:<br><input type="text" name="name" class="width50" required autofocus><br><br><br>
+        			Brand:<br><input type="text" list="brands" name="brand" class="width50" required><br><br><br>
+                    Collection:<br><input type="text" name="batch" class="width50"><br><i>Please format like: 2013 Off Shore (Summer)</i><br><br><br>
+                    Code:<br><input type="text" name="code" class="width50"><br><br><br>
                     Type:<br><ul>
                     <% for (i=0; i<types.length; i++) { %>
                         <input type="checkbox" name="type" value="<%=types[i]%>"><%=types[i]%><br>

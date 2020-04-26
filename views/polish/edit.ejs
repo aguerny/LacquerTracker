@@ -8,9 +8,9 @@
         		<form action="/polishedit/<%= editid %>/dupes" method="post">
     	     		<h3>Add dupes:</h3><br><br>
         			Name:<br>
-                    <input type="text" name="name" value="<%= editname %>" class="width45" <% if (isAuthenticated) { if (user.level !== "admin") { %> readonly="readonly" <% } } %> required><br><br><br>
+                    <input type="text" name="name" value="<%= editname %>" class="width50" <% if (isAuthenticated) { if (user.level !== "admin") { %> readonly="readonly" <% } } %> required><br><br><br>
                     Brand:<br>
-                    <input type="text" name="brand" value="<%= editbrand %>" class="width45" <% if (isAuthenticated) { if (user.level !== "admin") { %> readonly="readonly" <% } } %> required><br><br><br>
+                    <input type="text" name="brand" value="<%= editbrand %>" class="width50" <% if (isAuthenticated) { if (user.level !== "admin") { %> readonly="readonly" <% } } %> required><br><br><br>
                     Dupes:<br>
                     <select multiple name="dupes" id="select-polish" style="width:300px">
                         <% for (i=0; i<editdupes.length; i++) { %>

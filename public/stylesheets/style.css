@@ -129,8 +129,6 @@
 
     /*---General---*/
 
-    #header, #container, #footer{display:block; max-width:1100px; margin:0 auto;}
-
     #smalllayout {display:none;}
 
     nav ul{margin:0; padding:0; list-style:none;}
@@ -145,23 +143,11 @@
 
     img{max-width:600px;}
 
-    /*---Header---*/
-
-    #header{padding:20px 0;}
-    #header a {color:black;}
-    #header nav{display:block; width:100%; margin:0; padding:20px 0; color:#C0BAB6; background-color:#232323; clear:both;}
-    #header nav ul{padding:0 20px;}
-    #header nav li{display:inline; margin-right:25px; text-transform:uppercase;}
-    #header nav li.last{margin-right:0;}
-    #header nav li a{color:#C0BAB6; background-color:#232323;}
-    #header nav li a:hover{color:#10695A; background-color:#232323;}
-    #logininfo a{color:#10695A;}
-
 
     /*---Main Content---*/
 
     #container{background-color:#F2F7F7;}
-    #container section{display:block; margin-bottom:30px; padding:2% 2% 2% 2%;}
+    #container section{display:block; padding:2% 2% 2% 2%;}
 
     #contact-wrap {width:100%; float:center; margin:0;}
     #contact-left_col {float:left; width:50%; text-align:center;}
@@ -211,13 +197,9 @@
         max-width:100%;
     }
 
-    .width50 {display:inline-block; width:50%;}
     .width40 {display:inline-block; width:40%;}
-    .width45 {display:inline-block; width:45%;}
-    .width44 {display:inline-block; width:44%;}
-    .width53 {display:inline-block; width:53%;}
+    .width50 {display:inline-block; width:50%;}
     .width80 {display:inline-block; width:80%;}
-    .width98 {display:inline-block; width:98%;}
 
     .browsetable th.name {width:22%;}
     .browsetable th.brand {width:20%;}
@@ -259,8 +241,22 @@
 
 @media screen and (min-width: 1100px) {
 
-    #header h1{float:left; margin:7px 0 20px 0; color:black;}
-    #logininfo {text-align: right; padding-top: 1.5%; margin-right: 0; color:#000000;}
+    /*---Header---*/
+
+    #header{padding:10px 0;}
+    #header a {color:black;}
+    #header nav{display:block; width:100%; margin:0; padding:18px 0; color:#C0BAB6; background-color:#232323; clear:both;}
+    #header nav ul{padding:0 20px;}
+    #header nav li{display:inline; margin-right:25px; text-transform:uppercase;}
+    #header nav li.last{margin-right:0;}
+    #header nav li a{color:#C0BAB6; background-color:#232323;}
+    #header nav li a:hover{color:#10695A; background-color:#232323;}
+    #logininfo a{color:#10695A;}
+
+    #header h1{float:left; margin:5px 0 10px 0; color:black;}
+    #logininfo {float: right; padding-top: 1.0%; color:#000000;}
+
+    #header, #container, #footer{display:block; max-width:1100px; margin:0 auto;}
 
 }
 
@@ -269,8 +265,21 @@
 
 @media screen and (max-width: 1099px) and (min-width: 600px) {
 
-    #header h1{float:left; margin:7px 0 20px .5%; color:black;}
-    #logininfo {text-align: right; padding-top: 1.5%; padding-right: .5%; color:#000000;}
+    /*---Header---*/
+
+    #header a {color:black;}
+    #header nav{display:block; width:100%; margin:5px 0 5px 0; padding:10px 0; color:#C0BAB6; background-color:#232323; clear:both;}
+    #header nav ul{padding:0 15px;}
+    #header nav li{display:inline; margin-right:25px; text-transform:uppercase;}
+    #header nav li.last{margin-right:0;}
+    #header nav li a{color:#C0BAB6; background-color:#232323;}
+    #header nav li a:hover{color:#10695A; background-color:#232323;}
+    #logininfo a{color:#10695A;}
+
+    #header h1{float:left; margin-top:.75%; margin-left:.5%; color:black; font-size:25px;}
+    #logininfo {float: right; padding-right: .5%; color:#000000;}
+
+    #header, #container, #footer{display:block; width:98%; margin:0 auto;}
 
 }
 
@@ -359,13 +368,9 @@
         max-width:98%;
     }
 
-    .width50 {display:inline-block; width:98%;}
     .width40 {display:inline-block; width:98%;}
-    .width45 {display:inline-block; width:98%;}
-    .width44 {display:inline-block; width:98%;}
-    .width53 {display:inline-block; width:98%;}
+    .width50 {display:inline-block; width:98%;}
     .width80 {display:inline-block; width:98%;}
-    .width98 {display:inline-block; width:98%;}
 
     .browsetable th.name {width:20%;}
     .browsetable th.brand {width:18%;}

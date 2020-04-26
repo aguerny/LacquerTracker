@@ -12,7 +12,7 @@
                     <option value="offtopic" <% if (postforum === "offtopic") { %> selected="selected" <%}%>>Off Topic</option>
                     <option value="lt" <% if (postforum === "lt") { %> selected="selected" <%}%>>Lacquer Tracker Feedback/Suggestions</option>
                     </select><br><br>
-                Title:<br><input type="text" name="posttitle" class="width53" maxlength="100" value="<%=posttitle%>" required><br><br><br>
+                Title:<br><input type="text" name="posttitle" class="width50" maxlength="100" value="<%=posttitle%>" required><br><br><br>
                 Post:<br><textarea type="text" class="markItUp" name="postmessage" required><%=postmessage%></textarea><br><br>
                 <img src=<%=postphoto%>><br><br>
                 <input type="submit" value="Submit" class="button">
