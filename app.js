@@ -16,6 +16,7 @@ var session = require('express-session');
 var timeout = require('connect-timeout');
 var errorHandler = require('errorhandler');
 var fileUpload = require('express-fileupload');
+var MongoDBStore = require('connect-mongodb-session')(session);
 
 var app = express();
 
@@ -42,7 +43,20 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(methodOverride());
 
-app.use(session({secret:cookieSecret, cookie: {maxAge: 365 * 24 * 60 * 60 * 1000}, resave:true, saveUninitialized:false})); // session secret
+var store = new MongoDBStore({
+    uri: 'mongodb://localhost:27017/lacquertracker',
+    collection: 'sessions'
+});
+// Catch errors
+store.on('error', function(error) {
+  console.log(error);
+});
+app.use(session({
+    secret:cookieSecret,
+    cookie: {maxAge: 365 * 24 * 60 * 60 * 1000}, //oneyear
+    store: store,
+    resave:true,
+    saveUninitialized:false})); // session secret
 app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
