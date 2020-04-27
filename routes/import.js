@@ -334,10 +334,15 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
 //route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
 
+    if (req.isAuthenticated()) {
+        User.findById(req.user.id).exec(function(err, user) {
+            user.lastlogindate = new Date();
+            user.save();
+        })
+    }
+
     //if user is authenticated in the session, carry on
     if (req.isAuthenticated())
-    req.user.lastlogindate = new Date;
-    req.user.save();
     return next();
 
     //if they aren't, redirect them to the login page
