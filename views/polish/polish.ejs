@@ -22,7 +22,7 @@ $(window).load(function () {
                         <% if (status === "owned") { %>
                             Owned (<a href="/removeown/<%= pid %>">remove</a>) | <a href="/polishid/<%=pid%>/flag">Flag polish</a>
                         <% } else if (status === "wanted") {%>
-                            Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/polishid/<%=pid%>/flag">Flag polish</a>
+                            <a href="/addown/<%= pid %>">Add ownership</a> | Wishlist (<a href="/removewant/<%= pid %>">remove</a>) | <a href="/polishid/<%=pid%>/flag">Flag polish</a>
                         <% } else { %>
                             <a href="/addown/<%= pid %>">Add ownership</a> | <a href="/addwant/<%= pid %>">Add to wishlist</a> | <a href="/polishid/<%=pid%>/flag">Flag polish</a>
                         <% } %>

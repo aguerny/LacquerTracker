@@ -22,11 +22,8 @@ module.exports = function(app, passport) {
 //profile general
 app.get('/profile', isLoggedIn, function(req, res) {
     User.findOne({username: req.user.username}, function (err, user) {
-        user.lastlogindate = new Date;
-        user.save(function(err) {
-            var username = req.user.username;
-            res.redirect('/profile/' + username);
-        })
+        var username = req.user.username;
+        res.redirect('/profile/' + username);
     })
 });
 
@@ -263,6 +260,8 @@ function isLoggedIn(req, res, next) {
 
     //if user is authenticated in the session, carry on
     if (req.isAuthenticated())
+    req.user.lastlogindate = new Date;
+    req.user.save();
     return next();
 
     //if they aren't, redirect them to the login page
