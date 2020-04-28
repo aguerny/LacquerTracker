@@ -51,7 +51,7 @@ app.post('/email/:username', isLoggedIn, function(req, res) {
                         from: "polishrobot@lacquertracker.com",
                         to: user.email,
                         subject: 'Message from ' + req.user.username,
-                        text: "Hey " + user.username + ",\n\n" + req.user.username + " has sent you the following message:\n\n" + sanitizer.sanitize(req.body.emailmessage) + "\n\n\nThanks,\nLacquer Tracker\n\n**Please do not reply to directly to this e-mail. The sender should have included a reply-to e-mail address or you can send a message back on their profile page..**",
+                        text: "Hi " + user.username + ",\n\n" + req.user.username + " has sent you the following message through Lacquer Tracker:\n\n" + sanitizer.sanitize(req.body.emailmessage) + "\n\n\n**Please do not reply to directly to this e-mail. The sender should have included a reply-to e-mail address or you can send a message back on their profile page.**",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {

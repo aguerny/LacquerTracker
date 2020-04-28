@@ -206,9 +206,10 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
 
                         var mailOptions = {
                             from: "polishrobot@lacquertracker.com",
+                            replyTo: "lacquertrackermailer@gmail.com",
                             to: comment.user.email,
                             subject: 'New reply to your forum comment',
-                            text: "Hey " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on forum post: " + post.title + "\n\nCome check it out here: https://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nThanks,\nLacquer Tracker",
+                            text: "Hi " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on forum post: " + post.title + "\n\nCheck it out here: https://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nHappy polishing!\n\nLacquer Tracker",
                         }
 
                         transport.sendMail(mailOptions, function(error, response) {
@@ -226,9 +227,10 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
 
                     var mailOptions = {
                         from: "polishrobot@lacquertracker.com",
+                        replyTo: "lacquertrackermailer@gmail.com",
                         to: post.user.email,
                         subject: 'New reply to your post',
-                        text: "Hey " + post.user.username + ",\n\n" + req.user.username + " just replied to your forum post: " + post.title + "\n\nCome check it out here: https://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nThanks,\nLacquer Tracker",
+                        text: "Hi " + post.user.username + ",\n\n" + req.user.username + " just replied to your forum post: " + post.title + "\n\nCheck it out here: https://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nHappy polishing!\n\nLacquer Tracker",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {

@@ -287,9 +287,10 @@ app.post('/checkin/:id/:cid/add', isLoggedIn, function(req, res) {
 
                         var mailOptions = {
                             from: "polishrobot@lacquertracker.com",
+                            replyTo: "lacquertrackermailer@gmail.com",
                             to: comment.user.email,
                             subject: 'New reply to your check-in comment',
-                            text: "Hey " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on check-in.\n\nCome check it out here: https://www.lacquertracker.com/checkin/" + post.id + "\n\n\nThanks,\nLacquer Tracker",
+                            text: "Hi " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on check-in.\n\nCheck it out here: https://www.lacquertracker.com/checkin/" + post.id + "\n\n\nHappy polishing!\n\nLacquer Tracker",
                         }
 
                         transport.sendMail(mailOptions, function(error, response) {
@@ -307,9 +308,10 @@ app.post('/checkin/:id/:cid/add', isLoggedIn, function(req, res) {
 
                     var mailOptions = {
                         from: "polishrobot@lacquertracker.com",
+                        replyTo: "lacquertrackermailer@gmail.com",
                         to: post.user.email,
                         subject: 'New reply to your check-in',
-                        text: "Hey " + post.user.username + ",\n\n" + req.user.username + " just replied to your check-in.\n\nCome check it out here: https://www.lacquertracker.com/checkin/" + post.id + "\n\n\nThanks,\nLacquer Tracker",
+                        text: "Hi " + post.user.username + ",\n\n" + req.user.username + " just replied to your check-in.\n\nCheck it out here: https://www.lacquertracker.com/checkin/" + post.id + "\n\n\nHappy polishing!\n\nLacquer Tracker",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {
@@ -521,9 +523,10 @@ app.post('/checkin/:id/flag', isLoggedIn, function(req, res) {
 
                 var mailOptions = {
                     from: "polishrobot@lacquertracker.com",
+                    replyTo: "lacquertrackermailer@gmail.com",
                     to: 'lacquertrackermailer@gmail.com',
                     subject: 'Flagged Check-in',
-                    text: req.user.username + " has flagged a check-in.\n\n\nhttps://www.lacquertracker.com/admin/flaggedcheckins",
+                    text: req.user.username + " has flagged a check-in.\n\nhttps://www.lacquertracker.com/admin/flaggedcheckins",
                 }
 
                 transport.sendMail(mailOptions, function(error, response) {

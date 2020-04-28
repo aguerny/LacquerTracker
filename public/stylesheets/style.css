@@ -396,7 +396,8 @@
     .wantedtable th.type {width:12%;}
 
     #contact-left_col {text-align:center;}
-    #welcome {text-align:center;}
+    #welcome h4 {text-align:center;}
+    #welcome h2 {text-align:center;}
     #browse-wrap {margin-bottom:5%;}
 
     .slideshow {text-align:center;}

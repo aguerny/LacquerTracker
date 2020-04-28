@@ -24,7 +24,6 @@ var types = [
 	"pearl",
 	"pen",
     "powder",
-	"satin",
 	"scented",
 	"sheer",
 	"shimmer",

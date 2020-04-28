@@ -355,6 +355,7 @@ app.post('/polishid/:id/flag', isLoggedIn, function(req, res) {
 
             var mailOptions = {
                 from: "polishrobot@lacquertracker.com",
+                replyTo: "lacquertrackermailer@gmail.com",
                 to: 'lacquertrackermailer@gmail.com',
                 subject: 'Flagged Polish',
                 text: req.user.username + " has flagged a polish: " + polish.brand + " - " + polish.name + "\n\n\nhttp://www.lacquertracker.com/admin/flaggedpolish",

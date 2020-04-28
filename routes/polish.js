@@ -572,13 +572,16 @@ app.post('/polishedit/:id/type', isLoggedIn, function(req, res) {
             if (req.body.value !== undefined) {
                 p.type = sanitizer.sanitize(req.body.value).split(',')
                 p.dateupdated = new Date();
+                p.save(function(err) {
+                    res.end();
+                })
             } else {
                 p.dateupdated = new Date();
                 p.type = [];
+                p.save(function(err) {
+                    res.end();
+                })
             }
-            p.save(function(err) {
-                res.end();
-            });
         }
     });
 });

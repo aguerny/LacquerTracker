@@ -180,7 +180,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
 
                                 if (data.color) {
                                     if (data.color.length > 0) {
-                                        var input = sanitizer.sanitize(data.color).toLowerCase().split(',');
+                                        var input = sanitizer.sanitize(data.color).toLowerCase().replace("grey","gray").split(',');
                                         input = input.map(function (item) {
                                           return item.trim();
                                         });
@@ -265,7 +265,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
 
                                     if (data.color) {
                                         if (data.color.length > 0) {
-                                            var input = sanitizer.sanitize(data.color).toLowerCase().split(',');
+                                            var input = sanitizer.sanitize(data.color).toLowerCase().replace("grey","gray").split(',');
                                             input = input.map(function (item) {
                                                 return item.trim();
                                             });
