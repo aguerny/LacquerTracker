@@ -188,7 +188,7 @@ app.get('/login', function(req, res) {
 });
 
 app.post('/login', passport.authenticate('local-login', {
-    successReturnToOrRedirect: '/profile',
+    successReturnToOrRedirect: '/',
     failureRedirect: '/login',
     failureFlash: true
 }));

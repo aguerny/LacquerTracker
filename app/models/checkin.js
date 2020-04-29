@@ -13,6 +13,7 @@ var checkinSchema = mongoose.Schema({
     pendingreason: String,
     comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'CheckinComment'}],
     description: String,
+    savedby: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
 });
 
 

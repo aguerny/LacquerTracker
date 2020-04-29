@@ -169,6 +169,13 @@ app.get('/profile/:username/delete', isLoggedIn, function(req, res) {
                     }
                     for (i=0; i<user.checkins.length; i++) {
                         var checkin = user.checkins[i].id;
+                        var thischeckin = user.checkins[i];
+                        for (j=0; j<user.checkins[i].savedby.length; j++) {
+                            User.findById(thischeckin.savedby[j]).exec(function(err, checkinuser) {
+                                checkinuser.savedcheckins.remove(checkin);
+                                checkinuser.save();
+                            })
+                        }
                         Checkin.findById(user.checkins[i].id).populate('polish').exec(function (err, checkin) {
                             CheckinComment.find({checkinid:checkin.id}, function(err, comments) {
                                 for (j=0; j < comments.length; j++) {

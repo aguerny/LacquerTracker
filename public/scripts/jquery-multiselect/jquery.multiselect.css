@@ -108,7 +108,7 @@
     position: relative;
     display: inline-block;
     width: 100%;
-    padding: 2px 4px 2px 20px;
+    padding: 2px 4px 2px 23px;
     border: 1px dotted transparent;
 }
 .ms-options-wrap > .ms-options.checkbox-autofit > ul label,

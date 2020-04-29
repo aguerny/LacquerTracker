@@ -1,0 +1,67 @@
+<%- include('../layoutTop'); %>
+
+<script src="/scripts/jquery.js"></script>
+<script src="/scripts/jquery.mobile.custom.min.js"></script>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
+        <div class="photo500">
+            <h2>Your Saved Fresh Coats</h2>
+            <br><br><hr><br>
+                <% for (i=0; i<checkins.length; i++) { %>
+                    Posted on <%= checkins[i].date %> by <a href="/profile/<%= checkins[i].user.username %>"><%= checkins[i].user.username %></a><br><br>
+                    <img src=<%= checkins[i].photo %>><br><br><br>
+                    <% if (checkins[i].description.length > 0) {%><%= checkins[i].description%><br><br><br><%}%>
+                    <% if (checkins[i].polish.length === 0) { %>Polish Used: ?<%} else {%>
+                    Polish Used:
+                    <% for (j=0; j<checkins[i].polish.length; j++) { %>
+                        <br>&#8226; <a href='/polish/<%= checkins[i].polish[j].brand.replace(/ /g,"_") %>/<%= checkins[i].polish[j].name.replace(/ /g,"_") %>'><%= checkins[i].polish[j].brand %> - <%= checkins[i].polish[j].name %></a>
+                    <% }} %>
+                    <br><br><br>
+                    <a href="/checkin/<%= checkins[i].id %>"><%= checkins[i].comments.length %> Comment<% if (checkins[i].comments.length !== 1) {%>s<%}%></a> | <a href="/checkin/<%= checkins[i].id %>">Add a comment</a> | <a href="/checkin/<%= checkins[i].id %>">Options</a>
+                    <% if (isAuthenticated) { %>
+                        <% if (user.savedcheckins.indexOf(checkins[i].id) > -1) { %>
+                             | <a class="unsave" cid="<%= checkins[i].id %>" href="#">Unsave</a>
+                        <% } else { %>
+                             | <a class="save" cid="<%= checkins[i].id %>" href="#">Save</a>
+                        <% } %>
+                    <% } %>
+                    <br><br>
+                    <hr><br>
+                <% } %>
+            <div style="clear: both;">
+                <% if (checkins.length === 10) { %>
+                    <% if (page > 1) {%><p style="float:right;"><a href="/checkin/page/<%=page-1%>">&#8592; Prev </a> | Page <%= page %> | <a href="/checkin/page/<%=page+1%>">Next &#8594;</a></p><%}
+                    else if (page === 1) {%><p style="float:right;">Page <%= page %> | <a href="/checkin/page/<%=page+1%>">Next &#8594;</a></p><%}%>
+                <% } %>
+            </div>
+        </div>
+    </section>
+    </div>
+</div>
+
+<script>
+$('.save').on('tap', function(e){
+    $.ajax({
+        type: 'POST',
+        url: '/checkin/' + $(this).attr('cid') + '/save',
+        dataType: 'json',
+        success: $(this).replaceWith('Saved')
+    })
+    e.preventDefault();
+});
+
+$('.unsave').on('tap', function(e){
+    $.ajax({
+        type: 'POST',
+        url: '/checkin/' + $(this).attr('cid') + '/unsave',
+        dataType: 'json',
+        success: $(this).replaceWith('Unsaved')
+    })
+    e.preventDefault();
+});
+</script>
+
+<%- include('../layoutBottom'); %>

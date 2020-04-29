@@ -1,7 +1,7 @@
 var nodemailer = require('nodemailer');
 var sanitizer = require('sanitizer');
 var request = require('request');
-
+var User = require('../app/models/user');
 
 module.exports = function(app, passport) {
 

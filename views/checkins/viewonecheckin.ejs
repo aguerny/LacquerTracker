@@ -1,7 +1,5 @@
 <%- include('../layoutTop'); %>
 
-<script src="/scripts/jquery.js"></script>
-<script src="/scripts/jquery.mobile.custom.min.js"></script>
 <script src="/scripts/markitup/jquery.markitup.js"></script>
 <script type="text/javascript" src="/scripts/markitup/sets/html/set.js"></script>
 <link rel="stylesheet" type="text/css" href="/scripts/markitup/skins/simple/style.css" />
@@ -21,6 +19,13 @@ function confirm_alert(node) {
         <h2><%= checkinuser.username %>'s Fresh Coat</h2><br>
             Posted on <%= checkindate %> | <a href="/checkin/<%=checkinid%>/flag">Flag</a>
                 <% if (isAuthenticated) { %>
+                    <% if (user.savedcheckins.indexOf(checkinid) > -1) { %>
+                         | <a class="unsave" cid="<%= checkinid %>" href="#">Unsave</a>
+                    <% } else { %>
+                         | <a class="save" cid="<%= checkinid %>" href="#">Save</a>
+                    <% } %>
+                <% } %>
+                <% if (isAuthenticated) { %>
                     <% if (user.username === checkinuser.username) { %>
                         | <a href="/checkin/<%=checkinid%>/edit">Edit</a> | <a href="/checkin/<%=checkinid%>/remove" onclick="return confirm_alert(this);">Delete</a>
                     <% } %>
@@ -35,11 +40,14 @@ function confirm_alert(node) {
             <br><br><br><hr><br>
             <b>Comments (<%= checkincomment.length %>)</b> |
             <% if (isAuthenticated) { %>
-                <span class="replylink"><a href="#">Reply</a></span>
-                <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkinid %>/add" method="post">
-                    <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                    <input type="submit" value="Submit" class="button">
-                </form></div>
+                <span class="replylink"><a href="">Add a comment</a></span>
+                <div class="replybox"><br>
+                    <form action="/checkin/<%= checkinid %>/<%= checkinid %>/add" method="post">
+                        <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                        <br>
+                        <input type="submit" value="Submit" class="button">
+                    </form>
+                </div>
             <% } else { %>
                 <span><a href="/checkin/<%= checkinid %>/addreply">Reply</a></span>
             <% } %>
@@ -62,11 +70,14 @@ function confirm_alert(node) {
                     <div>
                         <p style="white-space: pre; padding-left: 3em"><%- checkincomment[i].message %></p>
                         <% if (isAuthenticated) { %>
-                            <div class="replylink"><a href="#">Reply</a></div>
-                            <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[i].id %>/add" method="post">
-                                <textarea name="message" placeholder="Reply here." class="width40" rows="5" required autofocus></textarea><br><br>
-                                <input type="submit" value="Submit" class="button">
-                            </form></div>
+                            <span class="replylink"><a href="">Reply</a></span>
+                            <div class="replybox"><br>
+                                <form action="/checkin/<%= checkinid %>/<%= checkincomment[i].id %>/add" method="post">
+                                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                    <br>
+                                    <input type="submit" value="Submit" class="button">
+                                </form>
+                            </div>
                         <% } else { %>
                             <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                         <% } %>
@@ -90,11 +101,14 @@ function confirm_alert(node) {
                             <div>
                                 <p style="white-space: pre; padding-left: 3em"><%- checkincomment[j].message %></p>
                                 <% if (isAuthenticated) { %>
-                                    <div class="replylink"><a href="#">Reply</a></div>
-                                    <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[j].id %>/add" method="post">
-                                        <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                                        <input type="submit" value="Submit" class="button">
-                                    </form></div>
+                                    <span class="replylink"><a href="">Reply</a></span>
+                                    <div class="replybox"><br>
+                                        <form action="/checkin/<%= checkinid %>/<%= checkincomment[j].id %>/add" method="post">
+                                            <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                            <br>
+                                            <input type="submit" value="Submit" class="button">
+                                        </form>
+                                    </div>
                                 <% } else { %>
                                     <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                                 <% } %>
@@ -116,11 +130,14 @@ function confirm_alert(node) {
                                 <div>
                                     <p style="white-space: pre; padding-left: 3em"><%- checkincomment[k].message %></p>
                                     <% if (isAuthenticated) { %>
-                                        <div class="replylink"><a href="#">Reply</a></div>
-                                        <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[k].id %>/add" method="post">
-                                            <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                                            <input type="submit" value="Submit" class="button">
-                                        </form></div>
+                                        <span class="replylink"><a href="">Reply</a></span>
+                                        <div class="replybox"><br>
+                                            <form action="/checkin/<%= checkinid %>/<%= checkincomment[k].id %>/add" method="post">
+                                                <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                                <br>
+                                                <input type="submit" value="Submit" class="button">
+                                            </form>
+                                        </div>
                                     <% } else { %>
                                         <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                                     <% } %>
@@ -142,11 +159,14 @@ function confirm_alert(node) {
                                     <div>
                                         <p style="white-space: pre; padding-left: 3em"><%- checkincomment[l].message %></p>
                                         <% if (isAuthenticated) { %>
-                                            <div class="replylink"><a href="#">Reply</a></div>
-                                            <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[l].id %>/add" method="post">
-                                                <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                                                <input type="submit" value="Submit" class="button">
-                                            </form></div>
+                                            <span class="replylink"><a href="">Reply</a></span>
+                                            <div class="replybox"><br>
+                                                <form action="/checkin/<%= checkinid %>/<%= checkincomment[l].id %>/add" method="post">
+                                                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                                    <br>
+                                                    <input type="submit" value="Submit" class="button">
+                                                </form>
+                                            </div>
                                         <% } else { %>
                                             <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                                         <% } %>
@@ -168,11 +188,14 @@ function confirm_alert(node) {
                                         <div>
                                             <p style="white-space: pre; padding-left: 3em"><%- checkincomment[m].message %></p>
                                             <% if (isAuthenticated) { %>
-                                                <div class="replylink"><a href="#">Reply</a></div>
-                                                <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[m].id %>/add" method="post">
-                                                    <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                                                    <input type="submit" value="Submit" class="button">
-                                                </form></div>
+                                                <span class="replylink"><a href="">Reply</a></span>
+                                                <div class="replybox"><br>
+                                                    <form action="/checkin/<%= checkinid %>/<%= checkincomment[m].id %>/add" method="post">
+                                                        <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                                        <br>
+                                                        <input type="submit" value="Submit" class="button">
+                                                    </form>
+                                                </div>
                                             <% } else { %>
                                                 <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                                             <% } %>
@@ -194,11 +217,14 @@ function confirm_alert(node) {
                                             <div>
                                                 <p style="white-space: pre; padding-left: 3em"><%- checkincomment[n].message %></p>
                                                 <% if (isAuthenticated) { %>
-                                                    <div class="replylink"><a href="#">Reply</a></div>
-                                                    <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[n].id %>/add" method="post">
-                                                        <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                                                        <input type="submit" value="Submit" class="button">
-                                                    </form></div>
+                                                    <span class="replylink"><a href="">Reply</a></span>
+                                                    <div class="replybox"><br>
+                                                        <form action="/checkin/<%= checkinid %>/<%= checkincomment[n].id %>/add" method="post">
+                                                            <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                                            <br>
+                                                            <input type="submit" value="Submit" class="button">
+                                                        </form>
+                                                    </div>
                                                 <% } else { %>
                                                     <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                                                 <% } %>
@@ -220,11 +246,14 @@ function confirm_alert(node) {
                                                 <div>
                                                     <p style="white-space: pre; padding-left: 3em"><%- checkincomment[o].message %></p>
                                                     <% if (isAuthenticated) { %>
-                                                        <div class="replylink"><a href="#">Reply</a></div>
-                                                        <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[o].id %>/add" method="post">
-                                                            <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                                                            <input type="submit" value="Submit" class="button">
-                                                        </form></div>
+                                                        <span class="replylink"><a href="">Reply</a></span>
+                                                        <div class="replybox"><br>
+                                                            <form action="/checkin/<%= checkinid %>/<%= checkincomment[o].id %>/add" method="post">
+                                                                <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                                                <br>
+                                                                <input type="submit" value="Submit" class="button">
+                                                            </form>
+                                                        </div>
                                                     <% } else { %>
                                                         <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                                                     <% } %>
@@ -246,11 +275,14 @@ function confirm_alert(node) {
                                                     <div>
                                                         <p style="white-space: pre; padding-left: 3em"><%- checkincomment[p].message %></p>
                                                         <% if (isAuthenticated) { %>
-                                                            <div class="replylink"><a href="#">Reply</a></div>
-                                                            <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkincomment[p].id %>/add" method="post">
-                                                                <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                                                                <input type="submit" value="Submit" class="button">
-                                                            </form></div>
+                                                            <span class="replylink"><a href="">Reply</a></span>
+                                                            <div class="replybox"><br>
+                                                                <form action="/checkin/<%= checkinid %>/<%= checkincomment[p].id %>/add" method="post">
+                                                                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                                                    <br>
+                                                                    <input type="submit" value="Submit" class="button">
+                                                                </form>
+                                                            </div>
                                                         <% } else { %>
                                                             <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
                                                         <% } %>
@@ -293,14 +325,7 @@ function confirm_alert(node) {
                             <% } %>
                 <% } %>
             <% } %>
-            <hr><!-- <br><br>
-            <% if (isAuthenticated) { %>
-                <b><a name="addcomment"><font color="#000000">Add a Comment:</font></b><br><br>
-                <form action="/checkin/<%= checkinid %>/<%= checkinid %>/add" method="post">
-                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
-                    <input type="submit" value="Submit" class="button">
-                </form>
-            <% } %> -->
+            <hr>
         </div>
     </section>
     </div>
@@ -310,6 +335,26 @@ function confirm_alert(node) {
 $(".replylink").click(function(){
     $(this).siblings(".replybox").show();
     return false;
+});
+
+$('.save').on('tap', function(e){
+    $.ajax({
+        type: 'POST',
+        url: '/checkin/' + $(this).attr('cid') + '/save',
+        dataType: 'json',
+        success: $(this).replaceWith('Saved')
+    })
+    e.preventDefault();
+});
+
+$('.unsave').on('tap', function(e){
+    $.ajax({
+        type: 'POST',
+        url: '/checkin/' + $(this).attr('cid') + '/unsave',
+        dataType: 'json',
+        success: $(this).replaceWith('Unsaved')
+    })
+    e.preventDefault();
 });
 </script>
 

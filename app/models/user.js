@@ -22,6 +22,7 @@ var userSchema = mongoose.Schema({
 	country      : String,
 	timezone     : String,
 	checkins     : [{type: mongoose.Schema.Types.ObjectId, ref: 'Checkin'}],
+	savedcheckins: [{type: mongoose.Schema.Types.ObjectId, ref: 'Checkin'}],
 	deleted      : Boolean,
 });
 

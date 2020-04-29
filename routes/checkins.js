@@ -66,6 +66,28 @@ app.get('/checkin/page/:page', function(req, res) {
 
 
 
+//saved checkins
+app.get('/checkin/saved', isLoggedIn, function(req, res) {
+    User.findById(req.user.id).select('savedcheckins').populate({path:'savedcheckins',populate:{path:'polish',select:'name brand'}}).populate({path:'savedcheckins',populate:{path:'user',select:'username'}}).exec(function(err, posts) {
+        data = {};
+        data.title = 'Saved Fresh Coats - Lacquer Tracker';
+        data.page = 1;
+        var allposts = posts.savedcheckins.map(function(x) {
+            if (req.isAuthenticated() && req.user.timezone.length > 0) {
+                x.date = moment(x.creationdate).tz(req.user.timezone).format('llll');
+            } else {
+                x.date = moment(x.creationdate).tz("America/New_York").format('llll');
+            }
+            return x;
+        })
+        data.checkins = allposts.reverse();
+        res.render('checkins/savedcheckins.ejs', data);
+    })
+});
+
+
+
+
 //add a new check-in
 app.get('/checkin/add', isLoggedIn, function(req, res) {
     data = {}
@@ -260,6 +282,30 @@ app.get('/checkin/:id', function(req, res) {
             res.render('checkins/viewonecheckin.ejs', data);
         }
     })
+});
+
+
+
+
+//save checkin
+app.post('/checkin/:id/save', isLoggedIn, function(req, res) {
+    Checkin.findById(req.params.id).exec(function(err, post) {
+        post.savedby.addToSet(req.user.id);
+        post.save();
+        req.user.savedcheckins.addToSet(req.params.id);
+        req.user.save();
+    });
+});
+
+
+//unsave checkin
+app.post('/checkin/:id/unsave', isLoggedIn, function(req, res) {
+    Checkin.findById(req.params.id).exec(function(err, post) {
+        post.savedby.remove(req.user.id);
+        post.save();
+        req.user.savedcheckins.remove(req.params.id);
+        req.user.save();
+    });
 });
 
 
@@ -469,10 +515,16 @@ app.get('/checkin/:id/remove', isLoggedIn, function(req, res) {
              res.redirect('/error');
          } else {
              if (post.user == req.user.id || req.user.level === "admin") {
-                 CheckinComment.find({checkinid:req.params.id}, function(err, comments) {
-                     for (i=0; i < comments.length; i++) {
-                         comments[i].remove();
-                     }
+                for (i=0; i<post.savedby.length; i++) {
+                    User.findById(post.savedby[i]).exec(function(err, user) {
+                        user.savedcheckins.remove(req.params.id);
+                        user.save();
+                    })
+                }
+                CheckinComment.find({checkinid:req.params.id}, function(err, comments) {
+                    for (i=0; i < comments.length; i++) {
+                        comments[i].remove();
+                    }
                     fs.unlink(path.resolve('./public/'+post.photo), function(err) {
                         for (i=0; i<post.polish.length; i++) {
                             Polish.findById(post.polish[i]).exec(function(err, polish) {

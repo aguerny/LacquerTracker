@@ -29,11 +29,13 @@ function confirm_alert(node) {
             <p style="white-space: pre;"><%- postmessage %><% if (postphoto !== undefined) { if (postphoto.length>0) {%><br><br><img src=<%=postphoto%>><%}}%></p><br><hr><br>
             <b>Comments (<%= postcomments.length %>)</b> |
             <% if (isAuthenticated) { %>
-                <span class="replylink"><a href="#">Add a comment</a></span>
-                <div class="replybox"><br><form action="/forums/<%= postforum %>/<%= postid %>/<%= postid %>/add" method="post">
-                    <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                    <input type="submit" value="Submit" class="button">
-                </form></div>
+                <span class="replylink"><a href="">Add a comment</a></span>
+                <div class="replybox"><br>
+                    <form action="/forums/<%= postforum %>/<%= postid %>/<%= postid %>/add" method="post">
+                        <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                        <input type="submit" value="Submit" class="button">
+                    </form>
+                </div>
             <% } else { %>
                 <span><a href="/forums/<%= postforum %>/<%= postid %>/addreply">Add a comment</a></span>
             <% } %>
@@ -56,11 +58,13 @@ function confirm_alert(node) {
                     <div>
                         <p style="white-space: pre; padding-left: 3em"><%- postcomments[i].message %></p>
                         <% if (isAuthenticated) { %>
-                            <div class="replylink"><a href="#">Reply</a></div>
-                            <div class="replybox"><br><form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[i].id %>/add" method="post">
-                                <textarea name="message" placeholder="Reply here." class="width40" rows="5" required autofocus></textarea><br><br>
-                                <input type="submit" value="Submit" class="button">
-                            </form></div>
+                            <span class="replylink"><a href="">Reply</a></span>
+                            <div class="replybox"><br>
+                                <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[i].id %>/add" method="post">
+                                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                    <input type="submit" value="Submit" class="button">
+                                </form>
+                            </div>
                         <% } else { %>
                             <div><a href="/forums/<%= postforum %>/<%= postid %>/addreply">Reply</a></div>
                         <% } %>
@@ -84,11 +88,13 @@ function confirm_alert(node) {
                             <div>
                                 <p style="white-space: pre; padding-left: 3em"><%- postcomments[j].message %></p>
                                 <% if (isAuthenticated) { %>
-                                    <div class="replylink"><a href="#">Reply</a></div>
-                                    <div class="replybox"><br><form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[j].id %>/add" method="post">
-                                        <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                                        <input type="submit" value="Submit" class="button">
-                                    </form></div>
+                                    <span class="replylink"><a href="">Reply</a></span>
+                                    <div class="replybox"><br>
+                                        <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[j].id %>/add" method="post">
+                                            <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                            <input type="submit" value="Submit" class="button">
+                                        </form>
+                                    </div>
                                 <% } else { %>
                                     <div><a href="/forums/<%= postforum %>/<%= postid %>/addreply">Reply</a></div>
                                 <% } %>
@@ -110,11 +116,13 @@ function confirm_alert(node) {
                                 <div>
                                     <p style="white-space: pre; padding-left: 3em"><%- postcomments[k].message %></p>
                                     <% if (isAuthenticated) { %>
-                                        <div class="replylink"><a href="#">Reply</a></div>
-                                        <div class="replybox"><br><form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[k].id %>/add" method="post">
-                                            <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                                            <input type="submit" value="Submit" class="button">
-                                        </form></div>
+                                        <span class="replylink"><a href="">Reply</a></span>
+                                        <div class="replybox"><br>
+                                            <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[k].id %>/add" method="post">
+                                                <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                                <input type="submit" value="Submit" class="button">
+                                            </form>
+                                        </div>
                                     <% } else { %>
                                         <div><a href="/forums/<%= postforum %>/<%= postid %>/addreply">Reply</a></div>
                                     <% } %>
@@ -136,11 +144,13 @@ function confirm_alert(node) {
                                     <div>
                                         <p style="white-space: pre; padding-left: 3em"><%- postcomments[l].message %></p>
                                         <% if (isAuthenticated) { %>
-                                            <div class="replylink"><a href="#">Reply</a></div>
-                                            <div class="replybox"><br><form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[l].id %>/add" method="post">
-                                                <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                                                <input type="submit" value="Submit" class="button">
-                                            </form></div>
+                                            <span class="replylink"><a href="">Reply</a></span>
+                                            <div class="replybox"><br>
+                                                <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[l].id %>/add" method="post">
+                                                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                                    <input type="submit" value="Submit" class="button">
+                                                </form>
+                                            </div>
                                         <% } else { %>
                                             <div><a href="/forums/<%= postforum %>/<%= postid %>/addreply">Reply</a></div>
                                         <% } %>
@@ -162,11 +172,13 @@ function confirm_alert(node) {
                                         <div>
                                             <p style="white-space: pre; padding-left: 3em"><%- postcomments[m].message %></p>
                                             <% if (isAuthenticated) { %>
-                                                <div class="replylink"><a href="#">Reply</a></div>
-                                                <div class="replybox"><br><form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[m].id %>/add" method="post">
-                                                    <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                                                    <input type="submit" value="Submit" class="button">
-                                                </form></div>
+                                                <span class="replylink"><a href="">Reply</a></span>
+                                                <div class="replybox"><br>
+                                                    <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[m].id %>/add" method="post">
+                                                        <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                                        <input type="submit" value="Submit" class="button">
+                                                    </form>
+                                                </div>
                                             <% } else { %>
                                                 <div><a href="/forums/<%= postforum %>/<%= postid %>/addreply">Reply</a></div>
                                             <% } %>
@@ -188,11 +200,13 @@ function confirm_alert(node) {
                                             <div>
                                                 <p style="white-space: pre; padding-left: 3em"><%- postcomments[n].message %></p>
                                                 <% if (isAuthenticated) { %>
-                                                    <div class="replylink"><a href="#">Reply</a></div>
-                                                    <div class="replybox"><br><form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[n].id %>/add" method="post">
-                                                        <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                                                        <input type="submit" value="Submit" class="button">
-                                                    </form></div>
+                                                    <span class="replylink"><a href="">Reply</a></span>
+                                                    <div class="replybox"><br>
+                                                        <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[n].id %>/add" method="post">
+                                                            <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                                            <input type="submit" value="Submit" class="button">
+                                                        </form>
+                                                    </div>
                                                 <% } else { %>
                                                     <div><a href="/forums/<%= postforum %>/<%= postid %>/addreply">Reply</a></div>
                                                 <% } %>
@@ -214,11 +228,13 @@ function confirm_alert(node) {
                                                 <div>
                                                     <p style="white-space: pre; padding-left: 3em"><%- postcomments[o].message %></p>
                                                     <% if (isAuthenticated) { %>
-                                                        <div class="replylink"><a href="#">Reply</a></div>
-                                                        <div class="replybox"><br><form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[o].id %>/add" method="post">
-                                                            <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                                                            <input type="submit" value="Submit" class="button">
-                                                        </form></div>
+                                                        <span class="replylink"><a href="">Reply</a></span>
+                                                        <div class="replybox"><br>
+                                                            <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[o].id %>/add" method="post">
+                                                                <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                                                <input type="submit" value="Submit" class="button">
+                                                            </form>
+                                                        </div>
                                                     <% } else { %>
                                                         <div><a href="/forums/<%= postforum %>/<%= postid %>/addreply">Reply</a></div>
                                                     <% } %>
@@ -240,11 +256,13 @@ function confirm_alert(node) {
                                                     <div>
                                                         <p style="white-space: pre; padding-left: 3em"><%- postcomments[p].message %></p>
                                                         <% if (isAuthenticated) { %>
-                                                            <div class="replylink"><a href="#">Reply</a></div>
-                                                            <div class="replybox"><br><form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[p].id %>/add" method="post">
-                                                                <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
-                                                                <input type="submit" value="Submit" class="button">
-                                                            </form></div>
+                                                            <span class="replylink"><a href="">Reply</a></span>
+                                                            <div class="replybox"><br>
+                                                                <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[p].id %>/add" method="post">
+                                                                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                                                    <input type="submit" value="Submit" class="button">
+                                                                </form>
+                                                            </div>
                                                         <% } else { %>
                                                             <div><a href="/forums/<%= postforum %>/<%= postid %>/addreply">Reply</a></div>
                                                         <% } %>
@@ -287,14 +305,7 @@ function confirm_alert(node) {
                             <% } %>
                 <% } %>
             <% } %>
-            <hr><!-- <br><br>
-            <% if (isAuthenticated) { %>
-                <b><a name="addcomment"><font color="#000000">Add a Comment:</font></b><br><br>
-                <form action="/forums/<%= postforum %>/<%= postid %>/<%= postid %>/add" method="post">
-                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
-                    <input type="submit" value="Submit" class="button">
-                </form>
-            <% } %> -->
+            <hr>
         </div>
     </section>
     </div>
