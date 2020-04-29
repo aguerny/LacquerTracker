@@ -65,13 +65,6 @@
 
     #tablelink:hover {color:#10695A;}
 
-    /* Sortable tables */
-    table.sortable thead {
-        background-color:#eee;
-        font-weight: bold;
-        cursor: default;
-    }
-
     .forumtable th {color: #000000;}
 
     table {width:100%; border-collapse: collapse; table-layout:fixed; margin-bottom: 2%;}

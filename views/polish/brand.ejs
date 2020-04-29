@@ -1,19 +1,5 @@
 <%- include('../layoutTop'); %>
 
-<script src="/scripts/jquery.js"></script>
-<script src="/scripts/jquery.mobile.custom.min.js"></script>
-<script src="/scripts/collageplus.js"></script>
-<script src="/scripts/sorttable.js"></script>
-
-<script>
-$(window).load(function () {
-    $('.collage').collagePlus({
-        'targetHeight' : 250,
-        'allowPartialLastRow' : true,
-    });
-});
-</script>
-
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
@@ -36,7 +22,7 @@ $(window).load(function () {
                 <% } %>
             </div>
             <% if (polishes.length > 0) { %>
-                <table id="polishbrowse" class="sortable browsetable" style="width:100%">
+                <table id="polishbrowse" class="browsetable" style="width:100%">
                     <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><% if (isAuthenticated) {%><th class="info"><span>Info</span></th><%}%></tr>
                     <% for(var i=0; i<polishes.length; i++) {%>
                         <tr><td><a id='tablelink' href='/polish/<%= polishes[i].brand.replace(/ /g,"_") %>/<%= polishes[i].name.replace(/ /g,"_") %>'><span><%= polishes[i].name %></span></a></td>

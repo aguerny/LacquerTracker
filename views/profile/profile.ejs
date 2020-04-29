@@ -3,7 +3,6 @@
 <script src="/scripts/jquery.js"></script>
 <script src="/scripts/jquery.mobile.custom.min.js"></script>
 <script src="/scripts/collageplus.js"></script>
-<script src="/scripts/sorttable.js"></script>
 
 <script>
 $(window).load(function () {
@@ -49,7 +48,7 @@ $(window).load(function () {
         <div>
             <% if (opolishes.length > 0) { %>
                 <br><br><h4><%= username %>'s Owned Polishes (<%= opolishes.length %>):</h4><br>
-                <table id="ownedpolish" class="sortable ownedtable">
+                <table id="ownedpolish" class="ownedtable">
                     <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><th class="rating"><span><%= username %>'s Rating</span></th></tr>
                 <% for(var i=0; i<opolishes.length; i++) {%>
                     <tr><td><a id='tablelink' href='/polish/<%= opolishes[i].brand.replace(/ /g,"_") %>/<%= opolishes[i].name.replace(/ /g,"_") %>'><span><%= opolishes[i].name %></span></a></td>
@@ -80,7 +79,7 @@ $(window).load(function () {
 
             <% if (wpolishes.length > 0) { %>
                 <br><br><h4><%= username %>'s Wanted Polishes (<%= wpolishes.length %>):</h4><br>
-                    <table id="wantedpolish" class="sortable wantedtable">
+                    <table id="wantedpolish" class="wantedtable">
                         <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th></tr>
                     <% for(var i=0; i<wpolishes.length; i++) {%>
                         <tr><td><a id='tablelink' href='/polish/<%= wpolishes[i].brand.replace(/ /g,"_") %>/<%= wpolishes[i].name.replace(/ /g,"_") %>'><span><%= wpolishes[i].name %></span></a></td>

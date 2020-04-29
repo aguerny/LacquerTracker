@@ -370,12 +370,6 @@ app.post('/checkin/:id/edit', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id, function (err, post){
         var currentPolish = post.polish;
         if (post.user == req.user.id) {
-            for (i=0; i<currentPolish.length; i++) {
-                Polish.findById(currentPolish[i]).exec(function(err, polish) {
-                    polish.checkins.remove(req.params.id);
-                    polish.save();
-                })
-            }
             if (req.body.polish) {
                 post.polish = sanitizer.sanitize(req.body.polish).split(',');
                 var newPolish = sanitizer.sanitize(req.body.polish).split(',');
@@ -386,6 +380,14 @@ app.post('/checkin/:id/edit', isLoggedIn, function(req, res) {
             post.editdate = new Date;
             post.description = sanitizer.sanitize(req.body.description);
             post.save(function(err) {
+                for (i=0; i<currentPolish.length; i++) {
+                    if (newPolish.indexOf(currentPolish[i].toString()) == -1) {
+                        Polish.findById(currentPolish[i]).exec(function(err, polish) {
+                            polish.checkins.remove(req.params.id);
+                            polish.save();
+                        })
+                    }
+                }
                 if (req.body.polish) {
                     for (j=0; j<newPolish.length; j++) {
                         Polish.findById(sanitizer.sanitize(newPolish[j])).exec(function(err, polish) {

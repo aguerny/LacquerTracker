@@ -21,7 +21,7 @@ function confirm_alert(node) {
         <h2><%= checkinuser.username %>'s Fresh Coat</h2><br>
             Posted on <%= checkindate %> | <a href="/checkin/<%=checkinid%>/flag">Flag</a>
                 <% if (isAuthenticated) { %>
-                    <% if (user.username === checkinuser.username || user.level === "admin") { %>
+                    <% if (user.username === checkinuser.username) { %>
                         | <a href="/checkin/<%=checkinid%>/edit">Edit</a> | <a href="/checkin/<%=checkinid%>/remove" onclick="return confirm_alert(this);">Delete</a>
                     <% } %>
                 <% } %>
@@ -41,7 +41,7 @@ function confirm_alert(node) {
                     <input type="submit" value="Submit" class="button">
                 </form></div>
             <% } else { %>
-                <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
+                <span><a href="/checkin/<%= checkinid %>/addreply">Reply</a></span>
             <% } %>
             <br><br>
 

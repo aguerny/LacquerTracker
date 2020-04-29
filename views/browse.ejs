@@ -2,7 +2,6 @@
 
 <script src="/scripts/jquery.js"></script>
 <script src="/scripts/jquery.mobile.custom.min.js"></script>
-<script src="/scripts/sorttable.js"></script>
 <script src="/scripts/jscolor.js"></script>
 <script src="/scripts/jquery-multiselect/jquery.multiselect.js"></script>
 <link href="/scripts/jquery-multiselect/jquery.multiselect.css" rel="stylesheet"/>
@@ -65,7 +64,7 @@
             </div>
             <div id="browse-right_col">
                 <% if (recent === true) { %><h4>Recently updated polishes:</h3><br><%}%>
-                <table id="polishbrowse" class="sortable browsetable" style="width:100%">
+                <table id="polishbrowse" class="browsetable" style="width:100%">
                     <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><% if (isAuthenticated) {%><th class="info"><span>Info</span></th><%}%></tr>
                     <% for(var i=0; i<polishes.length; i++) {%>
                         <tr><td><a id='tablelink' href='/polish/<%= polishes[i].brand.replace(/ /g,"_") %>/<%= polishes[i].name.replace(/ /g,"_") %>'><span><%= polishes[i].name %></span></a></td>
@@ -198,7 +197,7 @@ $(document).ready(function() {
 
     $('#brand').multiselect({
         columns: 1,
-        maxWidth: '150px',
+        maxWidth: '250px',
         search: true,
         placeholder: 'All Brands',
         selectAll: true
@@ -206,7 +205,7 @@ $(document).ready(function() {
 
     $('#type').multiselect({
         columns: 1,
-        maxWidth: '150px',
+        maxWidth: '250px',
         search: true,
         placeholder: 'All Types',
         selectAll: true
@@ -214,7 +213,7 @@ $(document).ready(function() {
 
     $('#colorcategory').multiselect({
         columns: 1,
-        maxWidth: '150px',
+        maxWidth: '250px',
         search: true,
         placeholder: 'All Colors',
         selectAll: true

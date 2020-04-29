@@ -1,9 +1,5 @@
 <%- include('../layoutTop'); %>
 
-<script src="/scripts/jquery.js"></script>
-<script src="/scripts/jquery.mobile.custom.min.js"></script>
-<script src="/scripts/sorttable.js"></script>
-
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
@@ -21,7 +17,7 @@
             </div>
             <div>
                 <table>
-                    <table id="brandalternates" class="sortable browsetable" style="width:100%">
+                    <table id="brandalternates" class="browsetable" style="width:100%">
                     <tr><th><span>Brand</span></th><th><span>Brand Alternate Names</span></th></tr>
                     <% for (var i=0; i<brands.length; i++) {%>
                         <tr><td><span><%=brands[i].name%></span></a></td>
