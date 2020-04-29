@@ -1,5 +1,12 @@
 <%- include('../layoutTop'); %>
 
+<script src="/scripts/jquery.js"></script>
+<script src="/scripts/jquery.mobile.custom.min.js"></script>
+<script src="/scripts/markitup/jquery.markitup.js"></script>
+<script type="text/javascript" src="/scripts/markitup/sets/html/set.js"></script>
+<link rel="stylesheet" type="text/css" href="/scripts/markitup/skins/simple/style.css" />
+<link rel="stylesheet" type="text/css" href="/scripts/markitup/sets/html/style.css" />
+
 <script type="text/javascript">
 function confirm_alert(node) {
     return confirm("Are you sure you want to permanently delete this?");
@@ -26,7 +33,17 @@ function confirm_alert(node) {
                     <br>&#8226; <a href='/polish/<%= checkinpolish[i].brand.replace(/ /g,"_") %>/<%= checkinpolish[i].name.replace(/ /g,"_") %>'><%= checkinpolish[i].brand %> - <%= checkinpolish[i].name %></a>
                 <% } %>
             <br><br><br><hr><br>
-            <b>Comments (<%= checkincomment.length %>)</b> | <a href="/checkin/<%= checkinid %>/add">Add a comment</a><br><br>
+            <b>Comments (<%= checkincomment.length %>)</b> |
+            <% if (isAuthenticated) { %>
+                <span class="replylink"><a href="#">Reply</a></span>
+                <div class="replybox"><br><form action="/checkin/<%= checkinid %>/<%= checkinid %>/add" method="post">
+                    <textarea name="message" placeholder="Reply here." class="width40" rows="5" required></textarea><br><br>
+                    <input type="submit" value="Submit" class="button">
+                </form></div>
+            <% } else { %>
+                <div><a href="/checkin/<%= checkinid %>/addreply">Reply</a></div>
+            <% } %>
+            <br><br>
 
 
             <% for (i=0; i<checkincomment.length; i++) { %>
@@ -276,14 +293,14 @@ function confirm_alert(node) {
                             <% } %>
                 <% } %>
             <% } %>
-            <hr><br><br>
+            <hr><!-- <br><br>
             <% if (isAuthenticated) { %>
                 <b><a name="addcomment"><font color="#000000">Add a Comment:</font></b><br><br>
                 <form action="/checkin/<%= checkinid %>/<%= checkinid %>/add" method="post">
                     <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
                     <input type="submit" value="Submit" class="button">
                 </form>
-            <% } %>
+            <% } %> -->
         </div>
     </section>
     </div>

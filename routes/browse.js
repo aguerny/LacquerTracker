@@ -65,25 +65,34 @@ app.get('/browse', function(req, res) {
 
 
 app.post('/browse', function(req, res) {
-    if (req.body.colorcategory == "") {
-        var search = {
-            keywords:sanitizer.sanitize(req.body.keywords),
-            brand:sanitizer.sanitize(req.body.brand),
-            page:sanitizer.sanitize(req.body.page)
-        }
-        if (req.body.type !== "") {
-            search.type = sanitizer.sanitize(req.body.type);
-        }
-    } else if (req.body.colorcategory !== "Choose") {
-        var search = {
-            keywords:sanitizer.sanitize(req.body.keywords),
-            brand:sanitizer.sanitize(req.body.brand),
-            page:sanitizer.sanitize(req.body.page),
-            colorscategory:sanitizer.sanitize(req.body.colorcategory).toLowerCase()
-        }
-        if (req.body.type !== "") {
-            search.type = sanitizer.sanitize(req.body.type);
-        }
+
+    var page = sanitizer.sanitize(req.body.page);
+
+    var search = {};
+
+    if (req.body.keywords.length > 0) {
+        search.keywords = new RegExp(sanitizer.sanitize(req.body.keywords.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'')), "i");
+    }
+
+    if (req.body.brand) {
+        search.brand = sanitizer.sanitize(req.body.brand).split(",");
+        var databrand = sanitizer.sanitize(req.body.brand).split(",");
+    } else {
+        var databrand = '';
+    }
+
+    if (req.body.type) {
+        search.type = {$in: sanitizer.sanitize(req.body.type).split(",")};
+        var datatype = sanitizer.sanitize(req.body.type).split(",");
+    } else {
+        var datatype = '';
+    }
+
+    if (!req.body.colorcategory) {
+        var datacolor = '';
+    } else if (req.body.colorcategory !== "choose") {
+        search.colorscategory = {$in: sanitizer.sanitize(req.body.colorcategory).split(",")};
+        var datacolor = sanitizer.sanitize(req.body.colorcategory).split(",");
     } else {
         function hexToRgb(hex) {
             var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -99,15 +108,8 @@ app.post('/browse', function(req, res) {
         for (i=0; i<PolishColors.length; i++) {
             deltas.push(deltaE(rgb2lab(PolishColors[i].rgb), rgb2lab(selectedColorRGB)));
         }
-        var search = {
-            keywords:sanitizer.sanitize(req.body.keywords),
-            brand:sanitizer.sanitize(req.body.brand),
-            colorsname: PolishColors[deltas.indexOf(Math.min(...deltas))].name,
-            page:sanitizer.sanitize(req.body.page)
-        }
-        if (req.body.type !== "") {
-            search.type = sanitizer.sanitize(req.body.type);
-        }
+        search.colorsname = {$in: PolishColors[deltas.indexOf(Math.min(...deltas))].name};
+        var datacolor = 'choose';
     }
 
     Polish.find().distinct('brand', function(error, brands) {
@@ -117,11 +119,10 @@ app.post('/browse', function(req, res) {
         data.title = 'Browse - Lacquer Tracker';
         data.brands = allbrands;
         data.browsekeywords = sanitizer.sanitize(req.body.keywords);
-        data.browsebrand = sanitizer.sanitize(req.body.brand);
-        data.browsecolorcategory = sanitizer.sanitize(req.body.colorcategory);
+        data.browsebrand = databrand;
+        data.browsecolorcategory = datacolor;
         data.browseselectcolor = sanitizer.sanitize(req.body.selectcolor);
-        data.browse
-        data.browsetype = sanitizer.sanitize(req.body.type);
+        data.browsetype = datatype;
         data.types = PolishTypes;
 
         data.recent = false;
@@ -129,26 +130,13 @@ app.post('/browse', function(req, res) {
         if (typeof req.body.browse !== "undefined") {
             var page = 1;
             data.page = 1;
-
         } else if (typeof req.body.nextpage !== "undefined") {
             var page = parseInt(sanitizer.sanitize(req.body.page)) + 1;
             data.page = page;
-
         } else if (typeof req.body.prevpage !== "undefined") {
             var page = parseInt(sanitizer.sanitize(req.body.page)) - 1;
             data.page = page;
         }
-
-
-        var filterOptions = _.transform(search, function(result, value, key) {
-            var valueWithCharactersStripped = value.replace(/[^A-Za-z 0-9!é•()'.-]/g,'');
-            var valueWithCharactersStrippedAndEscaped = valueWithCharactersStripped.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-            result[key] = new RegExp(valueWithCharactersStrippedAndEscaped, "i");
-        });
-
-        var polishkeys = _.keys(Polish.schema.paths);
-
-        var polishFilter = _.pick(filterOptions, polishkeys);
 
         var returnedpolish = [];
         var statuses = [];
@@ -159,7 +147,7 @@ app.post('/browse', function(req, res) {
             data.browsewanted = sanitizer.sanitize(req.body.wanted);
 
             if (req.body.owned === "on" && req.body.wanted === "on") {
-                Polish.find(polishFilter).sort('brand name').exec(function(err, polishes) {
+                Polish.find(search).sort('brand name').exec(function(err, polishes) {
                     for (i=0; i < polishes.length; i++) {
                         if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
                             returnedpolish.push(polishes[i]);
@@ -175,7 +163,7 @@ app.post('/browse', function(req, res) {
                     res.render('browse.ejs', data);
                 })
             } else if (req.body.owned === "on") {
-                Polish.find(polishFilter).sort('brand name').exec(function(err, polishes) {
+                Polish.find(search).sort('brand name').exec(function(err, polishes) {
                     for (i=0; i < polishes.length; i++) {
                         if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
                             returnedpolish.push(polishes[i]);
@@ -188,7 +176,7 @@ app.post('/browse', function(req, res) {
                     res.render('browse.ejs', data);
                 })
             } else if (req.body.wanted === "on") {
-                Polish.find(polishFilter).sort('brand name').exec(function(err, polishes) {
+                Polish.find(search).sort('brand name').exec(function(err, polishes) {
                     for (i=0; i < polishes.length; i++) {
                         if (req.user.wantedpolish.indexOf(polishes[i].id) > -1) {
                             returnedpolish.push(polishes[i]);
@@ -201,7 +189,7 @@ app.post('/browse', function(req, res) {
                     res.render('browse.ejs', data);
                 })
             } else {
-                Polish.find(polishFilter).sort('brand name').skip((page-1)*50).limit(50).exec(function(err, polishes) {
+                Polish.find(search).sort('brand name').skip((page-1)*50).limit(50).exec(function(err, polishes) {
                     for (i=0; i < polishes.length; i++) {
                         if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
                             statuses.push("owned");
@@ -218,7 +206,7 @@ app.post('/browse', function(req, res) {
                 })
             }
         } else {
-            Polish.find(polishFilter).sort('brand name').skip((page-1)*50).limit(50).exec(function(err, polishes) {
+            Polish.find(search).sort('brand name').skip((page-1)*50).limit(50).exec(function(err, polishes) {
                 returnedpolish = polishes;
                 data.polishes = returnedpolish;
                 data.status = statuses;
@@ -227,6 +215,152 @@ app.post('/browse', function(req, res) {
         }
     })
 });
+
+
+
+// app.post('/browse', function(req, res) {
+
+//     var page = sanitizer.sanitize(req.body.page);
+
+//     var search = {};
+
+//     if (req.body.keywords.length > 0) {
+//         search.keywords = new RegExp(sanitizer.sanitize(req.body.keywords.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'')), "i");
+//     }
+
+//     if (req.body.brand.length > 0) {
+//         search.brand = new RegExp(sanitizer.sanitize(req.body.brand), "i");
+//     }
+
+//     if (req.body.type.length > 0) {
+//         search.type = new RegExp(sanitizer.sanitize(req.body.type), "i");
+//     }
+
+//     if (req.body.colorcategory == "") {
+//         // do not add colorscategory to search document
+//     } else if (req.body.colorcategory !== "Choose") {
+//         search.colorscategory = new RegExp(sanitizer.sanitize(req.body.colorcategory).toLowerCase(), "i");
+//     } else {
+//         function hexToRgb(hex) {
+//             var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+//             return result ? {
+//                 r: parseInt(result[1], 16),
+//                 g: parseInt(result[2], 16),
+//                 b: parseInt(result[3], 16)
+//             } : null;
+//         }
+//         var selectedColorRGB = [hexToRgb(sanitizer.sanitize(req.body.selectcolor)).r, hexToRgb(sanitizer.sanitize(req.body.selectcolor)).g, hexToRgb(sanitizer.sanitize(req.body.selectcolor)).b];
+
+//         var deltas = [];
+//         for (i=0; i<PolishColors.length; i++) {
+//             deltas.push(deltaE(rgb2lab(PolishColors[i].rgb), rgb2lab(selectedColorRGB)));
+//         }
+//         search.colorsname = new RegExp(PolishColors[deltas.indexOf(Math.min(...deltas))].name, "i");
+//     }
+
+//     Polish.find().distinct('brand', function(error, brands) {
+//         var allbrands = _.sortBy(brands, function(b) {return b.toLowerCase();});
+
+//         data = {};
+//         data.title = 'Browse - Lacquer Tracker';
+//         data.brands = allbrands;
+//         data.browsekeywords = sanitizer.sanitize(req.body.keywords);
+//         data.browsebrand = sanitizer.sanitize(req.body.brand);
+//         data.browsecolorcategory = sanitizer.sanitize(req.body.colorcategory);
+//         data.browseselectcolor = sanitizer.sanitize(req.body.selectcolor);
+//         data.browsetype = sanitizer.sanitize(req.body.type);
+//         data.types = PolishTypes;
+
+//         data.recent = false;
+
+//         if (typeof req.body.browse !== "undefined") {
+//             var page = 1;
+//             data.page = 1;
+//         } else if (typeof req.body.nextpage !== "undefined") {
+//             var page = parseInt(sanitizer.sanitize(req.body.page)) + 1;
+//             data.page = page;
+//         } else if (typeof req.body.prevpage !== "undefined") {
+//             var page = parseInt(sanitizer.sanitize(req.body.page)) - 1;
+//             data.page = page;
+//         }
+
+//         var returnedpolish = [];
+//         var statuses = [];
+
+//         if (req.isAuthenticated()) {
+
+//             data.browseowned = sanitizer.sanitize(req.body.owned);
+//             data.browsewanted = sanitizer.sanitize(req.body.wanted);
+
+//             if (req.body.owned === "on" && req.body.wanted === "on") {
+//                 Polish.find(search).sort('brand name').exec(function(err, polishes) {
+//                     for (i=0; i < polishes.length; i++) {
+//                         if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
+//                             returnedpolish.push(polishes[i]);
+//                             statuses.push("owned");
+//                         } else if (req.user.wantedpolish.indexOf(polishes[i].id) > -1) {
+//                             returnedpolish.push(polishes[i]);
+//                             statuses.push("wanted");
+//                         }
+//                     }
+//                     data.page = 0;
+//                     data.polishes = returnedpolish;
+//                     data.status = statuses;
+//                     res.render('browse.ejs', data);
+//                 })
+//             } else if (req.body.owned === "on") {
+//                 Polish.find(search).sort('brand name').exec(function(err, polishes) {
+//                     for (i=0; i < polishes.length; i++) {
+//                         if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
+//                             returnedpolish.push(polishes[i]);
+//                             statuses.push("owned");
+//                         }
+//                     }
+//                     data.page = 0;
+//                     data.polishes = returnedpolish;
+//                     data.status = statuses;
+//                     res.render('browse.ejs', data);
+//                 })
+//             } else if (req.body.wanted === "on") {
+//                 Polish.find(search).sort('brand name').exec(function(err, polishes) {
+//                     for (i=0; i < polishes.length; i++) {
+//                         if (req.user.wantedpolish.indexOf(polishes[i].id) > -1) {
+//                             returnedpolish.push(polishes[i]);
+//                             statuses.push("wanted");
+//                         }
+//                     }
+//                     data.page = 0;
+//                     data.polishes = returnedpolish;
+//                     data.status = statuses;
+//                     res.render('browse.ejs', data);
+//                 })
+//             } else {
+//                 Polish.find(search).sort('brand name').skip((page-1)*50).limit(50).exec(function(err, polishes) {
+//                     for (i=0; i < polishes.length; i++) {
+//                         if (req.user.ownedpolish.indexOf(polishes[i].id) > -1) {
+//                             statuses.push("owned");
+//                         } else if (req.user.wantedpolish.indexOf(polishes[i].id) > -1) {
+//                             statuses.push("wanted");
+//                         } else {
+//                             statuses.push("");
+//                         }
+//                     }
+//                     returnedpolish = polishes;
+//                     data.polishes = returnedpolish;
+//                     data.status = statuses;
+//                     res.render('browse.ejs', data);
+//                 })
+//             }
+//         } else {
+//             Polish.find(search).sort('brand name').skip((page-1)*50).limit(50).exec(function(err, polishes) {
+//                 returnedpolish = polishes;
+//                 data.polishes = returnedpolish;
+//                 data.status = statuses;
+//                 res.render('browse.ejs', data);
+//             })
+//         }
+//     })
+// });
 
 
 

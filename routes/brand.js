@@ -15,8 +15,9 @@ module.exports = function(app, passport) {
 //view a brand
 app.get('/brand/:brandname', function(req, res) {
 
-    Brand.findOne({alternatenames: req.params.brandname.toLowerCase().replace(/_/g, " ")}, function(err, brand) {
-        var thisbrand = brand.name
+    var thisbrand = sanitizer.sanitize(req.params.brandname.replace(/_/g, " "));
+
+    Brand.findOne({alternatenames: thisbrand.toLowerCase()}, function(err, brand) {
         if (brand === null) {
             data = {};
             data.title = thisbrand + ' - Lacquer Tracker';

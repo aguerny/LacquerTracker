@@ -1,5 +1,12 @@
 <%- include('layoutTop'); %>
 
+<script src="/scripts/jquery.js"></script>
+<script src="/scripts/jquery.mobile.custom.min.js"></script>
+<script src="/scripts/sorttable.js"></script>
+<script src="/scripts/jscolor.js"></script>
+<script src="/scripts/jquery-multiselect/jquery.multiselect.js"></script>
+<link href="/scripts/jquery-multiselect/jquery.multiselect.css" rel="stylesheet"/>
+
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
@@ -8,40 +15,36 @@
             <div id="browse-left_col">
                 <div id="sidebar">
                     <h3>Browse by:</h3><br>
-                    <form action="/browse" method="post" id="browseform">
-                        <input type="text" name="keywords" <% if (browsekeywords.length > 0) { %> value="<%=browsekeywords%>" <% } %>placeholder="Keyword/Code" class="width80" autofocus>
+                    <form action="/browse" method="post" id="browseform" class="width80">
+                        <input type="text" name="keywords" <% if (browsekeywords.length > 0) { %> value="<%=browsekeywords%>" <% } %>placeholder="&nbsp;&nbsp;Keyword/Code" style="width:98%">
                         <br><br><br>
-                        <select name="brand" class="width80">
-                            <option value="">All Brands</option>
+                        <select name="brand" id="brand" multiple>
                             <% for (i=0; i<brands.length; i++) { %>
-                                <option value="<%= brands[i] %>" <% if (browsebrand === brands[i]) { %> selected="selected" <% } %>><%= brands[i] %></option>
+                                <option value="<%= brands[i] %>" <% if (browsebrand.indexOf(brands[i])>-1) { %> selected="selected" <% } %>><%= brands[i] %></option>
                             <% } %>
                         </select>
-                        <br><br><br>
-                        <select name="type" class="width80">
-                            <option value="">All Types</option>
+                        <br><br>
+                        <select name="type" id="type" multiple>
                             <% for (i=0; i<types.length; i++) { %>
-                                <option value="<%=types[i]%>" <% if (browsetype === types[i]) { %> selected="selected" <% } %>><%=types[i]%></option>
+                                <option value="<%=types[i]%>" <% if (browsetype.indexOf(types[i])>-1) { %> selected="selected" <% } %>><%=types[i]%></option>
                             <% } %>
                         </select>
-                        <br><br><br>
-                        <select name="colorcategory" id="colorcategory" class="width80">
-                            <option value="">All Colors</option>
-                            <option value="Black" <%if (browsecolorcategory=="Black"){%> selected="selected" <%}%>>Black</option>
-                            <option value="Blue" <%if (browsecolorcategory=="Blue"){%> selected="selected" <%}%>>Blue</option>
-                            <option value="Brown" <%if (browsecolorcategory=="Brown"){%> selected="selected" <%}%>>Brown</option>
-                            <option value="Gray" <%if (browsecolorcategory=="Gray"){%> selected="selected" <%}%>>Gray</option>
-                            <option value="Green" <%if (browsecolorcategory=="Green"){%> selected="selected" <%}%>>Green</option>
-                            <option value="Orange" <%if (browsecolorcategory=="Orange"){%> selected="selected" <%}%>>Orange</option>
-                            <option value="Pink" <%if (browsecolorcategory=="Pink"){%> selected="selected" <%}%>>Pink</option>
-                            <option value="Purple" <%if (browsecolorcategory=="Purple"){%> selected="selected" <%}%>>Purple</option>
-                            <option value="Red" <%if (browsecolorcategory=="Red"){%> selected="selected" <%}%>>Red</option>
-                            <option value="White" <%if (browsecolorcategory=="White"){%> selected="selected" <%}%>>White</option>
-                            <option value="Yellow" <%if (browsecolorcategory=="Yellow"){%> selected="selected" <%}%>>Yellow</option>
-                            <option value="Choose" <%if (browsecolorcategory=="Choose"){%> selected="selected" <%}%>>Choose a color</option>
+                        <br><br>
+                        <select name="colorcategory" id="colorcategory" multiple>
+                            <option value="black" <%if (browsecolorcategory.indexOf("black")>-1) {%> selected="selected" <%}%>>Black</option>
+                            <option value="blue" <%if (browsecolorcategory.indexOf("blue")>-1) {%> selected="selected" <%}%>>Blue</option>
+                            <option value="brown" <%if (browsecolorcategory.indexOf("brown")>-1) {%> selected="selected" <%}%>>Brown</option>
+                            <option value="gray" <%if (browsecolorcategory.indexOf("gray")>-1) {%> selected="selected" <%}%>>Gray</option>
+                            <option value="green" <%if (browsecolorcategory.indexOf("green")>-1) {%> selected="selected" <%}%>>Green</option>
+                            <option value="orange" <%if (browsecolorcategory.indexOf("orange")>-1) {%> selected="selected" <%}%>>Orange</option>
+                            <option value="pink" <%if (browsecolorcategory.indexOf("pink")>-1) {%> selected="selected" <%}%>>Pink</option>
+                            <option value="purple" <%if (browsecolorcategory.indexOf("purple")>-1) {%> selected="selected" <%}%>>Purple</option>
+                            <option value="red" <%if (browsecolorcategory.indexOf("red")>-1) {%> selected="selected" <%}%>>Red</option>
+                            <option value="white" <%if (browsecolorcategory.indexOf("white")>-1) {%> selected="selected" <%}%>>White</option>
+                            <option value="yellow" <%if (browsecolorcategory.indexOf("yellow")>-1) {%> selected="selected" <%}%>>Yellow</option>
+                            <option value="choose" <%if (browsecolorcategory.indexOf("choose")>-1) {%> selected="selected" <%}%>>Choose a color</option>
                         </select>
-                        <br>
-                        <span id="colorselector" <%if (browsecolorcategory!=="Choose"){%> style="display:none" <%}%>>
+                        <span id="colorselector" <%if (browsecolorcategory!=="choose"){%> style="display:none" <%}%>>
                             <input name="selectcolor" type="hidden" id="color_value" value="<%=browseselectcolor%>">
                             <input type="button" class="jscolor {valueElement: 'color_value'}" style="width:50px; height:20px;">
                         </span>
@@ -186,11 +189,35 @@ $(document).ready(function() {
 
 
     $('#colorcategory').change(function(){
-        if($(this).val() == "Choose"){
+        if($(this).val() == "choose"){
             $('#colorselector').show();
         } else {
             $('#colorselector').hide();
         }
+    });
+
+    $('#brand').multiselect({
+        columns: 1,
+        maxWidth: '150px',
+        search: true,
+        placeholder: 'All Brands',
+        selectAll: true
+    });
+
+    $('#type').multiselect({
+        columns: 1,
+        maxWidth: '150px',
+        search: true,
+        placeholder: 'All Types',
+        selectAll: true
+    });
+
+    $('#colorcategory').multiselect({
+        columns: 1,
+        maxWidth: '150px',
+        search: true,
+        placeholder: 'All Colors',
+        selectAll: true
     });
 
 });
