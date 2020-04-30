@@ -30,3 +30,7 @@ Disallow: /reset
 Disallow: /logout
 Disallow: /scripts
 Disallow: /stylesheets
+
+
+User-agent: MJ12bot
+Disallow: /

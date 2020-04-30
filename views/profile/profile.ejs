@@ -100,11 +100,11 @@ $(window).load(function () {
         </div>
         <div id="biglayout">
             <% if (checkins.length > 0) { %>
-                <br><br><h4><%= username %>'s Check-Ins (<%= checkins.length %>):</h4><br>
+                <br><br><h4><%= username %>'s Fresh Coats:</h4><br>
                 <div class="collage">
                     <% for (i=0; i<checkins.length; i++) { %>
                         <% if (checkins[i].pendingdelete === false) { %>
-                            <a href="/checkin/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>"></a>
+                            <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>"></a>
                         <% } %>
                     <% } %>
                 </div>
@@ -112,11 +112,11 @@ $(window).load(function () {
         </div>
         <div id="smalllayout">
             <% if (checkins.length > 0) { %>
-                <br><br><h4><%= username %>'s Check-Ins (<%= checkins.length %>):</h4><br>
+                <br><br><h4><%= username %>'s Fresh Coats:</h4><br>
                 <div>
                     <% for (i=0; i<checkins.length; i++) { %>
                         <% if (checkins[i].pendingdelete === false) { %>
-                            <a href="/checkin/<%=checkins[i].id%>"><img style="max-width:49%; padding-bottom:2px;" src="<%= checkins[i].photo %>"></a>
+                            <a href="/freshcoats/<%=checkins[i].id%>"><img style="max-width:49%; padding-bottom:2px;" src="<%= checkins[i].photo %>"></a>
                         <% } %>
                     <% } %>
                 </div>

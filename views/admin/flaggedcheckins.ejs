@@ -5,11 +5,11 @@
     <div id="container" class="clear">
     	<section>
     		<div>
-	     		<br><h3>Check-ins Pending Delete:</h3><br>
+	     		<br><h3>Fresh Coats Pending Delete:</h3><br>
                 <% for (i=0; i < flaggedcheckins.length; i++) { %>
                     <br><br><br><img class="polishphotosmall" src="<%= flaggedcheckins[i].photo %>"><br>
                     Reason: <%=flaggedcheckins[i].flaggedcheckins%><br>
-                    <a href="/checkin/<%= flaggedcheckins[i].id %>/remove">Delete check-in</a> | <a href="/admin/flaggedcheckins/<%= flaggedcheckins[i].id %>/restore">Restore Check-in</a>
+                    <a href="/freshcoats/<%= flaggedcheckins[i].id %>/remove">Delete Fresh Coat</a> | <a href="/admin/flaggedcheckins/<%= flaggedcheckins[i].id %>/restore">Restore Fresh Coat</a>
                 <% } %>
             </div>
     	</section>

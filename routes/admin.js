@@ -116,7 +116,7 @@ app.get('/admin/flaggedcheckins', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
         Checkin.find({pendingdelete:true}).exec(function(err, checkins) {
             data = {};
-            data.title = 'Check-ins Pending Delete - Lacquer Tracker';
+            data.title = 'Fresh Coats Pending Delete - Lacquer Tracker';
             data.flaggedcheckins = checkins;
             res.render('admin/flaggedcheckins.ejs', data);
         })

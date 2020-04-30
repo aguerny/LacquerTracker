@@ -393,7 +393,7 @@ app.post('/forums/:fid/:id/flag', isLoggedIn, function(req, res) {
                 replyTo: "lacquertrackermailer@gmail.com",
                 to: 'lacquertrackermailer@gmail.com',
                 subject: 'Flagged Forum Post',
-                text: req.user.username + " has flagged this post:\nhttps://www.lacquertracker.com/checkin/"+post.id+"\n\nReason for flagging: "+sanitizer.sanitize(req.body.message)+"\n\Post information:\nUser: "+post.user.username+"\nDate: "+moment(post.date).tz("America/New_York").format('llll')+"\nText: "+post.message,
+                text: req.user.username + " has flagged this post:\nhttps://www.lacquertracker.com/checkin/"+post.id+"\n\nReason for flagging: "+sanitizer.sanitize(req.body.message)+"\n\nPost information:\nUser: "+post.user.username+"\nDate: "+moment(post.date).tz("America/New_York").format('llll')+"\nText: "+post.message,
             }
 
             transport.sendMail(mailOptions, function(error, response) {

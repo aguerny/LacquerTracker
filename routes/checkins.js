@@ -16,7 +16,7 @@ module.exports = function(app, passport) {
 
 
 //recent checkins
-app.get('/checkin', function(req, res) {
+app.get('/freshcoats', function(req, res) {
     Checkin.find({pendingdelete:false}).sort({creationdate: -1}).limit(10).populate('user', 'username').populate('polish', 'name brand').exec(function(err, posts) {
         data = {};
         data.title = 'Fresh Coats - Lacquer Tracker';
@@ -35,7 +35,7 @@ app.get('/checkin', function(req, res) {
 });
 
 
-app.get('/checkin/page/:page', function(req, res) {
+app.get('/freshcoats/page/:page', function(req, res) {
     data = {};
     data.title = 'Fresh Coats - Lacquer Tracker';
 
@@ -67,7 +67,7 @@ app.get('/checkin/page/:page', function(req, res) {
 
 
 //saved checkins
-app.get('/checkin/saved', isLoggedIn, function(req, res) {
+app.get('/freshcoats/saved', isLoggedIn, function(req, res) {
     User.findById(req.user.id).select('savedcheckins').populate({path:'savedcheckins',populate:{path:'polish',select:'name brand'}}).populate({path:'savedcheckins',populate:{path:'user',select:'username'}}).exec(function(err, posts) {
         data = {};
         data.title = 'Saved Fresh Coats - Lacquer Tracker';
@@ -89,7 +89,7 @@ app.get('/checkin/saved', isLoggedIn, function(req, res) {
 
 
 //add a new check-in
-app.get('/checkin/add', isLoggedIn, function(req, res) {
+app.get('/freshcoats/add', isLoggedIn, function(req, res) {
     data = {}
     data.title = 'Check In Your Mani - Lacquer Tracker';
     res.render('checkins/add.ejs', data);
@@ -103,7 +103,7 @@ app.post('/allpolish', isLoggedIn, function(req, res) {
 });
 
 
-app.post('/checkin/add', isLoggedIn, function(req, res) {
+app.post('/freshcoats/add', isLoggedIn, function(req, res) {
     Checkin.findOne({user: req.user}).sort({creationdate: -1}).exec(function(err, checkin) {
         if (checkin == null) {
             // need to update below as well if under 12 hours
@@ -151,7 +151,7 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                                                     polish.save();
                                                 })
                                             }
-                                            res.redirect('/checkin');
+                                            res.redirect('/freshcoats');
                                         })
                                     })
                                 }
@@ -223,7 +223,7 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
                                                     polish.save();
                                                 })
                                             }
-                                            res.redirect('/checkin');
+                                            res.redirect('/freshcoats');
                                         })
                                     })
                                 }
@@ -248,13 +248,13 @@ app.post('/checkin/add', isLoggedIn, function(req, res) {
 
 
 //view specific check-in
-app.get('/checkin/:id', function(req, res) {
+app.get('/freshcoats/:id', function(req, res) {
     data = {};
     Checkin.findById(req.params.id).populate({path: 'comments', populate:{path:'user', select: 'username profilephoto'}}).populate('user', 'username').populate('polish', 'brand name').exec(function (err, post) {
         if (post === null || post === undefined || post.pendingdelete == true) {
             res.redirect('/error');
         } else {
-            data.title = "View Check-in - Lacquer Tracker";
+            data.title = post.user.username + "'s Fresh Coat - Lacquer Tracker";
             data.checkinuser = post.user;
             data.checkinid = post.id;
             data.checkinphoto = post.photo;
@@ -288,7 +288,7 @@ app.get('/checkin/:id', function(req, res) {
 
 
 //save checkin
-app.post('/checkin/:id/save', isLoggedIn, function(req, res) {
+app.post('/freshcoats/:id/save', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id).exec(function(err, post) {
         post.savedby.addToSet(req.user.id);
         post.save();
@@ -299,7 +299,7 @@ app.post('/checkin/:id/save', isLoggedIn, function(req, res) {
 
 
 //unsave checkin
-app.post('/checkin/:id/unsave', isLoggedIn, function(req, res) {
+app.post('/freshcoats/:id/unsave', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id).exec(function(err, post) {
         post.savedby.remove(req.user.id);
         post.save();
@@ -312,7 +312,7 @@ app.post('/checkin/:id/unsave', isLoggedIn, function(req, res) {
 
 
 //reply to a checkin or comment
-app.post('/checkin/:id/:cid/add', isLoggedIn, function(req, res) {
+app.post('/freshcoats/:id/:cid/add', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id).populate('user').exec(function (err, post){
         var newCheckinComment = new CheckinComment ({
             checkinid: post.id,
@@ -335,8 +335,8 @@ app.post('/checkin/:id/:cid/add', isLoggedIn, function(req, res) {
                             from: "polishrobot@lacquertracker.com",
                             replyTo: "lacquertrackermailer@gmail.com",
                             to: comment.user.email,
-                            subject: 'New reply to your check-in comment',
-                            text: "Hi " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on check-in.\n\nCheck it out here: https://www.lacquertracker.com/checkin/" + post.id + "\n\n\nHappy polishing!\n\nLacquer Tracker",
+                            subject: 'New reply to your fresh coat comment',
+                            text: "Hi " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on a fresh coat.\n\nCheck it out here: https://www.lacquertracker.com/freshcoats/" + post.id + "\n\n\nHappy polishing!\n\nLacquer Tracker",
                         }
 
                         transport.sendMail(mailOptions, function(error, response) {
@@ -356,8 +356,8 @@ app.post('/checkin/:id/:cid/add', isLoggedIn, function(req, res) {
                         from: "polishrobot@lacquertracker.com",
                         replyTo: "lacquertrackermailer@gmail.com",
                         to: post.user.email,
-                        subject: 'New reply to your check-in',
-                        text: "Hi " + post.user.username + ",\n\n" + req.user.username + " just replied to your check-in.\n\nCheck it out here: https://www.lacquertracker.com/checkin/" + post.id + "\n\n\nHappy polishing!\n\nLacquer Tracker",
+                        subject: 'New reply to your fresh coat',
+                        text: "Hi " + post.user.username + ",\n\n" + req.user.username + " just replied to your fresh coat.\n\nCheck it out here: https://www.lacquertracker.com/freshcoats/" + post.id + "\n\n\nHappy polishing!\n\nLacquer Tracker",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {
@@ -371,12 +371,12 @@ app.post('/checkin/:id/:cid/add', isLoggedIn, function(req, res) {
                         parent.childid.push(newCheckinComment.id);
                         post.save(function(err) {
                             parent.save(function(err) {
-                                res.redirect('/checkin/' + post.id)
+                                res.redirect('/freshcoats/' + post.id)
                             })
                         })
                     } else {
                         post.save(function(err) {
-                            res.redirect('/checkin/' + post.id)
+                            res.redirect('/freshcoats/' + post.id)
                         })
                     }
                 })
@@ -389,7 +389,7 @@ app.post('/checkin/:id/:cid/add', isLoggedIn, function(req, res) {
 
 
 //edit check-in
-app.get('/checkin/:id/edit', isLoggedIn, function(req, res) {
+app.get('/freshcoats/:id/edit', isLoggedIn, function(req, res) {
     data = {};
     Polish.find({}).sort({brand: 1}).sort({name: 1}).exec(function (err, polishes) {
         data.polish = polishes;
@@ -398,7 +398,7 @@ app.get('/checkin/:id/edit', isLoggedIn, function(req, res) {
                 res.redirect('/error');
             } else {
                 if (post.user == req.user.id) {
-                    data.title = "Edit Check-in - Lacquer Tracker";
+                    data.title = "Edit Fresh Coat - Lacquer Tracker";
                     data.checkinid = post.id;
                     data.checkinphoto = post.photo;
                     data.checkinpolish = post.polish;
@@ -412,7 +412,7 @@ app.get('/checkin/:id/edit', isLoggedIn, function(req, res) {
     })
 });
 
-app.post('/checkin/:id/edit', isLoggedIn, function(req, res) {
+app.post('/freshcoats/:id/edit', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id, function (err, post){
         var currentPolish = post.polish;
         if (post.user == req.user.id) {
@@ -443,7 +443,7 @@ app.post('/checkin/:id/edit', isLoggedIn, function(req, res) {
                         })
                     }
                 }
-                res.redirect('/checkin/' + post.id);
+                res.redirect('/freshcoats/' + post.id);
             })
         } else {
             res.redirect('/error');
@@ -455,19 +455,19 @@ app.post('/checkin/:id/edit', isLoggedIn, function(req, res) {
 
 
 
-app.get('/checkin/:id/add', isLoggedIn, function(req, res) {
-    res.redirect('/checkin/' + req.params.id + "#addcomment")
+app.get('/freshcoats/:id/add', isLoggedIn, function(req, res) {
+    res.redirect('/freshcoats/' + req.params.id + "#addcomment")
 });
 
-app.get('/checkin/:id/addreply', isLoggedIn, function(req, res) {
-    res.redirect('/checkin/' + req.params.id)
+app.get('/freshcoats/:id/addreply', isLoggedIn, function(req, res) {
+    res.redirect('/freshcoats/' + req.params.id)
 });
 
 
 
 
 //remove comment
-app.get('/checkin/:id/:cid/remove', isLoggedIn, function(req, res) {
+app.get('/freshcoats/:id/:cid/remove', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id, function(err, post) {
         CheckinComment.findById(req.params.cid, function(err, comment) {
             if (comment === null || comment === undefined) {
@@ -477,7 +477,7 @@ app.get('/checkin/:id/:cid/remove', isLoggedIn, function(req, res) {
                     if (comment.childid.length > 0) {
                         comment.message = sanitizer.sanitize(markdown("_comment deleted_"));
                         comment.save(function(err) {
-                            res.redirect("/checkin/" + req.params.id);
+                            res.redirect("/freshcoats/" + req.params.id);
                         })
                     } else {
                         post.comments.remove(req.params.cid);
@@ -487,12 +487,12 @@ app.get('/checkin/:id/:cid/remove', isLoggedIn, function(req, res) {
                                     parentcomment.childid.remove(req.params.cid);
                                     parentcomment.save();
                                     CheckinComment.findByIdAndRemove(req.params.cid, function(err) {
-                                        res.redirect("/checkin/" + req.params.id);
+                                        res.redirect("/freshcoats/" + req.params.id);
                                     })
                                 })
                             } else {
                                 CheckinComment.findByIdAndRemove(req.params.cid, function(err) {
-                                    res.redirect("/checkin/" + req.params.id);
+                                    res.redirect("/freshcoats/" + req.params.id);
                                 })
                             }
                         })
@@ -509,7 +509,7 @@ app.get('/checkin/:id/:cid/remove', isLoggedIn, function(req, res) {
 
 
 //delete check-in
-app.get('/checkin/:id/remove', isLoggedIn, function(req, res) {
+app.get('/freshcoats/:id/remove', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id).populate('user').exec(function(err, post) {
         if (post === null || post === undefined) {
              res.redirect('/error');
@@ -535,7 +535,7 @@ app.get('/checkin/:id/remove', isLoggedIn, function(req, res) {
                         Checkin.findByIdAndRemove(req.params.id, function(err) {
                             post.user.checkins.remove(req.params.id);
                             post.user.save();
-                            res.redirect('/checkin');
+                            res.redirect('/freshcoats');
                         })
                     })
                  })
@@ -549,26 +549,13 @@ app.get('/checkin/:id/remove', isLoggedIn, function(req, res) {
 
 
 //user flags a check-in
-app.get('/checkin/:id/flag', isLoggedIn, function(req, res) {
-    Checkin.findById(req.params.id).exec(function(err, checkin) {
-        if (checkin === null || checkin === undefined) {
-            res.redirect('/error');
-        } else {
-            data = {};
-            data.title = "Flag Check-in - Lacquer Tracker";
-            data.checkin = checkin;
-            res.render('checkins/flag.ejs', data);
-        }
-    });
-});
-
-app.post('/checkin/:id/flag', isLoggedIn, function(req, res) {
+app.post('/freshcoats/:id/flag', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id).exec(function(err, checkin) {
         if (checkin === null || checkin === undefined) {
             res.redirect('/error');
         } else {
             checkin.pendingdelete = true;
-            checkin.pendingreason = sanitizer.sanitize(req.body.pendingreason) + " - " + req.user.username;
+            checkin.pendingreason = req.user.username + ": " + sanitizer.sanitize(req.body.message);
             checkin.save(function(err) {
                 var transport = nodemailer.createTransport({
                     sendmail: true,
@@ -579,14 +566,14 @@ app.post('/checkin/:id/flag', isLoggedIn, function(req, res) {
                     from: "polishrobot@lacquertracker.com",
                     replyTo: "lacquertrackermailer@gmail.com",
                     to: 'lacquertrackermailer@gmail.com',
-                    subject: 'Flagged Check-in',
-                    text: req.user.username + " has flagged a check-in.\n\nhttps://www.lacquertracker.com/admin/flaggedcheckins",
+                    subject: 'Flagged Fresh Coat',
+                    text: req.user.username + " has flagged a fresh coat.\n\nReason for flagging: "+sanitizer.sanitize(req.body.message)+"\n\nhttps://www.lacquertracker.com/admin/flaggedcheckins",
                 }
 
                 transport.sendMail(mailOptions, function(error, response) {
                     transport.close();
                 });
-                res.redirect('/checkin');
+                res.redirect('/freshcoats');
             })
         }
     });
@@ -594,7 +581,7 @@ app.post('/checkin/:id/flag', isLoggedIn, function(req, res) {
 
 
 //user flags a check-in comment
-app.post('/checkin/:id/:cid/flag', isLoggedIn, function(req, res) {
+app.post('/freshcoats/:id/:cid/flag', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id).exec(function(err, checkin) {
         if (checkin === null || checkin === undefined) {
             res.redirect('/error');
@@ -609,14 +596,14 @@ app.post('/checkin/:id/:cid/flag', isLoggedIn, function(req, res) {
                     from: "polishrobot@lacquertracker.com",
                     replyTo: "lacquertrackermailer@gmail.com",
                     to: 'lacquertrackermailer@gmail.com',
-                    subject: 'Flagged Check-in Comment',
-                    text: req.user.username + " has flagged a comment on this post:\nhttps://www.lacquertracker.com/checkin/"+checkin.id+"\n\nReason for flagging: "+sanitizer.sanitize(req.body.message)+"\n\nComment information:\nUser: "+comment.user.username+"\nDate: "+moment(comment.date).tz("America/New_York").format('llll')+"\nText: "+comment.message,
+                    subject: 'Flagged Fresh Coat Comment',
+                    text: req.user.username + " has flagged a comment on this post:\nhttps://www.lacquertracker.com/freshcoats/"+checkin.id+"\n\nReason for flagging: "+sanitizer.sanitize(req.body.message)+"\n\nComment information:\nUser: "+comment.user.username+"\nDate: "+moment(comment.date).tz("America/New_York").format('llll')+"\nText: "+comment.message,
                 }
 
                 transport.sendMail(mailOptions, function(error, response) {
                     transport.close();
                 });
-                res.redirect('/checkin/'+req.params.id);
+                res.redirect('/freshcoats/'+req.params.id);
             })
         }
     });
