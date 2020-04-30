@@ -593,6 +593,36 @@ app.post('/checkin/:id/flag', isLoggedIn, function(req, res) {
 });
 
 
+//user flags a check-in comment
+app.post('/checkin/:id/:cid/flag', isLoggedIn, function(req, res) {
+    Checkin.findById(req.params.id).exec(function(err, checkin) {
+        if (checkin === null || checkin === undefined) {
+            res.redirect('/error');
+        } else {
+            CheckinComment.findById(req.params.cid).populate('user', 'username').exec(function(err, comment) {
+                var transport = nodemailer.createTransport({
+                    sendmail: true,
+                    path: "/usr/sbin/sendmail"
+                });
+
+                var mailOptions = {
+                    from: "polishrobot@lacquertracker.com",
+                    replyTo: "lacquertrackermailer@gmail.com",
+                    to: 'lacquertrackermailer@gmail.com',
+                    subject: 'Flagged Check-in Comment',
+                    text: req.user.username + " has flagged a comment on this post:\nhttps://www.lacquertracker.com/checkin/"+checkin.id+"\n\nReason for flagging: "+sanitizer.sanitize(req.body.message)+"\n\nComment information:\nUser: "+comment.user.username+"\nDate: "+moment(comment.date).tz("America/New_York").format('llll')+"\nText: "+comment.message,
+                }
+
+                transport.sendMail(mailOptions, function(error, response) {
+                    transport.close();
+                });
+                res.redirect('/checkin/'+req.params.id);
+            })
+        }
+    });
+});
+
+
 
 };
 

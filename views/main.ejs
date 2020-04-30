@@ -27,13 +27,31 @@
                 <ul style="padding-left:25px">
                     <li>Polish Owned: <%= user.ownedpolish.length %></li><br>
                         <ul>
-                            <li>Most Owned Brand: <%= ownedMostFrequent %></li>
+                            <% if (ownedMostFrequent.length == 1) { %>
+                                <li>Most Owned Brand: <%= ownedMostFrequent %></li>
+                            <% } else { %>
+                                <li>Most Owned Brands:</li>
+                                    <ul>
+                                    <% for (i=0; i<ownedMostFrequent.length; i++) { %>
+                                        <li><%= ownedMostFrequent[i] %></li>
+                                    <% } %>
+                                    </ul>
+                            <% } %>
                         </ul><br>
                     <li>Polish Wanted: <%= user.wantedpolish.length %></li><br>
                         <ul>
-                            <li>Most Wanted Brand: <%= wantedMostFrequent %></li>
+                            <% if (wantedMostFrequent.length == 1) { %>
+                                <li>Most Wanted Brand: <%= wantedMostFrequent %></li>
+                            <% } else { %>
+                                <li>Most Wanted Brands:</li>
+                                    <ul>
+                                    <% for (i=0; i<wantedMostFrequent.length; i++) { %>
+                                        <li><%= wantedMostFrequent[i] %></li>
+                                    <% } %>
+                                    </ul>
+                            <% } %>
                         </ul><br>
-                    <li>Fresh Coats: <%= user.checkins.length %></li>
+                    <li>Fresh Coats Posted: <%= user.checkins.length %></li>
                 </ul>
             <% } %>
         </div>

@@ -49,9 +49,10 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                     creditlink: sanitizer.sanitize(req.body.creditlink),
                     pendingdelete: false,
                     pendingreason: '',
+                    date: new Date(),
                 })
                 newPhoto.save(function(err) {
-                    p.date = new Date();
+                    p.dateupdated = new Date();
                     p.photos.push(newPhoto.id);
                     p.save();
                     gm(req.files.photo.tempFilePath).strip().resize(600).write(path.resolve('./public/images/polish/' + req.params.id + "-" + newPhoto.id + ext), function (err) {
@@ -97,10 +98,11 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                     creditlink: sanitizer.sanitize(req.body.creditlink),
                     pendingdelete: false,
                     pendingreason: '',
+                    date: new Date(),
                 })
                 newPhoto.save(function(err) {
                     var targetPath = path.resolve('./public/images/polish/' + req.params.id + '-' + newPhoto.id + ext);
-                    p.date = new Date();
+                    p.dateupdated = new Date();
                     p.photos.push(newPhoto.id);
                     p.save();
                     download(sanitizer.sanitize(req.body.url), targetPath, function(err) {

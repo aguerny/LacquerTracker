@@ -21,12 +21,12 @@ app.get('/', function(req, res) {
                 if (ownedCounts[user.ownedpolish[i].brand] > ownedCompare) {
                     ownedCompare = ownedCounts[user.ownedpolish[i].brand];
                     ownedMostFrequent = user.ownedpolish[i].brand;
-                } else if (ownedCounts[user.ownedpolish[i].brand] = ownedCompare) {
+                } else if (ownedCounts[user.ownedpolish[i].brand] == ownedCompare) {
                     ownedCompare = ownedCounts[user.ownedpolish[i].brand];
                     ownedMostFrequent = ownedMostFrequent + ", " + user.ownedpolish[i].brand;
                 }
             }
-            data.ownedMostFrequent = ownedMostFrequent;
+            data.ownedMostFrequent = ownedMostFrequent.split(",");
             var wantedCounts = {};
             var wantedCompare = 0;
             var wantedMostFrequent = "?";
@@ -39,12 +39,12 @@ app.get('/', function(req, res) {
                 if (wantedCounts[user.wantedpolish[i].brand] > wantedCompare) {
                     wantedCompare = wantedCounts[user.wantedpolish[i].brand];
                     wantedMostFrequent = user.wantedpolish[i].brand;
-                } else if (wantedCounts[user.wantedpolish[i].brand] = wantedCompare) {
+                } else if (wantedCounts[user.wantedpolish[i].brand] == wantedCompare) {
                     wantedCompare = wantedCounts[user.wantedpolish[i].brand];
                     wantedMostFrequent = wantedMostFrequent + ", " + user.wantedpolish[i].brand;
                 }
             }
-            data.wantedMostFrequent = wantedMostFrequent;
+            data.wantedMostFrequent = wantedMostFrequent.split(",");
             res.render('main.ejs', data);
         })
     } else {

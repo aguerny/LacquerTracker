@@ -375,6 +375,69 @@ app.get('/forums/:forum/:id/remove', isLoggedIn, function(req, res) {
 });
 
 
+
+
+//user flags a forum post
+app.post('/forums/:fid/:id/flag', isLoggedIn, function(req, res) {
+    ForumPost.findById(req.params.id).populate('user', 'username').exec(function(err, post) {
+        if (post === null || post === undefined) {
+            res.redirect('/error');
+        } else {
+            var transport = nodemailer.createTransport({
+                sendmail: true,
+                path: "/usr/sbin/sendmail"
+            });
+
+            var mailOptions = {
+                from: "polishrobot@lacquertracker.com",
+                replyTo: "lacquertrackermailer@gmail.com",
+                to: 'lacquertrackermailer@gmail.com',
+                subject: 'Flagged Forum Post',
+                text: req.user.username + " has flagged this post:\nhttps://www.lacquertracker.com/checkin/"+post.id+"\n\nReason for flagging: "+sanitizer.sanitize(req.body.message)+"\n\Post information:\nUser: "+post.user.username+"\nDate: "+moment(post.date).tz("America/New_York").format('llll')+"\nText: "+post.message,
+            }
+
+            transport.sendMail(mailOptions, function(error, response) {
+                transport.close();
+            });
+            res.redirect('/forums/'+req.params.fid+'/'+req.params.id);
+        }
+    });
+});
+
+
+
+//user flags a forum post comment
+app.post('/forums/:fid/:id/:cid/flag', isLoggedIn, function(req, res) {
+    ForumPost.findById(req.params.id).exec(function(err, post) {
+        if (post === null || post === undefined) {
+            res.redirect('/error');
+        } else {
+            ForumComment.findById(req.params.cid).populate('user', 'username').exec(function(err, comment) {
+                var transport = nodemailer.createTransport({
+                    sendmail: true,
+                    path: "/usr/sbin/sendmail"
+                });
+
+                var mailOptions = {
+                    from: "polishrobot@lacquertracker.com",
+                    replyTo: "lacquertrackermailer@gmail.com",
+                    to: 'lacquertrackermailer@gmail.com',
+                    subject: 'Flagged Forum Comment',
+                    text: req.user.username + " has flagged a comment on this post:\nhttps://www.lacquertracker.com/checkin/"+post.id+"\n\nReason for flagging: "+sanitizer.sanitize(req.body.message)+"\n\nComment information:\nUser: "+comment.user.username+"\nDate: "+moment(comment.date).tz("America/New_York").format('llll')+"\nText: "+comment.message,
+                }
+
+                transport.sendMail(mailOptions, function(error, response) {
+                    transport.close();
+                });
+                res.redirect('/forums/'+req.params.fid+'/'+req.params.id);
+            })
+        }
+    });
+});
+
+
+
+
 };
 
 

@@ -34,8 +34,8 @@
 		font:12px 'Courier New', Courier, monospace;
 		padding:5px;
 		width:98%;
-		max-width:690px;
-		height:320px;
+		max-width:500px;
+		height:150px;
 		clear:both;
 		line-height:18px;
 		overflow:auto;
@@ -92,7 +92,7 @@
 .markItUpHeader ul ul {
 	display:none;
 	position:absolute;
-	top:18px; left:0px;	
+	top:18px; left:0px;
 	background:#FFF;
 	border:1px solid #000;
 }
@@ -117,7 +117,7 @@
 /* next rows of buttons */
 .markItUpHeader ul ul ul {
 	position:absolute;
-	top:-1px; left:150px; 
+	top:-1px; left:150px;
 }
 .markItUpHeader ul ul ul li {
 	float:none;
@@ -134,7 +134,7 @@
 	display:block;
 	padding-left:0px;
 	text-indent:0;
-	width:120px; 
+	width:120px;
 	padding:5px 5px 5px 25px;
 	background-position:2px 50%;
 }
