@@ -32,7 +32,10 @@ app.get('/import', isLoggedIn, function(req, res) {
 
 app.post('/import', isLoggedIn, function(req, res) {
     if (req.files.spreadsheet.name.length > 0) {
-        if (req.files.spreadsheet.mimetype.startsWith("text/csv") || req.files.spreadsheet.mimetype.startsWith("application/vnd.ms-excel")) {
+        if (req.files.spreadsheet.mimetype.startsWith("text/csv") ||
+            req.files.spreadsheet.mimetype.startsWith("application/vnd.ms-excel") ||
+            req.files.spreadsheet.mimetype.startsWith("application/vnd.openxmlformats-officedocument.spreadsheetml")
+            ) {
             //send import request e-mail
             var transport = nodemailer.createTransport({
                 sendmail: true,
@@ -44,7 +47,7 @@ app.post('/import', isLoggedIn, function(req, res) {
                 subject: 'Import Polish Request',
                 text: req.user.username + " has requested to add the attached polish.\n\nOwnership option: " + req.body.ownership,
                 attachments: {
-                    filename: req.user.username + '.csv',
+                    filename: req.user.username + path.extname(req.files.spreadsheet.name),
                     path: req.files.spreadsheet.tempFilePath
                 }
             }
@@ -63,12 +66,12 @@ app.post('/import', isLoggedIn, function(req, res) {
             });
         } else {
             fs.unlink(req.files.spreadsheet.tempFilePath, function(err) {
-                res.render('polish/importuser.ejs', {title: 'Import Polish - Lacquer Tracker', message:'Error: Filetype not .CSV'});
+                res.render('polish/importuser.ejs', {title: 'Import Polish - Lacquer Tracker', message:'Error: Filetype not CSV or Excel format.'});
             })
         }
     } else {
         fs.unlink(req.files.spreadsheet.tempFilePath, function(err) {
-            res.render('polish/importuser.ejs', {title: 'Import Polish - Lacquer Tracker', message:'Error: Filetype not .CSV'});
+            res.render('polish/importuser.ejs', {title: 'Import Polish - Lacquer Tracker', message:'Error: Filetype not CSV or Excel format.'});
         })
     }
 })

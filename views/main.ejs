@@ -28,27 +28,27 @@
                     <li>Polish Owned: <%= user.ownedpolish.length %></li><br>
                         <ul>
                             <% if (ownedMostFrequent.length == 1) { %>
-                                <li>Most Owned Brand: <%= ownedMostFrequent %></li>
+                                <li>Most Owned Brand: <%= ownedMostFrequent %></li><br>
                             <% } else { %>
                                 <li>Most Owned Brands:</li>
                                     <ul>
                                     <% for (i=0; i<ownedMostFrequent.length; i++) { %>
                                         <li><%= ownedMostFrequent[i] %></li>
                                     <% } %>
-                                    </ul>
+                                    </ul><br>
                             <% } %>
                         </ul><br>
                     <li>Polish Wanted: <%= user.wantedpolish.length %></li><br>
                         <ul>
                             <% if (wantedMostFrequent.length == 1) { %>
-                                <li>Most Wanted Brand: <%= wantedMostFrequent %></li>
+                                <li>Most Wanted Brand: <%= wantedMostFrequent %></li><br>
                             <% } else { %>
                                 <li>Most Wanted Brands:</li>
                                     <ul>
                                     <% for (i=0; i<wantedMostFrequent.length; i++) { %>
                                         <li><%= wantedMostFrequent[i] %></li>
                                     <% } %>
-                                    </ul>
+                                    </ul><br>
                             <% } %>
                         </ul><br>
                     <li>Fresh Coats Posted: <%= user.checkins.length %></li>

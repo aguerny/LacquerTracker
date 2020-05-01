@@ -29,9 +29,9 @@
                         <td><span><%= polishes[i].brand %></span></td>
                         <td><span><%= polishes[i].batch %></span></td>
                         <td class="tableswatch"><% if (polishes[i].swatch.length > 0) {%>
-                                <img src="<%=polishes[i].swatch%>"/>
+                                <img src="<%=polishes[i].swatch%>" alt="Nail polish swatch / manicure of <%= polishes[i].brand %> - <%= polishes[i].name %>">
                             <%} else {%>
-                                <img src="/images/swatches/noswatch.jpg"/>
+                                <img src="/images/swatches/noswatch.jpg">
                             <%}%>
                         </td>
                         <td>

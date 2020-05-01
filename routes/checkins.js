@@ -279,6 +279,9 @@ app.get('/freshcoats/:id', function(req, res) {
             })
             data.checkincomment = allcomments;
             data.moment = moment;
+            data.alttagpolish = post.polish.map(function(x) {
+                return x.brand + " - " + x.name;
+            }).toString().replace(",", ", ");
             res.render('checkins/viewonecheckin.ejs', data);
         }
     })

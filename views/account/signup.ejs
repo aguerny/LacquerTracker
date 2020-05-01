@@ -22,7 +22,7 @@ custom_theme_widget: 'recaptcha_widget'
                 <h3>Fill out the information below to get started.</h3><br><br>
                 E-mail address:<br><input type="email" name="email" class="width50" required value="<%=email%>" placeholder="A validation message will be sent." autofocus><br><br><br>
                 Confirm E-mail:<br><input type="email" name="emailconfirm" class="width50" required><br><br><br>
-                Username:<br><input type="text" name="username" maxlength="20" class="width50" required value="<%=username%>" placeholder="Only use letters and numbers. No spaces or special characters allowed."><br><br><br>
+                Username:<br><input type="text" name="username" maxlength="20" class="width50" id="username" required value="<%=username%>" placeholder="Only use letters and numbers. No spaces or special characters allowed."><br><br><br>
                 Password:<br><input type="password" name="password" class="width50" required minlength="8" placeholder="Minimum length is 8 characters."><br><br><br>
                 Confirm Password:<br><input type="password" class="width50" name="confirm" required><br><br><br><br>
                 <div class="g-recaptcha" data-sitekey="6LcSeegUAAAAACSmq6y9_hXYCgEXdGknDqg99b__"></div><br><br><br><br><br>
@@ -32,5 +32,22 @@ custom_theme_widget: 'recaptcha_widget'
     </section>
     </div>
 </div>
+
+<script>
+$('#username').on('input', function() {
+    var c = this.selectionStart,
+    r = /[^a-z0-9]/gi,
+    v = $(this).val();
+    if(r.test(v)) {
+        $(this).val(v.replace(r, ''));
+        c--;
+    }
+    this.setSelectionRange(c, c);
+});
+
+$("#username").on('change keyup paste',function(){
+    $(this).val($(this).val().toLowerCase());
+})
+</script>
 
 <%- include('../layoutBottom'); %>

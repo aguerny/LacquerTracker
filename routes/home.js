@@ -1,4 +1,5 @@
 var User = require('../app/models/user');
+var PolishColors = require('../app/constants/polishColors');
 
 module.exports = function(app, passport) {
 
@@ -8,7 +9,7 @@ app.get('/', function(req, res) {
     if (req.isAuthenticated()) {
         data = {};
         data.title = 'Lacquer Tracker';
-        User.findById(req.user.id).populate('ownedpolish', 'brand').populate('wantedpolish', 'brand').exec(function(err, user) {
+        User.findById(req.user.id).populate('ownedpolish', 'brand colorsname').populate('wantedpolish', 'brand').exec(function(err, user) {
             var ownedCounts = {};
             var ownedCompare = 0;
             var ownedMostFrequent = "?";
@@ -45,6 +46,32 @@ app.get('/', function(req, res) {
                 }
             }
             data.wantedMostFrequent = wantedMostFrequent.split(",");
+            // var colorCounts = {};
+            // var colorCompare = 0;
+            // var colorMostFrequent = "?";
+            // for (i=0; i<user.ownedpolish.length; i++) {
+            //     if (user.ownedpolish[i].colorsname) {
+            //         if (colorCounts[user.ownedpolish[i].colorsname[0]] === undefined) {
+            //             colorCounts[user.ownedpolish[i].colorsname[0]] = 1;
+            //         } else {
+            //             colorCounts[user.ownedpolish[i].colorsname[0]] = colorCounts[user.ownedpolish[i].colorsname[0]] + 1;
+            //         }
+            //         if (colorCounts[user.ownedpolish[i].colorsname[0]] > colorCompare) {
+            //             colorCompare = colorCounts[user.ownedpolish[0].colorsname[j]];
+            //             colorMostFrequent = user.ownedpolish[i].colorsname[0];
+            //         } else if (colorCounts[user.ownedpolish[i].colorsname[0]] == colorCompare) {
+            //             colorCompare = colorCounts[user.ownedpolish[i].colorsname[0]];
+            //             colorMostFrequent = colorMostFrequent + ", " + user.ownedpolish[i].colorsname[0];
+            //         }
+            //     }
+            // }
+            // data.colorMostFrequent = colorMostFrequent.split(",").map(function(x) {
+            //     for (i=0; i<PolishColors.length; i++) {
+            //         if (x.indexOf(PolishColors[i].name) > -1) {
+            //             return PolishColors[i].hex;
+            //         }
+            //     }
+            // })
             res.render('main.ejs', data);
         })
     } else {

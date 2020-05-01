@@ -4,9 +4,10 @@ Disallow: /email
 Disallow: /forums/*/add
 Disallow: /forums/*/edit
 Disallow: /forums/*/remove
-Disallow: /checkin/*/add
-Disallow: /checkin/*/edit
-Disallow: /checkin/*/remove
+Disallow: /freshcoats/*/add
+Disallow: /freshcoats/*/edit
+Disallow: /freshcoats/*/remove
+Disallow: /freshcoats/*/saved
 Disallow: /photo
 Disallow: /swatch
 Disallow: /addown

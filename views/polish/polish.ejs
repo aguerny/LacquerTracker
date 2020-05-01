@@ -34,7 +34,7 @@ $(window).load(function () {
                         <% } %>
                         <br><br><br>
                         <% if (pswatch.length > 0) {%>
-                            <img class="polishswatch" src="<%=pswatch%>"/><br><br>
+                            <img class="polishswatch" src="<%=pswatch%>" alt="Nail polish swatch / manicure of <%= pbrand %> - <%= pname %>"><br><br>
                         <%}%>
                         <br>
                         <% if (isAuthenticated) { %>
@@ -68,7 +68,7 @@ $(window).load(function () {
                                     <li><br><img src="/images/questionmark.png"><br></li>
                                 <% } else { %>
                                     <% for (i=0; i<allphotos.length; i++) { %>
-                                        <li><br><img src="<%= allphotos[i].location %>"><br>
+                                        <li><br><img src="<%= allphotos[i].location %>" alt="Nail polish swatch / manicure of <%= pbrand %> - <%= pname %>"><br>
                                         <% if (allphotos[i].creditlink.length > 0) { %>
                                             <br>Credit: <a href="<%=allphotos[i].creditlink%>" target="_blank"><%if (allphotos[i].creditname.length > 0) {%><%=allphotos[i].creditname%><%} else {%>link<%}%></a></li>
                                         <%} else if (allphotos[i].creditname.length > 0) { %>
@@ -109,7 +109,7 @@ $(window).load(function () {
                             <li><br><img src="/images/questionmark.png"><br></li>
                         <% } else { %>
                             <% for (i=0; i<allphotos.length; i++) { %>
-                                <li><br><img src="<%= allphotos[i].location %>"><br>
+                                <li><br><img src="<%= allphotos[i].location %>" alt="Nail polish swatch / manicure of <%= pbrand %> - <%= pname %>"><br>
                                 <% if (allphotos[i].creditlink.length > 0) { %>
                                     <br>Credit: <a href="<%=allphotos[i].creditlink%>" target="_blank"><%if (allphotos[i].creditname.length > 0) {%><%=allphotos[i].creditname%><%} else {%>link<%}%></a></li>
                                 <%} else if (allphotos[i].creditname.length > 0) { %>
@@ -123,7 +123,7 @@ $(window).load(function () {
                 </div>
                 <br><br>
                 <% if (pswatch.length > 0) {%>
-                    <img class="polishswatch" src="<%=pswatch%>"/><br><br>
+                    <img class="polishswatch" src="<%=pswatch%>" alt="Nail polish swatch / manicure of <%= pbrand %></a> - <%= pname %>"><br><br>
                 <%}%>
                 <br>
                 <% if (isAuthenticated) { %>
@@ -170,7 +170,7 @@ $(window).load(function () {
                         <div class="collage">
                             <% for (i=0; i<checkins.length; i++) { %>
                                 <% if (checkins[i].pendingdelete === false) {%>
-                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>"></a>
+                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Nail polish swatch / manicure of <%= pbrand %> - <%= pname %>"></a>
                                 <% } %>
                             <% } %>
                         </div>
@@ -182,7 +182,7 @@ $(window).load(function () {
                         <div>
                             <% for (i=0; i<checkins.length; i++) { %>
                                 <% if (checkins[i].pendingdelete === false) {%>
-                                    <a href="/freshcoats/<%=checkins[i].id%>"><img style="max-width:49%" src="<%= checkins[i].photo %>"></a>
+                                    <a href="/freshcoats/<%=checkins[i].id%>"><img style="max-width:49%" src="<%= checkins[i].photo %>" alt="Nail polish swatch / manicure of <%= pbrand %></a> - <%= pname %>"></a>
                                 <% } %>
                             <% } %>
                         </div>
