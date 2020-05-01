@@ -32,15 +32,13 @@
 </div>
 
 <script>
-$(function() {
-    $('td span').each(function() {
-        var fontSize = 100;
-        while (this.scrollWidth > $(this).width() && fontSize > 0) {
-            // adjust the font-size 5% at a time
-            fontSize -= 5;
-            $(this).css('font-size', fontSize + '%');
-        }
-    });
+$('td span').each(function() {
+    var fontSize = 100;
+    while (this.scrollWidth > $(this).width() && fontSize > 0) {
+        // adjust the font-size 5% at a time
+        fontSize -= 5;
+        $(this).css('font-size', fontSize + '%');
+    }
 });
 </script>
 

@@ -63,45 +63,39 @@
 </div>
 
 <script>
-$(document).ready(function() {
+$('span').each(function() {
+    var fontSize = 100;
+    while (this.scrollWidth > $(this).width() && fontSize > 0) {
+        // adjust the font-size 5% at a time
+        fontSize -= 5;
+        $(this).css('font-size', fontSize + '%');
+    }
+});
 
-    $(function() {
-        $('span').each(function() {
-            var fontSize = 100;
-            while (this.scrollWidth > $(this).width() && fontSize > 0) {
-                // adjust the font-size 5% at a time
-                fontSize -= 5;
-                $(this).css('font-size', fontSize + '%');
-            }
-        });
-    });
+$('.addown').on('tap', function(e){
+    $.ajax({
+        type: 'POST',
+        url: '/addownbrowse/' + $(this).attr('pid'),
+        dataType: 'json',
+        success: function() {
+            $(this).parent().parent().replaceWith('<div><center><span>&#10004;</span></center></div>');
+        }
+    })
+    $(this).parent().parent().replaceWith('<div><center><span>&#10004;</span></center></div>');
+    e.preventDefault();
+});
 
-    $('.addown').on('tap', function(e){
-        $.ajax({
-            type: 'POST',
-            url: '/addownbrowse/' + $(this).attr('pid'),
-            dataType: 'json',
-            success: function() {
-                $(this).parent().parent().replaceWith('<div><center><span>&#10004;</span></center></div>');
-            }
-        })
-        $(this).parent().parent().replaceWith('<div><center><span>&#10004;</span></center></div>');
-        e.preventDefault();
-    });
-
-    $('.addwant').on('tap', function(e){
-        $.ajax({
-            type: 'POST',
-            url: '/addwantbrowse/' + $(this).attr('pid'),
-            dataType: 'json',
-            success: function() {
-                $(this).parent().parent().replaceWith('<div><center><span>&#10084;</span></center></div>');
-            }
-        })
-        $(this).parent().parent().replaceWith('<div><center><span>&#10084;</span></center></div>');
-        e.preventDefault();
-    });
-
+$('.addwant').on('tap', function(e){
+    $.ajax({
+        type: 'POST',
+        url: '/addwantbrowse/' + $(this).attr('pid'),
+        dataType: 'json',
+        success: function() {
+            $(this).parent().parent().replaceWith('<div><center><span>&#10084;</span></center></div>');
+        }
+    })
+    $(this).parent().parent().replaceWith('<div><center><span>&#10084;</span></center></div>');
+    e.preventDefault();
 });
 </script>
 
