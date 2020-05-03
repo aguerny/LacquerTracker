@@ -14,6 +14,9 @@ var fs = require('node-fs');
 var path = require('path');
 var bcrypt = require("bcrypt-nodejs");
 var PolishColors = require('../app/constants/polishColors');
+var nodemailer = require('nodemailer');
+var request = require('request');
+
 
 
 module.exports = function(app, passport) {
@@ -254,6 +257,76 @@ app.get('/profile/:username/delete', isLoggedIn, function(req, res) {
     } else {
         res.redirect('/error');
     }
+});
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+//send a user a message
+app.get('/profile/:username/message', isLoggedIn, function(req, res) {
+    User.findOne({username:req.params.username}, function(err, user) {
+        if (err || !user || user.useremail==="off") {
+            res.redirect('/error');
+        } else if (user.useremail === "on") {
+            data = {};
+            data.title = 'Send Message - Lacquer Tracker';
+            data.username = user.username;
+            res.render('profile/message.ejs', data)
+        }
+    })
+});
+
+
+app.post('/profile/:username/message', isLoggedIn, function(req, res) {
+
+    if (req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
+        res.render('profile/message.ejs', {title: 'Send Message - Lacquer Tracker', message: 'Captcha wrong. Try again.', emailmessage:sanitizer.sanitize(req.body.emailmessage), username:sanitizer.sanitize(req.params.username)});
+    }
+    // Put your secret key here.
+    var secretKey = process.env.LTRECAPTCHASECRETKEY;
+    // req.connection.remoteAddress will provide IP address of connected user.
+    var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
+    // Hitting GET request to the URL, Google will respond with success or error scenario.
+    request(verificationUrl,function(error,response,body) {
+        body = JSON.parse(body);
+        // Success will be true or false depending upon captcha validation.
+        if(body.success !== undefined && !body.success) {
+            res.render('profile/message.ejs', {title: 'Send Message - Lacquer Tracker', message: 'Captcha wrong. Try again.', emailmessage:sanitizer.sanitize(req.body.emailmessage), username:sanitizer.sanitize(req.params.username)});
+        }
+        if (body.success === true) {
+            User.findOne({ 'username' : sanitizer.sanitize(req.params.username)}, function(err, user) {
+                if (user) {
+                    //send e-mail
+                    var transport = nodemailer.createTransport({
+                        sendmail: true,
+                        path: "/usr/sbin/sendmail"
+                    });
+
+                    var mailOptions = {
+                        from: "polishrobot@lacquertracker.com",
+                        to: user.email,
+                        subject: 'Message from ' + req.user.username,
+                        text: "Hi " + user.username + ",\n\n" + req.user.username + " has sent you the following message through Lacquer Tracker:\n\n" + sanitizer.sanitize(req.body.emailmessage) + "\n\n\n**Please do not reply to directly to this e-mail. The sender should have included a reply-to e-mail address or you can send a message back on their profile page.**",
+                    }
+
+                    transport.sendMail(mailOptions, function(error, response) {
+                        if (error) {
+                            res.render('profile/message.ejs', {title: 'Send Message - Lacquer Tracker', message:'Error sending message. Please try again later.', emailmessage:sanitizer.sanitize(req.body.emailmessage), username:sanitizer.sanitize(req.params.username)});
+                        } else {
+                            res.render('profile/message.ejs', {title: 'Send Message - Lacquer Tracker', message: 'Success! Message sent.', username:user.username});
+                        }
+
+                        transport.close();
+                    });
+                } else {
+                   res.render('profile/message.ejs', {title: 'Send Message - Lacquer Tracker', message:'User not found. Please try again later.', emailmessage:sanitizer.sanitize(req.body.emailmessage), username:sanitizer.sanitize(req.params.username)});
+                }
+            });
+        } else {
+            res.render('profile/message.ejs', {title: 'Send Message - Lacquer Tracker', message:'Error sending message. Please try again later.', emailmessage:sanitizer.sanitize(req.body.emailmessage), username:sanitizer.sanitize(req.params.username)});
+        }
+    });
 });
 
 

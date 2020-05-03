@@ -26,6 +26,7 @@ module.exports = function(app, passport) {
 app.get('/import', isLoggedIn, function(req, res) {
     data = {};
     data.title = 'Import Polish - Lacquer Tracker';
+    data.meta = 'Track your nail polish by uploading your spreadsheet of owned shades into Lacquer Tracker.';
     res.render('polish/importuser.ejs', data);
 });
 

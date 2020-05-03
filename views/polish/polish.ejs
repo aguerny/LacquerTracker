@@ -34,7 +34,7 @@ $(window).load(function () {
                         <% } %>
                         <br><br><br>
                         <% if (pswatch.length > 0) {%>
-                            <img class="polishswatch" src="<%=pswatch%>" alt="Nail polish swatch / manicure of <%= pbrand %> - <%= pname %>"><br><br>
+                            <img class="polishswatch" src="<%=pswatch%>" alt="Nail polish swatch of shade <%= pbrand %> - <%= pname %>"><br><br>
                         <%}%>
                         <br>
                         <% if (isAuthenticated) { %>
@@ -65,10 +65,10 @@ $(window).load(function () {
                             </div>
                             <div class="gallery">
                                 <% if (numphotos < 1) { %>
-                                    <li><br><img src="/images/questionmark.png"><br></li>
+                                    <li><br><img src="/images/questionmark.png" alt=""><br></li>
                                 <% } else { %>
                                     <% for (i=0; i<allphotos.length; i++) { %>
-                                        <li><br><img src="<%= allphotos[i].location %>" alt="Nail polish swatch / manicure of <%= pbrand %> - <%= pname %>"><br>
+                                        <li><br><img src="<%= allphotos[i].location %>" alt="Nail polish swatch / manicure of shade <%= pbrand %> - <%= pname %>"><br>
                                         <% if (allphotos[i].creditlink.length > 0) { %>
                                             <br>Credit: <a href="<%=allphotos[i].creditlink%>" target="_blank"><%if (allphotos[i].creditname.length > 0) {%><%=allphotos[i].creditname%><%} else {%>link<%}%></a></li>
                                         <%} else if (allphotos[i].creditname.length > 0) { %>
@@ -106,10 +106,10 @@ $(window).load(function () {
                     </div>
                     <div class="gallery">
                         <% if (numphotos < 1) { %>
-                            <li><br><img src="/images/questionmark.png"><br></li>
+                            <li><br><img src="/images/questionmark.png" alt=""><br></li>
                         <% } else { %>
                             <% for (i=0; i<allphotos.length; i++) { %>
-                                <li><br><img src="<%= allphotos[i].location %>" alt="Nail polish swatch / manicure of <%= pbrand %> - <%= pname %>"><br>
+                                <li><br><img src="<%= allphotos[i].location %>" alt="Nail polish swatch / manicure of shade <%= pbrand %> - <%= pname %>"><br>
                                 <% if (allphotos[i].creditlink.length > 0) { %>
                                     <br>Credit: <a href="<%=allphotos[i].creditlink%>" target="_blank"><%if (allphotos[i].creditname.length > 0) {%><%=allphotos[i].creditname%><%} else {%>link<%}%></a></li>
                                 <%} else if (allphotos[i].creditname.length > 0) { %>
@@ -123,7 +123,7 @@ $(window).load(function () {
                 </div>
                 <br><br>
                 <% if (pswatch.length > 0) {%>
-                    <img class="polishswatch" src="<%=pswatch%>" alt="Nail polish swatch / manicure of <%= pbrand %></a> - <%= pname %>"><br><br>
+                    <img class="polishswatch" src="<%=pswatch%>" alt="Nail polish swatch of shade <%= pbrand %></a> - <%= pname %>"><br><br>
                 <%}%>
                 <br>
                 <% if (isAuthenticated) { %>
@@ -143,7 +143,7 @@ $(window).load(function () {
                         <hr><br>
                         <h4 style="display:inline">Your Review:</h4> <i><a href="/review/edit/<%= pid %>">Edit</a></i><br><br>
                         <% if (review.length > 0 || rating.length > 0) { %>
-                            <%if (rating >= 1) {%><img class="staradjust" src="/images/stars/<%=rating%>star.png"/> - <%}%><%= review %>
+                            <%if (rating >= 1) {%><img class="staradjust" src="/images/stars/<%=rating%>star.png" alt="<%=rating%> star rating"> - <%}%><%= review %>
                         <% } %>
                         <br><br><br>
                         <h4 style="display:inline">Your Notes:</h4> <i><a href="/notes/edit/<%= pid %>">Edit</a><br><br>(Notes are only visible to you.)</i><br><br>
@@ -155,7 +155,7 @@ $(window).load(function () {
                     <h4 style="display:inline">User Reviews:</h4><br><br>
                     <% for (i=0; i<allreviews.length; i++) {%>
                         <% if (allreviews[i].review.length > 0) { %>
-                            <%if (allreviews[i].rating >= 1) {%><img class="staradjust" src="/images/stars/<%=allreviews[i].rating%>star.png"/> - <%}%><%= allreviews[i].review %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+                            <%if (allreviews[i].rating >= 1) {%><img class="staradjust" src="/images/stars/<%=allreviews[i].rating%>star.png" alt="<%=allreviews[i].rating%> star rating"> - <%}%><%= allreviews[i].review %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
                         <% } %>
                     <% } %>
                     <br><br>
@@ -170,7 +170,7 @@ $(window).load(function () {
                         <div class="collage">
                             <% for (i=0; i<checkins.length; i++) { %>
                                 <% if (checkins[i].pendingdelete === false) {%>
-                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Nail polish swatch / manicure of <%= pbrand %> - <%= pname %>"></a>
+                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Nail polish manicure of shade <%= pbrand %> - <%= pname %>"></a>
                                 <% } %>
                             <% } %>
                         </div>
@@ -182,7 +182,7 @@ $(window).load(function () {
                         <div>
                             <% for (i=0; i<checkins.length; i++) { %>
                                 <% if (checkins[i].pendingdelete === false) {%>
-                                    <a href="/freshcoats/<%=checkins[i].id%>"><img style="max-width:49%" src="<%= checkins[i].photo %>" alt="Nail polish swatch / manicure of <%= pbrand %></a> - <%= pname %>"></a>
+                                    <a href="/freshcoats/<%=checkins[i].id%>"><img style="max-width:49%" src="<%= checkins[i].photo %>" alt="Nail polish manicure of shade <%= pbrand %></a> - <%= pname %>"></a>
                                 <% } %>
                             <% } %>
                         </div>

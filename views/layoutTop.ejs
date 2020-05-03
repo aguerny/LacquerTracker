@@ -3,9 +3,13 @@
 <head>
     <title><%= title %></title>
     <meta charset="iso-8859-1">
-    <meta name="description" content="Track and organize your nail polish, discover new colors, show off your latest manicure, and connect with fellow lacqueristas with Lacquer Tracker.">
-    <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
     <meta name="viewport" content="width=device-width, target-densitydpi=high-dpi" />
+    <% if (locals.meta) { %>
+        <meta name="description" content='<%= meta %>'>
+    <% } else { %>
+        <meta name="description" content="Track and organize your nail polish, discover new colors, show off your latest manicure, and connect with fellow lacqueristas.">
+    <% } %>
+    <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
     <script type="text/javascript">
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

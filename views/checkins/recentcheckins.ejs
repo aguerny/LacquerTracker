@@ -12,7 +12,7 @@
             <br><br><hr><br>
                 <% for (i=0; i<checkins.length; i++) { %>
                     Posted on <%= checkins[i].date %> by <a href="/profile/<%= checkins[i].user.username %>"><%= checkins[i].user.username %></a><br><br>
-                    <img src="<%= checkins[i].photo %>" alt="Nail polish swatch / manicure of <% for (j=0; j<checkins[i].polish.length; j++) { %><%= checkins[i].polish[j].brand %> - <%= checkins[i].polish[j].name %><% if (j!==checkins[i].polish.length) { %>, <% } %><% } %>"><br><br><br>
+                    <img src="<%= checkins[i].photo %>" alt="Nail polish manicure of shade <% for (j=0; j<checkins[i].polish.length; j++) { %><%= checkins[i].polish[j].brand %> - <%= checkins[i].polish[j].name %><% if (j!==checkins[i].polish.length) { %>, <% } %><% } %>"><br><br><br>
                     <% if (checkins[i].description.length > 0) {%><%= checkins[i].description%><br><br><br><%}%>
                     <% if (checkins[i].polish.length === 0) { %>Polish Used: ?<%} else {%>
                     Polish Used:

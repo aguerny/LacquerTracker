@@ -24,6 +24,7 @@ app.get('/polish/:brand/:name', function(req, res) {
         } else {
             data = {};
             data.title = polish.name + ' - ' + polish.brand + ' - Lacquer Tracker'
+            data.meta = 'Information about the nail polish shade ' + polish.brand + " - " + polish.name + ', including dupes, reviews, photos, swatches, colors, types.';
             data.pname = polish.name;
             data.pbrand = polish.brand;
             data.pbatch = polish.batch;
@@ -102,7 +103,8 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                 res.redirect('/error');
             } else {
                 data = {};
-                data.title = polish.name + ' - ' + polish.brand + ' - Lacquer Tracker'
+                data.title = polish.name + ' - ' + polish.brand + ' - Lacquer Tracker';
+                data.meta = 'Information about the nail polish shade ' + polish.brand + " - " + polish.name + ', including dupes, reviews, photos, swatches, colors, types.';
                 data.pname = polish.name;
                 data.pbrand = polish.brand;
                 data.pbatch = polish.batch;

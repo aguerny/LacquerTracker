@@ -26,7 +26,7 @@ $(window).load(function () {
                 <% if (user.username === username) { %>
                     - <a href="/profile/<%= username %>/edit">Edit your profile</a> | <a href="/import">Import owned polish</a>
                 <% } else if (useremail === "on") {%>
-                    - <a href="/email/<%= username %>">Send a message</a>
+                    - <a href="/profile/<%= username %>/message">Send a message</a>
                 <% } %>
             <% } %>
             <br><br><p style="white-space: pre; padding-left: 3em"><%- about %></p><br><br><br>
@@ -38,7 +38,7 @@ $(window).load(function () {
                     <br><br><a href="/profile/<%= username %>/edit">Edit your profile</a>
                     <br><br><a href="/import">Import owned polish</a>
                 <% } else if (useremail === "on") {%>
-                    <br><br><a href="/email/<%= username %>">Send a message</a>
+                    <br><br><a href="/profile/<%= username %>/message">Send a message</a>
                 <% } %>
             <% } %>
             <br><br><br><p style="white-space: pre; padding-left: 3em"><%- about %></p>
@@ -53,9 +53,9 @@ $(window).load(function () {
                     <td><a id='tablelink' href='/brand/<%= opolishes[i].brand.replace(/ /g,"_") %>'><span><%= opolishes[i].brand %></span></a></td>
                     <td><span><%= opolishes[i].batch %></span></td>
                     <td class="tableswatch"><% if (opolishes[i].swatch.length > 0) {%>
-                            <img src="<%=opolishes[i].swatch%>" alt="Nail polish swatch / manicure of <%= opolishes[i].brand %> - <%= opolishes[i].name %>">
+                            <img src="<%=opolishes[i].swatch%>" alt="Nail polish swatch in shade <%= opolishes[i].brand %> - <%= opolishes[i].name %>">
                         <%} else {%>
-                            <img src="/images/swatches/noswatch.jpg">
+                            <img src="/images/swatches/noswatch.jpg" alt="">
                         <%}%>
                     </td>
                     <td>
@@ -64,7 +64,7 @@ $(window).load(function () {
                     <td>
                         <% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
                             <div id="biglayout">
-                                <span style="display:none;"><%=oreviews[i].rating%></span><img class="starrating" src="/images/stars/<%=oreviews[i].rating%>star.png"/>
+                                <span style="display:none;"><%=oreviews[i].rating%></span><img class="starrating" src="/images/stars/<%=oreviews[i].rating%>star.png"alt="">
                             </div>
                             <div id="smalllayout">
                                 <span><%=oreviews[i].rating%></span>
@@ -84,9 +84,9 @@ $(window).load(function () {
                         <td><a id='tablelink' href='/brand/<%= wpolishes[i].brand.replace(/ /g,"_") %>'><span><%= wpolishes[i].brand %></span></a></td>
                         <td><span><%= wpolishes[i].batch %></span></td>
                         <td class="tableswatch"><% if (wpolishes[i].swatch.length > 0) {%>
-                                <img src="<%=wpolishes[i].swatch%>" alt="Nail polish swatch / manicure of <%= wpolishes[i].brand %> - <%= wpolishes[i].name %>">
+                                <img src="<%=wpolishes[i].swatch%>" alt="Nail polish swatch in shade <%= wpolishes[i].brand %> - <%= wpolishes[i].name %>">
                             <%} else {%>
-                                <img src="/images/swatches/noswatch.jpg">
+                                <img src="/images/swatches/noswatch.jpg" alt="">
                             <%}%>
                         </td>
                         <td>
@@ -102,7 +102,7 @@ $(window).load(function () {
                 <div class="collage">
                     <% for (i=0; i<checkins.length; i++) { %>
                         <% if (checkins[i].pendingdelete === false) { %>
-                            <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>"></a>
+                            <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Manicure by user <%= username %>"></a>
                         <% } %>
                     <% } %>
                 </div>
@@ -114,7 +114,7 @@ $(window).load(function () {
                 <div>
                     <% for (i=0; i<checkins.length; i++) { %>
                         <% if (checkins[i].pendingdelete === false) { %>
-                            <a href="/freshcoats/<%=checkins[i].id%>"><img style="max-width:49%; padding-bottom:2px;" src="<%= checkins[i].photo %>"></a>
+                            <a href="/freshcoats/<%=checkins[i].id%>"><img style="max-width:49%; padding-bottom:2px;" src="<%= checkins[i].photo %>" alt="Manicure by user <%= username %>"></a>
                         <% } %>
                     <% } %>
                 </div>
