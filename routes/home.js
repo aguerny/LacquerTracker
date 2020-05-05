@@ -9,25 +9,35 @@ app.get('/', function(req, res) {
     if (req.isAuthenticated()) {
         data = {};
         data.title = 'Lacquer Tracker';
-        User.findById(req.user.id).populate('ownedpolish', 'brand colorsname').populate('wantedpolish', 'brand').exec(function(err, user) {
+        User.findById(req.user.id).populate('ownedpolish', 'brand colorsname type').populate('wantedpolish', 'brand').exec(function(err, user) {
+            var ownedpolish = [];
+            var ownedaccessories = [];
+            for (i=0; i<user.ownedpolish.length; i++) {
+                if (user.ownedpolish[i].type.indexOf("plate") > -1) {
+                    ownedaccessories.push(user.ownedpolish[i]);
+                } else {
+                    ownedpolish.push(user.ownedpolish[i]);
+                }
+            }
             var ownedCounts = {};
             var ownedCompare = 0;
             var ownedMostFrequent = "?";
-            for (i=0; i<user.ownedpolish.length; i++) {
-                if (ownedCounts[user.ownedpolish[i].brand] === undefined) {
-                    ownedCounts[user.ownedpolish[i].brand] = 1;
+            for (i=0; i<ownedpolish.length; i++) {
+                if (ownedCounts[ownedpolish[i].brand] === undefined) {
+                    ownedCounts[ownedpolish[i].brand] = 1;
                 } else {
-                    ownedCounts[user.ownedpolish[i].brand] = ownedCounts[user.ownedpolish[i].brand] + 1;
+                    ownedCounts[ownedpolish[i].brand] = ownedCounts[ownedpolish[i].brand] + 1;
                 }
-                if (ownedCounts[user.ownedpolish[i].brand] > ownedCompare) {
-                    ownedCompare = ownedCounts[user.ownedpolish[i].brand];
-                    ownedMostFrequent = user.ownedpolish[i].brand;
-                } else if (ownedCounts[user.ownedpolish[i].brand] == ownedCompare) {
-                    ownedCompare = ownedCounts[user.ownedpolish[i].brand];
-                    ownedMostFrequent = ownedMostFrequent + ", " + user.ownedpolish[i].brand;
+                if (ownedCounts[ownedpolish[i].brand] > ownedCompare) {
+                    ownedCompare = ownedCounts[ownedpolish[i].brand];
+                    ownedMostFrequent = ownedpolish[i].brand;
+                } else if (ownedCounts[ownedpolish[i].brand] == ownedCompare) {
+                    ownedCompare = ownedCounts[ownedpolish[i].brand];
+                    ownedMostFrequent = ownedMostFrequent + ", " + ownedpolish[i].brand;
                 }
             }
             data.ownedMostFrequent = ownedMostFrequent.split(",");
+            data.ownedaccessories = ownedaccessories;
             var wantedCounts = {};
             var wantedCompare = 0;
             var wantedMostFrequent = "?";

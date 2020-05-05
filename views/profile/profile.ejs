@@ -45,7 +45,7 @@ $(window).load(function () {
         </div>
         <div>
             <% if (opolishes.length > 0) { %>
-                <br><br><h4><%= username %>'s Owned Polishes (<%= opolishes.length %>):</h4><br>
+                <br><br><h4><%= username %>'s Owned Polish (<%= opolishes.length %>):</h4><br>
                 <table id="ownedpolish" class="ownedtable">
                     <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><th class="rating"><span><%= username %>'s Rating</span></th></tr>
                 <% for(var i=0; i<opolishes.length; i++) {%>
@@ -75,8 +75,39 @@ $(window).load(function () {
                 </table>
             <% } %>
 
+            <% if (oaccessories.length > 0) { %>
+                <br><br><h4><%= username %>'s Owned Accessories (<%= oaccessories.length %>):</h4><br>
+                <table id="ownedpolish" class="ownedtable">
+                    <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><th class="rating"><span><%= username %>'s Rating</span></th></tr>
+                <% for(var i=0; i<oaccessories.length; i++) {%>
+                    <tr><td><a id='tablelink' href='/polish/<%= oaccessories[i].brand.replace(/ /g,"_") %>/<%= oaccessories[i].name.replace(/ /g,"_") %>'><span><%= oaccessories[i].name %></span></a></td>
+                    <td><a id='tablelink' href='/brand/<%= oaccessories[i].brand.replace(/ /g,"_") %>'><span><%= oaccessories[i].brand %></span></a></td>
+                    <td><span><%= oaccessories[i].batch %></span></td>
+                    <td class="tableswatch"><% if (oaccessories[i].swatch.length > 0) {%>
+                            <img src="<%=oaccessories[i].swatch%>" alt="Nail polish swatch in shade <%= oaccessories[i].brand %> - <%= oaccessories[i].name %>">
+                        <%} else {%>
+                            <img src="/images/swatches/noswatch.jpg" alt="">
+                        <%}%>
+                    </td>
+                    <td>
+                        <span><%= oaccessories[i].type.toString().replace(/,/g,", ") %></span>
+                    </td>
+                    <td>
+                        <% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
+                            <div id="biglayout">
+                                <span style="display:none;"><%=oreviews[i].rating%></span><img class="starrating" src="/images/stars/<%=oreviews[i].rating%>star.png"alt="">
+                            </div>
+                            <div id="smalllayout">
+                                <span><%=oreviews[i].rating%></span>
+                            </div>
+                        <% } %>
+                    </td></tr>
+                <% } %>
+                </table>
+            <% } %>
+
             <% if (wpolishes.length > 0) { %>
-                <br><br><h4><%= username %>'s Wanted Polishes (<%= wpolishes.length %>):</h4><br>
+                <br><br><h4><%= username %>'s Wishlist (<%= wpolishes.length %>):</h4><br>
                     <table id="wantedpolish" class="wantedtable">
                         <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th></tr>
                     <% for(var i=0; i<wpolishes.length; i++) {%>
@@ -98,7 +129,7 @@ $(window).load(function () {
         </div>
         <div id="biglayout">
             <% if (checkins.length > 0) { %>
-                <br><br><h4><%= username %>'s Fresh Coats:</h4><br>
+                <br><br><h4><%= username %>'s Fresh Coats (<%= checkins.length %>):</h4><br>
                 <div class="collage">
                     <% for (i=0; i<checkins.length; i++) { %>
                         <% if (checkins[i].pendingdelete === false) { %>
@@ -110,7 +141,7 @@ $(window).load(function () {
         </div>
         <div id="smalllayout">
             <% if (checkins.length > 0) { %>
-                <br><br><h4><%= username %>'s Fresh Coats:</h4><br>
+                <br><br><h4><%= username %>'s Fresh Coats (<%= checkins.length %>):</h4><br>
                 <div>
                     <% for (i=0; i<checkins.length; i++) { %>
                         <% if (checkins[i].pendingdelete === false) { %>

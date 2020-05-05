@@ -68,7 +68,7 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                             fs.unlink(req.files.photo.tempFilePath, function() {
                                 newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
                                 newPhoto.save(function(err) {
-                                    if (p.swatch.length > 0) {
+                                    if ((p.swatch.length > 0) || (p.type.indexOf("plate") > -1) || (p.type.indexOf("base") > -1) || (p.type.indexOf("latex") > -1) || (p.type.indexOf("glue") > -1)) {
                                         res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
                                     } else {
                                         res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
@@ -123,7 +123,7 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                                 } else {
                                     newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
                                     newPhoto.save(function(err) {
-                                        if (p.swatch.length > 0) {
+                                        if ((p.swatch.length > 0) || (p.type.indexOf("plate") > -1) || (p.type.indexOf("base") > -1) || (p.type.indexOf("latex") > -1) || (p.type.indexOf("glue") > -1)) {
                                             res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
                                         } else {
                                             res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
@@ -191,10 +191,15 @@ app.post('/photo/remove/:pid/:id', isLoggedIn, function(req, res) {
 app.get('/photo/edit/:pid', isLoggedIn, function(req, res) {
     data = {};
     data.title = 'Edit Polish Photos - Lacquer Tracker';
-    Polish.findById(req.params.pid).populate({path:'photos', match:{pendingdelete:false}}).exec(function(err, polish) {
+    Polish.findById(req.params.pid).populate({path:'photos', match:{pendingdelete:false}}).populate('polish', 'type').exec(function(err, polish) {
         data.allphotos = polish.photos;
         data.urlbrand = polish.brand.replace(/ /g,"_");
         data.urlname = polish.name.replace(/ /g,"_");
+        if (polish.type.indexOf("plate") > -1) {
+            data.accessory = true;
+        } else {
+            data.accessory = false;
+        }
         res.render('photos/polishedit.ejs', data);
     })
 });
@@ -346,8 +351,6 @@ app.get('/photo/profile', isLoggedIn, function(req, res) {
     res.render('photos/profile.ejs', data);
 });
 
-
-//from file
 app.post('/photo/profile', isLoggedIn, function(req, res) {
     if (req.files.photo.name.length > 0) {
         if (req.files.photo.mimetype.startsWith("image")) {

@@ -41,9 +41,17 @@ app.get('/profile/:username', function(req, res) {
             data.title = user.username + "'s Profile - Lacquer Tracker";
             var osort = user.ownedpolish.sort(function (a, b) {return a.name.toLowerCase().localeCompare(b.name.toLowerCase());});
             var osort2 = _.sortBy(osort, function(b) {return b.brand.toLowerCase();});
+            data.opolishes = [];
+            data.oaccessories = [];
+            for (i=0; i<osort2.length; i++) {
+                if (osort2[i].type.indexOf("plate") > -1) {
+                    data.oaccessories.push(osort2[i]);
+                } else {
+                    data.opolishes.push(osort2[i]);
+                }
+            }
             var wsort = user.wantedpolish.sort(function (a, b) {return a.name.toLowerCase().localeCompare(b.name.toLowerCase());});
             var wsort2 = _.sortBy(wsort, function(b) {return b.brand.toLowerCase();});
-            data.opolishes = osort2;
             data.wpolishes = wsort2;
             data.username = user.username;
             data.about = markdown(user.about);

@@ -47,8 +47,8 @@
                         </span>
                         <br><br>
                         <% if (isAuthenticated) { %>
-                            <input type="checkbox" name="owned" <% if (browseowned === "on") { %> checked <% } %>>Owned polishes<br><br><br>
-                            <input type="checkbox" name="wanted" <% if (browsewanted === "on") { %> checked <% } %>>Wanted polishes<br><br><br>
+                            <input type="checkbox" name="owned" <% if (browseowned === "on") { %> checked <% } %>>Owned items<br><br><br>
+                            <input type="checkbox" name="wanted" <% if (browsewanted === "on") { %> checked <% } %>>Wanted items<br><br><br>
                         <% } %>
                         <input type="submit" class="button" name="browse" value="Browse">
                         <input style="visibility:hidden;" name="page" value="<%=page%>">
@@ -61,7 +61,7 @@
                 </div>
             </div>
             <div id="browse-right_col">
-                <% if (recent === true) { %><h4>Recently updated polishes:</h3><br><%}%>
+                <% if (recent === true) { %><h4>Recently updated:</h3><br><%}%>
                 <table id="polishbrowse" class="browsetable" style="width:100%">
                     <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><% if (isAuthenticated) {%><th class="info"><span>Info</span></th><%}%></tr>
                     <% for(var i=0; i<polishes.length; i++) {%>
