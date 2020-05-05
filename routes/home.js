@@ -37,6 +37,7 @@ app.get('/', function(req, res) {
                 }
             }
             data.ownedMostFrequent = ownedMostFrequent.split(",");
+            data.ownedpolish = ownedpolish;
             data.ownedaccessories = ownedaccessories;
             var wantedCounts = {};
             var wantedCompare = 0;

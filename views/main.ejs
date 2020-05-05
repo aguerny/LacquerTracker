@@ -25,7 +25,7 @@
                 <br><br>
                 <span style="font-size:15px">Your Polish Stats:<br><br></span>
                 <ul style="padding-left:25px">
-                    <li>Polish Owned: <%= user.ownedpolish.length %></li><br>
+                    <li>Polish Owned: <%= ownedpolish.length %></li><br>
                         <ul>
                             <% if (ownedMostFrequent.length == 1) { %>
                                 <li>Most Owned Brand: <%= ownedMostFrequent %></li><br>
@@ -39,7 +39,7 @@
                             <% } %>
                         </ul><br>
                     <li>Stamping Plates Owned: <%= ownedaccessories.length %></li><br><br>
-                    <li>Polish Wanted: <%= user.wantedpolish.length %></li><br>
+                    <li>Items on Wishlist: <%= user.wantedpolish.length %></li><br>
                         <ul>
                             <% if (wantedMostFrequent.length == 1) { %>
                                 <li>Most Wanted Brand: <%= wantedMostFrequent %></li><br>

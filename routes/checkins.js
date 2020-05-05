@@ -97,7 +97,7 @@ app.get('/freshcoats/add', isLoggedIn, function(req, res) {
 
 
 app.post('/allpolish', isLoggedIn, function(req, res) {
-    Polish.find({name:new RegExp(sanitizer.sanitize(req.body.term.term), 'i')}).select('id brand name').exec(function (err, polishes) {
+    Polish.find({keywords:new RegExp(sanitizer.sanitize(req.body.term.term), 'i')}).select('id brand name').exec(function (err, polishes) {
         res.send(polishes);
     })
 });

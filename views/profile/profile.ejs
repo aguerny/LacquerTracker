@@ -45,69 +45,83 @@ $(window).load(function () {
         </div>
         <div>
             <% if (opolishes.length > 0) { %>
-                <br><br><h4><%= username %>'s Owned Polish (<%= opolishes.length %>):</h4><br>
-                <table id="ownedpolish" class="ownedtable">
-                    <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><th class="rating"><span><%= username %>'s Rating</span></th></tr>
-                <% for(var i=0; i<opolishes.length; i++) {%>
-                    <tr><td><a id='tablelink' href='/polish/<%= opolishes[i].brand.replace(/ /g,"_") %>/<%= opolishes[i].name.replace(/ /g,"_") %>'><span><%= opolishes[i].name %></span></a></td>
-                    <td><a id='tablelink' href='/brand/<%= opolishes[i].brand.replace(/ /g,"_") %>'><span><%= opolishes[i].brand %></span></a></td>
-                    <td><span><%= opolishes[i].batch %></span></td>
-                    <td class="tableswatch"><% if (opolishes[i].swatch.length > 0) {%>
-                            <img src="<%=opolishes[i].swatch%>" alt="Nail polish swatch in shade <%= opolishes[i].brand %> - <%= opolishes[i].name %>">
-                        <%} else {%>
-                            <img src="/images/swatches/noswatch.jpg" alt="">
-                        <%}%>
-                    </td>
-                    <td>
-                        <span><%= opolishes[i].type.toString().replace(/,/g,", ") %></span>
-                    </td>
-                    <td>
-                        <% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
-                            <div id="biglayout">
-                                <span style="display:none;"><%=oreviews[i].rating%></span><img class="starrating" src="/images/stars/<%=oreviews[i].rating%>star.png"alt="">
-                            </div>
-                            <div id="smalllayout">
-                                <span><%=oreviews[i].rating%></span>
-                            </div>
-                        <% } %>
-                    </td></tr>
-                <% } %>
-                </table>
+                <br><br><h4 style="display:inline"><%= username %>'s Owned Polish (<%= opolishes.length %>):</h4>
+                <span class="owned-open" style="display:none">&#9654;<br><br></span>
+                <span class="owned-close">&#9660;</span>
+                <div id="owned">
+                    <br>
+                    <table id="ownedpolish" class="ownedtable">
+                        <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><th class="rating"><span><%= username %>'s Rating</span></th></tr>
+                    <% for(var i=0; i<opolishes.length; i++) {%>
+                        <tr><td><a id='tablelink' href='/polish/<%= opolishes[i].brand.replace(/ /g,"_") %>/<%= opolishes[i].name.replace(/ /g,"_") %>'><span><%= opolishes[i].name %></span></a></td>
+                        <td><a id='tablelink' href='/brand/<%= opolishes[i].brand.replace(/ /g,"_") %>'><span><%= opolishes[i].brand %></span></a></td>
+                        <td><span><%= opolishes[i].batch %></span></td>
+                        <td class="tableswatch"><% if (opolishes[i].swatch.length > 0) {%>
+                                <img src="<%=opolishes[i].swatch%>" alt="Nail polish swatch in shade <%= opolishes[i].brand %> - <%= opolishes[i].name %>">
+                            <%} else {%>
+                                <img src="/images/swatches/noswatch.jpg" alt="">
+                            <%}%>
+                        </td>
+                        <td>
+                            <span><%= opolishes[i].type.toString().replace(/,/g,", ") %></span>
+                        </td>
+                        <td>
+                            <% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
+                                <div id="biglayout">
+                                    <span style="display:none;"><%=oreviews[i].rating%></span><img class="starrating" src="/images/stars/<%=oreviews[i].rating%>star.png"alt="">
+                                </div>
+                                <div id="smalllayout">
+                                    <span><%=oreviews[i].rating%></span>
+                                </div>
+                            <% } %>
+                        </td></tr>
+                    <% } %>
+                    </table>
+                </div>
             <% } %>
 
             <% if (oaccessories.length > 0) { %>
-                <br><br><h4><%= username %>'s Owned Accessories (<%= oaccessories.length %>):</h4><br>
-                <table id="ownedpolish" class="ownedtable">
-                    <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><th class="rating"><span><%= username %>'s Rating</span></th></tr>
-                <% for(var i=0; i<oaccessories.length; i++) {%>
-                    <tr><td><a id='tablelink' href='/polish/<%= oaccessories[i].brand.replace(/ /g,"_") %>/<%= oaccessories[i].name.replace(/ /g,"_") %>'><span><%= oaccessories[i].name %></span></a></td>
-                    <td><a id='tablelink' href='/brand/<%= oaccessories[i].brand.replace(/ /g,"_") %>'><span><%= oaccessories[i].brand %></span></a></td>
-                    <td><span><%= oaccessories[i].batch %></span></td>
-                    <td class="tableswatch"><% if (oaccessories[i].swatch.length > 0) {%>
-                            <img src="<%=oaccessories[i].swatch%>" alt="Nail polish swatch in shade <%= oaccessories[i].brand %> - <%= oaccessories[i].name %>">
-                        <%} else {%>
-                            <img src="/images/swatches/noswatch.jpg" alt="">
-                        <%}%>
-                    </td>
-                    <td>
-                        <span><%= oaccessories[i].type.toString().replace(/,/g,", ") %></span>
-                    </td>
-                    <td>
-                        <% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
-                            <div id="biglayout">
-                                <span style="display:none;"><%=oreviews[i].rating%></span><img class="starrating" src="/images/stars/<%=oreviews[i].rating%>star.png"alt="">
-                            </div>
-                            <div id="smalllayout">
-                                <span><%=oreviews[i].rating%></span>
-                            </div>
-                        <% } %>
-                    </td></tr>
-                <% } %>
-                </table>
+                <br><br><h4 style="display:inline"><%= username %>'s Owned Accessories (<%= oaccessories.length %>):</h4>
+                <span class="accessories-open" style="display:none">&#9654;<br><br></span>
+                <span class="accessories-close">&#9660;</span>
+                <div id="accessories">
+                    <br>
+                    <table id="ownedpolish" class="ownedtable">
+                        <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><th class="rating"><span><%= username %>'s Rating</span></th></tr>
+                    <% for(var i=0; i<oaccessories.length; i++) {%>
+                        <tr><td><a id='tablelink' href='/polish/<%= oaccessories[i].brand.replace(/ /g,"_") %>/<%= oaccessories[i].name.replace(/ /g,"_") %>'><span><%= oaccessories[i].name %></span></a></td>
+                        <td><a id='tablelink' href='/brand/<%= oaccessories[i].brand.replace(/ /g,"_") %>'><span><%= oaccessories[i].brand %></span></a></td>
+                        <td><span><%= oaccessories[i].batch %></span></td>
+                        <td class="tableswatch"><% if (oaccessories[i].swatch.length > 0) {%>
+                                <img src="<%=oaccessories[i].swatch%>" alt="Nail polish swatch in shade <%= oaccessories[i].brand %> - <%= oaccessories[i].name %>">
+                            <%} else {%>
+                                &nbsp;
+                            <%}%>
+                        </td>
+                        <td>
+                            <span><%= oaccessories[i].type.toString().replace(/,/g,", ") %></span>
+                        </td>
+                        <td>
+                            <% if (typeof areviews[i] !== "undefined" && areviews[i].rating > 0) { %>
+                                <div id="biglayout">
+                                    <span style="display:none;"><%=areviews[i].rating%></span><img class="starrating" src="/images/stars/<%=areviews[i].rating%>star.png"alt="">
+                                </div>
+                                <div id="smalllayout">
+                                    <span><%=areviews[i].rating%></span>
+                                </div>
+                            <% } %>
+                        </td></tr>
+                    <% } %>
+                    </table>
+                </div>
             <% } %>
 
             <% if (wpolishes.length > 0) { %>
-                <br><br><h4><%= username %>'s Wishlist (<%= wpolishes.length %>):</h4><br>
+                <br><br><h4 style="display:inline"><%= username %>'s Wishlist (<%= wpolishes.length %>):</h4>
+                <span class="wanted-open" style="display:none">&#9654;<br><br></span>
+                <span class="wanted-close">&#9660;</span>
+                <div id="wanted">
+                    <br>
                     <table id="wantedpolish" class="wantedtable">
                         <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th></tr>
                     <% for(var i=0; i<wpolishes.length; i++) {%>
@@ -125,6 +139,7 @@ $(window).load(function () {
                         </td>
                     <% } %>
                     </table>
+                </div>
             <% } %>
         </div>
         <div id="biglayout">
@@ -163,6 +178,42 @@ $('span').each(function() {
         fontSize -= 5;
         $(this).css('font-size', fontSize + '%');
     }
+});
+
+$('.accessories-open').click(function() {
+    $('#accessories').slideDown();
+    $('.accessories-close').show();
+    $('.accessories-open').hide();
+
+});
+$('.accessories-close').click(function() {
+    $('#accessories').slideUp();
+    $('.accessories-open').show();
+    $('.accessories-close').hide();
+});
+
+$('.owned-open').click(function() {
+    $('#owned').slideDown();
+    $('.owned-close').show();
+    $('.owned-open').hide();
+
+});
+$('.owned-close').click(function() {
+    $('#owned').slideUp();
+    $('.owned-open').show();
+    $('.owned-close').hide();
+});
+
+$('.wanted-open').click(function() {
+    $('#wanted').slideDown();
+    $('.wanted-close').show();
+    $('.wanted-open').hide();
+
+});
+$('.wanted-close').click(function() {
+    $('#wanted').slideUp();
+    $('.wanted-open').show();
+    $('.wanted-close').hide();
 });
 </script>
 

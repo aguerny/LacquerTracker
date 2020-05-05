@@ -61,12 +61,16 @@ app.get('/profile/:username', function(req, res) {
             data.colors = PolishColors;
             data.checkins = user.checkins;
             var oreviews = [];
-            Review.find({user:user.id}).populate('polish').exec(function(err, reviews) {
+            var areviews = [];
+            Review.find({user:user.id}).populate('polish').exec(function(err, reviews) { //need to fix
                 for (i=0; i<reviews.length; i++) {
-                    var thisindex = _.findIndex(osort2, {'id':reviews[i].polish.id});
-                    oreviews[thisindex] = reviews[i];
+                    var polishindex = _.findIndex(data.opolishes, {'id':reviews[i].polish.id});
+                    oreviews[polishindex] = reviews[i];
+                    var accessoryindex = _.findIndex(data.oaccessories, {'id':reviews[i].polish.id});
+                    areviews[accessoryindex] = reviews[i];
                 }
                 data.oreviews = oreviews;
+                data.areviews = areviews;
                 res.render('profile/profile.ejs', data);
             })
         }

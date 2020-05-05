@@ -69,7 +69,7 @@ app.post('/swatch/crop/:id', isLoggedIn, function(req, res) {
         fs.unlink(path.resolve('./public/'+polish.swatch), function() {
             gm(path.resolve('./public/' + sanitizer.sanitize(req.body.location)))
             .crop(sanitizer.sanitize(req.body.w), sanitizer.sanitize(req.body.h), sanitizer.sanitize(req.body.x), sanitizer.sanitize(req.body.y))
-            .resize(200)
+            .resize(100)
             .write(path.resolve('./public/images/swatches/' + req.params.id + sanitizer.sanitize(req.body.ext)), function (err) {
                 if (err) {
                     fs.unlink(path.resolve('./public/' + sanitizer.sanitize(req.body.location)), function(err) {
@@ -135,7 +135,7 @@ app.post('/swatch/edit/:pid/:id', isLoggedIn, function(req, res) {
         fs.unlink(path.resolve('./public/'+polish.swatch), function() {
             gm(path.resolve('./public/' + sanitizer.sanitize(req.body.location)))
             .crop(sanitizer.sanitize(req.body.w), sanitizer.sanitize(req.body.h), sanitizer.sanitize(req.body.x), sanitizer.sanitize(req.body.y))
-            .resize(200)
+            .resize(100)
             .write(path.resolve('./public/images/swatches/' + req.params.pid + sanitizer.sanitize(req.body.ext)), function (err) {
                 if (err) {
                     res.redirect('/error');

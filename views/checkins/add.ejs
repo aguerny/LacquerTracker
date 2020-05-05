@@ -28,10 +28,11 @@
 <script>
 $("#select-polish").select2({
     placeholder: 'Search by polish name',
-    minimumInputLength: 2,
+    minimumInputLength: 1,
     ajax: {
         url: '/allpolish',
         type: 'POST',
+        delay: 250,
         data: function(term) {
             return {
                 term:term
