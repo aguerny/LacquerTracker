@@ -14,7 +14,7 @@
                 Edit short description:<br>
                 <input type="type" name="description" maxlength="200" value="<%=checkindescription %>" class="width50">
                 <br><br><br>
-                Edit your polishes used:<br>
+                Edit your polish/items used:<br>
                 <select multiple name="polish" id="select-polish" style="width:300px">
                     <% for (i=0; i<checkinpolish.length; i++) { %>
                         <option value="<%=checkinpolish[i].id%>" selected><%= checkinpolish[i].brand %> - <%= checkinpolish[i].name %></option>

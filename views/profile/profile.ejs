@@ -45,9 +45,9 @@ $(window).load(function () {
         </div>
         <div>
             <% if (opolishes.length > 0) { %>
-                <br><br><h4 style="display:inline"><%= username %>'s Owned Polish (<%= opolishes.length %>):</h4>
-                <span class="owned-open" style="display:none">&#9654;<br><br></span>
-                <span class="owned-close">&#9660;</span>
+                <br><br>
+                <span class="owned-open" style="display:none">&#9654; <h4 style="display:inline"><%= username %>'s Owned Polish (<%= opolishes.length %>):</h4><br><br></span>
+                <span class="owned-close">&#9660; <h4 style="display:inline"><%= username %>'s Owned Polish (<%= opolishes.length %>):</h4></span>
                 <div id="owned">
                     <br>
                     <table id="ownedpolish" class="ownedtable">
@@ -81,23 +81,17 @@ $(window).load(function () {
             <% } %>
 
             <% if (oaccessories.length > 0) { %>
-                <br><br><h4 style="display:inline"><%= username %>'s Owned Accessories (<%= oaccessories.length %>):</h4>
-                <span class="accessories-open" style="display:none">&#9654;<br><br></span>
-                <span class="accessories-close">&#9660;</span>
+                <br><br>
+                <span class="accessories-open" style="display:none">&#9654; <h4 style="display:inline"><%= username %>'s Tools/Accessories (<%= oaccessories.length %>):</h4><br><br></span>
+                <span class="accessories-close">&#9660; <h4 style="display:inline"><%= username %>'s Tools/Accessories (<%= oaccessories.length %>):</h4></span>
                 <div id="accessories">
                     <br>
                     <table id="ownedpolish" class="ownedtable">
-                        <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><th class="rating"><span><%= username %>'s Rating</span></th></tr>
+                        <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="type"><span>Type</span></th><th class="rating"><span><%= username %>'s Rating</span></th></tr>
                     <% for(var i=0; i<oaccessories.length; i++) {%>
                         <tr><td><a id='tablelink' href='/polish/<%= oaccessories[i].brand.replace(/ /g,"_") %>/<%= oaccessories[i].name.replace(/ /g,"_") %>'><span><%= oaccessories[i].name %></span></a></td>
                         <td><a id='tablelink' href='/brand/<%= oaccessories[i].brand.replace(/ /g,"_") %>'><span><%= oaccessories[i].brand %></span></a></td>
                         <td><span><%= oaccessories[i].batch %></span></td>
-                        <td class="tableswatch"><% if (oaccessories[i].swatch.length > 0) {%>
-                                <img src="<%=oaccessories[i].swatch%>" alt="Nail polish swatch in shade <%= oaccessories[i].brand %> - <%= oaccessories[i].name %>">
-                            <%} else {%>
-                                &nbsp;
-                            <%}%>
-                        </td>
                         <td>
                             <span><%= oaccessories[i].type.toString().replace(/,/g,", ") %></span>
                         </td>
@@ -117,9 +111,9 @@ $(window).load(function () {
             <% } %>
 
             <% if (wpolishes.length > 0) { %>
-                <br><br><h4 style="display:inline"><%= username %>'s Wishlist (<%= wpolishes.length %>):</h4>
-                <span class="wanted-open" style="display:none">&#9654;<br><br></span>
-                <span class="wanted-close">&#9660;</span>
+                <br><br>
+                <span class="wanted-open" style="display:none">&#9654; <h4 style="display:inline"><%= username %>'s Wishlist (<%= wpolishes.length %>):</h4><br><br></span>
+                <span class="wanted-close">&#9660; <h4 style="display:inline"><%= username %>'s Wishlist (<%= wpolishes.length %>):</h4></span>
                 <div id="wanted">
                     <br>
                     <table id="wantedpolish" class="wantedtable">

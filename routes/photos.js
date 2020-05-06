@@ -68,7 +68,7 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                             fs.unlink(req.files.photo.tempFilePath, function() {
                                 newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
                                 newPhoto.save(function(err) {
-                                    if ((p.swatch.length > 0) || (p.type.indexOf("plate") > -1) || (p.type.indexOf("base") > -1) || (p.type.indexOf("latex") > -1) || (p.type.indexOf("glue") > -1)) {
+                                    if (p.tool == true) {
                                         res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
                                     } else {
                                         res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
@@ -123,7 +123,7 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                                 } else {
                                     newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
                                     newPhoto.save(function(err) {
-                                        if ((p.swatch.length > 0) || (p.type.indexOf("plate") > -1) || (p.type.indexOf("base") > -1) || (p.type.indexOf("latex") > -1) || (p.type.indexOf("glue") > -1)) {
+                                        if (p.tool == true) {
                                             res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
                                         } else {
                                             res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
@@ -195,11 +195,7 @@ app.get('/photo/edit/:pid', isLoggedIn, function(req, res) {
         data.allphotos = polish.photos;
         data.urlbrand = polish.brand.replace(/ /g,"_");
         data.urlname = polish.name.replace(/ /g,"_");
-        if (polish.type.indexOf("plate") > -1) {
-            data.accessory = true;
-        } else {
-            data.accessory = false;
-        }
+        data.tool = polish.tool;
         res.render('photos/polishedit.ejs', data);
     })
 });

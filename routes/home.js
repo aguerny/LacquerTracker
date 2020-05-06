@@ -13,7 +13,7 @@ app.get('/', function(req, res) {
             var ownedpolish = [];
             var ownedaccessories = [];
             for (i=0; i<user.ownedpolish.length; i++) {
-                if (user.ownedpolish[i].type.indexOf("plate") > -1) {
+                if (user.ownedpolish[i].tool == true) {
                     ownedaccessories.push(user.ownedpolish[i]);
                 } else {
                     ownedpolish.push(user.ownedpolish[i]);

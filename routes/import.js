@@ -178,6 +178,11 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
                                                 formatted.push(types[i]);
                                             }
                                         }
+                                        if ((formatted.indexOf("plate") > -1) || (formatted.indexOf("glue") > -1) || (formatted.indexOf("latex") > -1)) {
+                                            polish.tool = true;
+                                        } else {
+                                            polish.tool = false;
+                                        }
                                         polish.type = formatted;
                                     }
                                 }
@@ -230,6 +235,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
                                         flagged: false,
                                         falggedreason: '',
                                         checkins: [],
+                                        tool: false,
                                     })
 
                                     if (data.collection) {
@@ -262,8 +268,14 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
                                                 }
                                             }
                                             newPolish.type = formatted;
+                                            if ((formatted.indexOf("plate") > -1) || (formatted.indexOf("glue") > -1) || (formatted.indexOf("latex") > -1)) {
+                                                newPolish.tool = true;
+                                            } else {
+                                                newPolish.tool = false;
+                                            }
                                         } else {
                                             newPolish.type = [];
+                                            newPolish.tool = false;
                                         }
                                     }
 

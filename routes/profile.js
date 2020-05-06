@@ -44,7 +44,7 @@ app.get('/profile/:username', function(req, res) {
             data.opolishes = [];
             data.oaccessories = [];
             for (i=0; i<osort2.length; i++) {
-                if (osort2[i].type.indexOf("plate") > -1) {
+                if (osort2[i].tool == true) {
                     data.oaccessories.push(osort2[i]);
                 } else {
                     data.opolishes.push(osort2[i]);

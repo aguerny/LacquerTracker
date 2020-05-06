@@ -24,10 +24,10 @@ app.get('/polish/:brand/:name', function(req, res) {
         } else {
             data = {};
             data.title = polish.name + ' - ' + polish.brand + ' - Lacquer Tracker'
-            if (polish.type.indexOf("plate") == -1) {
+            if (polish.tool == false) {
                 data.meta = 'Information about the nail polish shade ' + polish.brand + " - " + polish.name + ', including dupes, reviews, photos, swatches, colors, types.';
             } else {
-                data.meta = 'Information about the nail polish stamping plate ' + polish.brand + " - " + polish.name + ', including dupes, reviews, photos, swatches, colors, types.';
+                data.meta = 'Information about the nail polish tool / accessory ' + polish.brand + " - " + polish.name + ', including dupes, reviews, photos, swatches, colors, types.';
             }
             data.pname = polish.name;
             data.pbrand = polish.brand;
@@ -393,6 +393,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                         dupes: sanitizer.sanitize(req.body.dupes),
                         swatch: '',
                         checkins: [],
+                        tool: false,
                     });
                     newPolish.save(function(err) {
                         if (err) {
@@ -405,6 +406,11 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                             }
                             if (req.body.colorcategory !== undefined) {
                                 newPolish.colorscategory = sanitizer.sanitize(req.body.colorcategory).split(',');
+                            }
+                            if ((req.body.type.indexOf("plate") > -1) || (req.body.type.indexOf("glue") > -1) || (req.body.type.indexOf("latex") > -1)) {
+                                newPolish.tool = true;
+                            } else {
+                                newPolish.tool = false;
                             }
                             newPolish.save(function(err) {
                                 Brand.findOne({name: polishBrandToFind}, function(err, brand) {
@@ -578,12 +584,18 @@ app.post('/polishedit/:id/type', isLoggedIn, function(req, res) {
             if (req.body.value !== undefined) {
                 p.type = sanitizer.sanitize(req.body.value).split(',')
                 p.dateupdated = new Date();
+                if ((req.body.value.indexOf("plate") > -1) || (req.body.value.indexOf("glue") > -1) || (req.body.value.indexOf("latex") > -1)) {
+                    p.tool = true;
+                } else {
+                    p.tool = false;
+                }
                 p.save(function(err) {
                     res.end();
                 })
             } else {
                 p.dateupdated = new Date();
                 p.type = [];
+                p.tool = false;
                 p.save(function(err) {
                     res.end();
                 })
