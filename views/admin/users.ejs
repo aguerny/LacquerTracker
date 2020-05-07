@@ -1,10 +1,12 @@
 <%- include('../layoutTop'); %>
 
+<script src="/scripts/sorttable.js"></script>
+
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
-        <table>
+        <table class="sortable">
             <tr><th style="width:5%">#</th><th style="overflow:hidden">Username</th><th style="overflow:hidden">E-mail</th><th style="overflow:hidden">Created</th><th style="overflow:hidden">Last Login</th><th style="width:8%; overflow:hidden">Validated</th><th style="width:8%; overflow:hidden">User Level</th></tr>
             <% for (i=0; i < allusers.length; i++) { %>
                 <tr>

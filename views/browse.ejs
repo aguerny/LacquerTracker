@@ -3,6 +3,7 @@
 <script src="/scripts/jscolor.js"></script>
 <script src="/scripts/jquery-multiselect/jquery.multiselect.js"></script>
 <link href="/scripts/jquery-multiselect/jquery.multiselect.css" rel="stylesheet"/>
+<script src="/scripts/sorttable.js"></script>
 
 <!-- content -->
 <div class="wrapper row2">
@@ -22,9 +23,20 @@
                         </select>
                         <br><br>
                         <select name="type" id="type" multiple>
-                            <% for (i=0; i<types.length; i++) { %>
-                                <option value="<%=types[i]%>" <% if (browsetype.indexOf(types[i])>-1) { %> selected="selected" <% } %>><%=types[i]%></option>
-                            <% } %>
+                            <optgroup label="Polish Types">
+                                <% for (i=0; i<types.length; i++) { %>
+                                    <% if (types[i].category == "polish") { %>
+                                        <option value="<%=types[i].name%>" <% if (browsetype.indexOf(types[i].name)>-1) { %> selected="selected" <% } %>><%=types[i].display%></option>
+                                    <% } %>
+                                <% } %>
+                            </optgroup>
+                            <optgroup label="Tool/Accessory Types">
+                                <% for (i=0; i<types.length; i++) { %>
+                                    <% if (types[i].category == "tool") { %>
+                                        <option value="<%=types[i].name%>" <% if (browsetype.indexOf(types[i].name)>-1) { %> selected="selected" <% } %>><%=types[i].display%></option>
+                                    <% } %>
+                                <% } %>
+                            </optgroup>
                         </select>
                         <br><br>
                         <select name="colorcategory" id="colorcategory" multiple>
@@ -62,7 +74,7 @@
             </div>
             <div id="browse-right_col">
                 <% if (recent === true) { %><h4>Recently updated:</h3><br><%}%>
-                <table id="polishbrowse" class="browsetable" style="width:100%">
+                <table id="polishbrowse" class="browsetable sortable" style="width:100%">
                     <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><% if (isAuthenticated) {%><th class="info"><span>Info</span></th><%}%></tr>
                     <% for(var i=0; i<polishes.length; i++) {%>
                         <tr><td><a id='tablelink' href='/polish/<%= polishes[i].brand.replace(/ /g,"_") %>/<%= polishes[i].name.replace(/ /g,"_") %>'><span><%= polishes[i].name %></span></a></td>

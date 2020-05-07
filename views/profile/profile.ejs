@@ -1,6 +1,7 @@
 <%- include('../layoutTop'); %>
 
 <script src="/scripts/collageplus.js"></script>
+<script src="/scripts/sorttable.js"></script>
 
 <script>
 $(window).load(function () {
@@ -46,11 +47,11 @@ $(window).load(function () {
         <div>
             <% if (opolishes.length > 0) { %>
                 <br><br>
-                <span class="owned-open" style="display:none">&#9654; <h4 style="display:inline"><%= username %>'s Owned Polish (<%= opolishes.length %>):</h4><br><br></span>
-                <span class="owned-close">&#9660; <h4 style="display:inline"><%= username %>'s Owned Polish (<%= opolishes.length %>):</h4></span>
-                <div id="owned">
+                <span class="owned-open">&#9654; <h4 style="display:inline"><%= username %>'s Owned Polish (<%= opolishes.length %>)</h4><br><br></span>
+                <span class="owned-close" style="display:none">&#9660; <h4 style="display:inline"><%= username %>'s Owned Polish (<%= opolishes.length %>)</h4></span>
+                <div id="owned" style="display:none">
                     <br>
-                    <table id="ownedpolish" class="ownedtable">
+                    <table id="ownedpolish" class="ownedtable sortable">
                         <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><th class="rating"><span><%= username %>'s Rating</span></th></tr>
                     <% for(var i=0; i<opolishes.length; i++) {%>
                         <tr><td><a id='tablelink' href='/polish/<%= opolishes[i].brand.replace(/ /g,"_") %>/<%= opolishes[i].name.replace(/ /g,"_") %>'><span><%= opolishes[i].name %></span></a></td>
@@ -82,11 +83,11 @@ $(window).load(function () {
 
             <% if (oaccessories.length > 0) { %>
                 <br><br>
-                <span class="accessories-open" style="display:none">&#9654; <h4 style="display:inline"><%= username %>'s Tools/Accessories (<%= oaccessories.length %>):</h4><br><br></span>
-                <span class="accessories-close">&#9660; <h4 style="display:inline"><%= username %>'s Tools/Accessories (<%= oaccessories.length %>):</h4></span>
-                <div id="accessories">
+                <span class="accessories-open">&#9654; <h4 style="display:inline"><%= username %>'s Tools/Accessories (<%= oaccessories.length %>)</h4><br><br></span>
+                <span class="accessories-close" style="display:none">&#9660; <h4 style="display:inline"><%= username %>'s Tools/Accessories (<%= oaccessories.length %>)</h4></span>
+                <div id="accessories" style="display:none">
                     <br>
-                    <table id="ownedpolish" class="ownedtable">
+                    <table id="ownedpolish" class="ownedtable sortable">
                         <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="type"><span>Type</span></th><th class="rating"><span><%= username %>'s Rating</span></th></tr>
                     <% for(var i=0; i<oaccessories.length; i++) {%>
                         <tr><td><a id='tablelink' href='/polish/<%= oaccessories[i].brand.replace(/ /g,"_") %>/<%= oaccessories[i].name.replace(/ /g,"_") %>'><span><%= oaccessories[i].name %></span></a></td>
@@ -112,11 +113,11 @@ $(window).load(function () {
 
             <% if (wpolishes.length > 0) { %>
                 <br><br>
-                <span class="wanted-open" style="display:none">&#9654; <h4 style="display:inline"><%= username %>'s Wishlist (<%= wpolishes.length %>):</h4><br><br></span>
-                <span class="wanted-close">&#9660; <h4 style="display:inline"><%= username %>'s Wishlist (<%= wpolishes.length %>):</h4></span>
-                <div id="wanted">
+                <span class="wanted-open">&#9654; <h4 style="display:inline"><%= username %>'s Wishlist (<%= wpolishes.length %>)</h4><br><br></span>
+                <span class="wanted-close" style="display:none">&#9660; <h4 style="display:inline"><%= username %>'s Wishlist (<%= wpolishes.length %>)</h4></span>
+                <div id="wanted" style="display:none">
                     <br>
-                    <table id="wantedpolish" class="wantedtable">
+                    <table id="wantedpolish" class="wantedtable sortable">
                         <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th></tr>
                     <% for(var i=0; i<wpolishes.length; i++) {%>
                         <tr><td><a id='tablelink' href='/polish/<%= wpolishes[i].brand.replace(/ /g,"_") %>/<%= wpolishes[i].name.replace(/ /g,"_") %>'><span><%= wpolishes[i].name %></span></a></td>
@@ -135,28 +136,26 @@ $(window).load(function () {
                     </table>
                 </div>
             <% } %>
-        </div>
-        <div id="biglayout">
+
             <% if (checkins.length > 0) { %>
-                <br><br><h4><%= username %>'s Fresh Coats (<%= checkins.length %>):</h4><br>
-                <div class="collage">
-                    <% for (i=0; i<checkins.length; i++) { %>
-                        <% if (checkins[i].pendingdelete === false) { %>
-                            <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Manicure by user <%= username %>"></a>
+                <br><br>
+                <span class="freshcoats-open" style="display:none">&#9654; <h4 style="display:inline"><%= username %>'s Fresh Coats (<%= checkins.length %>)</h4><br><br></span>
+                <span class="freshcoats-close">&#9660; <h4 style="display:inline"><%= username %>'s Fresh Coats (<%= checkins.length %>)</h4></span>
+                <div id="freshcoats">
+                    <div class="collage" id="biglayout">
+                        <% for (i=0; i<checkins.length; i++) { %>
+                            <% if (checkins[i].pendingdelete === false) { %>
+                                <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Manicure by user <%= username %>"></a>
+                            <% } %>
                         <% } %>
-                    <% } %>
-                </div>
-            <% } %>
-        </div>
-        <div id="smalllayout">
-            <% if (checkins.length > 0) { %>
-                <br><br><h4><%= username %>'s Fresh Coats (<%= checkins.length %>):</h4><br>
-                <div>
-                    <% for (i=0; i<checkins.length; i++) { %>
-                        <% if (checkins[i].pendingdelete === false) { %>
-                            <a href="/freshcoats/<%=checkins[i].id%>"><img style="max-width:49%; padding-bottom:2px;" src="<%= checkins[i].photo %>" alt="Manicure by user <%= username %>"></a>
+                    </div>
+                    <div id="smalllayout">
+                        <% for (i=0; i<checkins.length; i++) { %>
+                            <% if (checkins[i].pendingdelete === false) { %>
+                                <a href="/freshcoats/<%=checkins[i].id%>"><img style="max-width:49%; padding-bottom:2px;" src="<%= checkins[i].photo %>" alt="Manicure by user <%= username %>"></a>
+                            <% } %>
                         <% } %>
-                    <% } %>
+                    </div>
                 </div>
             <% } %>
         </div>
@@ -178,7 +177,14 @@ $('.accessories-open').click(function() {
     $('#accessories').slideDown();
     $('.accessories-close').show();
     $('.accessories-open').hide();
-
+    $('span').each(function() {
+        var fontSize = 100;
+        while (this.scrollWidth > $(this).width() && fontSize > 0) {
+            // adjust the font-size 5% at a time
+            fontSize -= 5;
+            $(this).css('font-size', fontSize + '%');
+        }
+    });
 });
 $('.accessories-close').click(function() {
     $('#accessories').slideUp();
@@ -190,7 +196,14 @@ $('.owned-open').click(function() {
     $('#owned').slideDown();
     $('.owned-close').show();
     $('.owned-open').hide();
-
+    $('span').each(function() {
+        var fontSize = 100;
+        while (this.scrollWidth > $(this).width() && fontSize > 0) {
+            // adjust the font-size 5% at a time
+            fontSize -= 5;
+            $(this).css('font-size', fontSize + '%');
+        }
+    });
 });
 $('.owned-close').click(function() {
     $('#owned').slideUp();
@@ -202,12 +215,31 @@ $('.wanted-open').click(function() {
     $('#wanted').slideDown();
     $('.wanted-close').show();
     $('.wanted-open').hide();
-
+    $('span').each(function() {
+        var fontSize = 100;
+        while (this.scrollWidth > $(this).width() && fontSize > 0) {
+            // adjust the font-size 5% at a time
+            fontSize -= 5;
+            $(this).css('font-size', fontSize + '%');
+        }
+    });
 });
 $('.wanted-close').click(function() {
     $('#wanted').slideUp();
     $('.wanted-open').show();
     $('.wanted-close').hide();
+});
+
+$('.freshcoats-open').click(function() {
+    $('#freshcoats').slideDown();
+    $('.freshcoats-close').show();
+    $('.freshcoats-open').hide();
+
+});
+$('.freshcoats-close').click(function() {
+    $('#freshcoats').slideUp();
+    $('.freshcoats-open').show();
+    $('.freshcoats-close').hide();
 });
 </script>
 

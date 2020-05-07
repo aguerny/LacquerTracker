@@ -167,18 +167,22 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
 
                                 if (data.type) {
                                     if (data.type.length > 0) {
-                                        var input = sanitizer.sanitize(data.type).toLowerCase().replace("cream","creme").replace("crème","creme").split(',');
+                                        var input = sanitizer.sanitize(data.type).toLowerCase().replace("cream","creme").replace("crème","creme").replace("holographic","holo").split(',');
                                         input = input.map(function (item) {
                                           return item.trim();
                                         });
                                         var formatted = polish.type;
                                         var types = PolishTypes;
+                                        var typesTools = [];
                                         for (i=0; i<types.length; i++) {
-                                            if ((input.indexOf(types[i]) !== -1) && (formatted.indexOf(types[i]) === -1)) {
-                                                formatted.push(types[i]);
+                                            if ((input.indexOf(types[i].name) !== -1) && (formatted.indexOf(types[i].name) === -1)) {
+                                                formatted.push(types[i].name);
+                                            }
+                                            if (types[i].category == "tool") {
+                                                typesTools.push(types[i].name);
                                             }
                                         }
-                                        if ((formatted.indexOf("plate") > -1) || (formatted.indexOf("glue") > -1) || (formatted.indexOf("latex") > -1)) {
+                                        if (_.intersection(typesTools,formatted).length > 0) {
                                             polish.tool = true;
                                         } else {
                                             polish.tool = false;
@@ -256,23 +260,27 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
 
                                     if (data.type) {
                                         if (data.type.length > 0) {
-                                            var input = sanitizer.sanitize(data.type).toLowerCase().replace("cream","creme").split(',');
+                                            var input = sanitizer.sanitize(data.type).toLowerCase().replace("cream","creme").replace("crème","creme").replace("holographic","holo").split(',');
                                             input = input.map(function (item) {
                                                 return item.trim();
                                             });
                                             var formatted = [];
                                             var types = PolishTypes;
+                                            var typesTools = [];
                                             for (i=0; i<types.length; i++) {
-                                                if (input.indexOf(types[i]) !== -1) {
-                                                    formatted.push(types[i]);
+                                                if (input.indexOf(types[i].name) !== -1) {
+                                                    formatted.push(types[i].name);
+                                                }
+                                                if (types[i].category == "tool") {
+                                                    typesTools.push(types[i].name);
                                                 }
                                             }
-                                            newPolish.type = formatted;
-                                            if ((formatted.indexOf("plate") > -1) || (formatted.indexOf("glue") > -1) || (formatted.indexOf("latex") > -1)) {
+                                            if (_.intersection(typesTools,formatted).length > 0) {
                                                 newPolish.tool = true;
                                             } else {
                                                 newPolish.tool = false;
                                             }
+                                            newPolish.type = formatted;
                                         } else {
                                             newPolish.type = [];
                                             newPolish.tool = false;

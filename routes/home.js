@@ -9,7 +9,7 @@ app.get('/', function(req, res) {
     if (req.isAuthenticated()) {
         data = {};
         data.title = 'Lacquer Tracker';
-        User.findById(req.user.id).populate('ownedpolish', 'brand colorsname type').populate('wantedpolish', 'brand').exec(function(err, user) {
+        User.findById(req.user.id).populate('ownedpolish', 'brand colorsname tool').populate('wantedpolish', 'brand').exec(function(err, user) {
             var ownedpolish = [];
             var ownedaccessories = [];
             for (i=0; i<user.ownedpolish.length; i++) {

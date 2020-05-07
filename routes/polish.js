@@ -43,7 +43,7 @@ app.get('/polish/:brand/:name', function(req, res) {
             data.checkins = polish.checkins;
 
             var formattedTypes = PolishTypes.map(function(type) {
-                return {value: type, text: type};
+                return {value: type.name, text: type.name};
             });
             data.types = formattedTypes;
 
@@ -123,7 +123,7 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                 data.checkins = polish.checkins;
 
                 var formattedTypes = PolishTypes.map(function(type) {
-                    return {value: type, text: type};
+                    return {value: type.name, text: type.name};
                 });
                 data.types = formattedTypes;
 
@@ -407,7 +407,13 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                             if (req.body.colorcategory !== undefined) {
                                 newPolish.colorscategory = sanitizer.sanitize(req.body.colorcategory).split(',');
                             }
-                            if ((req.body.type.indexOf("plate") > -1) || (req.body.type.indexOf("glue") > -1) || (req.body.type.indexOf("latex") > -1)) {
+                            var typesTools = [];
+                            for (i=0; i<PolishTypes.length; i++) {
+                                if (PolishTypes[i].category == "tool") {
+                                    typesTools.push(PolishTypes[i].name);
+                                }
+                            }
+                            if (_.intersection(typesTools,sanitizer.sanitize(req.body.type).split(',')).length > 0) {
                                 newPolish.tool = true;
                             } else {
                                 newPolish.tool = false;
@@ -584,7 +590,13 @@ app.post('/polishedit/:id/type', isLoggedIn, function(req, res) {
             if (req.body.value !== undefined) {
                 p.type = sanitizer.sanitize(req.body.value).split(',')
                 p.dateupdated = new Date();
-                if ((req.body.value.indexOf("plate") > -1) || (req.body.value.indexOf("glue") > -1) || (req.body.value.indexOf("latex") > -1)) {
+                var typesTools = [];
+                for (i=0; i<PolishTypes.length; i++) {
+                    if (PolishTypes[i].category == "tool") {
+                        typesTools.push(PolishTypes[i].name);
+                    }
+                }
+                if (_.intersection(typesTools,sanitizer.sanitize(req.body.value).split(',')).length > 0) {
                     p.tool = true;
                 } else {
                     p.tool = false;
