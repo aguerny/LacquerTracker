@@ -22,6 +22,7 @@ var types = [
 	{name:"metallic", display:"metallic", category:"polish"},
 	{name:"multichrome", display:"multichrome", category:"polish"},
 	{name:"neon", display:"neon", category:"polish"},
+	{name:"oil", display:"oil", category:"tool"},
 	{name:"pearl", display:"pearl", category:"polish"},
 	{name:"pen", display:"pen", category:"polish"},
 	{name:"plate", display:"stamping plate", category:"tool"},

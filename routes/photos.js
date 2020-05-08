@@ -266,11 +266,11 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
                             })
                         })
                     } else {
-                        gm(req.files.photo.tempFilePath).strip().resize(600).write(path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function (err) {
+                        gm(req.files.photo.tempFilePath).strip().resize(400).write(path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext), function (err) {
                             if (err) {
+                                console.log(err);
                                 fs.unlink(req.files.photo.tempFilePath, function(err) {
                                     newUserPhoto.remove();
-                                    req.user.photos.remove(newUserPhoto.id);
                                     req.user.save(function(err) {
                                         res.redirect('/error');
                                     })
@@ -304,13 +304,12 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
                         download(sanitizer.sanitize(req.body.url), targetPath, function(err) {
                             if (err) {
                                 newUserPhoto.remove();
-                                req.user.photos.remove(newUserPhoto.id);
                                 req.user.save(function(err) {
                                     res.redirect('/error');
                                 })
                             } else {
                                 gm(targetPath).size(function(err, value) {
-                                    gm(targetPath).strip().resize(600).write(targetPath, function (err) {
+                                    gm(targetPath).strip().resize(400).write(targetPath, function (err) {
                                         if (err) {
                                             fs.unlink(targetPath, function(err) {
                                                 newUserPhoto.remove();

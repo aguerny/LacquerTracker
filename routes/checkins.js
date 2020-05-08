@@ -339,7 +339,7 @@ app.post('/freshcoats/:id/:cid/add', isLoggedIn, function(req, res) {
                             replyTo: "lacquertrackermailer@gmail.com",
                             to: comment.user.email,
                             subject: 'New reply to your fresh coat comment',
-                            text: "Hi " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on a fresh coat.\n\nCheck it out here: https://www.lacquertracker.com/freshcoats/" + post.id + "\n\n\nHappy polishing!\n\nLacquer Tracker",
+                            text: "Hi " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on a fresh coat.\n\nCheck it out here: https://www.lacquertracker.com/freshcoats/" + post.id + "\n\n\nHappy polishing,\nLacquer Tracker",
                         }
 
                         transport.sendMail(mailOptions, function(error, response) {
@@ -360,7 +360,7 @@ app.post('/freshcoats/:id/:cid/add', isLoggedIn, function(req, res) {
                         replyTo: "lacquertrackermailer@gmail.com",
                         to: post.user.email,
                         subject: 'New reply to your fresh coat',
-                        text: "Hi " + post.user.username + ",\n\n" + req.user.username + " just replied to your fresh coat.\n\nCheck it out here: https://www.lacquertracker.com/freshcoats/" + post.id + "\n\n\nHappy polishing!\n\nLacquer Tracker",
+                        text: "Hi " + post.user.username + ",\n\n" + req.user.username + " just replied to your fresh coat.\n\nCheck it out here: https://www.lacquertracker.com/freshcoats/" + post.id + "\n\n\nHappy polishing,\nLacquer Tracker",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {

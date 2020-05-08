@@ -21,7 +21,7 @@ app.get('/brand/:brandname', function(req, res) {
         if (brand === null) {
             data = {};
             data.title = thisbrand + ' - Lacquer Tracker';
-            data.meta = 'Information about the nail polish brand ' + thisbrand + ', including shade names, dupes, reviews, photos, swatches, colors, types.';
+            data.meta = 'Information about the nail polish brand ' + thisbrand + ', including shade names, reviews, photos, swatches, dupes, colors, and types.';
             data.bname = thisbrand;
             data.bbio = '';
             data.bphoto = '';
@@ -35,7 +35,7 @@ app.get('/brand/:brandname', function(req, res) {
         } else {
             data = {};
             data.title = brand.name + ' - Lacquer Tracker';
-            data.meta = 'Information about the nail polish brand ' + thisbrand + ', including shade names, dupes, reviews, photos, swatches, colors, types.';
+            data.meta = 'Information about the nail polish brand ' + thisbrand + ', including shade names, reviews, photos, swatches, dupes, colors, and types.';
             data.bname = brand.name;
             data.bbio = markdown(brand.bio);
             data.bphoto = brand.photo;

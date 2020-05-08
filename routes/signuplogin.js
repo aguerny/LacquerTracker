@@ -81,7 +81,7 @@ app.post('/signup', function(req, res) {
                                                 replyTo: "lacquertrackermailer@gmail.com",
                                                 to: newUser.email,
                                                 subject: 'Welcome to Lacquer Tracker',
-                                                text: "Hi " + newUser.username + ",\n\nWelcome to Lacquer Tracker! Please visit the link below to validate your account and get started.\n\nhttps://www.lacquertracker.com/validate/" + newUser.id + "\n\n\nHappy polishing!\n\nLacquer Tracker",
+                                                text: "Hi " + newUser.username + ",\n\nWelcome to Lacquer Tracker! Please visit the link below to validate your account and get started.\n\nhttps://www.lacquertracker.com/validate/" + newUser.id + "\n\n\nHappy polishing,\nLacquer Tracker",
                                             }
 
                                             transport.sendMail(mailOptions, function(error, response) {
@@ -157,7 +157,7 @@ app.post('/revalidate', function(req, res) {
                         replyTo: "lacquertrackermailer@gmail.com",
                         to: user.email,
                         subject: 'Validation E-mail',
-                        text: "Hi " + user.username + ",\n\nLost your welcome e-mail? Not to worry! Please visit the link below to validate your account and get started.\n\nhttps://www.lacquertracker.com/validate/" + user.id + "\n\n\nHappy polishing!\n\nLacquer Tracker",
+                        text: "Hi " + user.username + ",\n\nLost your welcome e-mail? Not to worry! Please visit the link below to validate your account and get started.\n\nhttps://www.lacquertracker.com/validate/" + user.id + "\n\n\nHappy polishing,\nLacquer Tracker",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {
@@ -229,7 +229,7 @@ app.post('/passwordreset', function(req, res) {
                         replyTo: "lacquertrackermailer@gmail.com",
                         to: user.email,
                         subject: 'Password Reset',
-                        text: "Hi " + user.username + ",\n\nYour reset password link is: https://www.lacquertracker.com/reset/" + newResetKey.id + "\n\nYou have 24 hours until this key expires.\n\n\nHappy polishing!\n\nLacquer Tracker",
+                        text: "Hi " + user.username + ",\n\nYour reset password link is: https://www.lacquertracker.com/reset/" + newResetKey.id + "\n\nYou have 24 hours until this key expires.\n\n\nHappy polishing,\nLacquer Tracker",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {

@@ -140,8 +140,8 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
             var reader = csv.createCsvFileReader(req.files.spreadsheet.tempFilePath, {columnsFromHeader:true, 'separator': ','});
             reader.addListener('data', function(data, err) {
                 if (data.name.length > 0 && data.brand.length > 0) {
-                    var polishNameToFind = sanitizer.sanitize(data.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,''));
-                    var polishBrandEntered = sanitizer.sanitize(data.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,''));
+                    var polishNameToFind = sanitizer.sanitize(data.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,""));
+                    var polishBrandEntered = sanitizer.sanitize(data.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,""));
                     var polishBrandToFind;
                     Brand.findOne({alternatenames:polishBrandEntered.toLowerCase()}, function(err, brand) {
                         polishBrandToFind = brand.name;
@@ -215,7 +215,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
                                 polish.save(function (err) {
                                     brand.polish.addToSet(polish.id);
                                     brand.save();
-                                    polish.keywords = polish.name + " " + polish.brand + " " + polish.batch + " " + polish.code;
+                                    polish.keywords = polish.name.replace("é","e").replace("ñ","n") + " " + polish.brand + " " + polish.batch + " " + polish.code;
                                     polish.dateupdated = new Date();
                                     polish.save();
                                 })
@@ -307,7 +307,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
                                     }
 
                                     newPolish.save(function(err) {
-                                        newPolish.keywords = newPolish.name + " " + newPolish.brand + " " + newPolish.batch + " " + newPolish.code;
+                                        newPolish.keywords = newPolish.name.replace("é","e").replace("ñ","n") + " " + newPolish.brand + " " + newPolish.batch + " " + newPolish.code;
                                         if (req.body.ownership == "yes") {
                                             User.findOne({'username':req.body.user}, function(err, user) {
                                                 if (user !== null) {

@@ -25,9 +25,9 @@ app.get('/polish/:brand/:name', function(req, res) {
             data = {};
             data.title = polish.name + ' - ' + polish.brand + ' - Lacquer Tracker'
             if (polish.tool == false) {
-                data.meta = 'Information about the nail polish shade ' + polish.brand + " - " + polish.name + ', including dupes, reviews, photos, swatches, colors, types.';
+                data.meta = 'Information about the nail polish shade ' + polish.brand + " - " + polish.name + ', including reviews, photos, swatches, and dupes.';
             } else {
-                data.meta = 'Information about the nail polish tool / accessory ' + polish.brand + " - " + polish.name + ', including dupes, reviews, photos, swatches, colors, types.';
+                data.meta = 'Information about the nail polish tool / accessory ' + polish.brand + " - " + polish.name + ', including reviews, photos, swatches, and dupes.';
             }
             data.pname = polish.name;
             data.pbrand = polish.brand;
@@ -360,8 +360,8 @@ app.get('/polishadd', isLoggedIn, function(req, res) {
 
 app.post('/polishadd', isLoggedIn, function(req, res) {
     if (req.body.name.length > 0 && req.body.brand.length > 0) {
-        var polishNameToFind = sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,''));
-        var polishBrandEntered = sanitizer.sanitize(req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,''));
+        var polishNameToFind = sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,""));
+        var polishBrandEntered = sanitizer.sanitize(req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,""));
         var polishBrandToFind;
         Brand.findOne({alternatenames:polishBrandEntered.toLowerCase()}, function(err, brand) {
             if (brand) {
@@ -386,7 +386,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                         brand: polishBrandToFind,
                         batch: sanitizer.sanitize(req.body.batch),
                         code: sanitizer.sanitize(req.body.code.replace(/^\s+|\s+$/g,'')),
-                        keywords: sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
+                        keywords: polishNameToFind.replace("é","e").replace("ñ","n") + " " + polishBrandToFind + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
                         dateupdated: new Date(),
                         createddate: new Date(),
                         createdby: req.user.id,
@@ -401,22 +401,23 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                         } else {
                             if (req.body.type !== undefined) {
                                 newPolish.type = sanitizer.sanitize(req.body.type).split(',');
+                                var typesTools = [];
+                                for (i=0; i<PolishTypes.length; i++) {
+                                    if (PolishTypes[i].category == "tool") {
+                                        typesTools.push(PolishTypes[i].name);
+                                    }
+                                }
+                                if (_.intersection(typesTools,sanitizer.sanitize(req.body.type).split(',')).length > 0) {
+                                    newPolish.tool = true;
+                                } else {
+                                    newPolish.tool = false;
+                                }
                             } else {
                                 newPolish.type = [];
+                                newPolish.tool = false;
                             }
                             if (req.body.colorcategory !== undefined) {
                                 newPolish.colorscategory = sanitizer.sanitize(req.body.colorcategory).split(',');
-                            }
-                            var typesTools = [];
-                            for (i=0; i<PolishTypes.length; i++) {
-                                if (PolishTypes[i].category == "tool") {
-                                    typesTools.push(PolishTypes[i].name);
-                                }
-                            }
-                            if (_.intersection(typesTools,sanitizer.sanitize(req.body.type).split(',')).length > 0) {
-                                newPolish.tool = true;
-                            } else {
-                                newPolish.tool = false;
                             }
                             newPolish.save(function(err) {
                                 Brand.findOne({name: polishBrandToFind}, function(err, brand) {
@@ -489,21 +490,23 @@ app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
             res.redirect('/error');
         } else {
             if (req.user.level === "admin") {
-                polish.name = sanitizer.sanitize((req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")));
-                polish.brand = sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")));
+                var polishName = sanitizer.sanitize((req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")));
+                var polishBrand = sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")));
+                polish.name = polishName;
+                polish.brand = polishBrand;
                 Brand.findOne({name:currentBrand}, function (err, brand) {
                     brand.polish.remove(req.params.id);
                     brand.save();
                 })
-                Brand.findOne({alternatenames:sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")).toLowerCase())}, function(err, brand) {
+                Brand.findOne({alternatenames:polishBrand.toLowerCase()}, function(err, brand) {
                     if (brand === null || brand === undefined) {
                         var newBrand = new Brand ({
-                            name: sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-"))),
+                            name: polishName,
                             bio: '',
                             photo: '',
                             official: false,
                             polishlock: false,
-                            alternatenames: [sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")).toLowerCase())],
+                            alternatenames: [polishBrand.toLowerCase()],
                             polish: [],
                         })
                         newBrand.save(function(err) {
@@ -539,7 +542,7 @@ app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
                         })
                     }
                 }
-                polish.keywords = sanitizer.sanitize(polish.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(polish.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(polish.batch) + " " + sanitizer.sanitize(polish.code);
+                polish.keywords = polishName.replace("é","e").replace("ñ","n") + " " + polishBrand + " " + sanitizer.sanitize(polish.batch) + " " + sanitizer.sanitize(polish.code);
                 polish.save(function(err) {
                     res.redirect('/polish/' + polish.brand.replace(/ /g,"_") + "/" + polish.name.replace(/ /g,"_"));;
                 })

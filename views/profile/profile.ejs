@@ -5,10 +5,12 @@
 
 <script>
 $(window).load(function () {
-    $('.collage').collagePlus({
-        'targetHeight' : 250,
-        'allowPartialLastRow' : true,
-    });
+    if (window.matchMedia("(min-width: 600px)").matches) {
+        $('.collage').collagePlus({
+            'targetHeight' : 250,
+            'allowPartialLastRow' : true,
+        });
+    }
 });
 </script>
 
@@ -142,17 +144,10 @@ $(window).load(function () {
                 <span class="freshcoats-open" style="display:none">&#9654; <h4 style="display:inline"><%= username %>'s Fresh Coats (<%= checkins.length %>)</h4><br><br></span>
                 <span class="freshcoats-close">&#9660; <h4 style="display:inline"><%= username %>'s Fresh Coats (<%= checkins.length %>)</h4></span>
                 <div id="freshcoats">
-                    <div class="collage" id="biglayout">
+                    <div class="collage">
                         <% for (i=0; i<checkins.length; i++) { %>
                             <% if (checkins[i].pendingdelete === false) { %>
                                 <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Manicure by user <%= username %>"></a>
-                            <% } %>
-                        <% } %>
-                    </div>
-                    <div id="smalllayout">
-                        <% for (i=0; i<checkins.length; i++) { %>
-                            <% if (checkins[i].pendingdelete === false) { %>
-                                <a href="/freshcoats/<%=checkins[i].id%>"><img style="max-width:49%; padding-bottom:2px;" src="<%= checkins[i].photo %>" alt="Manicure by user <%= username %>"></a>
                             <% } %>
                         <% } %>
                     </div>

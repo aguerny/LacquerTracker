@@ -8,10 +8,12 @@
 
 <script>
 $(window).load(function () {
-    $('.collage').collagePlus({
-        'targetHeight' : 250,
-        'allowPartialLastRow' : true,
-    });
+    if (window.matchMedia("(min-width: 600px)").matches) {
+        $('.collage').collagePlus({
+            'targetHeight' : 250,
+            'allowPartialLastRow' : true,
+        });
+    }
 });
 </script>
 
@@ -139,7 +141,7 @@ $(window).load(function () {
                 <% } %>
             </div>
                 <div id="container" class="clear">
-                        <br><% if (isAuthenticated) { %>
+                    <br><% if (isAuthenticated) { %>
                         <hr><br>
                         <h4 style="display:inline">Your Review:</h4> <i><a href="/review/edit/<%= pid %>">Edit</a></i><br><br>
                         <% if (review.length > 0 || rating.length > 0) { %>
@@ -163,8 +165,6 @@ $(window).load(function () {
                     <% for (i=0; i<pdupes.length; i++) { %>
                         <br>&nbsp;&nbsp;&nbsp;&nbsp;&#8226; <a href='/polish/<%= pdupes[i].brand.replace(/ /g,"_") %>/<%= pdupes[i].name.replace(/ /g,"_") %>'><%= pdupes[i].brand %> - <%= pdupes[i].name %></a>
                     <% } %>
-                </div>
-                <div id="biglayout">
                     <% if (checkins.length > 0) { %>
                         <br><br><hr><br><h4>Recent Fresh Coats:</h4><br>
                         <div class="collage">
@@ -175,20 +175,8 @@ $(window).load(function () {
                             <% } %>
                         </div>
                     <% } %>
+                    <% if (isAuthenticated) {%><% if (user.adminview === true) { %><br><br><%=pid%><%}%><%}%>
                 </div>
-                <div id="smalllayout">
-                    <% if (checkins.length > 0) { %>
-                        <br><br><br><hr><br><h4>Recent Fresh Coats:</h4><br>
-                        <div>
-                            <% for (i=0; i<checkins.length; i++) { %>
-                                <% if (checkins[i].pendingdelete === false) {%>
-                                    <a href="/freshcoats/<%=checkins[i].id%>"><img style="max-width:49%" src="<%= checkins[i].photo %>" alt="Nail polish manicure of shade <%= pbrand %></a> - <%= pname %>"></a>
-                                <% } %>
-                            <% } %>
-                        </div>
-                    <% } %>
-                </div>
-                <% if (isAuthenticated) {%><% if (user.adminview === true) { %><br><br><%=pid%><%}%><%}%>
             </section>
         </section>
     </div>
