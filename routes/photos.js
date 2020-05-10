@@ -374,31 +374,32 @@ app.post('/photo/profile', isLoggedIn, function(req, res) {
             })
         }
     } else if (req.body.url.length > 0) {
-        fs.unlink(req.files.photo.tempFilePath);
-        var ext = path.extname(sanitizer.sanitize(req.body.url));
-        var tempPath = path.resolve('./public/images/tmp/' + req.user.username + ext);
-        var targetPath = path.resolve('./public/images/profilephotos/' + req.user.username + ext);
-        download(sanitizer.sanitize(req.body.url), tempPath, function(err) {
-            if (err) {
-                res.redirect('/error');
-            } else {
-                fs.unlink(path.resolve('./public/'+req.user.profilephoto), function() {
-                    gm(tempPath).strip().resize(200).write(targetPath, function(err) {
-                        if (err) {
-                            fs.unlink(tempPath, function(err) {
-                                res.redirect('/error');
-                            })
-                        } else {
-                            fs.unlink(tempPath, function() {
-                                req.user.profilephoto = '/images/profilephotos/' + req.user.username + ext,
-                                req.user.save(function(err) {
-                                    res.redirect('/profile/' + req.user.username);
+        fs.unlink(req.files.photo.tempFilePath, function() {
+            var ext = path.extname(sanitizer.sanitize(req.body.url));
+            var tempPath = path.resolve('./public/images/tmp/' + req.user.username + ext);
+            var targetPath = path.resolve('./public/images/profilephotos/' + req.user.username + ext);
+            download(sanitizer.sanitize(req.body.url), tempPath, function(err) {
+                if (err) {
+                    res.redirect('/error');
+                } else {
+                    fs.unlink(path.resolve('./public/'+req.user.profilephoto), function() {
+                        gm(tempPath).strip().resize(200).write(targetPath, function(err) {
+                            if (err) {
+                                fs.unlink(tempPath, function(err) {
+                                    res.redirect('/error');
                                 })
-                            })
-                        }
+                            } else {
+                                fs.unlink(tempPath, function() {
+                                    req.user.profilephoto = '/images/profilephotos/' + req.user.username + ext,
+                                    req.user.save(function(err) {
+                                        res.redirect('/profile/' + req.user.username);
+                                    })
+                                })
+                            }
+                        })
                     })
-                })
-            }
+                }
+            })
         })
     } else {
         res.redirect('/error');
@@ -443,31 +444,32 @@ app.post('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
                 })
             }
         } else if (req.body.url.length > 0) {
-            fs.unlink(req.files.photo.tempFilePath);
-            var ext = path.extname(sanitizer.sanitize(req.body.url));
-            var tempPath = path.resolve('./public/images/tmp/' + brand.id + ext);
-            var targetPath = path.resolve('./public/images/brandphotos/' + brand.id + ext);
-            download(sanitizer.sanitize(req.body.url), tempPath, function(err) {
-                if (err) {
-                    res.redirect('/error');
-                } else {
-                    fs.unlink(path.resolve('./public/'+brand.photo), function() {
-                        gm(tempPath).strip().resize(200).write(targetPath, function(err) {
-                            if (err) {
-                                fs.unlink(tempPath, function(err) {
-                                    res.redirect('/error');
-                                })
-                            } else {
-                                fs.unlink(tempPath, function() {
-                                    brand.photo = '/images/brandphotos/' + brand.id + ext,
-                                    brand.save(function(err) {
-                                        res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
+            fs.unlink(req.files.photo.tempFilePath, function () {
+                var ext = path.extname(sanitizer.sanitize(req.body.url));
+                var tempPath = path.resolve('./public/images/tmp/' + brand.id + ext);
+                var targetPath = path.resolve('./public/images/brandphotos/' + brand.id + ext);
+                download(sanitizer.sanitize(req.body.url), tempPath, function(err) {
+                    if (err) {
+                        res.redirect('/error');
+                    } else {
+                        fs.unlink(path.resolve('./public/'+brand.photo), function() {
+                            gm(tempPath).strip().resize(200).write(targetPath, function(err) {
+                                if (err) {
+                                    fs.unlink(tempPath, function(err) {
+                                        res.redirect('/error');
                                     })
-                                })
-                            }
+                                } else {
+                                    fs.unlink(tempPath, function() {
+                                        brand.photo = '/images/brandphotos/' + brand.id + ext,
+                                        brand.save(function(err) {
+                                            res.redirect('/brand/' + brand.name.replace(/ /g,"_"));
+                                        })
+                                    })
+                                }
+                            })
                         })
-                    })
-                }
+                    }
+                })
             })
         } else {
             res.redirect('/error');

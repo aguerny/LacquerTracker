@@ -326,47 +326,34 @@ app.get('/admin/flaggedpolish', isLoggedIn, function(req, res) {
 
 
 //user flags polish
-app.get('/polishid/:id/flag', isLoggedIn, function(req, res) {
-    Polish.findById(req.params.id, function(err, polish) {
-        if (polish === null || polish === undefined) {
-            res.redirect('/error');
-        } else {
-            data = {};
-            data.title = 'Flag Polish - Lacquer Tracker';
-            data.polish = polish;
-            res.render('polish/flag.ejs', data);
-        }
-    })
-});
-
-
 app.post('/polishid/:id/flag', isLoggedIn, function(req, res) {
-    Polish.findById(req.params.id, function(err, polish) {
+    Polish.findById(req.params.id).exec(function(err, polish) {
         if (polish === null || polish === undefined) {
             res.redirect('/error');
         } else {
             polish.flagged = true;
-            polish.flaggedreason = sanitizer.sanitize(req.body.flaggedreason) + " - " + req.user.username;
-            polish.save();
+            polish.flaggedreason = req.user.username + " - " + sanitizer.sanitize(req.body.message);
+            polish.save(function(err) {
                 var transport = nodemailer.createTransport({
                     sendmail: true,
                     path: "/usr/sbin/sendmail"
                 });
 
-            var mailOptions = {
-                from: "polishrobot@lacquertracker.com",
-                replyTo: "lacquertrackermailer@gmail.com",
-                to: 'lacquertrackermailer@gmail.com',
-                subject: 'Flagged Polish',
-                text: req.user.username + " has flagged a polish: " + polish.brand + " - " + polish.name + "\n\n\nhttp://www.lacquertracker.com/admin/flaggedpolish",
-            }
+                var mailOptions = {
+                    from: "polishrobot@lacquertracker.com",
+                    replyTo: "lacquertrackermailer@gmail.com",
+                    to: 'lacquertrackermailer@gmail.com',
+                    subject: 'Flagged Polish',
+                    text: req.user.username + " has flagged a polish.\n\nReason for flagging: "+sanitizer.sanitize(req.body.message)+"\n\nhttps://www.lacquertracker.com/admin/flaggedpolish",
+                }
 
-            transport.sendMail(mailOptions, function(error, response) {
-                transport.close();
-            });
-            res.redirect('/browse');
+                transport.sendMail(mailOptions, function(error, response) {
+                    transport.close();
+                });
+                res.redirect('/browse');
+            })
         }
-    })
+    });
 });
 
 //unflag

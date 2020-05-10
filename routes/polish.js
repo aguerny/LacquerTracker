@@ -10,6 +10,7 @@ var _ = require('lodash');
 var fs = require('node-fs');
 var path = require('path');
 var PolishTypes = require('../app/constants/polishTypes');
+var accents = require('remove-accents');
 
 
 module.exports = function(app, passport) {
@@ -386,7 +387,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                         brand: polishBrandToFind,
                         batch: sanitizer.sanitize(req.body.batch),
                         code: sanitizer.sanitize(req.body.code.replace(/^\s+|\s+$/g,'')),
-                        keywords: polishNameToFind.replace("é","e").replace("ñ","n") + " " + polishBrandToFind + " " + sanitizer.sanitize(req.body.batch) + " " + sanitizer.sanitize(req.body.code),
+                        keywords: accents.remove(polishBrandToFind) + " - " + accents.remove(polishNameToFind) + " - " + accents.remove(sanitizer.sanitize(req.body.batch)) + " - " + sanitizer.sanitize(req.body.code),
                         dateupdated: new Date(),
                         createddate: new Date(),
                         createdby: req.user.id,
@@ -542,7 +543,7 @@ app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
                         })
                     }
                 }
-                polish.keywords = polishName.replace("é","e").replace("ñ","n") + " " + polishBrand + " " + sanitizer.sanitize(polish.batch) + " " + sanitizer.sanitize(polish.code);
+                polish.keywords = accents.remove(polishBrand) + " - " + accents.remove(polishName) + " - " + accents.remove(sanitizer.sanitize(polish.batch)) + " - " + sanitizer.sanitize(polish.code);
                 polish.save(function(err) {
                     res.redirect('/polish/' + polish.brand.replace(/ /g,"_") + "/" + polish.name.replace(/ /g,"_"));;
                 })
@@ -559,7 +560,7 @@ app.post('/polishedit/:id/code', isLoggedIn, function(req, res) {
             p.code = sanitizer.sanitize(req.body.value);
             p.dateupdated = new Date();
             p.save(function(err) {
-                p.keywords = sanitizer.sanitize(p.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.batch) + " " + sanitizer.sanitize(p.code);
+                p.keywords = p.brand + " - " + p.name + " - " + p.batch + " - " + p.code;
                 p.save(function(err) {
                     res.end();
                 })
@@ -576,7 +577,7 @@ app.post('/polishedit/:id/batch', isLoggedIn, function(req, res) {
             p.batch = sanitizer.sanitize(req.body.value);
             p.dateupdated = new Date();
             p.save(function(err) {
-                p.keywords = sanitizer.sanitize(p.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")) + " " + sanitizer.sanitize(p.batch) + " " + sanitizer.sanitize(p.code);
+                p.keywords = p.brand + " - " + p.name + " - " + p.batch + " - " + p.code;
                 p.save(function(err) {
                     res.end();
                 })

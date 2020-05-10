@@ -7,7 +7,7 @@
     		<div>
 	     		<br><h3>Flagged Polish:</h3><br>
                 <% for (i=0; i < pendingpolish.length; i++) { %>
-                    <a href="/polishid/<%=pendingpolish[i].id%>"><%=pendingpolish[i].brand%></a> - <%=pendingpolish[i].name%> - <%=pendingpolish[i].id%>:<br>
+                    <a href="/polishid/<%=pendingpolish[i].id%>"><%=pendingpolish[i].brand%></a> - <%=pendingpolish[i].name%> - <%=pendingpolish[i].id%><br>
                     <%=pendingpolish[i].flaggedreason%><br>
                     <a href="/polishid/<%=pendingpolish[i].id%>/unflag">Unflag</a><br><br><br>
                 <% } %>

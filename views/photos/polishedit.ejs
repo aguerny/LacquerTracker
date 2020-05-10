@@ -8,7 +8,7 @@
                 <a href="/polish/<%=urlbrand%>/<%=urlname%>">&#8592; Cancel</a><br><br>
 	     		<br><h3>Edit Photos:</h3><br>
                     <% for (i=0; i < allphotos.length; i++) { %>
-                    <br><img class="polishphotosmall" src="<%= allphotos[i].location %>"><br><a href="/photo/flag/<%= allphotos[i].polishid %>/<%= allphotos[i].id %>">Flag photo</a> | <a href="/photo/edit/<%= allphotos[i].polishid %>/<%= allphotos[i].id %>">Edit credit</a><% if (tool == false) { %> | <a href="/photo/swatch/<%= allphotos[i].polishid %>/<%= allphotos[i].id %>">Create swatch</a><%}%><br><br>
+                    <br><img class="polishphotosmall" src="<%= allphotos[i].location %>"><br><a href="/photo/flag/<%= allphotos[i].polishid %>/<%= allphotos[i].id %>">Flag photo</a> | <a href="/photo/edit/<%= allphotos[i].polishid %>/<%= allphotos[i].id %>">Edit credit</a><% if (tool != true) { %> | <a href="/photo/swatch/<%= allphotos[i].polishid %>/<%= allphotos[i].id %>">Create swatch</a><%}%><br><br>
                 <% } %>
             </div>
     	</section>

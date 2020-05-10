@@ -17,6 +17,7 @@ var PolishColors = require('../app/constants/polishColors');
 var nodemailer = require('nodemailer');
 var request = require('request');
 var http = require('http');
+var accents = require('remove-accents');
 
 
 module.exports = function(app, passport) {
@@ -215,7 +216,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
                                 polish.save(function (err) {
                                     brand.polish.addToSet(polish.id);
                                     brand.save();
-                                    polish.keywords = polish.name.replace("é","e").replace("ñ","n") + " " + polish.brand + " " + polish.batch + " " + polish.code;
+                                    polish.keywords = accents.remove(polish.brand) + " - " + accents.remove(polish.name) + " - " + accents.remove(polish.batch) + " - " + polish.code;
                                     polish.dateupdated = new Date();
                                     polish.save();
                                 })
@@ -307,7 +308,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
                                     }
 
                                     newPolish.save(function(err) {
-                                        newPolish.keywords = newPolish.name.replace("é","e").replace("ñ","n") + " " + newPolish.brand + " " + newPolish.batch + " " + newPolish.code;
+                                        newPolish.keywords = accents.remove(newPolish.brand) + " - " + accents.remove(newPolish.name) + " - " + accents.remove(newPolish.batch) + " - " + newPolish.code;
                                         if (req.body.ownership == "yes") {
                                             User.findOne({'username':req.body.user}, function(err, user) {
                                                 if (user !== null) {

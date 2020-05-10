@@ -81,7 +81,7 @@
                         <td><a id='tablelink' href='/brand/<%= polishes[i].brand.replace(/ /g,"_") %>'><span><%= polishes[i].brand %></span></a></td>
                         <td><span><%= polishes[i].batch %></span></td>
                         <td class="tableswatch"><% if (polishes[i].swatch.length > 0) {%>
-                                <img src="<%=polishes[i].swatch%>" alt="Nail polish swatch in shade <%= polishes[i].brand %> - <%= polishes[i].name %>">
+                                <img src="<%=polishes[i].swatch%>" alt="Nail polish swatch of shade <%= polishes[i].brand %> <%= polishes[i].name %>">
                             <%} else {%>
                                 <img src="/images/swatches/noswatch.jpg" alt="">
                             <%}%>

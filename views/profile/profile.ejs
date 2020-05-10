@@ -60,7 +60,7 @@ $(window).load(function () {
                         <td><a id='tablelink' href='/brand/<%= opolishes[i].brand.replace(/ /g,"_") %>'><span><%= opolishes[i].brand %></span></a></td>
                         <td><span><%= opolishes[i].batch %></span></td>
                         <td class="tableswatch"><% if (opolishes[i].swatch.length > 0) {%>
-                                <img src="<%=opolishes[i].swatch%>" alt="Nail polish swatch in shade <%= opolishes[i].brand %> - <%= opolishes[i].name %>">
+                                <img src="<%=opolishes[i].swatch%>" alt="Nail polish swatch of shade <%= opolishes[i].brand %> <%= opolishes[i].name %>">
                             <%} else {%>
                                 <img src="/images/swatches/noswatch.jpg" alt="">
                             <%}%>
@@ -126,7 +126,7 @@ $(window).load(function () {
                         <td><a id='tablelink' href='/brand/<%= wpolishes[i].brand.replace(/ /g,"_") %>'><span><%= wpolishes[i].brand %></span></a></td>
                         <td><span><%= wpolishes[i].batch %></span></td>
                         <td class="tableswatch"><% if (wpolishes[i].swatch.length > 0) {%>
-                                <img src="<%=wpolishes[i].swatch%>" alt="Nail polish swatch in shade <%= wpolishes[i].brand %> - <%= wpolishes[i].name %>">
+                                <img src="<%=wpolishes[i].swatch%>" alt="Nail polish swatch of shade <%= wpolishes[i].brand %> <%= wpolishes[i].name %>">
                             <%} else {%>
                                 <img src="/images/swatches/noswatch.jpg" alt="">
                             <%}%>

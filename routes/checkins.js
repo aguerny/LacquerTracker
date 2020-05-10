@@ -280,7 +280,7 @@ app.get('/freshcoats/:id', function(req, res) {
             data.checkincomment = allcomments;
             data.moment = moment;
             data.alttagpolish = post.polish.map(function(x) {
-                return x.brand + " - " + x.name;
+                return x.brand + " " + x.name;
             }).toString().replace(",", ", ");
             res.render('checkins/viewonecheckin.ejs', data);
         }
@@ -558,7 +558,7 @@ app.post('/freshcoats/:id/flag', isLoggedIn, function(req, res) {
             res.redirect('/error');
         } else {
             checkin.pendingdelete = true;
-            checkin.pendingreason = req.user.username + ": " + sanitizer.sanitize(req.body.message);
+            checkin.pendingreason = req.user.username + " - " + sanitizer.sanitize(req.body.message);
             checkin.save(function(err) {
                 var transport = nodemailer.createTransport({
                     sendmail: true,
