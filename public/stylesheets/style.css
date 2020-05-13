@@ -38,8 +38,6 @@
 
     .replycomment {background-color: #D8D8D8;}
 
-    .starrating {max-width:100%;}
-
     .collage {padding: 10px;}
 
     .collage img{vertical-align:bottom;}
@@ -226,7 +224,8 @@
     .gallery li{display:none; list-style:none;}
     .gallery li:first-child {display:block;}
 
-    .staradjust {margin-top:-.5%;}
+    .starprofile {max-width:70px;}
+    .starpolish {max-width:70px; margin-top:-.5%;}
 
 }
 
@@ -366,28 +365,25 @@
     .width50 {display:inline-block; width:98%;}
     .width80 {display:inline-block; width:98%;}
 
-    .browsetable th.name {width:20%;}
-    .browsetable th.brand {width:18%;}
+    .browsetable th.name {width:21%;}
+    .browsetable th.brand {width:20%;}
     .browsetable th.collection {width:20%;}
-    .browsetable th.color {width:8%;}
-    .browsetable th.swatch {width:10%;}
-    .browsetable th.type {width:14%;}
+    .browsetable th.swatch {width:13%;}
+    .browsetable th.type {width:16%;}
     .browsetable th.info {width:10%;}
 
-    .ownedtable th.name {width:20%;}
-    .ownedtable th.brand {width:18%;}
-    .ownedtable th.collection {width:20%;}
-    .ownedtable th.color {width:8%;}
-    .ownedtable th.swatch {width:12%;}
-    .ownedtable th.type {width:14%;}
-    .ownedtable th.rating {width:8%;}
+    .ownedtable th.name {width:21%;}
+    .ownedtable th.brand {width:21%;}
+    .ownedtable th.collection {width:21%;}
+    .ownedtable th.swatch {width:13%;}
+    .ownedtable th.type {width:13%;}
+    .ownedtable th.rating {width:11%;}
 
-    .wantedtable th.name {width:24%;}
+    .wantedtable th.name {width:23%;}
     .wantedtable th.brand {width:22%;}
-    .wantedtable th.collection {width:22%;}
-    .wantedtable th.color {width:8%;}
-    .wantedtable th.swatch {width:12%;}
-    .wantedtable th.type {width:12%;}
+    .wantedtable th.collection {width:23%;}
+    .wantedtable th.swatch {width:14%;}
+    .wantedtable th.type {width:18%;}
 
     #contact-left_col {text-align:center;}
     #welcome h4 {text-align:center;}
@@ -409,7 +405,8 @@
 
     .hovermenu {font-size:11px;}
 
-    .staradjust {margin-top:-1.5%;}
+    .starprofile {max-width:100%;}
+    .starpolish {max-width:70px; margin-top:-1.5%;}
 
     .collage img{max-width:49%; padding-bottom:2px;}
 

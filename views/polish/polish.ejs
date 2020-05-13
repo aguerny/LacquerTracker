@@ -160,7 +160,7 @@ $(window).load(function () {
                         <hr><br>
                         <h4 style="display:inline">Your Review:</h4> <i><a href="/review/edit/<%= pid %>">Edit</a></i><br><br>
                         <% if (review.length > 0 || rating.length > 0) { %>
-                            <%if (rating >= 1) {%><img class="staradjust" src="/images/stars/<%=rating%>star.png" alt="<%=rating%> star rating"> - <%}%><%= review %>
+                            <%if (rating >= 1) {%><img class="starpolish" src="/images/stars/<%=rating%>star.png" alt="<%=rating%> star rating"> - <%}%><%= review %>
                         <% } %>
                         <br><br><br>
                         <h4 style="display:inline">Your Notes:</h4> <i><a href="/notes/edit/<%= pid %>">Edit</a><br><br>(Notes are only visible to you.)</i><br><br>
@@ -172,7 +172,7 @@ $(window).load(function () {
                     <h4 style="display:inline">User Reviews:</h4><br><br>
                     <% for (i=0; i<allreviews.length; i++) {%>
                         <% if (allreviews[i].review.length > 0) { %>
-                            <%if (allreviews[i].rating >= 1) {%><img class="staradjust" src="/images/stars/<%=allreviews[i].rating%>star.png" alt="<%=allreviews[i].rating%> star rating"> - <%}%><%= allreviews[i].review %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
+                            <%if (allreviews[i].rating >= 1) {%><img class="starpolish" src="/images/stars/<%=allreviews[i].rating%>star.png" alt="<%=allreviews[i].rating%> star rating"> - <%}%><%= allreviews[i].review %> - <a href="/profile/<%= allreviews[i].user.username %>"><%= allreviews[i].user.username %></a><br><br>
                         <% } %>
                     <% } %>
                     <br><br>

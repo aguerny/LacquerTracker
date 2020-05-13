@@ -70,12 +70,7 @@ $(window).load(function () {
                         </td>
                         <td>
                             <% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
-                                <div id="biglayout">
-                                    <span style="display:none;"><%=oreviews[i].rating%></span><img class="starrating" src="/images/stars/<%=oreviews[i].rating%>star.png"alt="">
-                                </div>
-                                <div id="smalllayout">
-                                    <span><%=oreviews[i].rating%></span>
-                                </div>
+                                <span style="display:none;"><%=oreviews[i].rating%></span><img class="starprofile" src="/images/stars/<%=oreviews[i].rating%>star.png"alt="">
                             <% } %>
                         </td></tr>
                     <% } %>
@@ -100,12 +95,7 @@ $(window).load(function () {
                         </td>
                         <td>
                             <% if (typeof areviews[i] !== "undefined" && areviews[i].rating > 0) { %>
-                                <div id="biglayout">
-                                    <span style="display:none;"><%=areviews[i].rating%></span><img class="starrating" src="/images/stars/<%=areviews[i].rating%>star.png"alt="">
-                                </div>
-                                <div id="smalllayout">
-                                    <span><%=areviews[i].rating%></span>
-                                </div>
+                                <span style="display:none;"><%=areviews[i].rating%></span><img class="starprofile" src="/images/stars/<%=areviews[i].rating%>star.png"alt="">
                             <% } %>
                         </td></tr>
                     <% } %>
