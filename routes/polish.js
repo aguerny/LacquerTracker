@@ -39,6 +39,9 @@ app.get('/polish/:brand/:name', function(req, res) {
             data.pcode = polish.code;
             data.pid = polish.id;
             data.pdupes = polish.dupes;
+            if (polish.avgrating) {
+                data.pavgrating = Math.round(polish.avgrating).toString();
+            }
             data.linkbrand = polish.brand.replace("%20"," ");
             data.linkname = polish.name.replace("%20"," ");
             data.checkins = polish.checkins;

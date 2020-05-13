@@ -18,6 +18,7 @@ var polishSchema = mongoose.Schema({
     dupes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Polish'}],
     photos: [{type: mongoose.Schema.Types.ObjectId, ref: 'Photo'}],
     reviews: [{type: mongoose.Schema.Types.ObjectId, ref: 'Review'}],
+    avgrating: Number,
     swatch: String,
     flagged: Boolean,
     flaggedreason: String,

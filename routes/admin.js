@@ -193,40 +193,59 @@ app.post('/admin/combine', isLoggedIn, function(req, res) {
                         }
 
                         User.find({wantedpolish:remove.id}, function(err, users) {
-                            for (var j=0; j<users.length; j++) {
-                                users[j].wantedpolish.remove(remove.id);
-                                users[j].wantedpolish.addToSet(keep.id);
-                                users[j].save();
+                            for (var k=0; k<users.length; k++) {
+                                users[k].wantedpolish.remove(remove.id);
+                                users[k].wantedpolish.addToSet(keep.id);
+                                users[k].save();
                             }
 
                             Photo.find({polishid:remove.id}, function(err, photos) {
-                                for (var j=0; j<photos.length; j++) {
-                                    photos[j].polishid = keep.id;
-                                    photos[j].save();
-                                    keep.photos.addToSet(photos[j].id);
-                                    keep.save();
+                                for (var l=0; l<photos.length; l++) {
+                                    photos[l].polishid = keep.id;
+                                    photos[l].save();
+                                    keep.photos.addToSet(photos[l].id);
                                 }
 
-                                Review.find({polish:remove.id}, function(err, reviews) {
-                                    for (var j=0; j<reviews.length; j++) {
-                                        reviews[j].polish = keep.id;
-                                        reviews[j].save();
-                                        remove.reivews.remove(reviews[j].id);
-                                        remove.save();
-                                        keep.reviews.addToSet(reviews[j].id);
-                                        keep.save();
-                                    }
+                                keep.dateupdated = new Date();
+                                keep.save(function(err) {
 
-                                    Checkin.find({polish:remove.id}, function(err, checkins) {
-                                        for (var j=0; j<checkins.length; j++) {
-                                            checkins[j].polish.remove(remove.id);
-                                            checkins[j].polish.addToSet(keep.id);
-                                            checkins[j].save();
-                                            remove.checkins.remove(checkins[j].id);
-                                            remove.save();
-                                            keep.checkins.addToSet(checkins[j].id);
-                                            keep.save();
+                                    Review.find({polish:remove.id}, function(err, reviews) {
+                                        for (var m=0; m<reviews.length; m++) {
+                                            reviews[m].polish = keep.id;
+                                            reviews[m].save();
+                                            remove.reviews.remove(reviews[m].id);
+                                            keep.reviews.addToSet(reviews[m].id);
                                         }
+
+                                        remove.save();
+                                        keep.save(function(err) {
+
+                                            Review.find({polish: keep.id}, function (err, allreviews) {
+                                                if (allreviews.length > 0) {
+                                                    var ratings = allreviews.map(function(x) {
+                                                        if (x.rating.length > 0) {
+                                                            return parseInt(x.rating);
+                                                        }
+                                                    })
+                                                    keep.avgrating = _.mean(ratings);
+                                                }
+                                                keep.save(function(err) {
+
+                                                    Checkin.find({polish:remove.id}, function(err, checkins) {
+                                                        for (var n=0; n<checkins.length; n++) {
+                                                            checkins[n].polish.remove(remove.id);
+                                                            checkins[n].polish.addToSet(keep.id);
+                                                            checkins[n].save();
+                                                            remove.checkins.remove(checkins[n].id);
+                                                            keep.checkins.addToSet(checkins[n].id);
+                                                        }
+
+                                                        remove.save();
+                                                        keep.save();
+                                                    })
+                                                })
+                                            })
+                                        })
                                     })
                                 })
                             })

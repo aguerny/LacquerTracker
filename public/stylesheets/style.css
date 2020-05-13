@@ -399,7 +399,7 @@
     .forumlist, .forumlist li {list-style-type:none; padding-left:0;}
 
     .gallery li img {
-        max-height: 300px;
+        max-height: 550px;
         max-width: 98%;
         vertical-align:middle;
     }

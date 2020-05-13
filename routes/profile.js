@@ -257,7 +257,19 @@ app.get('/profile/:username/delete', isLoggedIn, function(req, res) {
                         console.log(reviews[i].id);
                         Polish.findById(reviews[i].polish).exec(function (err, polish) {
                             polish.reviews.remove(reviewid);
-                            polish.save();
+                            polish.save(function(err) {
+                                Review.find({polish: polish.id}, function (err, reviews) {
+                                    if (reviews.length > 0) {
+                                        var ratings = reviews.map(function(x) {
+                                            if (x.rating.length > 0) {
+                                                return parseInt(x.rating);
+                                            }
+                                        })
+                                        polish.avgrating = _.mean(ratings);
+                                        polish.save();
+                                    }
+                                })
+                            });
                         })
                         reviews[i].remove();
                     }

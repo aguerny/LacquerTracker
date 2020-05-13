@@ -3,6 +3,7 @@ var User = require('../app/models/user');
 var Review = require('../app/models/review');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
+var _ = require('lodash');
 
 module.exports = function(app, passport) {
 
@@ -44,7 +45,17 @@ app.post('/review/edit/:id', isLoggedIn, function(req, res) {
             review.save(function(err) {
                 polish.dateupdated = new Date();
                 polish.save(function(err) {
-                    res.redirect('/polish/' + polishbrand.replace(/ /g,"_") + "/" + polishname.replace(/ /g,"_"));
+                    Review.find({polish: req.params.id}, function (err, reviews) {
+                        var ratings = reviews.map(function(x) {
+                            if (x.rating.length > 0) {
+                                return parseInt(x.rating);
+                            }
+                        })
+                        polish.avgrating = _.mean(ratings);
+                        polish.save(function(err) {
+                            res.redirect('/polish/' + polishbrand.replace(/ /g,"_") + "/" + polishname.replace(/ /g,"_"));
+                        })
+                    })
                 })
             });
         } else {
@@ -59,7 +70,17 @@ app.post('/review/edit/:id', isLoggedIn, function(req, res) {
                 polish.dateupdated = new Date();
                 polish.reviews.push(newReview.id);
                 polish.save(function(err) {
-                    res.redirect('/polish/' + polishbrand.replace(/ /g,"_") + "/" + polishname.replace(/ /g,"_"));
+                    Review.find({polish: req.params.id}, function (err, reviews) {
+                        var ratings = reviews.map(function(x) {
+                            if (x.rating.length > 0) {
+                                return parseInt(x.rating);
+                            }
+                        })
+                        polish.avgrating = _.mean(ratings);
+                        polish.save(function(err) {
+                            res.redirect('/polish/' + polishbrand.replace(/ /g,"_") + "/" + polishname.replace(/ /g,"_"));
+                        })
+                    })
                 })
             });
             }
