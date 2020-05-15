@@ -34,11 +34,11 @@ app.post('/signup', function(req, res) {
                             if (req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
                                 res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
                             }
-                            Put your secret key here.
+                            //Put your secret key here.
                             var secretKey = process.env.LTRECAPTCHASECRETKEY;
-                            req.connection.remoteAddress will provide IP address of connected user.
+                            //req.connection.remoteAddress will provide IP address of connected user.
                             var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
-                            Hitting GET request to the URL, Google will respond with success or error scenario.
+                            //Hitting GET request to the URL, Google will respond with success or error scenario.
                             request(verificationUrl,function(error,response,body) {
                                 body = JSON.parse(body);
                                 // Success will be true or false depending upon captcha validation.
@@ -46,7 +46,7 @@ app.post('/signup', function(req, res) {
                                     res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
                                 }
                                 if (body.success === true) {
-                                    create the user
+                                    //create the user
                                     var newUser = new User();
 
                                     //set the user's local credentials
