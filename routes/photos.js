@@ -86,7 +86,7 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
         }
     } else if (req.body.url.length > 0) {
         fs.unlink(req.files.photo.tempFilePath, function() {
-            var ext = path.extname(sanitizer.sanitize(req.body.url));
+            var ext = path.extname(sanitizer.sanitize(req.body.url.replace(/^(.+?\.(png|jpe?g)).*$/i, '$1')));
             Polish.findById(req.params.id, function(err, p) {
                 var newPhoto = new Photo ({
                     polishid: p.id,
@@ -103,7 +103,7 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                     p.dateupdated = new Date();
                     p.photos.push(newPhoto.id);
                     p.save();
-                    download(sanitizer.sanitize(req.body.url), targetPath, function(err) {
+                    download(sanitizer.sanitize(req.body.url.replace(/^(.+?\.(png|jpe?g)).*$/i, '$1')), targetPath, function(err) {
                         if (err) {
                             newPhoto.remove();
                             p.photos.remove(newPhoto.id);
@@ -291,7 +291,7 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
             }
         } else if (req.body.url.length > 0) {
             fs.unlink(req.files.photo.tempFilePath, function() {
-                var ext = path.extname(sanitizer.sanitize(req.body.url));
+                var ext = path.extname(sanitizer.sanitize(req.body.url.replace(/^(.+?\.(png|jpe?g)).*$/i, '$1')));
                 var newUserPhoto = new UserPhoto ({
                     userid: req.user.id,
                     location: '',
@@ -301,7 +301,7 @@ app.post('/photo/upload', isLoggedIn, function(req, res) {
                         res.redirect('/error');
                     } else {
                         var targetPath = path.resolve('./public/images/useruploads/' + req.user.username + "-" + newUserPhoto.id + ext);
-                        download(sanitizer.sanitize(req.body.url), targetPath, function(err) {
+                        download(sanitizer.sanitize(req.body.url.replace(/^(.+?\.(png|jpe?g)).*$/i, '$1')), targetPath, function(err) {
                             if (err) {
                                 newUserPhoto.remove();
                                 req.user.save(function(err) {
@@ -375,10 +375,10 @@ app.post('/photo/profile', isLoggedIn, function(req, res) {
         }
     } else if (req.body.url.length > 0) {
         fs.unlink(req.files.photo.tempFilePath, function() {
-            var ext = path.extname(sanitizer.sanitize(req.body.url));
+            var ext = path.extname(sanitizer.sanitize(req.body.url.replace(/^(.+?\.(png|jpe?g)).*$/i, '$1')));
             var tempPath = path.resolve('./public/images/tmp/' + req.user.username + ext);
             var targetPath = path.resolve('./public/images/profilephotos/' + req.user.username + ext);
-            download(sanitizer.sanitize(req.body.url), tempPath, function(err) {
+            download(sanitizer.sanitize(req.body.url.replace(/^(.+?\.(png|jpe?g)).*$/i, '$1')), tempPath, function(err) {
                 if (err) {
                     res.redirect('/error');
                 } else {
@@ -445,10 +445,10 @@ app.post('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
             }
         } else if (req.body.url.length > 0) {
             fs.unlink(req.files.photo.tempFilePath, function () {
-                var ext = path.extname(sanitizer.sanitize(req.body.url));
+                var ext = path.extname(sanitizer.sanitize(req.body.url.replace(/^(.+?\.(png|jpe?g)).*$/i, '$1')));
                 var tempPath = path.resolve('./public/images/tmp/' + brand.id + ext);
                 var targetPath = path.resolve('./public/images/brandphotos/' + brand.id + ext);
-                download(sanitizer.sanitize(req.body.url), tempPath, function(err) {
+                download(sanitizer.sanitize(req.body.url.replace(/^(.+?\.(png|jpe?g)).*$/i, '$1')), tempPath, function(err) {
                     if (err) {
                         res.redirect('/error');
                     } else {

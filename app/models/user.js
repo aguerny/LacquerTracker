@@ -24,6 +24,7 @@ var userSchema = mongoose.Schema({
 	checkins     : [{type: mongoose.Schema.Types.ObjectId, ref: 'Checkin'}],
 	savedcheckins: [{type: mongoose.Schema.Types.ObjectId, ref: 'Checkin'}],
 	deleted      : Boolean,
+	source       : String,
 });
 
 userSchema.plugin(autoIncrement.plugin, {

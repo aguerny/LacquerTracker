@@ -29,16 +29,16 @@ app.post('/signup', function(req, res) {
                 } else if (req.body.username.length > 20) {
                     res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Username max length is 15 characters.', email:sanitizer.sanitize(req.body.email), username:''});
                 } else {
-                    if (sanitizer.sanitize(req.body.password) === sanitizer.sanitize(req.body.confirm)) {
+                    if (sanitizer.sanitize(req.body.password) === sanitizer.sanitize(req.body.passwordconfirm)) {
                         if (sanitizer.sanitize(req.body.email.toLowerCase()) === sanitizer.sanitize(req.body.emailconfirm.toLowerCase())) {
                             if (req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
                                 res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
                             }
-                            // Put your secret key here.
+                            Put your secret key here.
                             var secretKey = process.env.LTRECAPTCHASECRETKEY;
-                            // req.connection.remoteAddress will provide IP address of connected user.
+                            req.connection.remoteAddress will provide IP address of connected user.
                             var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
-                            // Hitting GET request to the URL, Google will respond with success or error scenario.
+                            Hitting GET request to the URL, Google will respond with success or error scenario.
                             request(verificationUrl,function(error,response,body) {
                                 body = JSON.parse(body);
                                 // Success will be true or false depending upon captcha validation.
@@ -46,7 +46,7 @@ app.post('/signup', function(req, res) {
                                     res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
                                 }
                                 if (body.success === true) {
-                                    //create the user
+                                    create the user
                                     var newUser = new User();
 
                                     //set the user's local credentials
@@ -64,6 +64,7 @@ app.post('/signup', function(req, res) {
                                     newUser.country = "";
                                     newUser.timezone = "America/New_York";
                                     newUser.deleted = false;
+                                    newUser.source = sanitizer.sanitize(req.body.source) || '';
 
                                     //save the user
                                     newUser.save(function(err) {
@@ -274,7 +275,7 @@ app.post('/reset/:key', function(req, res) {
             res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
         } else {
             if (new Date(resetkey.expiredate) > new Date()) {
-                if (sanitizer.sanitize(req.body.password) === sanitizer.sanitize(req.body.confirm)) {
+                if (sanitizer.sanitize(req.body.password) === sanitizer.sanitize(req.body.passwordconfirm)) {
                     User.findOneAndUpdate({username: resetkey.username}, {password: bcrypt.hashSync(sanitizer.sanitize(req.body.password))}, function(err, user) {
                         res.redirect('/login');
                     });

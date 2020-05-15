@@ -16,7 +16,7 @@ function confirm_alert(node) {
     <div id="container" class="clear">
     <section>
         <div class="photo500">
-        <h2><%= checkinuser.username %>'s Fresh Coat</h2><br>
+        <h2><a href="/profile/<%= checkinuser.username %>"><%= checkinuser.username %></a>'s Fresh Coat</h2><br>
             Posted on <%= checkindate %>
                 <% if (isAuthenticated) { %>
                      | <span class="postflag" style="opacity:0.5"><a href="">&#128681</a></span>
@@ -39,10 +39,12 @@ function confirm_alert(node) {
             <br><br><br>
             <img src="<%= checkinphoto %>" alt="Nail polish manicure of shade <%= alttagpolish %>"><br><br><br>
             <% if (checkindescription.length > 0) {%><%= checkindescription %><br><br><br><%}%>
-            Polish Used:
+            <% if (checkinpolish.length === 0) { %>Polish Used: ?<%} else {%>
+                Polish Used:
                 <% for (i=0; i<checkinpolish.length; i++) { %>
                     <br>&#8226; <a href='/polish/<%= checkinpolish[i].brand.replace(/ /g,"_") %>/<%= checkinpolish[i].name.replace(/ /g,"_") %>'><%= checkinpolish[i].brand %> - <%= checkinpolish[i].name %></a>
                 <% } %>
+            <% } %>
             <br><br><br><hr><br>
             <b>Comments (<%= checkincomment.length %>)</b> |
             <% if (isAuthenticated) { %>
