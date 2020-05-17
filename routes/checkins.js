@@ -109,55 +109,94 @@ app.post('/freshcoats/add', isLoggedIn, function(req, res) {
             // need to update below as well if under 12 hours
             if (req.files.photo.name.length > 0) {
                 if (req.files.photo.mimetype.startsWith("image")) {
-                    var ext = path.extname(req.files.photo.name);
-                    var newCheckin = new Checkin ({
-                        user: req.user.id,
-                        creationdate: new Date,
-                        editdate: new Date,
-                        photo: "",
-                        polish: [],
-                        pendingdelete: false,
-                        pendingreason: "",
-                        comments: [],
-                        description: sanitizer.sanitize(req.body.description),
-                    })
-                    newCheckin.save(function(err) {
-                        if (req.body.polish) {
-                            newCheckin.polish = sanitizer.sanitize(req.body.polish).split(',');
-                        }
-                        if (err) {
-                            fs.unlink(req.files.photo.tempFilePath, function(err) {
-                                newCheckin.remove(function(err) {
-                                    res.redirect('/error');
-                                })
-                            })
-                        } else {
-                            gm(req.files.photo.tempFilePath).strip().interlace('Plane').samplingFactor(4,2,0).quality(50).resize(60,60,"%").write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function (err) {
-                                if (err) {
-                                    fs.unlink(req.files.photo.tempFilePath, function(err) {
-                                        newCheckin.remove();
+                    if (req.files.photo.size <= 5000000) {
+                        var ext = path.extname(req.files.photo.name);
+                        var newCheckin = new Checkin ({
+                            user: req.user.id,
+                            creationdate: new Date,
+                            editdate: new Date,
+                            photo: "",
+                            polish: [],
+                            pendingdelete: false,
+                            pendingreason: "",
+                            comments: [],
+                            description: sanitizer.sanitize(req.body.description),
+                        })
+                        newCheckin.save(function(err) {
+                            if (req.body.polish) {
+                                newCheckin.polish = sanitizer.sanitize(req.body.polish).split(',');
+                            }
+                            if (err) {
+                                fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                    newCheckin.remove(function(err) {
                                         res.redirect('/error');
                                     })
-                                } else {
-                                    fs.unlink(req.files.photo.tempFilePath, function() {
-                                        newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
-                                        newCheckin.save(function(err) {
-                                            req.user.checkins.addToSet(newCheckin.id);
-                                            req.user.save();
-                                            for (i=0; i<newCheckin.polish.length; i++) {
-                                                Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
-                                                    polish.checkins.addToSet(newCheckin.id);
-                                                    polish.dateupdated = new Date();
-                                                    polish.save();
+                                })
+                            } else {
+                                if (gm(req.files.photo.tempFilePath).size.width > 600) {
+                                    gm(req.files.photo.tempFilePath).strip().interlace('Plane').samplingFactor(4,2,0).quality(50).resize(60,60,"%").write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function (err) {
+                                        if (err) {
+                                            fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                                newCheckin.remove();
+                                                res.redirect('/error');
+                                            })
+                                        } else {
+                                            fs.unlink(req.files.photo.tempFilePath, function() {
+                                                newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
+                                                newCheckin.save(function(err) {
+                                                    req.user.checkins.addToSet(newCheckin.id);
+                                                    req.user.save();
+                                                    for (i=0; i<newCheckin.polish.length; i++) {
+                                                        Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
+                                                            polish.checkins.addToSet(newCheckin.id);
+                                                            polish.dateupdated = new Date();
+                                                            polish.save();
+                                                        })
+                                                    }
+                                                    res.redirect('/freshcoats');
                                                 })
-                                            }
-                                            res.redirect('/freshcoats');
-                                        })
+                                            })
+                                        }
+                                    })
+                                } else {
+                                    gm(req.files.photo.tempFilePath).strip().interlace('Plane').samplingFactor(4,2,0).quality(50).write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function (err) {
+                                        if (err) {
+                                            fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                                newCheckin.remove();
+                                                res.redirect('/error');
+                                            })
+                                        } else {
+                                            fs.unlink(req.files.photo.tempFilePath, function() {
+                                                newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
+                                                newCheckin.save(function(err) {
+                                                    req.user.checkins.addToSet(newCheckin.id);
+                                                    req.user.save();
+                                                    for (i=0; i<newCheckin.polish.length; i++) {
+                                                        Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
+                                                            polish.checkins.addToSet(newCheckin.id);
+                                                            polish.dateupdated = new Date();
+                                                            polish.save();
+                                                        })
+                                                    }
+                                                    res.redirect('/freshcoats');
+                                                })
+                                            })
+                                        }
                                     })
                                 }
+                            }
+                        })
+                    } else {
+                        fs.unlink(req.files.photo.tempFilePath, function() {
+                            Polish.find({}).sort({brand: 1}).sort({name: 1}).exec(function (err, polishes) {
+                                data = {}
+                                data.title = 'Check In Your Mani - Lacquer Tracker';
+                                data.polish = polishes;
+                                data.message = 'File size too large.'
+                                res.render('checkins/add.ejs', data);
                             })
-                        }
-                    })
+                        })
+                    }
                 } else {
                     fs.unlink(req.files.photo.tempFilePath, function() {
                         res.redirect('/error');
@@ -181,55 +220,94 @@ app.post('/freshcoats/add', isLoggedIn, function(req, res) {
         } else {
             if (req.files.photo.name.length > 0) {
                 if (req.files.photo.mimetype.startsWith("image")) {
-                    var ext = path.extname(req.files.photo.name);
-                    var newCheckin = new Checkin ({
-                        user: req.user.id,
-                        creationdate: new Date,
-                        editdate: new Date,
-                        photo: "",
-                        polish: [],
-                        pendingdelete: false,
-                        pendingreason: "",
-                        comments: [],
-                        description: sanitizer.sanitize(req.body.description),
-                    })
-                    newCheckin.save(function(err) {
-                        if (req.body.polish) {
-                            newCheckin.polish = sanitizer.sanitize(req.body.polish).split(',');
-                        }
-                        if (err) {
-                            fs.unlink(req.files.photo.tempFilePath, function(err) {
-                                newCheckin.remove(function(err) {
-                                    res.redirect('/error');
-                                })
-                            })
-                        } else {
-                            gm(req.files.photo.tempFilePath).strip().interlace('Plane').samplingFactor(4,2,0).quality(50).resize(60,60,"%").write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function (err) {
-                                if (err) {
-                                    fs.unlink(req.files.photo.tempFilePath, function(err) {
-                                        newCheckin.remove();
+                    if (req.files.photo.size <= 5000000) {
+                        var ext = path.extname(req.files.photo.name);
+                        var newCheckin = new Checkin ({
+                            user: req.user.id,
+                            creationdate: new Date,
+                            editdate: new Date,
+                            photo: "",
+                            polish: [],
+                            pendingdelete: false,
+                            pendingreason: "",
+                            comments: [],
+                            description: sanitizer.sanitize(req.body.description),
+                        })
+                        newCheckin.save(function(err) {
+                            if (req.body.polish) {
+                                newCheckin.polish = sanitizer.sanitize(req.body.polish).split(',');
+                            }
+                            if (err) {
+                                fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                    newCheckin.remove(function(err) {
                                         res.redirect('/error');
                                     })
-                                } else {
-                                    fs.unlink(req.files.photo.tempFilePath, function() {
-                                        newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
-                                        newCheckin.save(function(err) {
-                                            req.user.checkins.addToSet(newCheckin.id);
-                                            req.user.save();
-                                            for (i=0; i<newCheckin.polish.length; i++) {
-                                                Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
-                                                    polish.checkins.addToSet(newCheckin.id);
-                                                    polish.dateupdated = new Date();
-                                                    polish.save();
+                                })
+                            } else {
+                                if (gm(req.files.photo.tempFilePath).size.width > 600) {
+                                    gm(req.files.photo.tempFilePath).strip().interlace('Plane').samplingFactor(4,2,0).quality(50).resize(60,60,"%").write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function (err) {
+                                        if (err) {
+                                            fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                                newCheckin.remove();
+                                                res.redirect('/error');
+                                            })
+                                        } else {
+                                            fs.unlink(req.files.photo.tempFilePath, function() {
+                                                newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
+                                                newCheckin.save(function(err) {
+                                                    req.user.checkins.addToSet(newCheckin.id);
+                                                    req.user.save();
+                                                    for (i=0; i<newCheckin.polish.length; i++) {
+                                                        Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
+                                                            polish.checkins.addToSet(newCheckin.id);
+                                                            polish.dateupdated = new Date();
+                                                            polish.save();
+                                                        })
+                                                    }
+                                                    res.redirect('/freshcoats');
                                                 })
-                                            }
-                                            res.redirect('/freshcoats');
-                                        })
+                                            })
+                                        }
+                                    })
+                                } else {
+                                    gm(req.files.photo.tempFilePath).strip().interlace('Plane').samplingFactor(4,2,0).quality(50).write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function (err) {
+                                        if (err) {
+                                            fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                                newCheckin.remove();
+                                                res.redirect('/error');
+                                            })
+                                        } else {
+                                            fs.unlink(req.files.photo.tempFilePath, function() {
+                                                newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
+                                                newCheckin.save(function(err) {
+                                                    req.user.checkins.addToSet(newCheckin.id);
+                                                    req.user.save();
+                                                    for (i=0; i<newCheckin.polish.length; i++) {
+                                                        Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
+                                                            polish.checkins.addToSet(newCheckin.id);
+                                                            polish.dateupdated = new Date();
+                                                            polish.save();
+                                                        })
+                                                    }
+                                                    res.redirect('/freshcoats');
+                                                })
+                                            })
+                                        }
                                     })
                                 }
+                            }
+                        })
+                    } else {
+                        fs.unlink(req.files.photo.tempFilePath, function() {
+                            Polish.find({}).sort({brand: 1}).sort({name: 1}).exec(function (err, polishes) {
+                                data = {}
+                                data.title = 'Check In Your Mani - Lacquer Tracker';
+                                data.polish = polishes;
+                                data.message = 'File upload too large.'
+                                res.render('checkins/add.ejs', data);
                             })
-                        }
-                    })
+                        })
+                    }
                 } else {
                     fs.unlink(req.files.photo.tempFilePath, function() {
                         res.redirect('/error');
@@ -515,9 +593,9 @@ app.get('/freshcoats/:id/:cid/remove', isLoggedIn, function(req, res) {
 app.get('/freshcoats/:id/remove', isLoggedIn, function(req, res) {
     Checkin.findById(req.params.id).populate('user').exec(function(err, post) {
         if (post === null || post === undefined) {
-             res.redirect('/error');
+            res.redirect('/error');
          } else {
-             if (post.user == req.user.id || req.user.level === "admin") {
+             if (post.user.username == req.user.username || req.user.level === "admin") {
                 for (i=0; i<post.savedby.length; i++) {
                     User.findById(post.savedby[i]).exec(function(err, user) {
                         user.savedcheckins.remove(req.params.id);
@@ -543,7 +621,7 @@ app.get('/freshcoats/:id/remove', isLoggedIn, function(req, res) {
                     })
                  })
              } else {
-                 res.redirect('/error');
+                res.redirect('/error');
              }
          }
     })

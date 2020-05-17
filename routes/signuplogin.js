@@ -205,7 +205,7 @@ app.get('/passwordreset', function(req, res) {
 });
 
 app.post('/passwordreset', function(req, res) {
-    User.findOne({username: sanitizer.sanitize(req.body.username)}, function(err, user) {
+    User.findOne({username: sanitizer.sanitize(req.body.username.toLowerCase())}, function(err, user) {
         if (err) {
             res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error. Please try again later.'});
         } else {
@@ -230,7 +230,7 @@ app.post('/passwordreset', function(req, res) {
                         replyTo: "lacquertrackermailer@gmail.com",
                         to: user.email,
                         subject: 'Password Reset',
-                        text: "Hi " + user.username + ",\n\nYour reset password link is: https://www.lacquertracker.com/reset/" + newResetKey.id + "\n\nYou have 24 hours until this key expires.\n\n\nHappy polishing,\nLacquer Tracker",
+                        text: "Hi " + user.username + ",\n\nYour reset password link is: https://www.lacquertracker.com/reset/" + newResetKey.id + "\n\nYou have 24 hours until this link expires.\n\n\nHappy polishing,\nLacquer Tracker",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {

@@ -38,7 +38,7 @@ app.get('/photo/add/:id', isLoggedIn, function(req, res) {
 
 app.post('/photo/add/:id', isLoggedIn, function(req, res) {
     if (req.files.photo.name.length > 0) {
-        if (req.files.photo.mimetype.startsWith("image")) {
+        if ((req.files.photo.mimetype.startsWith("image")) && (req.files.photo.mimetype !== "image/gif")) {
             var ext = path.extname(req.files.photo.name);
             Polish.findById(req.params.id, function(err, p) {
                 var newPhoto = new Photo ({
@@ -348,7 +348,7 @@ app.get('/photo/profile', isLoggedIn, function(req, res) {
 
 app.post('/photo/profile', isLoggedIn, function(req, res) {
     if (req.files.photo.name.length > 0) {
-        if (req.files.photo.mimetype.startsWith("image")) {
+        if ((req.files.photo.mimetype.startsWith("image")) && (req.files.photo.mimetype !== "image/gif")) {
             var ext = path.extname(req.files.photo.name);
             var tempPath = req.files.photo.tempFilePath;
             var targetPath = path.resolve('./public/images/profilephotos/' + req.user.username + ext);
@@ -418,7 +418,7 @@ app.get('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
 app.post('/admin/brandphoto/:id', isLoggedIn, function(req, res) {
     Brand.findById(req.params.id, function(err, brand) {
         if (req.files.photo.name.length > 0) {
-            if (req.files.photo.mimetype.startsWith("image")) {
+            if ((req.files.photo.mimetype.startsWith("image")) && (req.files.photo.mimetype !== "image/gif")) {
                 var ext = path.extname(req.files.photo.name);
                 var tempPath = req.files.photo.tempFilePath;
                 var targetPath = path.resolve('./public/images/brandphotos/' + brand.id + ext);

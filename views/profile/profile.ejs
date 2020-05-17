@@ -2,6 +2,8 @@
 
 <script src="/scripts/collageplus.js"></script>
 <script src="/scripts/sorttable.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/freezeframe@3.0.10/build/css/freezeframe_styles.min.css">
+<script type="text/javascript" src="https://unpkg.com/freezeframe@3.0.10/build/js/freezeframe.pkgd.min.js"></script>
 
 <script>
 $(window).load(function () {
@@ -137,7 +139,7 @@ $(window).load(function () {
                     <div class="collage">
                         <% for (i=0; i<checkins.length; i++) { %>
                             <% if (checkins[i].pendingdelete === false) { %>
-                                <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Manicure by user <%= username %>"></a>
+                                <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Manicure by user <%= username %>" class="freezeframe"></a>
                             <% } %>
                         <% } %>
                     </div>
@@ -226,6 +228,8 @@ $('.freshcoats-close').click(function() {
     $('.freshcoats-open').show();
     $('.freshcoats-close').hide();
 });
+
+$('.freezeframe').freezeframe();
 </script>
 
 <%- include('../layoutBottom'); %>
