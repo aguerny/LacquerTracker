@@ -149,7 +149,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
                         Polish.findOne({name: new RegExp("^"+polishNameToFind+"$","i"), brand: new RegExp("^"+polishBrandToFind+"$", "i")}, function(err, polish) {
                             if (polish !== null) {
                                 if (req.body.ownership == "yes") {
-                                    User.findOne({'username':req.body.user}, function(err, user) {
+                                    User.findOne({'username':new RegExp(["^", sanitizer.sanitize(req.body.username.user), "$"].join(""), "i")}, function(err, user) {
                                         if (user !== null) {
                                             user.wantedpolish.remove(polish.id);
                                             user.ownedpolish.addToSet(polish.id);
@@ -221,7 +221,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
                                     polish.save();
                                 })
                             } else {
-                                User.findOne({'username':req.body.user}, function(err, user) {
+                                User.findOne({'username':new RegExp(["^", sanitizer.sanitize(req.body.user), "$"].join(""), "i")}, function(err, user) {
 
                                     var newPolish = new Polish ({
                                         name: polishNameToFind,
@@ -310,7 +310,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
                                     newPolish.save(function(err) {
                                         newPolish.keywords = accents.remove(newPolish.brand) + " - " + accents.remove(newPolish.name) + " - " + accents.remove(newPolish.batch) + " - " + newPolish.code;
                                         if (req.body.ownership == "yes") {
-                                            User.findOne({'username':req.body.user}, function(err, user) {
+                                            User.findOne({'username':new RegExp(["^", sanitizer.sanitize(req.body.user), "$"].join(""), "i")}, function(err, user) {
                                                 if (user !== null) {
                                                     user.wantedpolish.remove(newPolish.id);
                                                     user.ownedpolish.addToSet(newPolish.id);

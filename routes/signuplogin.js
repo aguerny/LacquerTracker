@@ -21,36 +21,36 @@ app.post('/signup', function(req, res) {
         } else if (euser) {
             res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'That email already has an associated account.', email:'', username:''});
         } else {
-            User.findOne({ 'username' : sanitizer.sanitize(req.body.username.toLowerCase().replace(/[^A-Za-z0-9]/g,""))}, function(err, user) {
+            User.findOne({ 'username' : new RegExp(["^", sanitizer.sanitize(req.body.username.replace(/[^A-Za-z0-9]/g,"")), "$"].join(""), "i")}, function(err, user) {
                 if (err) {
                     res.redirect('/error');
                 } else if (user) {
                     res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'That username is already taken.', email:sanitizer.sanitize(req.body.email), username:''});
                 } else if (req.body.username.length > 20) {
-                    res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Username max length is 15 characters.', email:sanitizer.sanitize(req.body.email), username:''});
+                    res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Username max length is 20 characters.', email:sanitizer.sanitize(req.body.email), username:''});
                 } else {
                     if (sanitizer.sanitize(req.body.password) === sanitizer.sanitize(req.body.passwordconfirm)) {
                         if (sanitizer.sanitize(req.body.email.toLowerCase()) === sanitizer.sanitize(req.body.emailconfirm.toLowerCase())) {
-                            if (req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
-                                res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
-                            }
-                            //Put your secret key here.
-                            var secretKey = process.env.LTRECAPTCHASECRETKEY;
-                            //req.connection.remoteAddress will provide IP address of connected user.
-                            var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
-                            //Hitting GET request to the URL, Google will respond with success or error scenario.
-                            request(verificationUrl,function(error,response,body) {
-                                body = JSON.parse(body);
-                                // Success will be true or false depending upon captcha validation.
-                                if(body.success !== undefined && !body.success) {
-                                    res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
-                                }
-                                if (body.success === true) {
+                            // if (req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
+                            //     res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
+                            // }
+                            // //Put your secret key here.
+                            // var secretKey = process.env.LTRECAPTCHASECRETKEY;
+                            // //req.connection.remoteAddress will provide IP address of connected user.
+                            // var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
+                            // //Hitting GET request to the URL, Google will respond with success or error scenario.
+                            // request(verificationUrl,function(error,response,body) {
+                            //     body = JSON.parse(body);
+                            //     // Success will be true or false depending upon captcha validation.
+                            //     if(body.success !== undefined && !body.success) {
+                            //         res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
+                            //     }
+                            //     if (body.success === true) {
                                     //create the user
                                     var newUser = new User();
 
                                     //set the user's local credentials
-                                    newUser.username = sanitizer.sanitize(req.body.username.toLowerCase().replace(/[^A-Za-z0-9]/g,""));
+                                    newUser.username = sanitizer.sanitize(req.body.username.replace(/[^A-Za-z0-9]/g,""));
                                     newUser.password = newUser.generateHash(sanitizer.sanitize(req.body.password));
                                     newUser.about = "";
                                     newUser.email = sanitizer.sanitize(req.body.email);
@@ -97,10 +97,10 @@ app.post('/signup', function(req, res) {
                                             });
                                         }
                                     })
-                                } else {
-                                    res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Your account was created, but there was an error sending your validation e-mail. Please try again.'});
-                                }
-                            });
+                                // } else {
+                                //     res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Your account was created, but there was an error sending your validation e-mail. Please try again.'});
+                                // }
+                            // });
                         } else {
                             res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'E-mails do not match. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
                         }
@@ -140,7 +140,7 @@ app.get('/revalidate', function(req, res) {
 });
 
 app.post('/revalidate', function(req, res) {
-    User.findOne({username: sanitizer.sanitize(req.body.username)}, function(err, user) {
+    User.findOne({username: new RegExp(["^", sanitizer.sanitize(req.body.username), "$"].join(""), "i")}, function(err, user) {
         if (err) {
             res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Error. Please try again later.'});
         } else {
@@ -205,7 +205,7 @@ app.get('/passwordreset', function(req, res) {
 });
 
 app.post('/passwordreset', function(req, res) {
-    User.findOne({username: sanitizer.sanitize(req.body.username.toLowerCase())}, function(err, user) {
+    User.findOne({username: new RegExp(["^", sanitizer.sanitize(req.body.username), "$"].join(""), "i")}, function(err, user) {
         if (err) {
             res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error. Please try again later.'});
         } else {

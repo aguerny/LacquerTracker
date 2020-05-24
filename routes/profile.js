@@ -33,7 +33,7 @@ app.get('/profile', isLoggedIn, function(req, res) {
 
 //profile specific
 app.get('/profile/:username', function(req, res) {
-    User.findOne({username: req.params.username, level:{$ne:"deleted"}}).populate('ownedpolish').populate('wantedpolish').populate('checkins', 'photo pendingdelete creationdate polish', null, {sort:{creationdate:-1}}).exec(function(err, user) {
+    User.findOne({username: new RegExp(["^", sanitizer.sanitize(req.params.username), "$"].join(""), "i"), level:{$ne:"deleted"}}).populate('ownedpolish').populate('wantedpolish').populate('checkins', 'photo pendingdelete creationdate polish', null, {sort:{creationdate:-1}}).exec(function(err, user) {
         if (!user || user.username==="admin" || user.username==="lacquertracker") {
             res.redirect('/error');
         } else {
@@ -89,7 +89,7 @@ app.get('/profile/edit', isLoggedIn, function(req, res) {
 
 app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
     if (req.params.username === req.user.username) {
-        User.findOne({username : req.params.username}).exec(function(err, user) {
+        User.findOne({username : new RegExp(["^", sanitizer.sanitize(req.params.username), "$"].join(""), "i")}).exec(function(err, user) {
         var data = {};
             data.title = 'Edit Your Profile - Lacquer Tracker';
             data.userid = user.id;
@@ -99,7 +99,6 @@ app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
             yesphotos = [];
             nophotos = [];
             data.notifications = user.notifications;
-            data.useremail = user.useremail;
             data.country = user.country;
             data.timezone = user.timezone;
         res.render('profile/profileedit.ejs', data);
@@ -110,7 +109,7 @@ app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
 });
 
 app.post('/profile/:username/edit', isLoggedIn, function(req, res) {
-    User.findOne({username:req.params.username}, function(err, user) {
+    User.findOne({username:new RegExp(["^", sanitizer.sanitize(req.params.username), "$"].join(""), "i")}, function(err, user) {
         if (!user) {
             res.redirect('/error');
         } else {
@@ -123,11 +122,6 @@ app.post('/profile/:username/edit', isLoggedIn, function(req, res) {
             } else {
                 user.notifications = "off";
             }
-            if (req.body.useremail) {
-                user.useremail = sanitizer.sanitize(req.body.useremail);
-            } else {
-                user.useremail = "off";
-            }
             user.save(function(err) {
                 res.redirect('/profile/' + req.user.username);
             });
@@ -139,7 +133,7 @@ app.post('/profile/:username/edit', isLoggedIn, function(req, res) {
 //delete user profile
 app.get('/profile/:username/delete', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
-        User.findOne({username:req.params.username}).populate('checkins').exec(function(err, user) {
+        User.findOne({username:new RegExp(["^", sanitizer.sanitize(req.params.username), "$"].join(""), "i")}).populate('checkins').exec(function(err, user) {
             if (!user) {
                 res.redirect('/error');
             } else {
@@ -289,10 +283,10 @@ app.get('/profile/:username/delete', isLoggedIn, function(req, res) {
 
 //send a user a message
 app.get('/profile/:username/message', isLoggedIn, function(req, res) {
-    User.findOne({username:req.params.username}, function(err, user) {
+    User.findOne({username:new RegExp(["^", sanitizer.sanitize(req.params.username), "$"].join(""), "i")}, function(err, user) {
         if (err || !user || user.useremail==="off") {
             res.redirect('/error');
-        } else if (user.useremail === "on") {
+        } else {
             data = {};
             data.title = 'Send Message - Lacquer Tracker';
             data.username = user.username;
@@ -319,7 +313,7 @@ app.post('/profile/:username/message', isLoggedIn, function(req, res) {
             res.render('profile/message.ejs', {title: 'Send Message - Lacquer Tracker', message: 'Captcha wrong. Try again.', emailmessage:sanitizer.sanitize(req.body.emailmessage), username:sanitizer.sanitize(req.params.username)});
         }
         if (body.success === true) {
-            User.findOne({ 'username' : sanitizer.sanitize(req.params.username)}, function(err, user) {
+            User.findOne({ 'username' : new RegExp(["^", sanitizer.sanitize(req.params.username), "$"].join(""), "i")}, function(err, user) {
                 if (user) {
                     //send e-mail
                     var transport = nodemailer.createTransport({
@@ -331,7 +325,7 @@ app.post('/profile/:username/message', isLoggedIn, function(req, res) {
                         from: "polishrobot@lacquertracker.com",
                         to: user.email,
                         subject: 'Message from ' + req.user.username,
-                        text: "Hi " + user.username + ",\n\n" + req.user.username + " has sent you the following message through Lacquer Tracker:\n\n" + sanitizer.sanitize(req.body.emailmessage) + "\n\n\n**Please do not reply to directly to this e-mail. The sender should have included a reply-to e-mail address or you can send a message back on their profile page.**",
+                        text: "Hi " + user.username + ",\n\n" + req.user.username + " has sent you the following message through Lacquer Tracker:\n\n" + sanitizer.sanitize(req.body.emailmessage) + "\n\n**Do not reply to directly to this e-mail. To respond to the sender, click here: https://www.lacquertracker.com/profile/"+req.user.username+"/message\n\n\nHappy polishing,\nLacquer Tracker",
                     }
 
                     transport.sendMail(mailOptions, function(error, response) {

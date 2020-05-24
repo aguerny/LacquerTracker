@@ -3,7 +3,6 @@ var LocalStrategy = require('passport-local').Strategy;
 
 //load up the user model
 var User = require('../app/models/user');
-
 var sanitizer = require('sanitizer');
 var nodemailer = require('nodemailer');
 
@@ -39,7 +38,7 @@ module.exports = function(passport) {
 
 		//find a user who username is the same as the form's username
 		//we are checking to see if the user trying to login already exists
-		User.findOne({ 'username' : username.toLowerCase()}, function(err, user) {
+		User.findOne({ 'username' : new RegExp(["^", sanitizer.sanitize(username), "$"].join(""), "i")}, function(err, user) {
 			//if there are any errors, return the error before anything else
 			if (err)
 				return done(err);

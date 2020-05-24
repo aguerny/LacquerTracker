@@ -187,7 +187,7 @@ $(window).load(function () {
                         <div class="collage">
                             <% for (i=0; i<checkins.length; i++) { %>
                                 <% if (checkins[i].pendingdelete === false) {%>
-                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Nail polish manicure of shade <%= pbrand %> <%= pname %>" class="freezeframe"></a>
+                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Nail polish manicure of shade <%= pbrand %> <%= pname %>" <% if (checkins[i].photo.slice(checkins[i].photo.length - 5)==".gif") { %>class="freezeframe"><%}%>></a>
                                 <% } %>
                             <% } %>
                         </div>

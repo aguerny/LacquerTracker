@@ -47,10 +47,6 @@ $('#username').on('input', function() {
     this.setSelectionRange(c, c);
 });
 
-$("#username").on('change keyup paste',function(){
-    $(this).val($(this).val().toLowerCase());
-})
-
 $("form").submit(function() {
     var _txt1 = $('[name=email]').val();
     var _txt2 = $('[name=emailconfirm]').val();

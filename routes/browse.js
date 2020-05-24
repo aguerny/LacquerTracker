@@ -73,6 +73,7 @@ app.post('/browse', function(req, res) {
 
     if (req.body.keywords.length > 0) {
         search.keywords = new RegExp(sanitizer.sanitize(req.body.keywords.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'')), "i");
+        console.log(search.keywords);
     }
 
     if (req.body.brand) {

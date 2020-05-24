@@ -1,5 +1,4 @@
 var types = [
-	{name:"blackened", display:"blackened", category:"polish"},
 	{name:"base", display:"base coat", category:"polish"},
 	{name:"chrome", display:"chrome", category:"polish"},
 	{name:"crackle", display:"crackle", category:"polish"},
@@ -8,7 +7,6 @@ var types = [
 	{name:"dip", display:"dip", category:"polish"},
 	{name:"duochrome", display:"duochrome", category:"polish"},
 	{name:"flakie", display:"flakie", category:"polish"},
-	{name:"fleck", display:"fleck", category:"polish"},
 	{name:"frost", display:"frost", category:"polish"},
 	{name:"gel", display:"gel", category:"polish"},
 	{name:"glitter", display:"glitter", category:"polish"},

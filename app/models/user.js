@@ -5,7 +5,7 @@ var autoIncrement = require('mongoose-auto-increment');
 
 //define the schema for our model
 var userSchema = mongoose.Schema({
-	username     : {type: String, lowercase: true},
+	username     : {type: String},
 	password     : String,
 	email		 : String,
 	about		 : String,
