@@ -31,76 +31,77 @@ app.post('/signup', function(req, res) {
                 } else {
                     if (sanitizer.sanitize(req.body.password) === sanitizer.sanitize(req.body.passwordconfirm)) {
                         if (sanitizer.sanitize(req.body.email.toLowerCase()) === sanitizer.sanitize(req.body.emailconfirm.toLowerCase())) {
-                            // if (req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
-                            //     res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
-                            // }
-                            // //Put your secret key here.
-                            // var secretKey = process.env.LTRECAPTCHASECRETKEY;
-                            // //req.connection.remoteAddress will provide IP address of connected user.
-                            // var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
-                            // //Hitting GET request to the URL, Google will respond with success or error scenario.
-                            // request(verificationUrl,function(error,response,body) {
-                            //     body = JSON.parse(body);
-                            //     // Success will be true or false depending upon captcha validation.
-                            //     if(body.success !== undefined && !body.success) {
-                            //         res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
-                            //     }
-                            //     if (body.success === true) {
-                                    //create the user
-                                    var newUser = new User();
+                            if (req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
+                                res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
+                            } else {
+                                //Put your secret key here.
+                                var secretKey = process.env.LTRECAPTCHASECRETKEY;
+                                //req.connection.remoteAddress will provide IP address of connected user.
+                                var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
+                                //Hitting GET request to the URL, Google will respond with success or error scenario.
+                                request(verificationUrl,function(error,response,body) {
+                                    body = JSON.parse(body);
+                                    // Success will be true or false depending upon captcha validation.
+                                    if(body.success !== undefined && !body.success) {
+                                        res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
+                                    }
+                                    if (body.success === true) {
+                                        //create the user
+                                        var newUser = new User();
 
-                                    //set the user's local credentials
-                                    newUser.username = sanitizer.sanitize(req.body.username.replace(/[^A-Za-z0-9]/g,""));
-                                    newUser.password = newUser.generateHash(sanitizer.sanitize(req.body.password));
-                                    newUser.about = "";
-                                    newUser.email = sanitizer.sanitize(req.body.email);
-                                    newUser.profilephoto = '';
-                                    newUser.isvalidated = false;
-                                    newUser.level = "normal";
-                                    newUser.notifications = "on";
-                                    newUser.useremail = "on";
-                                    newUser.creationdate = new Date();
-                                    newUser.lastlogindate = new Date();
-                                    newUser.country = "";
-                                    newUser.timezone = "America/New_York";
-                                    newUser.deleted = false;
-                                    newUser.source = sanitizer.sanitize(req.body.source) || '';
+                                        //set the user's local credentials
+                                        newUser.username = sanitizer.sanitize(req.body.username.replace(/[^A-Za-z0-9]/g,""));
+                                        newUser.password = newUser.generateHash(sanitizer.sanitize(req.body.password));
+                                        newUser.about = "";
+                                        newUser.email = sanitizer.sanitize(req.body.email);
+                                        newUser.profilephoto = '';
+                                        newUser.isvalidated = false;
+                                        newUser.level = "normal";
+                                        newUser.notifications = "on";
+                                        newUser.useremail = "on";
+                                        newUser.creationdate = new Date();
+                                        newUser.lastlogindate = new Date();
+                                        newUser.country = "";
+                                        newUser.timezone = "America/New_York";
+                                        newUser.deleted = false;
+                                        newUser.source = sanitizer.sanitize(req.body.source) || '';
 
-                                    //save the user
-                                    newUser.save(function(err) {
-                                        if (err) {
-                                            res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Error saving account. Please try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
-                                        } else {
-                                            //send validation e-mail
-                                            var transport = nodemailer.createTransport({
-                                                sendmail: true,
-                                                path: "/usr/sbin/sendmail"
-                                            });
+                                        //save the user
+                                        newUser.save(function(err) {
+                                            if (err) {
+                                                res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Error saving account. Please try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
+                                            } else {
+                                                //send validation e-mail
+                                                var transport = nodemailer.createTransport({
+                                                    sendmail: true,
+                                                    path: "/usr/sbin/sendmail"
+                                                });
 
-                                            var mailOptions = {
-                                                from: "polishrobot@lacquertracker.com",
-                                                replyTo: "lacquertrackermailer@gmail.com",
-                                                to: newUser.email,
-                                                subject: 'Welcome to Lacquer Tracker',
-                                                text: "Hi " + newUser.username + ",\n\nWelcome to Lacquer Tracker! Please visit the link below to validate your account and get started.\n\nhttps://www.lacquertracker.com/validate/" + newUser.id + "\n\n\nHappy polishing,\nLacquer Tracker",
+                                                var mailOptions = {
+                                                    from: "polishrobot@lacquertracker.com",
+                                                    replyTo: "lacquertrackermailer@gmail.com",
+                                                    to: newUser.email,
+                                                    subject: 'Welcome to Lacquer Tracker',
+                                                    text: "Hi " + newUser.username + ",\n\nWelcome to Lacquer Tracker! Please visit the link below to validate your account and get started.\n\nhttps://www.lacquertracker.com/validate/" + newUser.id + "\n\n\nHappy polishing,\nLacquer Tracker",
+                                                }
+
+                                                transport.sendMail(mailOptions, function(error, response) {
+                                                    if (error) {
+                                                        res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Your account was created, but there was an error sending your validation e-mail. Please try again.'});
+                                                    }
+                                                    else {
+                                                        res.render('account/successmessage.ejs', {title: 'Signup - Lacquer Tracker', message: "Success! Please check your e-mail to validate your new account."});
+                                                    }
+
+                                                    transport.close();
+                                                });
                                             }
-
-                                            transport.sendMail(mailOptions, function(error, response) {
-                                                if (error) {
-                                                    res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Your account was created, but there was an error sending your validation e-mail. Please try again.'});
-                                                }
-                                                else {
-                                                    res.render('account/successmessage.ejs', {title: 'Signup - Lacquer Tracker', message: "Success! Please check your e-mail to validate your new account."});
-                                                }
-
-                                                transport.close();
-                                            });
-                                        }
-                                    })
-                                // } else {
-                                //     res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Your account was created, but there was an error sending your validation e-mail. Please try again.'});
-                                // }
-                            // });
+                                        })
+                                    } else {
+                                        res.render('account/revalidate.ejs', {title: 'Resend Validation E-mail - Lacquer Tracker', message:'Your account was created, but there was an error sending your validation e-mail. Please try again.'});
+                                    }
+                                })
+                            }
                         } else {
                             res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'E-mails do not match. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
                         }
