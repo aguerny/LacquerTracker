@@ -538,6 +538,20 @@ app.get('/admin/portal', isLoggedIn, function(req, res) {
 //db.polishes.update({}, {$rename:{"typenew":"type"}}, false, true)
 
 
+
+//fix reviews
+// app.get('/admin/fixreviews', isLoggedIn, function(req, res) {
+//     Review.find({}).populate('polish').exec(function(err, reviews) {
+//         for (i=0; i<reviews.length; i++) {
+//             reviews[i].polish.reviews.push(reviews[i].id);
+//             reviews[i].polish.save();
+//         }
+//     })
+// });
+// //db.polishes.update({}, {$set:{"reviews":[]}}, false, true)
+
+
+
 //update colors based on current swatches and color list
 app.get('/admin/updatecolors', isLoggedIn, function(req, res) {
     Polish.find({}, function (err, polish) {

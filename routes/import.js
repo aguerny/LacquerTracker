@@ -350,15 +350,6 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-//Export to CSV
-// app.get('/import', isLoggedIn, function(req, res) {
-//     data = {};
-//     data.title = 'Import Polish - Lacquer Tracker';
-//     data.meta = 'Track your nail polish by uploading your spreadsheet of owned shades into Lacquer Tracker.';
-//     res.render('polish/importuser.ejs', data);
-// });
-
-
 app.get('/profile/:username/export', isLoggedIn, function(req, res) {
     User.findOne({username: new RegExp(["^", sanitizer.sanitize(req.params.username), "$"].join(""), "i"), level:{$ne:"deleted"}}).exec(function(err, user) {
         if (!user) {
@@ -368,9 +359,9 @@ app.get('/profile/:username/export', isLoggedIn, function(req, res) {
                 var data = [',Brand,Name,Collection,Color,Type,Status,Rating,Review,Notes'];
                 // Brand, Name, Collection, Color, Type, Status, Rating, Review, Notes
                 for (i=0; i<polish.length; i++) {
-                    var brand = polish[i].brand.replace(',',"");
-                    var name = polish[i].name.replace(',',"");
-                    var batch = polish[i].batch.replace(',',"");
+                    var brand = polish[i].brand.replace(/,/g, '');
+                    var name = polish[i].name.replace(/,/g, '');
+                    var batch = polish[i].batch.replace(/,/g, '');
                     var color = _.uniqBy(polish[i].colorscategory).join("/");
                     var type = polish[i].type.join("/");
                     if (user.ownedpolish.indexOf(polish[i].id) > -1) {
@@ -382,9 +373,9 @@ app.get('/profile/:username/export', isLoggedIn, function(req, res) {
                     }
                     var index = _.findIndex(polish[i].reviews, function(reviews) { return reviews.user == user.id })
                     if (index > -1) {
-                        var rating = polish[i].reviews[index].rating.replace(',',"");
-                        var review = polish[i].reviews[index].review.replace(',',"");
-                        var notes = polish[i].reviews[index].notes.replace(',',"");
+                        var rating = polish[i].reviews[index].rating.replace(/,/g, '');
+                        var review = polish[i].reviews[index].review.replace(/,/g, '');
+                        var notes = polish[i].reviews[index].notes.replace(/,/g, '');
                     } else {
                         var rating = "";
                         var review = "";
