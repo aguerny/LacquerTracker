@@ -11,6 +11,7 @@ var fs = require('node-fs');
 var path = require('path');
 var gm = require('gm').subClass({ imageMagick: true });
 var http = require('http');
+var thumbler = require('thumbler');
 
 module.exports = function(app, passport) {
 
@@ -227,17 +228,26 @@ app.post('/freshcoats/add', isLoggedIn, function(req, res) {
                                 fs.rename(req.files.photo.tempFilePath, path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function() {
                                     fs.unlink(req.files.photo.tempFilePath, function() {
                                         newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
-                                        newCheckin.save(function(err) {
-                                            req.user.checkins.addToSet(newCheckin.id);
-                                            req.user.save();
-                                            for (i=0; i<newCheckin.polish.length; i++) {
-                                                Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
-                                                    polish.checkins.addToSet(newCheckin.id);
-                                                    polish.dateupdated = new Date();
-                                                    polish.save();
+                                        thumbler({
+                                            type: 'video',
+                                            input: path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext),
+                                            output: path.resolve('./public/images/checkinphotos/' + newCheckin.id + 'T.jpeg'),
+                                            time:'00:00:01'
+                                        }, function(){
+                                            newCheckin.save(function(err) {
+                                                gm(path.resolve('./public/images/checkinphotos/' + newCheckin.id + 'T.jpeg')).strip().interlace('Plane').samplingFactor(4,2,0).quality(50).resize(60,60,"%").write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + 'T.jpeg'), function (err) {
+                                                    req.user.checkins.addToSet(newCheckin.id);
+                                                    req.user.save();
+                                                    for (i=0; i<newCheckin.polish.length; i++) {
+                                                        Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
+                                                            polish.checkins.addToSet(newCheckin.id);
+                                                            polish.dateupdated = new Date();
+                                                            polish.save();
+                                                        })
+                                                    }
+                                                    res.redirect('/freshcoats');
                                                 })
-                                            }
-                                            res.redirect('/freshcoats');
+                                            })
                                         })
                                     })
                                 })
@@ -395,17 +405,26 @@ app.post('/freshcoats/add', isLoggedIn, function(req, res) {
                                 fs.rename(req.files.photo.tempFilePath, path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function() {
                                     fs.unlink(req.files.photo.tempFilePath, function() {
                                         newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
-                                        newCheckin.save(function(err) {
-                                            req.user.checkins.addToSet(newCheckin.id);
-                                            req.user.save();
-                                            for (i=0; i<newCheckin.polish.length; i++) {
-                                                Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
-                                                    polish.checkins.addToSet(newCheckin.id);
-                                                    polish.dateupdated = new Date();
-                                                    polish.save();
+                                        thumbler({
+                                            type: 'video',
+                                            input: path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext),
+                                            output: path.resolve('./public/images/checkinphotos/' + newCheckin.id + 'T.jpeg'),
+                                            time:'00:00:01'
+                                        }, function(){
+                                            newCheckin.save(function(err) {
+                                                gm(path.resolve('./public/images/checkinphotos/' + newCheckin.id + 'T.jpeg')).strip().interlace('Plane').samplingFactor(4,2,0).quality(50).resize(60,60,"%").write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + 'T.jpeg'), function (err) {
+                                                    req.user.checkins.addToSet(newCheckin.id);
+                                                    req.user.save();
+                                                    for (i=0; i<newCheckin.polish.length; i++) {
+                                                        Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
+                                                            polish.checkins.addToSet(newCheckin.id);
+                                                            polish.dateupdated = new Date();
+                                                            polish.save();
+                                                        })
+                                                    }
+                                                    res.redirect('/freshcoats');
                                                 })
-                                            }
-                                            res.redirect('/freshcoats');
+                                            })
                                         })
                                     })
                                 })
@@ -723,16 +742,18 @@ app.get('/freshcoats/:id/remove', isLoggedIn, function(req, res) {
                         comments[i].remove();
                     }
                     fs.unlink(path.resolve('./public/'+post.photo), function(err) {
-                        for (i=0; i<post.polish.length; i++) {
-                            Polish.findById(post.polish[i]).exec(function(err, polish) {
-                                polish.checkins.remove(req.params.id);
-                                polish.save();
+                        fs.unlink(path.resolve('./public/images/checkinphotos/' + req.params.id + 'T.jpeg'), function(err) {
+                            for (i=0; i<post.polish.length; i++) {
+                                Polish.findById(post.polish[i]).exec(function(err, polish) {
+                                    polish.checkins.remove(req.params.id);
+                                    polish.save();
+                                })
+                            }
+                            Checkin.findByIdAndRemove(req.params.id, function(err) {
+                                post.user.checkins.remove(req.params.id);
+                                post.user.save();
+                                res.redirect('/freshcoats');
                             })
-                        }
-                        Checkin.findByIdAndRemove(req.params.id, function(err) {
-                            post.user.checkins.remove(req.params.id);
-                            post.user.save();
-                            res.redirect('/freshcoats');
                         })
                     })
                  })

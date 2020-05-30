@@ -191,15 +191,17 @@ app.get('/profile/:username/delete', isLoggedIn, function(req, res) {
                                     comments[j].remove();
                                 }
                                 fs.unlink(path.resolve('./public/'+checkin.photo), function(err) {
-                                    for (j=0; j<checkin.polish.length; j++) {
-                                        Polish.findById(checkin.polish[j]).exec(function(err, polish) {
-                                            polish.checkins.remove(checkin.id);
-                                            polish.save();
-                                        })
-                                    }
-                                    checkin.remove();
-                                    user.checkins.remove(checkin);
-                                    user.save();
+                                    fs.unlink(path.resolve('./public/images/checkinphotos/' + checkin.id + 'T.jpeg'), function(err) {
+                                        for (j=0; j<checkin.polish.length; j++) {
+                                            Polish.findById(checkin.polish[j]).exec(function(err, polish) {
+                                                polish.checkins.remove(checkin.id);
+                                                polish.save();
+                                            })
+                                        }
+                                        checkin.remove();
+                                        user.checkins.remove(checkin);
+                                        user.save();
+                                    })
                                 })
                             })
                         })

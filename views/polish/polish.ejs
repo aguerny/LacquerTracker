@@ -1,5 +1,7 @@
 <%- include('../layoutTop'); %>
 
+<script src="/scripts/jquery.js"></script>
+<script src="/scripts/jquery.mobile.custom.min.js"></script>
 <script src="/scripts/collageplus.js"></script>
 <script src="/scripts/jquery-editable/js/jquery-editable-poshytip.min.js"></script>
 <link href="/scripts/jquery-editable/css/jquery-editable.css" rel="stylesheet"/>
@@ -188,11 +190,7 @@ $(window).load(function () {
                                     <% if (checkins[i].type !== "video") { %>
                                         <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Nail polish manicure of shade <%= pbrand %> <%= pname %>" <% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%>></a>
                                     <% } else { %>
-                                        <a href="/freshcoats/<%=checkins[i].id%>">
-                                            <video style="inline">
-                                                <source src="<%= checkins[i].photo %>">
-                                            </video>
-                                        </a>
+                                        <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>T.jpeg" alt="Nail polish manicure of shade <%= pbrand %> <%= pname %>"></a>
                                     <% } %>
                                 <% } %>
                             <% } %>
