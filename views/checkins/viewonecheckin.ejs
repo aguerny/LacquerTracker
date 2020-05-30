@@ -37,7 +37,14 @@ function confirm_alert(node) {
                     </div>
                 <% } %>
             <br><br><br>
-            <img src="<%= checkinphoto %>" alt="Nail polish manicure of shade <%= alttagpolish %>"><br><br><br>
+            <% if (checkintype !== "video") { %>
+                <img src="<%= checkinphoto %>" alt="Nail polish manicure of shade <%= alttagpolish %>">
+            <% } else { %>
+                <video class="checkinvideo" controls>
+                    <source src="<%= checkinphoto %>">
+                </video>
+            <% } %>
+            <br><br><br>
             <% if (checkindescription.length > 0) {%><%= checkindescription %><br><br><br><%}%>
             <% if (checkinpolish.length === 0) { %>Polish Used: ?<%} else {%>
                 Polish Used:

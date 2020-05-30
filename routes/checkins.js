@@ -109,7 +109,7 @@ app.post('/freshcoats/add', isLoggedIn, function(req, res) {
             // need to update below as well if under 12 hours
             if (req.files.photo.name.length > 0) {
                 if (req.files.photo.mimetype.startsWith("image")) {
-                    if (req.files.photo.size <= 5000000) {
+                    if (req.files.photo.size <= 5242880) {
                         var ext = path.extname(req.files.photo.name);
                         var newCheckin = new Checkin ({
                             user: req.user.id,
@@ -121,6 +121,7 @@ app.post('/freshcoats/add', isLoggedIn, function(req, res) {
                             pendingreason: "",
                             comments: [],
                             description: sanitizer.sanitize(req.body.description),
+                            type: "image",
                         })
                         newCheckin.save(function(err) {
                             if (req.body.polish) {
@@ -192,7 +193,63 @@ app.post('/freshcoats/add', isLoggedIn, function(req, res) {
                                 data = {}
                                 data.title = 'Check In Your Mani - Lacquer Tracker';
                                 data.polish = polishes;
-                                data.message = 'File size too large.'
+                                data.message = 'File size too large. Limit for photos is 5MB.'
+                                res.render('checkins/add.ejs', data);
+                            })
+                        })
+                    }
+                } else if (req.files.photo.mimetype.startsWith("video")) {
+                    if (req.files.photo.size <= 10485760) {
+                        var ext = path.extname(req.files.photo.name);
+                        var newCheckin = new Checkin ({
+                            user: req.user.id,
+                            creationdate: new Date,
+                            editdate: new Date,
+                            photo: "",
+                            polish: [],
+                            pendingdelete: false,
+                            pendingreason: "",
+                            comments: [],
+                            description: sanitizer.sanitize(req.body.description),
+                            type: "video",
+                        })
+                        newCheckin.save(function(err) {
+                            if (req.body.polish) {
+                                newCheckin.polish = sanitizer.sanitize(req.body.polish).split(',');
+                            }
+                            if (err) {
+                                fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                    newCheckin.remove(function(err) {
+                                        res.redirect('/error');
+                                    })
+                                })
+                            } else {
+                                fs.rename(req.files.photo.tempFilePath, path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function() {
+                                    fs.unlink(req.files.photo.tempFilePath, function() {
+                                        newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
+                                        newCheckin.save(function(err) {
+                                            req.user.checkins.addToSet(newCheckin.id);
+                                            req.user.save();
+                                            for (i=0; i<newCheckin.polish.length; i++) {
+                                                Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
+                                                    polish.checkins.addToSet(newCheckin.id);
+                                                    polish.dateupdated = new Date();
+                                                    polish.save();
+                                                })
+                                            }
+                                            res.redirect('/freshcoats');
+                                        })
+                                    })
+                                })
+                            }
+                        })
+                    } else {
+                        fs.unlink(req.files.photo.tempFilePath, function() {
+                            Polish.find({}).sort({brand: 1}).sort({name: 1}).exec(function (err, polishes) {
+                                data = {}
+                                data.title = 'Check In Your Mani - Lacquer Tracker';
+                                data.polish = polishes;
+                                data.message = 'File size too large. Limit for videos is 10MB.'
                                 res.render('checkins/add.ejs', data);
                             })
                         })
@@ -220,7 +277,7 @@ app.post('/freshcoats/add', isLoggedIn, function(req, res) {
         } else {
             if (req.files.photo.name.length > 0) {
                 if (req.files.photo.mimetype.startsWith("image")) {
-                    if (req.files.photo.size <= 5000000) {
+                    if (req.files.photo.size <= 5242880) {
                         var ext = path.extname(req.files.photo.name);
                         var newCheckin = new Checkin ({
                             user: req.user.id,
@@ -232,6 +289,7 @@ app.post('/freshcoats/add', isLoggedIn, function(req, res) {
                             pendingreason: "",
                             comments: [],
                             description: sanitizer.sanitize(req.body.description),
+                            type: "image",
                         })
                         newCheckin.save(function(err) {
                             if (req.body.polish) {
@@ -303,7 +361,63 @@ app.post('/freshcoats/add', isLoggedIn, function(req, res) {
                                 data = {}
                                 data.title = 'Check In Your Mani - Lacquer Tracker';
                                 data.polish = polishes;
-                                data.message = 'File upload too large.'
+                                data.message = 'File size too large. Limit for photos is 5MB.'
+                                res.render('checkins/add.ejs', data);
+                            })
+                        })
+                    }
+                } else if (req.files.photo.mimetype.startsWith("video")) {
+                    if (req.files.photo.size <= 10485760) {
+                        var ext = path.extname(req.files.photo.name);
+                        var newCheckin = new Checkin ({
+                            user: req.user.id,
+                            creationdate: new Date,
+                            editdate: new Date,
+                            photo: "",
+                            polish: [],
+                            pendingdelete: false,
+                            pendingreason: "",
+                            comments: [],
+                            description: sanitizer.sanitize(req.body.description),
+                            type: "video",
+                        })
+                        newCheckin.save(function(err) {
+                            if (req.body.polish) {
+                                newCheckin.polish = sanitizer.sanitize(req.body.polish).split(',');
+                            }
+                            if (err) {
+                                fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                    newCheckin.remove(function(err) {
+                                        res.redirect('/error');
+                                    })
+                                })
+                            } else {
+                                fs.rename(req.files.photo.tempFilePath, path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function() {
+                                    fs.unlink(req.files.photo.tempFilePath, function() {
+                                        newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
+                                        newCheckin.save(function(err) {
+                                            req.user.checkins.addToSet(newCheckin.id);
+                                            req.user.save();
+                                            for (i=0; i<newCheckin.polish.length; i++) {
+                                                Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
+                                                    polish.checkins.addToSet(newCheckin.id);
+                                                    polish.dateupdated = new Date();
+                                                    polish.save();
+                                                })
+                                            }
+                                            res.redirect('/freshcoats');
+                                        })
+                                    })
+                                })
+                            }
+                        })
+                    } else {
+                        fs.unlink(req.files.photo.tempFilePath, function() {
+                            Polish.find({}).sort({brand: 1}).sort({name: 1}).exec(function (err, polishes) {
+                                data = {}
+                                data.title = 'Check In Your Mani - Lacquer Tracker';
+                                data.polish = polishes;
+                                data.message = 'File size too large. Limit for videos is 10MB.'
                                 res.render('checkins/add.ejs', data);
                             })
                         })
@@ -336,6 +450,7 @@ app.get('/freshcoats/:id', function(req, res) {
             data.checkinuser = post.user;
             data.checkinid = post.id;
             data.checkinphoto = post.photo;
+            data.checkintype = post.type;
             data.checkinpolish = post.polish;
             data.checkindescription = post.description;
             if (req.isAuthenticated() && req.user.timezone.length > 0) {
@@ -482,6 +597,7 @@ app.get('/freshcoats/:id/edit', isLoggedIn, function(req, res) {
                     data.title = "Edit Fresh Coat - Lacquer Tracker";
                     data.checkinid = post.id;
                     data.checkinphoto = post.photo;
+                    data.checkintype = post.type;
                     data.checkinpolish = post.polish;
                     data.checkindescription = post.description;
                     res.render('checkins/edit.ejs', data);

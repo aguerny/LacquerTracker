@@ -1,7 +1,5 @@
 <%- include('../layoutTop'); %>
 
-<script src="/scripts/jquery.js"></script>
-<script src="/scripts/jquery.mobile.custom.min.js"></script>
 <script src="/scripts/collageplus.js"></script>
 <script src="/scripts/jquery-editable/js/jquery-editable-poshytip.min.js"></script>
 <link href="/scripts/jquery-editable/css/jquery-editable.css" rel="stylesheet"/>
@@ -186,8 +184,16 @@ $(window).load(function () {
                         <br><br><hr><br><h4>Recent Fresh Coats:</h4><br>
                         <div class="collage">
                             <% for (i=0; i<checkins.length; i++) { %>
-                                <% if (checkins[i].pendingdelete === false) {%>
-                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Nail polish manicure of shade <%= pbrand %> <%= pname %>" <% if (checkins[i].photo.slice(checkins[i].photo.length - 5)==".gif") { %>class="freezeframe"><%}%>></a>
+                                <% if (checkins[i].pendingdelete === false) { %>
+                                    <% if (checkins[i].type !== "video") { %>
+                                        <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Nail polish manicure of shade <%= pbrand %> <%= pname %>" <% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%>></a>
+                                    <% } else { %>
+                                        <a href="/freshcoats/<%=checkins[i].id%>">
+                                            <video style="inline">
+                                                <source src="<%= checkins[i].photo %>">
+                                            </video>
+                                        </a>
+                                    <% } %>
                                 <% } %>
                             <% } %>
                         </div>
@@ -233,7 +239,9 @@ $(".postflag").click(function(){
     return false;
 });
 
-$('.freezeframe').freezeframe();
+$('.freezeframe').freezeframe({
+    overlay: true,
+});
 </script>
 
 <%- include('../layoutBottom'); %>

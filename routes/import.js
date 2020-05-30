@@ -159,7 +159,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
                                 }
 
                                 if ((data.collection) && (polish.batch == '')) {
-                                    polish.batch = sanitizer.sanitize(data.collection);
+                                    polish.batch = sanitizer.sanitize(data.collection.replace(/[&]/g,"and"));
                                 }
 
                                 if ((data.code) && (polish.code == '')) {
@@ -245,7 +245,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
 
                                     if (data.collection) {
                                         if (data.collection.length > 0) {
-                                            newPolish.batch = sanitizer.sanitize(data.collection);
+                                            newPolish.batch = sanitizer.sanitize(data.collection.replace(/[&]/g,"and"));
                                         } else {
                                             newPolish.batch = '';
                                         }

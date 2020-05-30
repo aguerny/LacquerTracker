@@ -139,7 +139,15 @@ $(window).load(function () {
                     <div class="collage">
                         <% for (i=0; i<checkins.length; i++) { %>
                             <% if (checkins[i].pendingdelete === false) { %>
-                                <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Manicure by user <%= username %>" <% if (checkins[i].photo.slice(checkins[i].photo.length - 5)==".gif") { %>class="freezeframe"><%}%></a>
+                                <% if (checkins[i].type !== "video") { %>
+                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Manicure by user <%= username %>" <% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%></a>
+                                <% } else { %>
+                                    <a href="/freshcoats/<%=checkins[i].id%>">
+                                        <video style="inline">
+                                            <source src="<%= checkins[i].photo %>">
+                                        </video>
+                                    </a>
+                                <% } %>
                             <% } %>
                         <% } %>
                     </div>

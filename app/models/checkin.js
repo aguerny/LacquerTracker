@@ -14,6 +14,7 @@ var checkinSchema = mongoose.Schema({
     comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'CheckinComment'}],
     description: String,
     savedby: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    type: String,
 });
 
 

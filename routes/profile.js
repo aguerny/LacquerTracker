@@ -33,7 +33,7 @@ app.get('/profile', isLoggedIn, function(req, res) {
 
 //profile specific
 app.get('/profile/:username', function(req, res) {
-    User.findOne({username: new RegExp(["^", sanitizer.sanitize(req.params.username), "$"].join(""), "i"), level:{$ne:"deleted"}}).populate('ownedpolish').populate('wantedpolish').populate('checkins', 'photo pendingdelete creationdate polish', null, {sort:{creationdate:-1}}).exec(function(err, user) {
+    User.findOne({username: new RegExp(["^", sanitizer.sanitize(req.params.username), "$"].join(""), "i"), level:{$ne:"deleted"}}).populate('ownedpolish').populate('wantedpolish').populate('checkins', 'photo pendingdelete creationdate polish type', null, {sort:{creationdate:-1}}).exec(function(err, user) {
         if (!user || user.username==="admin" || user.username==="lacquertracker") {
             res.redirect('/error');
         } else {
@@ -325,7 +325,7 @@ app.post('/profile/:username/message', isLoggedIn, function(req, res) {
                             from: "polishrobot@lacquertracker.com",
                             to: user.email,
                             subject: 'Message from ' + req.user.username,
-                            text: "Hi " + user.username + ",\n\n" + req.user.username + " has sent you the following message through Lacquer Tracker:\n\n" + sanitizer.sanitize(req.body.emailmessage) + "\n\n**Do not reply to directly to this e-mail. To respond to the sender, click here: https://www.lacquertracker.com/profile/"+req.user.username+"/message\n\n\nHappy polishing,\nLacquer Tracker",
+                            text: "Hi " + user.username + ",\n\n" + req.user.username + " has sent you the following message through Lacquer Tracker:\n\n" + sanitizer.sanitize(req.body.emailmessage) + "\n\n\n**Do not reply directly to this e-mail. To respond to the sender, click here: https://www.lacquertracker.com/profile/"+req.user.username+"/message\n\n\nHappy polishing,\nLacquer Tracker",
                         }
 
                         transport.sendMail(mailOptions, function(error, response) {
