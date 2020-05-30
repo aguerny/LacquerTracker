@@ -29,7 +29,7 @@ $(window).load(function () {
             <h2 style="display:inline-block"><%= username %>'s Profile</h2>
             <% if (isAuthenticated) { %>
                 <% if (user.username === username) { %>
-                    - <a href="/profile/<%= username %>/edit">Edit your profile</a> | <a href="/import">Import owned polish</a>
+                    - <a href="/profile/<%= username %>/edit">Edit your profile</a> | <a href="/import">Import owned polish</a> | <a href="/profile/<%= username %>/export">Export owned polish</a>
                 <% } else if (useremail === "on") {%>
                     - <a href="/profile/<%= username %>/message">Send a message</a>
                 <% } %>
@@ -42,6 +42,7 @@ $(window).load(function () {
                 <% if (user.username === username) { %>
                     <br><br><a href="/profile/<%= username %>/edit">Edit your profile</a>
                     <br><br><a href="/import">Import owned polish</a>
+                    <br><br><a href="/profile/<%= username %>/export">Export owned polish</a>
                 <% } else if (useremail === "on") {%>
                     <br><br><a href="/profile/<%= username %>/message">Send a message</a>
                 <% } %>
