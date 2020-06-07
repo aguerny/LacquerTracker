@@ -309,6 +309,17 @@
 </div>
 
 <script>
+$('#username').on('input', function() {
+    var c = this.selectionStart,
+    r = /[^a-z0-9]/gi,
+    v = $(this).val();
+    if(r.test(v)) {
+        $(this).val(v.replace(r, ''));
+        c--;
+    }
+    this.setSelectionRange(c, c);
+});
+
 $("form").submit(function() {
     var _txt1 = $('[name=username]').val().toLowerCase();
     var _txt2 = <%- JSON.stringify(username) %>.toLowerCase();

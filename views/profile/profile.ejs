@@ -141,9 +141,9 @@ $(window).load(function () {
                         <% for (i=0; i<checkins.length; i++) { %>
                             <% if (checkins[i].pendingdelete === false) { %>
                                 <% if (checkins[i].type !== "video") { %>
-                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="Manicure by user <%= username %>" <% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%></a>
+                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="" <% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%></a>
                                 <% } else { %>
-                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>T.jpeg" alt="Manicure by user <%= username %>"></a>
+                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>T.jpeg" alt=""></a>
                                 <% } %>
                             <% } %>
                         <% } %>

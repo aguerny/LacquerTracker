@@ -377,11 +377,11 @@
     .browsetable th.type {width:16%;}
     .browsetable th.info {width:10%;}
 
-    .ownedtable th.name {width:21%;}
+    .ownedtable th.name {width:20%;}
     .ownedtable th.brand {width:20%;}
-    .ownedtable th.collection {width:21%;}
+    .ownedtable th.collection {width:20%;}
     .ownedtable th.swatch {width:13%;}
-    .ownedtable th.type {width:14%;}
+    .ownedtable th.type {width:16%;}
     .ownedtable th.rating {width:11%;}
 
     .wantedtable th.name {width:23%;}
