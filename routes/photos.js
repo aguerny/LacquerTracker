@@ -71,7 +71,11 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                                     if ((p.tool == true) || (p.type.indexOf("base") > -1) || (p.type.indexOf("top") > -1)) {
                                         res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
                                     } else {
-                                        res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
+                                        if (p.swatch.length > 0) {
+                                            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                        } else {
+                                            res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
+                                        }
                                     }
                                 })
                             })
@@ -126,7 +130,11 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                                         if (p.tool == true || (p.type.indexOf("base") > -1) || (p.type.indexOf("top") > -1)) {
                                             res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
                                         } else {
-                                            res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
+                                            if (p.swatch.length > 0) {
+                                                res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                            } else {
+                                                res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
+                                            }
                                         }
                                     })
                                 }

@@ -95,3 +95,9 @@ d.run(function() {
         console.log('Express server listening on port ' + app.get('port'));
     });
 });
+
+
+//The 404 Route (ALWAYS Keep this as the last route)
+app.get('*', function(req, res) {
+    res.status(404).redirect('/error');
+});

@@ -149,7 +149,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
                         Polish.findOne({name: new RegExp("^"+polishNameToFind+"$","i"), brand: new RegExp("^"+polishBrandToFind+"$", "i")}, function(err, polish) {
                             if (polish !== null) {
                                 if (req.body.ownership == "yes") {
-                                    User.findOne({'username':new RegExp(["^", sanitizer.sanitize(req.body.username.user), "$"].join(""), "i")}, function(err, user) {
+                                    User.findOne({'username':new RegExp(["^", sanitizer.sanitize(req.body.user), "$"].join(""), "i")}, function(err, user) {
                                         if (user !== null) {
                                             user.wantedpolish.remove(polish.id);
                                             user.ownedpolish.addToSet(polish.id);
@@ -350,19 +350,21 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
+//Export polish list to CSV
 app.get('/profile/:username/export', isLoggedIn, function(req, res) {
     User.findOne({username: new RegExp(["^", sanitizer.sanitize(req.params.username), "$"].join(""), "i"), level:{$ne:"deleted"}}).exec(function(err, user) {
         if (!user) {
             res.redirect('/error');
         } else if (req.user.username == user.username || req.user.level == "admin") {
-            Polish.find().populate('reviews').exec(function(err, polish) {
+            Polish.find().populate('reviews').sort({brand:1, name:1}).exec(function(err, polish) {
+                var polish = _.sortBy(polish, function (x) {return x.brand.toLowerCase();});
                 var data = [',Brand,Name,Collection,Color,Type,Status,Rating,Review,Notes'];
                 // Brand, Name, Collection, Color, Type, Status, Rating, Review, Notes
                 for (i=0; i<polish.length; i++) {
-                    var brand = polish[i].brand.replace(/,/g, '');
-                    var name = polish[i].name.replace(/,/g, '');
-                    var batch = polish[i].batch.replace(/,/g, '');
-                    var color = _.uniqBy(polish[i].colorscategory).join("/");
+                    var brand = accents.remove(polish[i].brand).replace(/,/g, '').replace(/•/g, '.');
+                    var name = accents.remove(polish[i].name).replace(/,/g, '');
+                    var batch = accents.remove(polish[i].batch).replace(/,/g, '');
+                    var color = _.uniqBy(polish[i].colorscategory).join("/").toLowerCase();
                     var type = polish[i].type.join("/");
                     if (user.ownedpolish.indexOf(polish[i].id) > -1) {
                         var status = "owned";
@@ -373,9 +375,9 @@ app.get('/profile/:username/export', isLoggedIn, function(req, res) {
                     }
                     var index = _.findIndex(polish[i].reviews, function(reviews) { return reviews.user == user.id })
                     if (index > -1) {
-                        var rating = polish[i].reviews[index].rating.replace(/,/g, '');
-                        var review = polish[i].reviews[index].review.replace(/,/g, '');
-                        var notes = polish[i].reviews[index].notes.replace(/,/g, '');
+                        var rating = accents.remove(polish[i].reviews[index].rating).replace(/,/g, '').replace(/\r\n/g, ' - ');
+                        var review = accents.remove(polish[i].reviews[index].review).replace(/,/g, '').replace(/\r\n/g, ' - ');
+                        var notes = accents.remove(polish[i].reviews[index].notes).replace(/,/g, '').replace(/\r\n/g, ' - ');
                     } else {
                         var rating = "";
                         var review = "";

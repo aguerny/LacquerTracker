@@ -35,6 +35,7 @@ app.get('/polish/:brand/:name', function(req, res) {
             data.pbatch = polish.batch;
             data.pswatch = polish.swatch;
             data.pcolors = polish.colorsname;
+            data.pcolors2 = polish.colorscategory;
             data.ptype = polish.type;
             data.pcode = polish.code;
             data.pid = polish.id;

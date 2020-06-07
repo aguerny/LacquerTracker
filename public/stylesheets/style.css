@@ -378,10 +378,10 @@
     .browsetable th.info {width:10%;}
 
     .ownedtable th.name {width:21%;}
-    .ownedtable th.brand {width:21%;}
+    .ownedtable th.brand {width:20%;}
     .ownedtable th.collection {width:21%;}
     .ownedtable th.swatch {width:13%;}
-    .ownedtable th.type {width:13%;}
+    .ownedtable th.type {width:14%;}
     .ownedtable th.rating {width:11%;}
 
     .wantedtable th.name {width:23%;}

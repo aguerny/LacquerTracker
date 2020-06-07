@@ -88,7 +88,7 @@ app.get('/profile/edit', isLoggedIn, function(req, res) {
 
 
 app.get('/profile/:username/edit', isLoggedIn, function(req, res) {
-    if (req.params.username === req.user.username) {
+    if (req.params.username.toLowerCase() === req.user.username.toLowerCase()) {
         User.findOne({username : new RegExp(["^", sanitizer.sanitize(req.params.username), "$"].join(""), "i")}).exec(function(err, user) {
         var data = {};
             data.title = 'Edit Your Profile - Lacquer Tracker';
@@ -113,6 +113,9 @@ app.post('/profile/:username/edit', isLoggedIn, function(req, res) {
         if (!user) {
             res.redirect('/error');
         } else {
+            if ((sanitizer.sanitize(req.body.username).toLowerCase() == user.username.toLowerCase()) && (sanitizer.sanitize(req.body.username) !== user.username)) {
+                user.username = sanitizer.sanitize(req.body.username);
+            }
             user.email = sanitizer.sanitize(req.body.email);
             user.about = sanitizer.sanitize(req.body.about);
             user.country = sanitizer.sanitize(req.body.country);
@@ -325,9 +328,10 @@ app.post('/profile/:username/message', isLoggedIn, function(req, res) {
 
                         var mailOptions = {
                             from: "polishrobot@lacquertracker.com",
+                            replyTo: "lacquertrackermailer@gmail.com",
                             to: user.email,
                             subject: 'Message from ' + req.user.username,
-                            text: "Hi " + user.username + ",\n\n" + req.user.username + " has sent you the following message through Lacquer Tracker:\n\n" + sanitizer.sanitize(req.body.emailmessage) + "\n\n\n**Do not reply directly to this e-mail. To respond to the sender, click here: https://www.lacquertracker.com/profile/"+req.user.username+"/message\n\n\nHappy polishing,\nLacquer Tracker",
+                            text: req.user.username + " has sent you the following message through Lacquer Tracker:\n\n" + sanitizer.sanitize(req.body.emailmessage) + "\n\n\n**Do not reply directly to this e-mail. To respond to the sender, click here: https://www.lacquertracker.com/profile/"+req.user.username,
                         }
 
                         transport.sendMail(mailOptions, function(error, response) {
