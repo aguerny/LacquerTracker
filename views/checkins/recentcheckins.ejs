@@ -10,36 +10,41 @@
             <br><br><br>
             <a href="/freshcoats/saved">View the fresh coats you've saved for inspiration.</a>
             <br><br><hr><br>
-                <% for (i=0; i<checkins.length; i++) { %>
-                    Posted on <%= checkins[i].date %> by <a href="/profile/<%= checkins[i].user.username %>"><%= checkins[i].user.username %></a><br><br>
-                    <% if (checkins[i].type !== "video") { %>
-                        <img src="<%= checkins[i].photo %>" alt="Nail polish manicure of shade <% for (j=0; j<checkins[i].polish.length; j++) { %><%= checkins[i].polish[j].brand %> <%= checkins[i].polish[j].name %><% if (j!==checkins[i].polish.length) { %>, <% } %><% } %>">
-                    <% } else { %>
-                        <video class="checkinvideo" controls src="<%= checkins[i].photo %>" poster="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>T.jpeg"></video>
-                    <% } %>
-                    <br><br><br>
-                    <% if (checkins[i].description.length > 0) {%><%= checkins[i].description%><br><br><br><%}%>
-                    <% if (checkins[i].polish.length === 0) { %>Polish Used: ?<%} else {%>
-                    Polish Used:
-                    <% for (j=0; j<checkins[i].polish.length; j++) { %>
-                        <br>&#8226; <a href='/polish/<%= checkins[i].polish[j].brand.replace(/ /g,"_") %>/<%= checkins[i].polish[j].name.replace(/ /g,"_") %>'><%= checkins[i].polish[j].brand %> - <%= checkins[i].polish[j].name %></a>
-                    <% }} %>
-                    <br><br><br>
-                    <a href="/freshcoats/<%= checkins[i].id %>"><%= checkins[i].comments.length %> Comment<% if (checkins[i].comments.length !== 1) {%>s<%}%></a> | <a href="/freshcoats/<%= checkins[i].id %>">Add a comment</a> | <a href="/freshcoats/<%= checkins[i].id %>">Options</a>
-                    <% if (isAuthenticated) { %>
-                        <% if (user.savedcheckins.indexOf(checkins[i].id) > -1) { %>
-                             | <a class="unsave" cid="<%= checkins[i].id %>" href="#">Unsave</a>
-                        <% } else { %>
-                             | <a class="save" cid="<%= checkins[i].id %>" href="#">Save</a>
-                        <% } %>
-                    <% } %>
-                    <br><br>
-                    <hr><br>
+            <% for (i=0; i<checkins.length; i++) { %>
+                Posted on <%= checkins[i].date %> by <a href="/profile/<%= checkins[i].user.username %>"><%= checkins[i].user.username %></a><br><br>
+                <% if (checkins[i].type !== "video") { %>
+                    <img src="<%= checkins[i].photo %>" alt="Nail polish manicure of shade <% for (j=0; j<checkins[i].polish.length; j++) { %><%= checkins[i].polish[j].brand %> <%= checkins[i].polish[j].name %><% if (j!==checkins[i].polish.length) { %>, <% } %><% } %>">
+                <% } else { %>
+                    <video class="checkinvideo" controls src="<%= checkins[i].photo %>" poster="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>T.jpeg"></video>
                 <% } %>
+                <br><br><br>
+                <% if (checkins[i].description.length > 0) {%><%= checkins[i].description%><br><br><br><%}%>
+                <% if (checkins[i].polish.length === 0) { %>Polish Used: ?<%} else {%>
+                Polish Used:
+                <% for (j=0; j<checkins[i].polish.length; j++) { %>
+                    <br>&#8226; <a href='/polish/<%= checkins[i].polish[j].brand.replace(/ /g,"_") %>/<%= checkins[i].polish[j].name.replace(/ /g,"_") %>'><%= checkins[i].polish[j].brand %> - <%= checkins[i].polish[j].name %></a>
+                <% }} %>
+                <br><br><br>
+                <a href="/freshcoats/<%= checkins[i].id %>"><%= checkins[i].comments.length %> Comment<% if (checkins[i].comments.length !== 1) {%>s<%}%></a> | <a href="/freshcoats/<%= checkins[i].id %>">Add a comment</a> | <a href="/freshcoats/<%= checkins[i].id %>">Options</a>
+                <% if (isAuthenticated) { %>
+                    <% if (user.savedcheckins.indexOf(checkins[i].id) > -1) { %>
+                         | <a class="unsave" cid="<%= checkins[i].id %>" href="#">Unsave</a>
+                    <% } else { %>
+                         | <a class="save" cid="<%= checkins[i].id %>" href="#">Save</a>
+                    <% } %>
+                <% } %>
+                <br><br>
+                <hr><br>
+            <% } %>
             <div style="clear: both;">
                 <% if (checkins.length === 10) { %>
-                    <% if (page > 1) {%><p style="float:right;"><a href="/freshcoats/page/<%=page-1%>">&#8592; Prev </a> | Page <%= page %> | <a href="/freshcoats/page/<%=page+1%>">Next &#8594;</a></p><%}
-                    else if (page === 1) {%><p style="float:right;">Page <%= page %> | <a href="/freshcoats/page/<%=page+1%>">Next &#8594;</a></p><%}%>
+                    <% if (page > 1) { %>
+                        <p style="float:right;"><a href="/freshcoats/page/<%=page-1%>">&#8592; Prev </a> | Page <%= page %> | <a href="/freshcoats/page/<%=page+1%>">Next &#8594;</a></p>
+                    <% } else if (page === 1) { %>
+                        <p style="float:right;">Page <%= page %> | <a href="/freshcoats/page/<%=page+1%>">Next &#8594;</a></p>
+                    <%}%>
+                <% } else if (page > 1) { %>
+                    <p style="float:right;"><a href="/freshcoats/page/<%=page-1%>">&#8592; Prev </a> | Page <%= page %>
                 <% } %>
             </div>
         </div>

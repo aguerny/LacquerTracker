@@ -6,7 +6,8 @@
     	<section>
     		<form action="/review/edit/<%= polish %>" method="post">
 	     		<h3>Edit Review for: <%= polishbrand %> - <%= polishname %>:</h3><br><br>
-    			Rating: <select name="rating" required placeholder="select a rating">
+    			Rating: <select name="rating" required>
+                    <option disabled selected value>Select a rating</option>
                     <option value="1" <% if (rating === "1") { %> selected="selected" <%}%>>*</option>
                     <option value="2" <% if (rating === "2") { %> selected="selected" <%}%>>**</option>
                     <option value="3" <% if (rating === "3") { %> selected="selected" <%}%>>***</option>

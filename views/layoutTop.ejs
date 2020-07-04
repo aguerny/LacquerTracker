@@ -46,6 +46,11 @@
                     <li><a href="/forums">Forums</a></li>
                     <li><a href="/profile">Profile</a></li>
                     <li><a href="/contact">Contact</a></li>
+                    <% if (isAuthenticated) { %>
+                        <% if (user.level == "admin") { %>
+                            <li><a href="/admin/portal">Admin</a></li>
+                        <% } %>
+                    <% } %>
                 </ul>
             </nav>
         </div>
@@ -56,6 +61,11 @@
                 <a href="/forums">Forums</a> |
                 <a href="/profile">Profile</a> |
                 <a href="/contact">Contact</a>
+                <% if (isAuthenticated) { %>
+                    <% if (user.level == "admin") { %>
+                        | <a href="/admin/portal">Admin</a>
+                    <% } %>
+                <% } %>
             </nav>
         </div>
     </header>

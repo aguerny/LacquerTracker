@@ -97,6 +97,8 @@
 
     #code, #batch, #colorcat, #type, #indie {color:black;}
 
+    .edit-icon {display: inline-block; transform: rotateZ(90deg);}
+
     /*---Footer---*/
 
     #footer {box-shadow: 0px 500px 0px 500px #9ED9CF; padding-top:1%;}

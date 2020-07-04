@@ -365,8 +365,8 @@ app.get('/polishadd', isLoggedIn, function(req, res) {
 
 app.post('/polishadd', isLoggedIn, function(req, res) {
     if (req.body.name.length > 0 && req.body.brand.length > 0) {
-        var polishNameToFind = sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,""));
-        var polishBrandEntered = sanitizer.sanitize(req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,""));
+        var polishNameToFind = sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,"").replace(/\s+/g, " ").trim());
+        var polishBrandEntered = sanitizer.sanitize(req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,"").replace(/\s+/g, " ").trim());
         var polishBrandToFind;
         Brand.findOne({alternatenames:polishBrandEntered.toLowerCase()}, function(err, brand) {
             if (brand) {
@@ -389,12 +389,12 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                     var newPolish = new Polish ({
                         name: polishNameToFind,
                         brand: polishBrandToFind,
-                        batch: sanitizer.sanitize(req.body.batch.replace(/[&]/g,"and")),
+                        batch: sanitizer.sanitize(req.body.batch.replace(/[&]/g,"and").replace(/\s+/g, " ").trim()),
                         code: sanitizer.sanitize(req.body.code.replace(/^\s+|\s+$/g,'')),
                         keywords: accents.remove(polishBrandToFind) + " - " + accents.remove(polishNameToFind) + " - " + accents.remove(sanitizer.sanitize(req.body.batch.replace(/[&]/g,"and"))) + " - " + sanitizer.sanitize(req.body.code),
                         dateupdated: new Date(),
                         createddate: new Date(),
-                        createdby: req.user.id,
+                        createdby: sanitizer.sanitize(req.user.id),
                         dupes: sanitizer.sanitize(req.body.dupes),
                         swatch: '',
                         checkins: [],
