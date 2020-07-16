@@ -97,7 +97,7 @@
 
     #code, #batch, #colorcat, #type, #indie {color:black;}
 
-    .edit-icon {display: inline-block; transform: rotateZ(90deg);}
+    .edit-icon {display: inline-block; transform: rotateZ(90deg); color:#000000;}
 
     /*---Footer---*/
 

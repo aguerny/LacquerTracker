@@ -157,8 +157,12 @@ app.get('/profile/:username/delete', isLoggedIn, function(req, res) {
                 CheckinComment.find({user:user.id}, function(err, comments) {
                     for (i=0; i<comments.length; i++) {
                         var comment = comments[i];
+                        fs.unlink(path.resolve('./public/'+comments[i].photo), function(err) {
+                            //continue
+                        })
                         if (comments[i].childid.length > 0) {
                             comments[i].message = sanitizer.sanitize(markdown("_comment deleted_"));
+                            comments[i].photo = undefined;
                             comments[i].save();
                         } else {
                             Checkin.findById(comments[i].checkinid, function(err, checkin) {
@@ -191,6 +195,9 @@ app.get('/profile/:username/delete', isLoggedIn, function(req, res) {
                         Checkin.findById(user.checkins[i].id).populate('polish').exec(function (err, checkin) {
                             CheckinComment.find({checkinid:checkin.id}, function(err, comments) {
                                 for (j=0; j < comments.length; j++) {
+                                    fs.unlink(path.resolve('./public/'+comments[j].photo), function(err) {
+                                        //continue
+                                    })
                                     comments[j].remove();
                                 }
                                 fs.unlink(path.resolve('./public/'+checkin.photo), function(err) {

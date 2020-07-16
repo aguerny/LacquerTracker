@@ -12,6 +12,7 @@ var path = require('path');
 var gm = require('gm').subClass({ imageMagick: true });
 var http = require('http');
 var thumbler = require('thumbler');
+var request = require('request');
 
 module.exports = function(app, passport) {
 
@@ -537,6 +538,27 @@ app.post('/freshcoats/:id/:cid/add', isLoggedIn, function(req, res) {
             date: new Date(),
         })
         newCheckinComment.save(function(err) {
+            if (req.files.photo.name.length > 0) {
+                if (req.files.photo.mimetype.startsWith("image")) {
+                    var ext = path.extname(req.files.photo.name);
+                    gm(req.files.photo.tempFilePath).strip().resize(400).write(path.resolve('./public/images/checkincommentphotos/' + newCheckinComment.id + ext), function (err) {
+                        if (err) {
+                            fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                //continue on
+                            })
+                        } else {
+                            fs.unlink(req.files.photo.tempFilePath, function() {
+                                newCheckinComment.photo = '/images/checkincommentphotos/' + newCheckinComment.id + ext;
+                                newCheckinComment.save();
+                            })
+                        }
+                    })
+                } else {
+                    fs.unlink(req.files.photo.tempFilePath, function(err) {
+                        //continue on
+                    })
+                }
+            }
             CheckinComment.findById(req.params.cid).populate('user').exec(function(err, comment) {
                 if (comment !== null) {
                     if (req.user.username !== comment.user.username && comment.user.notifications === "on" && comment.user.username !== post.user.username) {
@@ -691,26 +713,31 @@ app.get('/freshcoats/:id/:cid/remove', isLoggedIn, function(req, res) {
             } else {
                 if (comment.user == req.user.id || req.user.level === "admin") {
                     if (comment.childid.length > 0) {
-                        comment.message = sanitizer.sanitize(markdown("_comment deleted_"));
-                        comment.save(function(err) {
-                            res.redirect("/freshcoats/" + req.params.id);
+                        fs.unlink(path.resolve('./public/'+comment.photo), function(err) {
+                            comment.message = sanitizer.sanitize(markdown("_comment deleted_"));
+                            comment.photo = undefined;
+                            comment.save(function(err) {
+                                res.redirect("/freshcoats/" + req.params.id);
+                            })
                         })
                     } else {
-                        post.comments.remove(req.params.cid);
-                        post.save(function(err) {
-                            if (comment.parentid !== comment.checkinid) {
-                                CheckinComment.findById(comment.parentid, function(err, parentcomment) {
-                                    parentcomment.childid.remove(req.params.cid);
-                                    parentcomment.save();
+                        fs.unlink(path.resolve('./public/'+comment.photo), function(err) {
+                            post.comments.remove(req.params.cid);
+                            post.save(function(err) {
+                                if (comment.parentid !== comment.checkinid) {
+                                    CheckinComment.findById(comment.parentid, function(err, parentcomment) {
+                                        parentcomment.childid.remove(req.params.cid);
+                                        parentcomment.save();
+                                        CheckinComment.findByIdAndRemove(req.params.cid, function(err) {
+                                            res.redirect("/freshcoats/" + req.params.id);
+                                        })
+                                    })
+                                } else {
                                     CheckinComment.findByIdAndRemove(req.params.cid, function(err) {
                                         res.redirect("/freshcoats/" + req.params.id);
                                     })
-                                })
-                            } else {
-                                CheckinComment.findByIdAndRemove(req.params.cid, function(err) {
-                                    res.redirect("/freshcoats/" + req.params.id);
-                                })
-                            }
+                                }
+                            })
                         })
                     }
                 } else {
@@ -739,6 +766,9 @@ app.get('/freshcoats/:id/remove', isLoggedIn, function(req, res) {
                 }
                 CheckinComment.find({checkinid:req.params.id}, function(err, comments) {
                     for (i=0; i < comments.length; i++) {
+                        fs.unlink(path.resolve('./public/'+comments[i].photo), function(err) {
+                            //continue
+                        })
                         comments[i].remove();
                     }
                     fs.unlink(path.resolve('./public/'+post.photo), function(err) {

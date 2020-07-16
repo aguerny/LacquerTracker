@@ -160,12 +160,12 @@ $(window).load(function () {
                 <div id="container" class="clear">
                     <br><% if (isAuthenticated) { %>
                         <hr><br>
-                        <h4 style="display:inline">Your Review:</h4> <i><a href="/review/edit/<%= pid %>">Edit</a></i><br><br>
+                        <h4 style="display:inline">Your Review:</h4> <i><a href="/review/edit/<%= pid %>"><span title="Edit" class="edit-icon">&#9998;</span></a></i><br><br>
                         <% if (review.length > 0 || rating.length > 0) { %>
                             <%if (rating >= 1) {%><img class="starpolish" src="/images/stars/<%=rating%>star.png" alt="<%=rating%> star rating"> - <%}%><%= review %>
                         <% } %>
                         <br><br><br>
-                        <h4 style="display:inline">Your Notes:</h4> <i><a href="/notes/edit/<%= pid %>">Edit</a><br><br>(Notes are only visible to you.)</i><br><br>
+                        <h4 style="display:inline">Your Notes:</h4> <i><a href="/notes/edit/<%= pid %>"><span title="Edit" class="edit-icon">&#9998;</span></a><br><br>(Notes are only visible to you.)</i><br><br>
                         <% if (notes.length > 0) { %>
                             <%= notes %><br><br>
                         <% } %>
@@ -178,7 +178,7 @@ $(window).load(function () {
                         <% } %>
                     <% } %>
                     <br><br>
-                    <h4 style="display:inline">User-Submitted Dupes:</h4><% if (isAuthenticated) { %> <i><a href="/polishedit/<%=pid%>/dupes">Edit</a></i><%}%><br>
+                    <h4 style="display:inline">User-Submitted Dupes:</h4><% if (isAuthenticated) { %> <i><a href="/polishedit/<%=pid%>/dupes"><span title="Edit" class="edit-icon">&#9998;</span></a></i><%}%><br>
                     <% for (i=0; i<pdupes.length; i++) { %>
                         <br>&nbsp;&nbsp;&nbsp;&nbsp;&#8226; <a href='/polish/<%= pdupes[i].brand.replace(/ /g,"_") %>/<%= pdupes[i].name.replace(/ /g,"_") %>'><%= pdupes[i].brand %> - <%= pdupes[i].name %></a>
                     <% } %>

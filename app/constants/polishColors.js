@@ -121,7 +121,7 @@ var ColorTable = [
 {name:'Azure', hex:'#F0FFFF', rgb:[240,255,255], category:'blue'},
 {name:'AliceBlue', hex:'#F0F8FF', rgb:[240,248,255], category:'blue'},
 {name:'GhostWhite', hex:'#F8F8FF', rgb:[248,248,255], category:'blue'},
-{name:'WhiteSmoke', hex:'#F5F5F5', rgb:[245,245,245], category:'gray'},
+{name:'WhiteSmoke', hex:'#F5F5F5', rgb:[245,245,245], category:'white'},
 {name:'SeaShell', hex:'#FFF5EE', rgb:[255,245,238], category:'orange'},
 {name:'BeigeSolid', hex:'#F5F5DC', rgb:[245,245,220], category:'brown'},
 {name:'OldLace', hex:'#FDF5E6', rgb:[253,245,230], category:'brown'},

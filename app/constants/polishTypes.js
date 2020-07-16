@@ -33,6 +33,7 @@ var types = [
 	{name:"texture", display:"texture", category:"polish"},
 	{name:"thermal", display:"thermal", category:"polish"},
 	{name:"top", display:"top coat", category:"polish"},
+	{name:"topper", display:"topper", category:"polish"},
 	{name:"uv", display:"uv", category:"polish"},
 	{name:"vinyl", display:"vinyl", category:"tool"}
 ];
