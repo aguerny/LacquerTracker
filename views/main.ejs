@@ -4,9 +4,17 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
-        <div id="biglayout">
-            <img id="polish-image" src="/images/swatchwheels.JPG" alt="">
-        </div>
+        <% if (isAuthenticated) { %>
+            <div id="biglayout" style="float:right;">
+                <br><br><br><br>
+                <span style="font-size:15px;">Featured Fresh Coat from <a href='/profile/<%= featureuser.username %>'><%= featureuser.username %></a>:<br><br></span>
+                <a href="/freshcoats/<%= featureid %>"><img id="polish-image" src="<%= featurephoto %>" alt=""></a>
+            </div>
+        <% } else { %>
+            <div id="biglayout">
+                <img id="polish-image" src="/images/swatchwheels.JPG" alt="">
+            </div>
+        <% } %>
         <div id="welcome">
             <% if (!isAuthenticated) { %>
                 <h2>Welcome to Lacquer Tracker!</h2>
@@ -56,8 +64,14 @@
             <% } %>
         </div>
         <div id="smalllayout">
-            <br><br>
-            <img id="polish-image" src="/images/swatchwheels.JPG" alt=""></center>
+            <% if (isAuthenticated) { %>
+                <br><hr><br>
+                <span style="font-size:15px">Featured Fresh Coat from <a href='/profile/<%= featureuser.username %>'><%= featureuser.username %></a>:<br><br></span>
+                <a href="/freshcoats/<%= featureid %>"><img id="polish-image" src="<%= featurephoto %>" alt=""></a></center>
+            <% } else { %>
+                <br><br>
+                <img id="polish-image" src="/images/swatchwheels.JPG" alt=""></center>
+            <% } %>
         </div>
     </section>
     </div>

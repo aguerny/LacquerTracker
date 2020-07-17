@@ -161,7 +161,7 @@
 
     .button {color:#FFFFFF; background-color:#10695A; border:none; margin: 0 0 2% 0; padding: 2px;}
 
-    #polish-image {margin:0 0 4% 0; float:right; width:40%; vertical-align:middle; clear:right;}
+    #polish-image {margin:0 0 4% 0; float:right; max-width:400px; vertical-align:middle; clear:right;}
 
     #polish-image2 {width:80%; margin: 0 0 4% 0;}
 

@@ -541,23 +541,32 @@ app.post('/freshcoats/:id/:cid/add', isLoggedIn, function(req, res) {
             if (req.files.photo.name.length > 0) {
                 if (req.files.photo.mimetype.startsWith("image")) {
                     var ext = path.extname(req.files.photo.name);
+                    newCheckinComment.photo = '/images/checkincommentphotos/' + newCheckinComment.id + ext;
+                    newCheckinComment.save();
                     gm(req.files.photo.tempFilePath).strip().resize(400).write(path.resolve('./public/images/checkincommentphotos/' + newCheckinComment.id + ext), function (err) {
                         if (err) {
                             fs.unlink(req.files.photo.tempFilePath, function(err) {
-                                //continue on
+                                newCheckinComment.photo = undefined;
+                                newCheckinComment.save(function(err) {
+                                    res.redirect('/freshcoats/' + newCheckinComment.checkinid);
+                                });
                             })
                         } else {
                             fs.unlink(req.files.photo.tempFilePath, function() {
                                 newCheckinComment.photo = '/images/checkincommentphotos/' + newCheckinComment.id + ext;
-                                newCheckinComment.save();
+                                newCheckinComment.save(function(err) {
+                                    res.redirect('/freshcoats/' + newCheckinComment.checkinid);
+                                });
                             })
                         }
                     })
                 } else {
                     fs.unlink(req.files.photo.tempFilePath, function(err) {
-                        //continue on
+                        res.redirect('/freshcoats/' + newCheckinComment.checkinid);
                     })
                 }
+            } else {
+                res.redirect('/freshcoats/' + newCheckinComment.checkinid);
             }
             CheckinComment.findById(req.params.cid).populate('user').exec(function(err, comment) {
                 if (comment !== null) {
@@ -607,14 +616,10 @@ app.post('/freshcoats/:id/:cid/add', isLoggedIn, function(req, res) {
                     if (parent) {
                         parent.childid.push(newCheckinComment.id);
                         post.save(function(err) {
-                            parent.save(function(err) {
-                                res.redirect('/freshcoats/' + post.id)
-                            })
+                            parent.save();
                         })
                     } else {
-                        post.save(function(err) {
-                            res.redirect('/freshcoats/' + post.id)
-                        })
+                        post.save();
                     }
                 })
             })
