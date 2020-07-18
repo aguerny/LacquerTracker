@@ -209,7 +209,7 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
                             from: "polishrobot@lacquertracker.com",
                             replyTo: "lacquertrackermailer@gmail.com",
                             to: comment.user.email,
-                            subject: 'New reply to your forum comment',
+                            subject: 'New reply to your comment',
                             text: "Hi " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on forum post: " + post.title + "\n\nCheck it out here: https://www.lacquertracker.com/forums/" + post.forum + '/' + post.id + "\n\n\nHappy polishing,\nLacquer Tracker",
                         }
 

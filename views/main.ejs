@@ -6,7 +6,6 @@
     <section>
         <% if (isAuthenticated) { %>
             <div id="biglayout" style="float:right;">
-                <br><br><br><br>
                 <span style="font-size:15px;">Featured Fresh Coat from <a href='/profile/<%= featureuser.username %>'><%= featureuser.username %></a>:<br><br></span>
                 <a href="/freshcoats/<%= featureid %>"><img id="polish-image" src="<%= featurephoto %>" alt=""></a>
             </div>

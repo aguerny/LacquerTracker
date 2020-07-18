@@ -1,0 +1,40 @@
+<%- include('../layoutTop'); %>
+
+<script src='https://www.google.com/recaptcha/api.js'></script>
+
+<script type= "text/javascript">
+    var RecaptchaOptions = {
+        theme: 'custom',
+        lang: 'en',
+        custom_theme_widget: 'recaptcha_widget'
+    };
+</script>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
+        <div>
+            <% if (typeof message !== "undefined") { %>
+                <center><b><%= message %></b><br><br><br><br></center>
+            <% } %>
+            <h3>Send message as admin:</h3><br><br><br>
+            <form action="/admin/message" method="post">
+                Username:<br>
+                <input type="text" name="username" class="width50" required><br><br><br>
+                Sbuject:<br>
+                <input type="text" name="subject" class="width50" value="Message from Lacquer Tracker" required><br><br><br>
+                Message:<br>
+                <textarea autofocus rows="10" class="width50" type="text" name="emailmessage" required <%if (typeof emailmessage !== "undefined") {%>value="<%=emailmessage%>" <%}%>><%if (typeof emailmessage !== "undefined") {%><%=emailmessage%><%}%></textarea><br><br><br>
+                <div class="g-recaptcha" data-sitekey="6LcSeegUAAAAACSmq6y9_hXYCgEXdGknDqg99b__"></div><br><br><br><br><br>
+                <input type="submit" value="Submit" class="button">
+            </form>
+        <br><br>
+        <b>Polish import complete</b><br>
+        Hello, your recent polish import request has been completed. Happy polishing!
+        </div>
+    </section>
+    </div>
+</div>
+
+<%- include('../layoutBottom'); %>

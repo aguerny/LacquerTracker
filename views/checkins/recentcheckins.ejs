@@ -5,10 +5,7 @@
     <div id="container" class="clear">
     <section>
         <div class="photo500">
-            <h2>Fresh Coats</h2><br><br>
-            <a href="/freshcoats/add">Check in your mani by adding a photo of what you're wearing today!</a>
-            <br><br><br>
-            <a href="/freshcoats/saved">View the fresh coats you've saved for inspiration.</a>
+            <h2 style="display:inline-block">Fresh Coats</h2> - <a href="/freshcoats/add">Add new</a> | <a href="/freshcoats/saved">View saved</a>
             <br><br><hr><br>
             <% for (i=0; i<checkins.length; i++) { %>
                 Posted on <%= checkins[i].date %> by <a href="/profile/<%= checkins[i].user.username %>"><%= checkins[i].user.username %></a><br><br>

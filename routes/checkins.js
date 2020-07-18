@@ -581,7 +581,7 @@ app.post('/freshcoats/:id/:cid/add', isLoggedIn, function(req, res) {
                             from: "polishrobot@lacquertracker.com",
                             replyTo: "lacquertrackermailer@gmail.com",
                             to: comment.user.email,
-                            subject: 'New reply to your fresh coat comment',
+                            subject: 'New reply to your comment',
                             text: "Hi " + comment.user.username + ",\n\n" + req.user.username + " just replied to your comment on a fresh coat.\n\nCheck it out here: https://www.lacquertracker.com/freshcoats/" + post.id + "\n\n\nHappy polishing,\nLacquer Tracker",
                         }
 
