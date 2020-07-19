@@ -15,7 +15,15 @@
                     <td style="overflow:hidden"><%=allusers[i].email%></td>
                     <td style="overflow:hidden"><%=allusers[i].source%></td>
                     <td style="overflow:hidden"><%= moment(allusers[i].creationdate).tz("America/New_York").format('MM/DD/YYYY') %></td>
-                    <td style="overflow:hidden"><% if (moment(allusers[i].lastlogindate).add(3, 'days').toDate() > moment().toDate()) {%><mark><%= moment(allusers[i].lastlogindate).tz("America/New_York").calendar() %></mark><% } else { %><%= moment(allusers[i].lastlogindate).tz("America/New_York").calendar() %><% } %></td>
+                    <td style="overflow:hidden">
+                        <% if (moment(allusers[i].lastlogindate).add(1, 'days').toDate() > moment().toDate()) {%>
+                            <mark style="background-color:#FFFF00"><%= moment(allusers[i].lastlogindate).tz("America/New_York").calendar() %></mark>
+                        <% } else if (moment(allusers[i].lastlogindate).add(3, 'days').toDate() > moment().toDate()) {%>
+                            <mark style="background-color:#9ED9CF"><%= moment(allusers[i].lastlogindate).tz("America/New_York").calendar() %></mark>
+                        <% } else { %>
+                            <%= moment(allusers[i].lastlogindate).tz("America/New_York").calendar() %>
+                        <% } %>
+                    </td>
                     <td style="overflow:hidden"><%= allusers[i].isvalidated %></td>
                     <td style="overflow:hidden"><%= allusers[i].level %></td>
                 </tr>
