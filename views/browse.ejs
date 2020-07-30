@@ -55,7 +55,7 @@
                         </select>
                         <span id="colorselector" <%if (browsecolorcategory!=="choose"){%> style="display:none" <%}%>>
                             <input name="selectcolor" type="hidden" id="color_value" value="<%=browseselectcolor%>">
-                            <input type="button" class="jscolor {valueElement: 'color_value'}" style="width:50px; height:20px;">
+                            <input type="button" class="jscolor {valueElement: 'color_value', 'height':200, 'width':300}" style="width:50px; height:20px;">
                         </span>
                         <br><br>
                         <% if (isAuthenticated) { %>

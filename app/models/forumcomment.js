@@ -10,6 +10,7 @@ var forumcommentSchema = mongoose.Schema({
 	message: String,
 	date: Date,
 	childid: [{type: mongoose.Schema.Types.ObjectId, ref: 'ForumComment'}],
+	photo: String,
 });
 
 

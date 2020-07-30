@@ -12,6 +12,10 @@ $(window).load(function () {
             'targetHeight' : 250,
             'allowPartialLastRow' : true,
         });
+    } else{
+        $(".collage").each(function(index, element) {
+            $(element).wrap("<div class='collagephoto'></div>");
+        });
     }
 });
 </script>
@@ -29,7 +33,7 @@ $(window).load(function () {
             <h2 style="display:inline-block"><%= username %>'s Profile</h2>
             <% if (isAuthenticated) { %>
                 <% if (user.username === username) { %>
-                    - <a href="/profile/<%= username %>/edit">Edit your profile</a> | <a href="/import">Import owned polish</a> | <a href="/profile/<%= username %>/export">Export owned polish</a>
+                    - <a href="/profile/<%= username %>/edit">Edit profile</a> | <a href="/import">Import polish</a> | <a href="/profile/<%= username %>/export">Export polish</a>
                 <% } else if (useremail === "on") {%>
                     - <a href="/profile/<%= username %>/message">Send a message</a>
                 <% } %>
@@ -37,12 +41,12 @@ $(window).load(function () {
             <br><br><p style="white-space: pre; padding-left: 3em"><%- about %></p><br><br><br>
         </div>
         <div id="smalllayout">
-            <h3 style="display:inline-block"><%= username %>'s Profile</h3>
+            <h2 style="display:inline-block"><%= username %>'s Profile</h2>
             <% if (isAuthenticated) { %>
                 <% if (user.username === username) { %>
-                    <br><br><a href="/profile/<%= username %>/edit">Edit your profile</a>
-                    <br><br><a href="/import">Import owned polish</a>
-                    <br><br><a href="/profile/<%= username %>/export">Export owned polish</a>
+                     - <a href="/profile/<%= username %>/edit">Edit</a>
+                     | <a href="/import">Import</a>
+                     | <a href="/profile/<%= username %>/export">Export</a>
                 <% } else if (useremail === "on") {%>
                     <br><br><a href="/profile/<%= username %>/message">Send a message</a>
                 <% } %>
@@ -141,9 +145,9 @@ $(window).load(function () {
                         <% for (i=0; i<checkins.length; i++) { %>
                             <% if (checkins[i].pendingdelete === false) { %>
                                 <% if (checkins[i].type !== "video") { %>
-                                    <div class="collagephoto"><a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="" <% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%></a></div>
+                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="" id="collagephoto" <% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%></a>
                                 <% } else { %>
-                                    <div class="collagephoto"><a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>T.jpeg" alt=""></a></div>
+                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>T.jpeg" alt="" id="collagephoto"></a>
                                 <% } %>
                             <% } %>
                         <% } %>

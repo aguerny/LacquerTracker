@@ -220,6 +220,9 @@ app.get('/profile/:username/delete', isLoggedIn, function(req, res) {
                 ForumComment.find({user:user.id}, function(err, comments) {
                     for (i=0; i<comments.length; i++) {
                         var forumcomment = comments[i];
+                        fs.unlink(path.resolve('./public/'+comments[i].photo), function(err) {
+                            //continue
+                        })
                         if (comments[i].childid.length > 0) {
                             comments[i].message = sanitizer.sanitize(markdown("_comment deleted_"));
                             comments[i].save();

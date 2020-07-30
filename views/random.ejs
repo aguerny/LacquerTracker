@@ -1,0 +1,78 @@
+<%- include('layoutTop'); %>
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
+        <div>
+            <h3>Manicure Generator</h3><br><br><br>
+            <% if (results == true) { %>
+                <% if (message2.length > 0 && polish.length > 0) { %>
+                    <%= message2%> <b><%=chosenTechnique%></b> <%=message3%><br><br><br>
+                <% } else { %>
+                    <%= message %><br><br><br>
+                <% } %>
+                <% if (polish.length > 0) { %>
+                    <table>
+                        <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th></tr>
+                        <% for(var i=0; i<polish.length; i++) {%>
+                            <tr><td><a id='tablelink' href='/polish/<%= polish[i].brand.replace(/ /g,"_") %>/<%= polish[i].name.replace(/ /g,"_") %>'><span><%= polish[i].name %></span></a></td>
+                            <td><a id='tablelink' href='/brand/<%= polish[i].brand.replace(/ /g,"_") %>'><span><%= polish[i].brand %></span></a></td>
+                            <td class="tableswatch"><% if (polish[i].swatch.length > 0) {%>
+                                    <img src="<%=polish[i].swatch%>" alt="Nail polish swatch of shade <%= polish[i].brand %> <%= polish[i].name %>">
+                                <%} else {%>
+                                    <img src="/images/swatches/noswatch.jpg" alt="">
+                                <%}%>
+                            </td>
+                            <td>
+                                <span><%= polish[i].type.toString().replace(/,/g,", ") %></span>
+                            </td>
+                            </tr>
+                        <% } %>
+                        <% if (chosenTechniqueAccessory !== '') {%>
+                            <tr><td><a id='tablelink' href='/polish/<%= chosenTechniqueAccessory.brand.replace(/ /g,"_") %>/<%= chosenTechniqueAccessory.name.replace(/ /g,"_") %>'><span><%= chosenTechniqueAccessory.name %></span></a></td>
+                            <td><a id='tablelink' href='/brand/<%= chosenTechniqueAccessory.brand.replace(/ /g,"_") %>'><span><%= chosenTechniqueAccessory.brand %></span></a></td>
+                            <td class="tableswatch"><% if (chosenTechniqueAccessory.swatch.length > 0) {%>
+                                    <img src="<%=polish[i].swatch%>" alt="Nail polish swatch of shade <%= chosenTechniqueAccessory.brand %> <%= chosenTechniqueAccessory.name %>">
+                                <%} else {%>
+                                    <img src="/images/swatches/noswatch.jpg" alt="">
+                                <%}%>
+                            </td>
+                            <td>
+                                <span><%= chosenTechniqueAccessory.type.toString().replace(/,/g,", ") %></span>
+                            </td>
+                            </tr>
+                        <% } %>
+                    </table>
+                <% } %>
+                <br><br><br><br>
+                <b>Try again?</b><br><br><br>
+            <% } %>
+            <form action="/random" method="post" enctype="multipart/form-data">
+                Number of polishes: 
+                <select name="number">
+                    <option value="surprise" <% if (number=="surprise") { %> selected="selected" <% } %>>Surprise me!</option>
+                    <option value="1" <% if (number=="1") { %> selected="selected" <% } %>>1</option>
+                    <option value="2" <% if (number=="2") { %> selected="selected" <% } %>>2</option>
+                    <option value="3" <% if (number=="3") { %> selected="selected" <% } %>>3</option>
+                    <option value="4" <% if (number=="4") { %> selected="selected" <% } %>>4</option>
+                    <option value="5" <% if (number=="5") { %> selected="selected" <% } %>>5</option>
+                </select>
+                <br><br><br>
+                Suggest a technique or style? 
+                <select name="technique">
+                    <option value="no" <% if (technique=="no") { %> selected="selected" <% } %>>No</option>
+                    <option value="surprise" <% if (technique=="surprise") { %> selected="selected" <% } %>>Surprise me!</option>
+                    <% if (plate == true) { %><option value="plate" <% if (technique=="plate") { %> selected="selected" <% } %>>Stamping plate</option><% } %>
+                    <% if (vinyl == true) { %><option value="vinyl" <% if (technique=="vinyl") { %> selected="selected" <% } %>>Nail vinyl</option><% } %>
+                    <% if (loose == true) { %><option value="loose" <% if (technique=="loose") { %> selected="selected" <% } %>>Loose accessory</option><% } %>
+                </select>
+                <br><br><br>
+                <input type="submit" class="button" value="Submit"/>
+            </form>
+        </div>
+    </section>
+    </div>
+</div>
+
+<%- include('layoutBottom'); %>

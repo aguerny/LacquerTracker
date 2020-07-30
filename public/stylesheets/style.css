@@ -417,14 +417,11 @@
 
     .checkinvideo {max-width:100%;  max-height:600px;}
 
-    /*.collage img{max-width:48%; padding-bottom:2px;}
-    .collage video{max-width:48%; padding-bottom:2px;}*/
-
     .collage {
         -moz-column-count:2;
         -webkit-column-count:2;
         column-count:2;
-        width: 99%;
+        width: 98%;
     }
 
     .collagephoto img {

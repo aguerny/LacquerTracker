@@ -15,6 +15,10 @@ $(window).load(function () {
             'targetHeight' : 250,
             'allowPartialLastRow' : true,
         });
+    } else{
+        $(".collage").each(function(index, element) {
+            $(element).wrap("<div class='collagephoto'></div>");
+        });
     }
 });
 </script>
@@ -188,9 +192,9 @@ $(window).load(function () {
                             <% for (i=0; i<checkins.length; i++) { %>
                                 <% if (checkins[i].pendingdelete === false) { %>
                                     <% if (checkins[i].type !== "video") { %>
-                                        <div class="collagephoto"><a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="" <% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%>></a></div>
+                                        <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo %>" alt="" id="collagephoto"<% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%></a>
                                     <% } else { %>
-                                        <div class="collagephoto"><a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>T.jpeg" alt=""></a></div>
+                                        <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>T.jpeg" alt="" id="collagephoto"></a>
                                     <% } %>
                                 <% } %>
                             <% } %>

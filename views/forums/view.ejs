@@ -39,8 +39,10 @@ function confirm_alert(node) {
             <% if (isAuthenticated) { %>
                 <span class="replylink"><a href="">Add a comment</a></span>
                 <div class="replybox"><br>
-                    <form action="/forums/<%= postforum %>/<%= postid %>/<%= postid %>/add" method="post">
-                        <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                    <form action="/forums/<%= postforum %>/<%= postid %>/<%= postid %>/add" method="post" enctype='multipart/form-data'>
+                        <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                        Include a photo? <input type="file" name="photo">
+                        <br><br>
                         <input type="submit" value="Submit" class="button">
                     </form>
                 </div>
@@ -73,11 +75,14 @@ function confirm_alert(node) {
                     <br>
                     <div>
                         <p style="white-space: pre; padding-left: 3em"><%- postcomments[i].message %></p>
+                        <% if (postcomments[i].photo) { %><img src="<%= postcomments[i].photo %>"><br><br><%}%>
                         <% if (isAuthenticated) { %>
                             <span class="replylink"><a href="">Reply</a></span>
                             <div class="replybox"><br>
-                                <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[i].id %>/add" method="post">
-                                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[i].id %>/add" method="post" enctype='multipart/form-data'>
+                                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                    Include a photo? <input type="file" name="photo">
+                                    <br><br>
                                     <input type="submit" value="Submit" class="button">
                                 </form>
                             </div>
@@ -111,11 +116,14 @@ function confirm_alert(node) {
                             <br>
                             <div>
                                 <p style="white-space: pre; padding-left: 3em"><%- postcomments[j].message %></p>
+                                <% if (postcomments[j].photo) { %><img src="<%= postcomments[j].photo %>"><br><br><%}%>
                                 <% if (isAuthenticated) { %>
                                     <span class="replylink"><a href="">Reply</a></span>
                                     <div class="replybox"><br>
-                                        <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[j].id %>/add" method="post">
-                                            <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                        <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[j].id %>/add" method="post" enctype='multipart/form-data'>
+                                            <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                            Include a photo? <input type="file" name="photo">
+                                            <br><br>
                                             <input type="submit" value="Submit" class="button">
                                         </form>
                                     </div>
@@ -147,11 +155,14 @@ function confirm_alert(node) {
                                 <br>
                                 <div>
                                     <p style="white-space: pre; padding-left: 3em"><%- postcomments[k].message %></p>
+                                    <% if (postcomments[k].photo) { %><img src="<%= postcomments[k].photo %>"><br><br><%}%>
                                     <% if (isAuthenticated) { %>
                                         <span class="replylink"><a href="">Reply</a></span>
                                         <div class="replybox"><br>
-                                            <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[k].id %>/add" method="post">
-                                                <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                            <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[k].id %>/add" method="post" enctype='multipart/form-data'>
+                                                <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                                Include a photo? <input type="file" name="photo">
+                                                <br><br>
                                                 <input type="submit" value="Submit" class="button">
                                             </form>
                                         </div>
@@ -183,11 +194,14 @@ function confirm_alert(node) {
                                     <br>
                                     <div>
                                         <p style="white-space: pre; padding-left: 3em"><%- postcomments[l].message %></p>
+                                        <% if (postcomments[l].photo) { %><img src="<%= postcomments[l].photo %>"><br><br><%}%>
                                         <% if (isAuthenticated) { %>
                                             <span class="replylink"><a href="">Reply</a></span>
                                             <div class="replybox"><br>
-                                                <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[l].id %>/add" method="post">
-                                                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                                <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[l].id %>/add" method="post" enctype='multipart/form-data'>
+                                                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                                    Include a photo? <input type="file" name="photo">
+                                                    <br><br>
                                                     <input type="submit" value="Submit" class="button">
                                                 </form>
                                             </div>
@@ -219,11 +233,14 @@ function confirm_alert(node) {
                                         <br>
                                         <div>
                                             <p style="white-space: pre; padding-left: 3em"><%- postcomments[m].message %></p>
+                                            <% if (postcomments[m].photo) { %><img src="<%= postcomments[m].photo %>"><br><br><%}%>
                                             <% if (isAuthenticated) { %>
                                                 <span class="replylink"><a href="">Reply</a></span>
                                                 <div class="replybox"><br>
-                                                    <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[m].id %>/add" method="post">
-                                                        <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                                    <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[m].id %>/add" method="post" enctype='multipart/form-data'>
+                                                        <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                                        Include a photo? <input type="file" name="photo">
+                                                        <br><br>
                                                         <input type="submit" value="Submit" class="button">
                                                     </form>
                                                 </div>
@@ -255,11 +272,14 @@ function confirm_alert(node) {
                                             <br>
                                             <div>
                                                 <p style="white-space: pre; padding-left: 3em"><%- postcomments[n].message %></p>
+                                                <% if (postcomments[n].photo) { %><img src="<%= postcomments[n].photo %>"><br><br><%}%>
                                                 <% if (isAuthenticated) { %>
                                                     <span class="replylink"><a href="">Reply</a></span>
                                                     <div class="replybox"><br>
-                                                        <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[n].id %>/add" method="post">
-                                                            <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                                        <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[n].id %>/add" method="post" enctype='multipart/form-data'>
+                                                            <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                                            Include a photo? <input type="file" name="photo">
+                                                            <br><br>
                                                             <input type="submit" value="Submit" class="button">
                                                         </form>
                                                     </div>
@@ -291,11 +311,14 @@ function confirm_alert(node) {
                                                 <br>
                                                 <div>
                                                     <p style="white-space: pre; padding-left: 3em"><%- postcomments[o].message %></p>
+                                                    <% if (postcomments[o].photo) { %><img src="<%= postcomments[o].photo %>"><br><br><%}%>
                                                     <% if (isAuthenticated) { %>
                                                         <span class="replylink"><a href="">Reply</a></span>
                                                         <div class="replybox"><br>
-                                                            <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[o].id %>/add" method="post">
-                                                                <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                                            <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[o].id %>/add" method="post" enctype='multipart/form-data'>
+                                                                <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                                                Include a photo? <input type="file" name="photo">
+                                                                <br><br>
                                                                 <input type="submit" value="Submit" class="button">
                                                             </form>
                                                         </div>
@@ -327,11 +350,14 @@ function confirm_alert(node) {
                                                     <br>
                                                     <div>
                                                         <p style="white-space: pre; padding-left: 3em"><%- postcomments[p].message %></p>
+                                                        <% if (postcomments[p].photo) { %><img src="<%= postcomments[p].photo %>"><br><br><%}%>
                                                         <% if (isAuthenticated) { %>
                                                             <span class="replylink"><a href="">Reply</a></span>
                                                             <div class="replybox"><br>
-                                                                <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[p].id %>/add" method="post">
-                                                                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea><br><br>
+                                                                <form action="/forums/<%= postforum %>/<%= postid %>/<%= postcomments[p].id %>/add" method="post" enctype='multipart/form-data'>
+                                                                    <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                                                                    Include a photo? <input type="file" name="photo">
+                                                                    <br><br>
                                                                     <input type="submit" value="Submit" class="button">
                                                                 </form>
                                                             </div>
@@ -362,7 +388,7 @@ function confirm_alert(node) {
                                                             <% } %>
                                                         <br>
                                                         <div>
-                                                            <p style="white-space: pre; padding-left: 3em"><%- postcomments[q].message %></p></div>
+                                                            <p style="white-space: pre; padding-left: 3em"><%- postcomments[q].message %></p><% if (postcomments[q].photo) { %><img src="<%= postcomments[q].photo %>"><br><br><%}%></div>
                                                         </div><br>
 
 

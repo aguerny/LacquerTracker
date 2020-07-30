@@ -11,12 +11,21 @@
     <section>
         <form action="/forums/<%= forumcat %>/add" method="post" enctype='multipart/form-data'>
             <h3>Add a discussion post:</h3><br><br>
-                Category:<br><select name="forum" required>
+                Category:<br><select name="forum" class="category" required>
                     <option value="general" <% if (forumcat === "general") { %> selected="selected" <%}%>>General Polish Discussion</option>
                     <option value="intro" <% if (forumcat === "intro") { %> selected="selected" <%}%>>Introductions</option>
                     <option value="offtopic" <% if (forumcat === "offtopic") { %> selected="selected" <%}%>>Off Topic</option>
                     <option value="lt" <% if (forumcat === "lt") { %> selected="selected" <%}%>>Lacquer Tracker Feedback/Suggestions</option>
                     </select><br><br>
+                <span class="introsuggestions" <%if (forumcat!=="intro"){%> style="display:none" <%}%>>
+                    Intro ideas:<br>
+                    <ul>
+                    <li>Include a photo of your collection if you can!</li>
+                    <li>How did you become interested in nail polish?</li>
+                    <li>What are your favorite colors and finishes?</li>
+                    <li>Anything else polish-related or not to help us get to know you!</li>
+                    </ul>
+                </span><br>
                 Title:<br><input type="text" name="posttitle" class="width50" maxlength="100" required autofocus><br><br><br>
                 Post:<br><textarea type="text" class="markItUp" name="postmessage" required></textarea><br>
                 Include an image? <input type="file" value="photo" name="photo" /><br><br><br>
@@ -25,5 +34,15 @@
     </section>
     </div>
 </div>
+
+<script>
+$('.category').change(function(){
+    if($(this).val() == "intro"){
+        $('.introsuggestions').show();
+    } else {
+        $('.introsuggestions').hide();
+    }
+});
+</script>
 
 <%- include('../layoutBottom'); %>

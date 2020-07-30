@@ -39,7 +39,7 @@ app.get('/photo/add/:id', isLoggedIn, function(req, res) {
 app.post('/photo/add/:id', isLoggedIn, function(req, res) {
     if (req.files.photo.name.length > 0) {
         if ((req.files.photo.mimetype.startsWith("image")) && (req.files.photo.mimetype !== "image/gif")) {
-            var ext = path.extname(req.files.photo.name);
+            var ext = ".jpg"; //path.extname(req.files.photo.name);
             Polish.findById(req.params.id, function(err, p) {
                 var newPhoto = new Photo ({
                     polishid: p.id,

@@ -29,6 +29,14 @@
             <% } else if (isAuthenticated) { %>
                 <h2>Welcome back to Lacquer Tracker, <%=user.username%>!</h2>
                 <br><br>
+                <% if ((intro.length == 0) && (newuser == true)) {%>
+                    <span style="font-size:15px">&#9658; <a href="/forums/intro/add">Click here to introduce yourself in the forums!</a></span>
+                    <br><br><br>
+                <% } %>
+                <% if ((user.checkins.length == 0) && (newuser == false)) {%>
+                    <span style="font-size:15px">&#9658; <a href="/freshcoats">Click here to share your first fresh coat!</a></span>
+                    <br><br><br>
+                <% } %>
                 <span style="font-size:15px">Your Polish Stats:<br><br></span>
                 <ul style="padding-left:25px">
                     <li>Polish Owned: <%= ownedpolish.length %></li><br>

@@ -107,22 +107,30 @@ app.get('/polish/:brand/:name', function(req, res) {
 //view a polish by id
 app.get('/polishid/:id', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
-        Polish.findById(req.params.id).populate('dupes', 'brand name').populate('checkins', 'photo pendingdelete').populate('photos').exec(function(err, polish) {
+        Polish.findById(req.params.id).populate('dupes', 'brand name').populate('checkins', 'photo pendingdelete creationdate type', null, {sort:{creationdate:-1}}).populate('photos').exec(function(err, polish) {
             if (polish === null) {
                 res.redirect('/error');
             } else {
                 data = {};
-                data.title = polish.name + ' - ' + polish.brand + ' - Lacquer Tracker';
-                data.meta = 'Information about the nail polish shade ' + polish.brand + " - " + polish.name + ', including dupes, reviews, photos, swatches, colors, types.';
+                data.title = polish.name + ' - ' + polish.brand + ' - Lacquer Tracker'
+                if (polish.tool == false) {
+                    data.meta = 'Information about the nail polish shade ' + polish.brand + " - " + polish.name + ', including reviews, photos, swatches, and dupes.';
+                } else {
+                    data.meta = 'Information about the nail polish tool / accessory ' + polish.brand + " - " + polish.name + ', including reviews, photos, swatches, and dupes.';
+                }
                 data.pname = polish.name;
                 data.pbrand = polish.brand;
                 data.pbatch = polish.batch;
                 data.pswatch = polish.swatch;
-                data.ptype = polish.type;
                 data.pcolors = polish.colorsname;
+                data.pcolors2 = polish.colorscategory;
+                data.ptype = polish.type;
                 data.pcode = polish.code;
                 data.pid = polish.id;
                 data.pdupes = polish.dupes;
+                if (polish.avgrating) {
+                    data.pavgrating = Math.round(polish.avgrating).toString();
+                }
                 data.linkbrand = polish.brand.replace("%20"," ");
                 data.linkname = polish.name.replace("%20"," ");
                 data.checkins = polish.checkins;

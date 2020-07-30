@@ -3,10 +3,10 @@
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
-    	<section>
-    		<div>
+        <section>
+            <div>
                 <% if (typeof message !== "undefined") { %>
-                    <center><b><%= message %></b><br><br><br><br></center>
+                    <center><b><%- message %></b><br><br><br><br></center>
                 <% } %>
                 <% if (typeof polishes !== "undefined") { %>
                     <% for (i=0; i<polishes.length; i++) { %>
@@ -15,14 +15,14 @@
                     <% } %>
                     <br><br>
                 <% } %>
-	     		<h3>Combine Polishes:</h3><br>
+                <h3>Combine Polishes:</h3><br>
                 <form action="/admin/combine" method="post">
                     Id to Keep: <input name="keepid" class="width50"><br><br>
                     Id to Remove: <input name="removeid" class="width50" required><br><br>
                     <input type="submit" value="Submit" class="button">
                 </form>
             </div>
-    	</section>
+        </section>
     </div>
 </div>
 

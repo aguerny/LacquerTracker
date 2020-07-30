@@ -34,6 +34,7 @@ app.post('/contact', function (req, res) {
 
                 var mailOptions = {
                     from: "polishrobot@lacquertracker.com",
+                    replyTo: sanitizer.sanitize(req.body.email),
                     to: 'lacquertrackermailer@gmail.com',
                     subject: 'Contact Form Submission',
                     text: "Message from " + sanitizer.sanitize(req.body.name) + " - " + sanitizer.sanitize(req.body.email) + ":\n\n" + sanitizer.sanitize(req.body.usermessage)

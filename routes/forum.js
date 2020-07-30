@@ -11,6 +11,7 @@ var fs = require('node-fs');
 var path = require('path');
 var gm = require('gm').subClass({ imageMagick: true });
 var http = require('http');
+var request = require('request');
 
 module.exports = function(app, passport) {
 
@@ -139,7 +140,7 @@ app.post('/forums/:forum/add', isLoggedIn, function(req, res) {
                 })
             }
         } else {
-            res.redirect('/forums/' + newForumPost.forum + '/' + newForumPost.id);
+            res.redirect('/forums/' + newForumPost.forum);
         }
     })
 });
@@ -185,7 +186,7 @@ app.get('/forums/:forum/:id', function(req, res) {
 });
 
 
-//reply to specific comment
+//eply to a post or comment
 app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
     ForumPost.findById(req.params.id).populate('user').exec(function (err, post){
         var newForumComment = new ForumComment ({
@@ -196,6 +197,36 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
             date: new Date(),
         })
         newForumComment.save(function(err) {
+            if (req.files.photo.name.length > 0) {
+                if (req.files.photo.mimetype.startsWith("image")) {
+                    var ext = path.extname(req.files.photo.name);
+                    newForumComment.photo = '/images/forumcommentphotos/' + newForumComment.id + ext;
+                    newForumComment.save();
+                    gm(req.files.photo.tempFilePath).strip().resize(400).write(path.resolve('./public/images/forumcommentphotos/' + newForumComment.id + ext), function (err) {
+                        if (err) {
+                            fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                newForumComment.photo = undefined;
+                                newForumComment.save(function(err) {
+                                    res.redirect('/forums/' + post.forum + '/' + post.id);
+                                });
+                            })
+                        } else {
+                            fs.unlink(req.files.photo.tempFilePath, function() {
+                                newForumComment.photo = '/images/forumcommentphotos/' + newForumComment.id + ext;
+                                newForumComment.save(function(err) {
+                                    res.redirect('/forums/' + post.forum + '/' + post.id);
+                                });
+                            })
+                        }
+                    })
+                } else {
+                    fs.unlink(req.files.photo.tempFilePath, function(err) {
+                        res.redirect('/forums/' + post.forum + '/' + post.id);
+                    })
+                }
+            } else {
+                res.redirect('/forums/' + post.forum + '/' + post.id);
+            }
             ForumComment.findById(req.params.cid).populate('user').exec(function(err, comment) {
                 if (comment !== null) {
                     if (req.user.username !== comment.user.username && comment.user.notifications === "on" && comment.user.username !== post.user.username) {
@@ -245,14 +276,10 @@ app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
                     if (parent) {
                         parent.childid.push(newForumComment.id);
                         post.save(function(err) {
-                            parent.save(function(err) {
-                                res.redirect('/forums/' + post.forum + '/' + post.id)
-                            })
+                            parent.save();
                         })
                     } else {
-                        post.save(function(err) {
-                            res.redirect('/forums/' + post.forum + '/' + post.id)
-                        })
+                        post.save();
                     }
                 })
             })
@@ -319,26 +346,31 @@ app.get('/forums/:forum/:id/:cid/remove', isLoggedIn, function(req, res) {
             } else {
                 if (comment.user == req.user.id || req.user.level === "admin") {
                     if (comment.childid.length > 0) {
-                        comment.message = sanitizer.sanitize(markdown("_comment deleted_"));
-                        comment.save(function(err) {
-                            res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
+                        fs.unlink(path.resolve('./public/'+comment.photo), function(err) {
+                            comment.message = sanitizer.sanitize(markdown("_comment deleted_"));
+                            comment.photo = undefined;
+                            comment.save(function(err) {
+                                res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
+                            })
                         })
                     } else {
-                        post.comments.remove(req.params.cid);
-                        post.save(function(err) {
-                            if (comment.parentid !== comment.postid) {
-                                ForumComment.findById(comment.parentid, function(err, parentcomment) {
-                                    parentcomment.childid.remove(req.params.cid);
-                                    parentcomment.save();
+                        fs.unlink(path.resolve('./public/'+comment.photo), function(err) {
+                            post.comments.remove(req.params.cid);
+                            post.save(function(err) {
+                                if (comment.parentid !== comment.postid) {
+                                    ForumComment.findById(comment.parentid, function(err, parentcomment) {
+                                        parentcomment.childid.remove(req.params.cid);
+                                        parentcomment.save();
+                                        ForumComment.findByIdAndRemove(req.params.cid, function(err) {
+                                            res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
+                                        })
+                                    })
+                                } else {
                                     ForumComment.findByIdAndRemove(req.params.cid, function(err) {
                                         res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
                                     })
-                                })
-                            } else {
-                                ForumComment.findByIdAndRemove(req.params.cid, function(err) {
-                                    res.redirect("/forums/" + req.params.forum + "/" + req.params.id);
-                                })
-                            }
+                                }
+                            })
                         })
                     }
                 } else {
@@ -360,6 +392,9 @@ app.get('/forums/:forum/:id/remove', isLoggedIn, function(req, res) {
             if (post.user == req.user.id || req.user.level === "admin") {
                 ForumComment.find({postid:req.params.id}, function(err, comments) {
                     for (i=0; i < comments.length; i++) {
+                        fs.unlink(path.resolve('./public/'+comments[i].photo), function(err) {
+                            //continue
+                        })
                         comments[i].remove();
                     }
                     fs.unlink(path.resolve('./public/'+post.photo), function(err) {
