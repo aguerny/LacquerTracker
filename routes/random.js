@@ -11,12 +11,15 @@ module.exports = function(app, passport) {
 
 //generate mani
 app.get('/random', isLoggedIn, function(req, res) {
-    User.findOne({username: req.user.username}).populate('ownedpolish').exec(function (err, user) {
+    User.findOne({username: req.user.username}).populate('ownedpolish', 'name brand type swatch tool').exec(function (err, user) {
         var data = {};
         data.title = "Manicure Generator";
         data.results = false;
         data.number = "surprise";
         data.technique = "no";
+        data.chosenTechnique = "no";
+        data.allPolish = '';
+        data.allChosenTechniqueAccessories = '';
         var plate = user.ownedpolish.filter(function( obj ) {
             return obj.tool == true && _.includes(obj.type, "plate");
         });
@@ -48,7 +51,7 @@ app.get('/random', isLoggedIn, function(req, res) {
 
 //generate random mani
 app.post('/random', function(req, res) {
-    User.findOne({username: req.user.username}).populate('ownedpolish').exec(function(err, user) {
+    User.findOne({username: req.user.username}).populate('ownedpolish', 'name brand type swatch tool').exec(function(err, user) {
         var data = {};
         data.title = "Manicure Generator";
         data.results = true;
@@ -80,6 +83,7 @@ app.post('/random', function(req, res) {
             data.loose = false;
         }
 
+        //generate polish
         if (req.body.number !== "surprise") {
             var numPolish = parseInt(req.body.number);
         } else {
@@ -108,13 +112,15 @@ app.post('/random', function(req, res) {
         var shufflePolish = _.shuffle(user.ownedpolish);
 
         var polish = shufflePolish.filter(function( obj ) {
-            return obj.tool == undefined || obj.tool == false;
+            if ((obj.tool == undefined || obj.tool == false) && (obj.type !== ["top"] && _.includes(obj.type, "base") !== true)) {
+                return obj;
+            }
         });
 
         if (user.ownedpolish.length == 0) {
             data.message = "Oops! Come back once you've added some polish to your owned list.";
         } else {
-            data.message = "Create a mani using this polish from your collection:";
+            data.message = "Create a manicure using these items from your collection:";
         }
 
         if (user.ownedpolish.length = 0) {
@@ -122,11 +128,14 @@ app.post('/random', function(req, res) {
         } else {
             if (polish.length < numPolish) {
                 data.polish = polish;
+                data.allPolish = polish;
             } else {
                 data.polish = polish.slice(0, numPolish);
+                data.allPolish = polish;
             }
         }
 
+        //generate technique/accessory
         if (req.body.technique == "surprise") {
             var techniques = [
                 "french",
@@ -171,20 +180,24 @@ app.post('/random', function(req, res) {
 
             if (chosenTechnique == "stamping") {
                 data.chosenTechniqueAccessory = plate[0];
+                data.allChosenTechniqueAccessories = plate;
             } else if (chosenTechnique == "vinyl") {
                 data.chosenTechniqueAccessory = vinyl[0];
+                data.allChosenTechniqueAccessories = vinyl;
             } else if (chosenTechnique == "loose accessory") {
                 data.chosenTechniqueAccessory = loose[0];
+                data.allChosenTechniqueAccessories = loose;
             } else {
                 data.chosenTechniqueAccessory = '';
+                data.allChosenTechniqueAccessories = '';
             }
             var vowels = ("aeiouAEIOU"); 
             if (vowels.indexOf(chosenTechnique[0]) !== -1) {
                 data.message2 = "Create an ";
-                data.message3 = " manicure using these items:";
+                data.message3 = " manicure using these items from your collection:";
             } else {
                 data.message2 = "Create a ";
-                data.message3 = " manicure using these items:";
+                data.message3 = " manicure using these items from your collection:";
             }
         } else if (req.body.technique == "plate") {
             var techniques = [];
@@ -201,14 +214,15 @@ app.post('/random', function(req, res) {
 
             if (chosenTechnique == "stamping") {
                 data.chosenTechniqueAccessory = plate[0];
+                data.allChosenTechniqueAccessories = plate;
             }
             var vowels = ("aeiouAEIOU"); 
             if (vowels.indexOf(chosenTechnique[0]) !== -1) {
                 data.message2 = "Create an ";
-                data.message3 = " manicure using these items:";
+                data.message3 = " manicure using these items from your collection:";
             } else {
                 data.message2 = "Create a ";
-                data.message3 = " manicure using these items:";
+                data.message3 = " manicure using these items from your collection:";
             }
         } else if (req.body.technique == "vinyl") {
             var techniques = [];
@@ -225,14 +239,15 @@ app.post('/random', function(req, res) {
 
             if (chosenTechnique == "vinyl") {
                 data.chosenTechniqueAccessory = vinyl[0];
+                data.allChosenTechniqueAccessories = vinyl;
             }
             var vowels = ("aeiouAEIOU"); 
             if (vowels.indexOf(chosenTechnique[0]) !== -1) {
                 data.message2 = "Create an ";
-                data.message3 = " manicure using these items:";
+                data.message3 = " manicure using these items from your collection:";
             } else {
                 data.message2 = "Create a ";
-                data.message3 = " manicure using these items:";
+                data.message3 = " manicure using these items from your collection:";
             }
         } else if (req.body.technique == "loose") {
             var techniques = [];
@@ -249,18 +264,31 @@ app.post('/random', function(req, res) {
 
             if (chosenTechnique == "loose accessory") {
                 data.chosenTechniqueAccessory = loose[0];
+                data.allChosenTechniqueAccessories = loose;
             }
             var vowels = ("aeiouAEIOU"); 
             if (vowels.indexOf(chosenTechnique[0]) !== -1) {
                 data.message2 = "Create an ";
-                data.message3 = " manicure using these items:";
+                data.message3 = " manicure using these items from your collection:";
             } else {
                 data.message2 = "Create a ";
-                data.message3 = " manicure using these items:";
+                data.message3 = " manicure using these items from your collection:";
             }
+        // } else if (req.body.technique !== "no") {
+        //     data.chosenTechnique = req.body.technique;
+        //     data.chosenTechniqueAccessory = '';
+        //     var vowels = ("aeiouAEIOU"); 
+        //     if (vowels.indexOf(req.body.technique[0]) !== -1) {
+        //         data.message2 = "Create an ";
+        //         data.message3 = " manicure using these items from your collection:";
+        //     } else {
+        //         data.message2 = "Create a ";
+        //         data.message3 = " manicure using these items from your collection:";
+        //     }
         } else {
-            data.chosenTechnique = '';
+            data.chosenTechnique = "no";
             data.chosenTechniqueAccessory = '';
+            data.allChosenTechniqueAccessories = '';
             data.message2 = '';
         }
         res.render('random.ejs', data);
