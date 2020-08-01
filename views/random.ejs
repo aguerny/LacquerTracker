@@ -6,73 +6,73 @@
     <section>
         <div>
             <h3>Manicure Generator</h3><br><br><br>
-            <form action="/random" method="post" enctype="multipart/form-data">
-                <% if (results == true) { %>
-                    <% if (message2.length > 0 && polish.length > 0) { %>
-                        <%= message2%> <b><%=chosenTechnique%></b> <%=message3%><br><br><br>
-                    <% } else { %>
-                        <%= message %><br><br><br>
-                    <% } %>
-                    <% if (polish.length > 0) { %>
-                        <table>
-                            <tr>
-                                <th style="width:25%"><span>Name</span></th>
-                                <th style="width:25%"><span>Brand</span></th>
-                                <th style="width:15%"><span>Swatch</span></th>
-                                <th style="width:20%"><span>Type</span></th>
-                                <th style="width:15%"><span>Option</span></th>
-                            </tr>
-                            <% for(var i=0; i<polish.length; i++) {%>
-                                <tr>
-                                    <td>
-                                        <a id='tablelink' href='/polish/<%= polish[i].brand.replace(/ /g,"_") %>/<%= polish[i].name.replace(/ /g,"_") %>'><span><%= polish[i].name %></span></a>
-                                    </td>
-                                    <td>
-                                        <a id='tablelink' href='/brand/<%= polish[i].brand.replace(/ /g,"_") %>'><span><%= polish[i].brand %></span></a>
-                                    </td>
-                                    <td class="tableswatch">
-                                        <% if (polish[i].swatch.length > 0) {%>
-                                            <img src="<%=polish[i].swatch%>">
-                                        <%} else {%>
-                                            <img src="/images/swatches/noswatch.jpg">
-                                        <%}%>
-                                    </td>
-                                    <td>
-                                        <span><%= polish[i].type.toString().replace(/,/g,", ") %></span>
-                                    </td>
-                                    <td>
-                                        <span class="reroll"><a href="#">Reroll</a></span>
-                                    </td>
-                                </tr>
-                            <% } %>
-                            <% if (chosenTechniqueAccessory !== '') {%>
-                                <tr>
-                                    <td>
-                                        <a id='tablelink' href='/polish/<%= chosenTechniqueAccessory.brand.replace(/ /g,"_") %>/<%= chosenTechniqueAccessory.name.replace(/ /g,"_") %>'><span><%= chosenTechniqueAccessory.name %></span></a>
-                                    </td>
-                                    <td>
-                                        <a id='tablelink' href='/brand/<%= chosenTechniqueAccessory.brand.replace(/ /g,"_") %>'><span><%= chosenTechniqueAccessory.brand %></span></a>
-                                    </td>
-                                    <td class="tableswatch">
-                                        <% if (chosenTechniqueAccessory.swatch.length > 0) {%>
-                                            <img src="<%=polish[i].swatch%>">
-                                        <%} else {%>
-                                            <img src="/images/swatches/noswatch.jpg">
-                                        <%}%>
-                                    </td>
-                                    <td>
-                                        <span><%= chosenTechniqueAccessory.type.toString().replace(/,/g,", ") %></span>
-                                    </td>
-                                    <td>
-                                        <span class="rerollaccessory"><a href="#">Reroll</a></span>
-                                    </td>
-                                </tr>
-                            <% } %>
-                        </table>
-                    <% } %>
-                    <br><br><br><br>
-                    <b>Try again?</b><br><br><br>
+            <% if (results == true) { %>
+                <% if (message2.length > 0 && polish.length > 0) { %>
+                    <%= message2%> <b><%=chosenTechnique%></b> <%=message3%><br><br><br>
+                <% } else { %>
+                    <%= message %><br><br><br>
                 <% } %>
+                <% if (polish.length > 0) { %>
+                    <table>
+                        <tr>
+                            <th style="width:25%"><span>Name</span></th>
+                            <th style="width:25%"><span>Brand</span></th>
+                            <th style="width:15%"><span>Swatch</span></th>
+                            <th style="width:20%"><span>Type</span></th>
+                            <th style="width:15%"><span>Option</span></th>
+                        </tr>
+                        <% for(var i=0; i<polish.length; i++) {%>
+                            <tr>
+                                <td>
+                                    <a id='tablelink' href='/polish/<%= polish[i].brand.replace(/ /g,"_") %>/<%= polish[i].name.replace(/ /g,"_") %>'><span><%= polish[i].name %></span></a>
+                                </td>
+                                <td>
+                                    <a id='tablelink' href='/brand/<%= polish[i].brand.replace(/ /g,"_") %>'><span><%= polish[i].brand %></span></a>
+                                </td>
+                                <td class="tableswatch">
+                                    <% if (polish[i].swatch.length > 0) {%>
+                                        <img src="<%=polish[i].swatch%>">
+                                    <%} else {%>
+                                        <img src="/images/swatches/noswatch.jpg">
+                                    <%}%>
+                                </td>
+                                <td>
+                                    <span><%= polish[i].type.toString().replace(/,/g,", ") %></span>
+                                </td>
+                                <td>
+                                    <span class="reroll"><a href="#">Reroll</a></span>
+                                </td>
+                            </tr>
+                        <% } %>
+                        <% if (chosenTechniqueAccessory !== '') {%>
+                            <tr>
+                                <td>
+                                    <a id='tablelink' href='/polish/<%= chosenTechniqueAccessory.brand.replace(/ /g,"_") %>/<%= chosenTechniqueAccessory.name.replace(/ /g,"_") %>'><span><%= chosenTechniqueAccessory.name %></span></a>
+                                </td>
+                                <td>
+                                    <a id='tablelink' href='/brand/<%= chosenTechniqueAccessory.brand.replace(/ /g,"_") %>'><span><%= chosenTechniqueAccessory.brand %></span></a>
+                                </td>
+                                <td class="tableswatch">
+                                    <% if (chosenTechniqueAccessory.swatch.length > 0) {%>
+                                        <img src="<%=polish[i].swatch%>">
+                                    <%} else {%>
+                                        <img src="/images/swatches/noswatch.jpg">
+                                    <%}%>
+                                </td>
+                                <td>
+                                    <span><%= chosenTechniqueAccessory.type.toString().replace(/,/g,", ") %></span>
+                                </td>
+                                <td>
+                                    <span class="rerollaccessory"><a href="#">Reroll</a></span>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </table>
+                <% } %>
+                <br><br><br><br>
+                <b>Try again?</b><br><br><br>
+            <% } %>
+            <form action="/random" method="post" enctype="multipart/form-data">
                 Number of polishes: 
                 <select name="number">
                     <option value="surprise" <% if (number=="surprise") { %> selected="selected" <% } %>>Surprise me!</option>

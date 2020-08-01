@@ -13,7 +13,7 @@
                 <% if (checkintype !== "video") { %>
                     <img src=<%= checkinphoto %>>
                 <% } else { %>
-                    <video class="checkinvideo" controls src="<%= checkinphoto %>" poster="<%= checkinphoto.split('.').slice(0, -1).join('.') %>T.jpeg"></video>
+                    <video class="checkinvideo" controls src="<%= checkinphoto %>" poster="<%= checkinphoto.split('.').slice(0, -1).join('.') %>thumb.jpeg"></video>
                 <% } %>
                 <br><br><br>
                 Edit short description:<br>

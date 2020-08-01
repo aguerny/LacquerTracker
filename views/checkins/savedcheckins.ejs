@@ -12,7 +12,7 @@
                 <% if (checkins[i].type !== "video") { %>
                     <img src=<%= checkins[i].photo %>>
                 <% } else { %>
-                    <video class="checkinvideo" controls src="<%= checkins[i].photo %>" poster="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>T.jpeg"></video>
+                    <video class="checkinvideo" controls src="<%= checkins[i].photo %>" poster="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>thumb.jpeg"></video>
                 <% } %>
                 <br><br><br>
                 <% if (checkins[i].description.length > 0) {%><%= checkins[i].description%><br><br><br><%}%>

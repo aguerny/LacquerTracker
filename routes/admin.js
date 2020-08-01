@@ -7,6 +7,7 @@ var Checkin = require('../app/models/checkin');
 var Review = require('../app/models/review');
 var fs = require('node-fs');
 var path = require('path');
+var gm = require('gm').subClass({ imageMagick: true });
 var mongoose = require('mongoose');
 var sanitizer = require('sanitizer');
 var markdown = require('markdown-css');
