@@ -1,0 +1,80 @@
+<%- include('../layoutTop'); %>
+
+<script src="/scripts/jquery.js"></script>
+<script src="/scripts/jquery.mobile.custom.min.js"></script>
+<script src="/scripts/jcrop/js/jquery.Jcrop.min.js"></script>
+<link rel="stylesheet" href="/scripts/jcrop/css/jquery.Jcrop.css" type="text/css" />
+
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+        <section>
+            <div>
+                <form action="/freshcoats/<%=checkinid%>/crop" method="post" enctype='multipart/form-data'>
+                    <h3>Would you like to crop your photo?</h3><br>
+                    To leave the photo as-is, simply click submit.<br><br>
+                    To crop the photo, first selecct the area you'd like to keep, then click submit.<br><br><br>
+                    <div id="smalllayout">
+                        <input type="submit" value="Submit" class="button"><br><br><br>
+                    </div>
+                    <img style="max-width:none;" src="<%= checkinphoto %>" id="jcrop_target"><br><br>
+                    <input id="x" type="text" name="x" style="display:none">
+                    <input id="y" type="text" name="y" style="display:none">
+                    <input id="w" type="text" name="w" style="display:none">
+                    <input id="h" type="text" name="h" style="display:none">
+                    <div id="biglayout">
+                        <input type="submit" value="Submit" class="button">
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+
+$(window).load(function() {
+    // media query event handler
+    if (matchMedia) {
+        var mq = window.matchMedia("(min-width: 600px)");
+        mq.addListener(WidthChange);
+        WidthChange(mq);
+    }
+
+    // media query change
+    function WidthChange(mq) {
+
+        if (mq.matches) {
+            // window width is at least 600px
+            $(function(){
+                $('#jcrop_target').Jcrop({
+                    boxWidth: 550,
+                    onChange: showCoords,
+                    onSelect: showCoords,
+                });
+            });
+        }
+        else {
+            var windowsize = $(window).width()*.94;
+            $(function(){
+                $('#jcrop_target').Jcrop({
+                    boxWidth: windowsize,
+                    onChange: showCoords,
+                    onSelect: showCoords,
+                });
+            });
+        }
+    }
+
+    function showCoords(c)
+    {
+        $('#x').val(c.x);
+        $('#y').val(c.y);
+        $('#w').val(c.w);
+        $('#h').val(c.h);
+    };
+});
+
+</script>
+
+<%- include('../layoutBottom'); %>

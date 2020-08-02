@@ -136,31 +136,33 @@ app.post('/freshcoats/add', isLoggedIn, function(req, res) {
                                     })
                                 })
                             } else {
-                                gm(req.files.photo.tempFilePath).strip().interlace('Plane').samplingFactor(4,2,0).quality(50).resize(60,60,"%").write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function (err) {
-                                    if (err) {
-                                        fs.unlink(req.files.photo.tempFilePath, function(err) {
-                                            newCheckin.remove();
-                                            res.redirect('/error');
-                                        })
-                                    } else {
-                                        newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
-                                        newCheckin.save(function(err) {
-                                            fs.unlink(req.files.photo.tempFilePath, function() {
-                                                req.user.checkins.addToSet(newCheckin.id);
-                                                req.user.save();
-                                                for (i=0; i<newCheckin.polish.length; i++) {
-                                                    Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
-                                                        polish.checkins.addToSet(newCheckin.id);
-                                                        polish.dateupdated = new Date();
-                                                        polish.save();
+                                fs.rename(req.files.photo.tempFilePath, path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function(err) {
+                                    gm(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext)).strip().interlace('Plane').samplingFactor(4,2,0).quality(50).resize(60,60,"%").write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function (err) {
+                                        if (err) {
+                                            fs.unlink(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function(err) {
+                                                newCheckin.remove();
+                                                res.redirect('/error');
+                                            })
+                                        } else {
+                                            newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
+                                            newCheckin.save(function(err) {
+                                                fs.unlink(req.files.photo.tempFilePath, function() {
+                                                    req.user.checkins.addToSet(newCheckin.id);
+                                                    req.user.save();
+                                                    for (i=0; i<newCheckin.polish.length; i++) {
+                                                        Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
+                                                            polish.checkins.addToSet(newCheckin.id);
+                                                            polish.dateupdated = new Date();
+                                                            polish.save();
+                                                        })
+                                                    }
+                                                    gm(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext)).resize(null,500).write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + 't.jpeg'), function (err) {
+                                                        res.redirect('/freshcoats/'+newCheckin.id+'/crop');
                                                     })
-                                                }
-                                                gm(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext)).resize(null,500).write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + 't.jpeg'), function (err) {
-                                                    res.redirect('/freshcoats');
                                                 })
                                             })
-                                        })
-                                    }
+                                        }
+                                    })
                                 })
                             }
                         })
@@ -290,31 +292,33 @@ app.post('/freshcoats/add', isLoggedIn, function(req, res) {
                                     })
                                 })
                             } else {
-                                gm(req.files.photo.tempFilePath).strip().interlace('Plane').samplingFactor(4,2,0).quality(50).resize(60,60,"%").write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function (err) {
-                                    if (err) {
-                                        fs.unlink(req.files.photo.tempFilePath, function(err) {
-                                            newCheckin.remove();
-                                            res.redirect('/error');
-                                        })
-                                    } else {
-                                        fs.unlink(req.files.photo.tempFilePath, function() {
-                                            newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
-                                            newCheckin.save(function(err) {
-                                                req.user.checkins.addToSet(newCheckin.id);
-                                                req.user.save();
-                                                for (i=0; i<newCheckin.polish.length; i++) {
-                                                    Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
-                                                        polish.checkins.addToSet(newCheckin.id);
-                                                        polish.dateupdated = new Date();
-                                                        polish.save();
+                                fs.rename(req.files.photo.tempFilePath, path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function(err) {
+                                    gm(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext)).strip().interlace('Plane').samplingFactor(4,2,0).quality(50).resize(60,60,"%").write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext), function (err) {
+                                        if (err) {
+                                            fs.unlink(req.files.photo.tempFilePath, function(err) {
+                                                newCheckin.remove();
+                                                res.redirect('/error');
+                                            })
+                                        } else {
+                                            fs.unlink(req.files.photo.tempFilePath, function() {
+                                                newCheckin.photo = '/images/checkinphotos/' + newCheckin.id + ext;
+                                                newCheckin.save(function(err) {
+                                                    req.user.checkins.addToSet(newCheckin.id);
+                                                    req.user.save();
+                                                    for (i=0; i<newCheckin.polish.length; i++) {
+                                                        Polish.findById(newCheckin.polish[i]).exec(function(err, polish) {
+                                                            polish.checkins.addToSet(newCheckin.id);
+                                                            polish.dateupdated = new Date();
+                                                            polish.save();
+                                                        })
+                                                    }
+                                                    gm(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext)).resize(null,500).write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + 't.jpeg'), function (err) {
+                                                        res.redirect('/freshcoats/'+newCheckin.id+'/crop');
                                                     })
-                                                }
-                                                gm(path.resolve('./public/images/checkinphotos/' + newCheckin.id + ext)).resize(null,500).write(path.resolve('./public/images/checkinphotos/' + newCheckin.id + 't.jpeg'), function (err) {
-                                                    res.redirect('/freshcoats');
                                                 })
                                             })
-                                        })
-                                    }
+                                        }
+                                    })
                                 })
                             }
                         })
@@ -406,6 +410,50 @@ app.post('/freshcoats/add', isLoggedIn, function(req, res) {
                     res.redirect('/error');
                 })
             }
+        }
+    })
+});
+
+
+
+
+//crop image check-in
+app.get('/freshcoats/:id/crop', isLoggedIn, function(req, res) {
+    data = {};
+    Checkin.findById(req.params.id).populate('user', 'username').exec(function (err, post) {
+        if (post === null || post === undefined) {
+            res.redirect('/error');
+        } else {
+            if (post.user.id == req.user.id) {
+                data.title = "Crop Fresh Coat - Lacquer Tracker";
+                data.checkinid = post.id;
+                data.checkinphoto = post.photo;
+                res.render('checkins/crop.ejs', data);
+            } else {
+                res.redirect('/error');
+            }
+        }
+    })
+});
+
+app.post('/freshcoats/:id/crop', isLoggedIn, function(req, res) {
+    Checkin.findById(req.params.id, function(err, post) {
+        if (req.body.x) {
+            fs.copyFile(path.resolve('./public/' + sanitizer.sanitize(post.photo)), path.resolve('./public/images/checkinphotos/' + post.id + 't.jpeg'), function (err) {
+                gm(path.resolve('./public/' + sanitizer.sanitize(post.photo)))
+                .crop(sanitizer.sanitize(req.body.w), sanitizer.sanitize(req.body.h), sanitizer.sanitize(req.body.x), sanitizer.sanitize(req.body.y))
+                .write(path.resolve('./public/' + sanitizer.sanitize(post.photo)), function (err) {
+                    var ext = path.extname(path.resolve('./public/' + sanitizer.sanitize(req.body.location)));
+                    gm(path.resolve('./public/images/checkinphotos/' + post.id + 't.jpeg'))
+                    .crop(sanitizer.sanitize(req.body.w), sanitizer.sanitize(req.body.h), sanitizer.sanitize(req.body.x), sanitizer.sanitize(req.body.y))
+                    .resize(null,500)
+                    .write(path.resolve('./public/images/checkinphotos/' + post.id + 't.jpeg'), function (err) {
+                        res.redirect('/freshcoats');
+                    })
+                })
+            })
+        } else {
+            res.redirect('/freshcoats');
         }
     })
 });

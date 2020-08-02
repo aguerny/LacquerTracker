@@ -15,10 +15,6 @@ $(window).load(function () {
             'targetHeight' : 250,
             'allowPartialLastRow' : true,
         });
-    } else{
-        $(".collage").each(function(index, element) {
-            $(element).wrap("<div class='collagephoto'></div>");
-        });
     }
 });
 </script>
@@ -188,12 +184,23 @@ $(window).load(function () {
                     <% } %>
                     <% if (checkins.length > 0) { %>
                         <br><br><hr><br><h4>Recent Fresh Coats:</h4><br>
-                        <div class="collage">
-                            <% for (i=0; i<checkins.length; i++) { %>
-                                <% if (checkins[i].pendingdelete === false) { %>
-                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>t.jpeg" alt="" id="collagephoto" <% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%></a>
+                        <div id="biglayout">
+                            <div class="collage">
+                                <% for (i=0; i<checkins.length; i++) { %>
+                                    <% if (checkins[i].pendingdelete === false) { %>
+                                        <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>t.jpeg" alt="" id="collagephoto" <% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%></a>
+                                    <% } %>
                                 <% } %>
-                            <% } %>
+                            </div>
+                        </div>
+                        <div id="smalllayout">
+                            <div class="collage">
+                                <% for (i=0; i<checkins.length; i++) { %>
+                                    <% if (checkins[i].pendingdelete === false) { %>
+                                        <div class='collagephoto'><a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>t.jpeg" alt="" id="collagephoto" <% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%></a></div>
+                                    <% } %>
+                                <% } %>
+                            </div>
                         </div>
                     <% } %>
                     <% if (isAuthenticated) {%><% if (user.adminview === true) { %><br><br><%=pid%><%}%><%}%>

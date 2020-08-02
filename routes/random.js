@@ -43,7 +43,15 @@ app.get('/random', isLoggedIn, function(req, res) {
             data.loose = true;
         } else {
             data.loose = false;
-        } 
+        }
+        var sticker = user.ownedpolish.filter(function( obj ) {
+            return obj.tool == true && _.includes(obj.type, "sticker");
+        });
+        if (sticker.length > 0){
+            data.sticker = true;
+        } else {
+            data.sticker = false;
+        }
         res.render('random.ejs', data);
     })
 });
@@ -81,6 +89,14 @@ app.post('/random', function(req, res) {
             data.loose = true;
         } else {
             data.loose = false;
+        }
+        var sticker = user.ownedpolish.filter(function( obj ) {
+            return obj.tool == true && _.includes(obj.type, "sticker");
+        });
+        if (sticker.length > 0){
+            data.sticker = true;
+        } else {
+            data.sticker = false;
         }
 
         //generate polish
@@ -175,6 +191,13 @@ app.post('/random', function(req, res) {
                 techniques.push("loose accessory");
             }
 
+            var sticker = shufflePolish.filter(function( obj ) {
+                return obj.tool == true && _.includes(obj.type, "sticker");
+            });
+            if (sticker.length > 0){
+                techniques.push("sticker");
+            }
+
             var chosenTechnique = _.sample(techniques);
             data.chosenTechnique = chosenTechnique;
 
@@ -187,6 +210,9 @@ app.post('/random', function(req, res) {
             } else if (chosenTechnique == "loose accessory") {
                 data.chosenTechniqueAccessory = loose[0];
                 data.allChosenTechniqueAccessories = loose;
+            } else if (chosenTechnique == "sticker") {
+                data.chosenTechniqueAccessory = sticker[0];
+                data.allChosenTechniqueAccessories = sticker;
             } else {
                 data.chosenTechniqueAccessory = '';
                 data.allChosenTechniqueAccessories = '';
@@ -265,6 +291,31 @@ app.post('/random', function(req, res) {
             if (chosenTechnique == "loose accessory") {
                 data.chosenTechniqueAccessory = loose[0];
                 data.allChosenTechniqueAccessories = loose;
+            }
+            var vowels = ("aeiouAEIOU"); 
+            if (vowels.indexOf(chosenTechnique[0]) !== -1) {
+                data.message2 = "Create an ";
+                data.message3 = " manicure using these items from your collection:";
+            } else {
+                data.message2 = "Create a ";
+                data.message3 = " manicure using these items from your collection:";
+            }
+        } else if (req.body.technique == "sticker") {
+            var techniques = [];
+
+            var sticker = shufflePolish.filter(function( obj ) {
+                return obj.tool == true && _.includes(obj.type, "sticker");
+            });
+            if (sticker.length > 0){
+                techniques.push("sticker");
+            }
+
+            var chosenTechnique = _.sample(techniques);
+            data.chosenTechnique = chosenTechnique;
+
+            if (chosenTechnique == "sticker") {
+                data.chosenTechniqueAccessory = sticker[0];
+                data.allChosenTechniqueAccessories = sticker;
             }
             var vowels = ("aeiouAEIOU"); 
             if (vowels.indexOf(chosenTechnique[0]) !== -1) {

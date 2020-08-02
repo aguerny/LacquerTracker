@@ -90,7 +90,7 @@
                     <% if (plate == true) { %><option value="plate" <% if (technique=="plate") { %> selected="selected" <% } %>>Stamping plate</option><% } %>
                     <% if (vinyl == true) { %><option value="vinyl" <% if (technique=="vinyl") { %> selected="selected" <% } %>>Nail vinyl</option><% } %>
                     <% if (loose == true) { %><option value="loose" <% if (technique=="loose") { %> selected="selected" <% } %>>Loose accessory</option><% } %>
-                    <!-- <% if (["no", "surprise", "plate", "vinyl", "loose"].indexOf(chosenTechnique) == -1) { %><option value="<%= chosenTechnique %>" selected="selected"><%= chosenTechnique %></option><% } %> -->
+                    <% if (sticker == true) { %><option value="sticker" <% if (technique=="sticker") { %> selected="selected" <% } %>>Sticker</option><% } %>
                 </select>
                 <br><br><br>
                 <input type="submit" class="button" value="Submit"/>
