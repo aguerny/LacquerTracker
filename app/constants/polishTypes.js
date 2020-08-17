@@ -40,7 +40,7 @@ var types = [
 	{name:"top", display:"top coat", category:"polish"},
 	{name:"topper", display:"topper", category:"polish"},
 	{name:"uv", display:"uv", category:"polish"},
-	{name:"vinyl", display:"vinyl", category:"tool"}
+	{name:"vinyl", display:"vinyl/stencil", category:"tool"}
 ];
 
 

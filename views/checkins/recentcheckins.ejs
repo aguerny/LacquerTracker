@@ -1,5 +1,10 @@
 <%- include('../layoutTop'); %>
 
+<script src="/scripts/markitup/jquery.markitup.js"></script>
+<script type="text/javascript" src="/scripts/markitup/sets/html/set.js"></script>
+<link rel="stylesheet" type="text/css" href="/scripts/markitup/skins/simple/style.css" />
+<link rel="stylesheet" type="text/css" href="/scripts/markitup/sets/html/style.css" />
+
 <!-- content -->
 <div class="wrapper row2">
     <div id="container" class="clear">
@@ -8,6 +13,7 @@
             <h2 style="display:inline-block">Fresh Coats</h2> - <a href="/freshcoats/add">Add new</a> | <a href="/freshcoats/saved">View saved</a>
             <br><br><hr><br>
             <% for (i=0; i<checkins.length; i++) { %>
+            <div>
                 Posted on <%= checkins[i].date %> by <a href="/profile/<%= checkins[i].user.username %>"><%= checkins[i].user.username %></a><br><br>
                 <% if (checkins[i].type !== "video") { %>
                     <img src="<%= checkins[i].photo %>" alt="Nail polish manicure of shade <% for (j=0; j<checkins[i].polish.length; j++) { %><%= checkins[i].polish[j].brand %> <%= checkins[i].polish[j].name %><% if (j!==checkins[i].polish.length) { %>, <% } %><% } %>">
@@ -22,16 +28,32 @@
                     <br>&#8226; <a href='/polish/<%= checkins[i].polish[j].brand.replace(/ /g,"_") %>/<%= checkins[i].polish[j].name.replace(/ /g,"_") %>'><%= checkins[i].polish[j].brand %> - <%= checkins[i].polish[j].name %></a>
                 <% }} %>
                 <br><br><br>
-                <a href="/freshcoats/<%= checkins[i].id %>"><%= checkins[i].comments.length %> Comment<% if (checkins[i].comments.length !== 1) {%>s<%}%></a> | <a href="/freshcoats/<%= checkins[i].id %>">Add a comment</a> | <a href="/freshcoats/<%= checkins[i].id %>">Options</a>
+                <a href="/freshcoats/<%= checkins[i].id %>"><%= checkins[i].comments.length %> Comment<% if (checkins[i].comments.length !== 1) {%>s<%}%></a> | <% if (isAuthenticated) { %><span class="replylink"><a href="">Add a comment</a></span><% } else { %><span><a href="/freshcoats/<%= checkins[i].id %>/addreply">Add a comment</a></span><% } %><% if (isAuthenticated) { %> | <span class="postflag" style="opacity:0.5"><a href="">&#128681</a></span><%}%>
                 <% if (isAuthenticated) { %>
                     <% if (user.savedcheckins.indexOf(checkins[i].id) > -1) { %>
                          | <a class="unsave" cid="<%= checkins[i].id %>" href="#">Unsave</a>
                     <% } else { %>
                          | <a class="save" cid="<%= checkins[i].id %>" href="#">Save</a>
                     <% } %>
-                <% } %>
+                <% } %> 
+                <div class="replybox"><br>
+                    <form action="/freshcoats/<%= checkins[i].id %>/<%= checkins[i].id %>/add" method="post" enctype='multipart/form-data'>
+                        <textarea class="markItUp" name="message" cols="100" rows="10" required></textarea>
+                        Include a photo? <input type="file" name="photo">
+                        <br><br>
+                        <input type="submit" value="Submit" class="button">
+                    </form>
+                </div>
+                <div class="postbox"><br>
+                    <form action="/freshcoats/<%=checkins[i].id%>/flag" method="post">
+                        <textarea name="message" cols="50" rows="5" placeholder="Please provide a reason for flagging/reporting this. Once submitted, an admin will review and take action." style="max-width:98%" required></textarea>
+                        <br>
+                        <input type="submit" value="Submit" class="button">
+                    </form>
+                </div>
                 <br><br>
                 <hr><br>
+            </div>
             <% } %>
             <div style="clear: both;">
                 <% if (checkins.length === 10) { %>
@@ -68,6 +90,16 @@ $('.unsave').on('tap', function(e){
         success: $(this).replaceWith('Unsaved')
     })
     e.preventDefault();
+});
+
+$(".replylink").click(function(){
+    $(this).siblings(".replybox").show();
+    return false;
+});
+
+$(".postflag").click(function(){
+    $(this).siblings(".postbox").show();
+    return false;
 });
 </script>
 

@@ -9,55 +9,56 @@ var PolishColors = require('../app/constants/polishColors');
 module.exports = function(app, passport) {
 
 
-//generate mani
+//generate random mani
 app.get('/random', isLoggedIn, function(req, res) {
-    User.findOne({username: req.user.username}).populate('ownedpolish', 'name brand type swatch tool').exec(function (err, user) {
-        var data = {};
-        data.title = "Manicure Generator";
-        data.results = false;
-        data.number = "surprise";
-        data.technique = "no";
-        data.chosenTechnique = "no";
-        data.allPolish = '';
-        data.allChosenTechniqueAccessories = '';
-        var plate = user.ownedpolish.filter(function( obj ) {
-            return obj.tool == true && _.includes(obj.type, "plate");
-        });
-        if (plate.length > 0){
-            data.plate = true;
-        } else {
-            data.plate = false;
-        }
-        var vinyl = user.ownedpolish.filter(function( obj ) {
-            return obj.tool == true && _.includes(obj.type, "vinyl");
-        });
-        if (vinyl.length > 0){
-            data.vinyl = true;
-        } else {
-            data.vinyl = false;
-        }
-        var loose = user.ownedpolish.filter(function( obj ) {
-            return obj.tool == true && (_.includes(obj.type, "loose-flakes") || _.includes(obj.type, "loose-gems") || _.includes(obj.type, "loose-glitter"));
-        });
-        if (loose.length > 0){
-            data.loose = true;
-        } else {
-            data.loose = false;
-        }
-        var sticker = user.ownedpolish.filter(function( obj ) {
-            return obj.tool == true && _.includes(obj.type, "sticker");
-        });
-        if (sticker.length > 0){
-            data.sticker = true;
-        } else {
-            data.sticker = false;
-        }
-        res.render('random.ejs', data);
-    })
+    if (req.user.level === "admin") {
+        User.findOne({username: req.user.username}).populate('ownedpolish', 'name brand type swatch tool').exec(function (err, user) {
+            var data = {};
+            data.title = "Manicure Generator";
+            data.results = false;
+            data.number = "surprise";
+            data.technique = "no";
+            data.chosenTechnique = "no";
+            data.allPolish = '';
+            data.allChosenTechniqueAccessories = '';
+            var plate = user.ownedpolish.filter(function( obj ) {
+                return obj.tool == true && _.includes(obj.type, "plate");
+            });
+            if (plate.length > 0){
+                data.plate = true;
+            } else {
+                data.plate = false;
+            }
+            var vinyl = user.ownedpolish.filter(function( obj ) {
+                return obj.tool == true && _.includes(obj.type, "vinyl");
+            });
+            if (vinyl.length > 0){
+                data.vinyl = true;
+            } else {
+                data.vinyl = false;
+            }
+            var loose = user.ownedpolish.filter(function( obj ) {
+                return obj.tool == true && (_.includes(obj.type, "loose-flakes") || _.includes(obj.type, "loose-gems") || _.includes(obj.type, "loose-glitter"));
+            });
+            if (loose.length > 0){
+                data.loose = true;
+            } else {
+                data.loose = false;
+            }
+            var sticker = user.ownedpolish.filter(function( obj ) {
+                return obj.tool == true && _.includes(obj.type, "sticker");
+            });
+            if (sticker.length > 0){
+                data.sticker = true;
+            } else {
+                data.sticker = false;
+            }
+            res.render('random.ejs', data);
+        })
+    }
 });
 
 
-//generate random mani
 app.post('/random', function(req, res) {
     User.findOne({username: req.user.username}).populate('ownedpolish', 'name brand type swatch tool').exec(function(err, user) {
         var data = {};

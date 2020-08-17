@@ -37,6 +37,10 @@
                     <span style="font-size:15px">&#9658; <a href="/freshcoats">Click here to share your first fresh coat!</a></span>
                     <br><br><br>
                 <% } %>
+                <% if (checkinreminder == true) {%>
+                    <span style="font-size:15px">&#9658; <a href="/freshcoats/add">Click here to share your latest fresh coat!</a></span>
+                    <br><br><br>
+                <% } %>
                 <span style="font-size:15px">Your Polish Stats:<br><br></span>
                 <ul style="padding-left:25px">
                     <li>Polish Owned: <%= ownedpolish.length %></li><br>

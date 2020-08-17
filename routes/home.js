@@ -20,15 +20,20 @@ app.get('/', function(req, res) {
             } else {
                 data.featureid = featuredcheckin.id;
                 data.featureuser = featuredcheckin.user;
-                data.featurephoto = featuredcheckin.photo.split('.').slice(0, -1).join('.')+'T.jpeg';
+                data.featurephoto = featuredcheckin.photo.split('.').slice(0, -1).join('.')+'thumb.jpeg';
             }
-            User.findById(req.user.id).populate('ownedpolish', 'brand colorsname tool').populate('wantedpolish', 'brand').exec(function(err, user) {
+            User.findById(req.user.id).populate('ownedpolish', 'brand colorsname tool').populate('wantedpolish', 'brand').populate('checkins', 'creationdate').exec(function(err, user) {
                 ForumPost.find({'user':req.user.id, 'forum':'intro'}).exec(function(err, intro) {
                     data.intro = intro;
                     if (moment(user.creationdate).add(7, 'days').toDate() > moment().toDate() === true) {
                         data.newuser = true;
                     } else {
                         data.newuser = false;
+                    }
+                    if ((user.checkins.length > 0) && (moment(user.checkins[user.checkins.length - 1].creationdate).add(1, 'month').toDate() < moment().toDate() === true)) {
+                        data.checkinreminder = true;
+                    } else {
+                        data.checkinreminder = false;
                     }
                     var ownedpolish = [];
                     var ownedaccessories = [];
