@@ -28,7 +28,14 @@
                     <br>&#8226; <a href='/polish/<%= checkins[i].polish[j].brand.replace(/ /g,"_") %>/<%= checkins[i].polish[j].name.replace(/ /g,"_") %>'><%= checkins[i].polish[j].brand %> - <%= checkins[i].polish[j].name %></a>
                 <% }} %>
                 <br><br><br>
-                <a href="/freshcoats/<%= checkins[i].id %>"><%= checkins[i].comments.length %> Comment<% if (checkins[i].comments.length !== 1) {%>s<%}%></a> | <% if (isAuthenticated) { %><span class="replylink"><a href="">Add a comment</a></span><% } else { %><span><a href="/freshcoats/<%= checkins[i].id %>/addreply">Add a comment</a></span><% } %><% if (isAuthenticated) { %> | <span class="postflag" style="opacity:0.5"><a href="">&#128681</a></span><%}%>
+                <a href="/freshcoats/<%= checkins[i].id %>"><%= checkins[i].comments.length %> Comment<% if (checkins[i].comments.length !== 1) {%>s<%}%></a> | <% if (isAuthenticated) { %><span class="replylink"><a href="">Add a comment</a></span><% } else { %><span><a href="/freshcoats/<%= checkins[i].id %>/addreply">Add a comment</a></span><% } %>
+                <% if (isAuthenticated) { %>
+                    <% if (user.username === checkins[i].user.username) { %>
+                         | <a href="/freshcoats/<%= checkins[i].id %>">Options</a>
+                    <% } else { %>
+                         | <span class="postflag" style="opacity:0.5"><a href="">&#128681</a></span>
+                    <% } %>
+                 <%}%>
                 <% if (isAuthenticated) { %>
                     <% if (user.savedcheckins.indexOf(checkins[i].id) > -1) { %>
                          | <a class="unsave" cid="<%= checkins[i].id %>" href="#">Unsave</a>

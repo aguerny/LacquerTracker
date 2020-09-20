@@ -3,6 +3,7 @@ var Checkin = require('../app/models/checkin');
 var ForumPost = require('../app/models/forumpost');
 var PolishColors = require('../app/constants/polishColors');
 var moment = require('moment-timezone');
+var _ = require('lodash');
 
 module.exports = function(app, passport) {
 
@@ -11,16 +12,32 @@ app.get('/', function(req, res) {
     if (req.isAuthenticated()) {
         data = {};
         data.title = 'Lacquer Tracker';
-        Checkin.find({'pendingdelete':false}).select('user photo type').populate('user', 'username').exec(function(err, checkins) {
-            var featuredcheckin = checkins[Math.floor(Math.random() * checkins.length)];
-            if (featuredcheckin.type !== "video") {
-                data.featureid = featuredcheckin.id;
-                data.featureuser = featuredcheckin.user;
-                data.featurephoto = featuredcheckin.photo;
+        Checkin.find({'pendingdelete':false}).select('user photo type creationdate').populate('user', 'username').exec(function(err, checkins) {
+            var recentCheckins = _.filter(checkins, function(x) {
+                return moment(x.creationdate).isAfter(moment().subtract(30, 'days'));
+            })
+            if (recentCheckins.length > 0) {
+                var featuredcheckin = recentCheckins[Math.floor(Math.random() * recentCheckins.length)];
+                if (featuredcheckin.type !== "video") {
+                    data.featureid = featuredcheckin.id;
+                    data.featureuser = featuredcheckin.user;
+                    data.featurephoto = featuredcheckin.photo;
+                } else {
+                    data.featureid = featuredcheckin.id;
+                    data.featureuser = featuredcheckin.user;
+                    data.featurephoto = featuredcheckin.photo.split('.').slice(0, -1).join('.')+'thumb.jpeg';
+                }
             } else {
-                data.featureid = featuredcheckin.id;
-                data.featureuser = featuredcheckin.user;
-                data.featurephoto = featuredcheckin.photo.split('.').slice(0, -1).join('.')+'thumb.jpeg';
+                var featuredcheckin = checkins[Math.floor(Math.random() * checkins.length)];
+                if (featuredcheckin.type !== "video") {
+                    data.featureid = featuredcheckin.id;
+                    data.featureuser = featuredcheckin.user;
+                    data.featurephoto = featuredcheckin.photo;
+                } else {
+                    data.featureid = featuredcheckin.id;
+                    data.featureuser = featuredcheckin.user;
+                    data.featurephoto = featuredcheckin.photo.split('.').slice(0, -1).join('.')+'thumb.jpeg';
+                }
             }
             User.findById(req.user.id).populate('ownedpolish', 'brand colorsname tool').populate('wantedpolish', 'brand').populate('checkins', 'creationdate').exec(function(err, user) {
                 ForumPost.find({'user':req.user.id, 'forum':'intro'}).exec(function(err, intro) {
