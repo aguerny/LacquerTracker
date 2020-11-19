@@ -35,7 +35,7 @@ var ColorTable = [
 {name:'Plum', hex:'#DDA0DD', rgb:[221,160,221], category:'purple'},
 {name:'Violet', hex:'#EE82EE', rgb:[238,130,238], category:'purple'},
 {name:'Orchid', hex:'#DA70D6', rgb:[218,112,214], category:'purple'},
-{name:'Fuchsia', hex:'#FF00FF', rgb:[255,0,255], category:'purple'},
+{name:'Fuchsia', hex:'#FF00FF', rgb:[255,0,255], category:'pink'},
 {name:'MediumOrchid', hex:'#BA55D3', rgb:[186,85,211], category:'purple'},
 {name:'MediumPurple', hex:'#9370DB', rgb:[147,112,219], category:'purple'},
 {name:'RebeccaPurple', hex:'#663399', rgb:[102,51,153], category:'purple'},

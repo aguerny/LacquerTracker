@@ -100,7 +100,17 @@ app.get('/freshcoats/add', isLoggedIn, function(req, res) {
 
 app.post('/allpolish', isLoggedIn, function(req, res) {
     Polish.find({keywords:new RegExp(sanitizer.sanitize(req.body.term.term), 'i')}).select('id brand name').exec(function (err, polishes) {
-        res.send(polishes);
+        var allpolish = polishes.map(function(x) {
+            if (req.user.ownedpolish.indexOf(x.id) > -1) {
+                x.name = x.name + " ✓"
+                x.owned = 0;
+            } else {
+                x.owned = 1;
+            }
+            return x;
+        })
+        var allpolishsorted = _.sortBy(allpolish, ['owned', 'brand', 'name']);
+        res.send(allpolishsorted);
     })
 });
 

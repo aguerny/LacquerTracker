@@ -202,53 +202,72 @@ app.post('/login', passport.authenticate('local-login', {
 
 //forgot password
 app.get('/passwordreset', function(req, res) {
-    res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker'});
+    res.render('account/passwordforgot.ejs', {title: 'Reset Password - Lacquer Tracker'});
 });
 
 app.post('/passwordreset', function(req, res) {
-    User.findOne({username: new RegExp(["^", sanitizer.sanitize(req.body.username), "$"].join(""), "i")}, function(err, user) {
+    User.findOne({email: new RegExp(["^", sanitizer.sanitize(req.body.email), "$"].join(""), "i")}, function(err, user) {
         if (err) {
-            res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error. Please try again later.'});
+            res.render('account/passwordforgot.ejs', {title: 'Reset Password - Lacquer Tracker', message:'Error. Please try again later.'});
         } else {
             if (user) {
-                if (user.email) {
-                    var a = new Date();
-                    a.setDate(a.getDate()+1);
-                    var newResetKey = new ResetKey ({
-                        username: user.username,
-                        expiredate: a,
-                    })
-                    newResetKey.save();
+                var a = new Date();
+                a.setDate(a.getDate()+1);
+                var newResetKey = new ResetKey ({
+                    username: user.username,
+                    expiredate: a,
+                })
+                newResetKey.save();
 
-                    //send email
-                    var transport = nodemailer.createTransport({
-                        sendmail: true,
-                        path: "/usr/sbin/sendmail"
-                    });
+                //send email
+                var transport = nodemailer.createTransport({
+                    sendmail: true,
+                    path: "/usr/sbin/sendmail"
+                });
 
-                    var mailOptions = {
-                        from: "polishrobot@lacquertracker.com",
-                        replyTo: "lacquertrackermailer@gmail.com",
-                        to: user.email,
-                        subject: 'Password Reset',
-                        text: "Hi " + user.username + ",\n\nYour reset password link is: https://www.lacquertracker.com/reset/" + newResetKey.id + "\n\nYou have 24 hours until this link expires.\n\n\nHappy polishing,\nLacquer Tracker",
+                var mailOptions = {
+                    from: "polishrobot@lacquertracker.com",
+                    replyTo: "lacquertrackermailer@gmail.com",
+                    to: user.email,
+                    subject: 'Password Reset',
+                    text: "Hi " + user.username + ",\n\nYour reset password link is: https://www.lacquertracker.com/reset/" + newResetKey.id + "\n\nYou have 24 hours until this link expires.\n\nIf you did not request this password reset, simply ignore this message.\n\n\nHappy polishing,\nLacquer Tracker",
+                }
+
+                transport.sendMail(mailOptions, function(error, response) {
+                    if (error) {
+                        res.render('account/passwordforgot.ejs', {title: 'Reset Password - Lacquer Tracker', message:'Error. Please try again later.'});
+                    }
+                    else {
+                        res.render('account/successmessage.ejs', {title: 'Reset Password - Lacquer Tracker', message:'A message has successfully sent to this e-mail address with further instructions.'});
                     }
 
-                    transport.sendMail(mailOptions, function(error, response) {
-                        if (error) {
-                            res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'Error. Please try again later.'});
-                        }
-                        else {
-                            res.render('account/successmessage.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'If this account exists, a password reset e-mail has successfully sent.'});
-                        }
-
-                        transport.close();
-                    });
-                } else {
-                    res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'If this account exists, a password reset e-mail has successfully sent.'});
-                }
+                    transport.close();
+                });
             } else {
-                res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'If this account exists, a password reset e-mail has successfully sent.'});
+                //send email
+                var transport = nodemailer.createTransport({
+                    sendmail: true,
+                    path: "/usr/sbin/sendmail"
+                });
+
+                var mailOptions = {
+                    from: "polishrobot@lacquertracker.com",
+                    replyTo: "lacquertrackermailer@gmail.com",
+                    to: sanitizer.sanitize(req.body.email),
+                    subject: 'Password Reset',
+                    text: "Hello,\n\nA password reset was requested, but no account exists with this e-mail address.\n\nPlease try again or contact us if you need further support.",
+                }
+
+                transport.sendMail(mailOptions, function(error, response) {
+                    if (error) {
+                        res.render('account/passwordforgot.ejs', {title: 'Reset Password - Lacquer Tracker', message:'Error. Please try again later.'});
+                    }
+                    else {
+                        res.render('account/successmessage.ejs', {title: 'Reset Password - Lacquer Tracker', message:'A message has successfully sent to this e-mail address with further instructions.'});
+                    }
+
+                    transport.close();
+                });
             }
         }
     })
@@ -258,12 +277,12 @@ app.post('/passwordreset', function(req, res) {
 app.get('/reset/:key', function(req, res) {
     ResetKey.findById(req.params.key, function(err, resetkey) {
         if (err) {
-            res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
+            res.render('account/passwordforgot.ejs', {title: 'Reset Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
         } else {
             if (new Date(resetkey.expiredate) > new Date()) {
                 res.render('account/passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: resetkey.username, key: resetkey.id})
             } else {
-                res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
+                res.render('account/passwordforgot.ejs', {title: 'Reset Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
             }
         }
     })
@@ -273,7 +292,7 @@ app.get('/reset/:key', function(req, res) {
 app.post('/reset/:key', function(req, res) {
     ResetKey.findById(req.params.key, function(err, resetkey) {
         if (err) {
-            res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
+            res.render('account/passwordforgot.ejs', {title: 'Reset Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
         } else {
             if (new Date(resetkey.expiredate) > new Date()) {
                 if (sanitizer.sanitize(req.body.password) === sanitizer.sanitize(req.body.passwordconfirm)) {
@@ -284,7 +303,7 @@ app.post('/reset/:key', function(req, res) {
                     res.render('account/passwordreset.ejs', {title: 'Reset Password - Lacquer Tracker', username: resetkey.username, key: resetkey.id, message:'Passwords do not match.'})
                 }
             } else {
-                res.render('account/passwordforgot.ejs', {title: 'Retrieve Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
+                res.render('account/passwordforgot.ejs', {title: 'Reset Password - Lacquer Tracker', message:'That reset key is expired. Please request a new one.'});
             }
         }
     })
