@@ -5,8 +5,14 @@
     <div id="container" class="clear">
     <section>
         <div>
-            <h3>Manicure Generator</h3><br><br><br>
+            <h2>Polish Picker</h2>
+            <% if (results == false) { %>
+                <br><br>
+                Can't decide on a polish? Generate a manicure based on your collection!
+                <br><br><br>
+            <% } %>
             <% if (results == true) { %>
+                <br><br><br>
                 <% if (message2.length > 0 && polish.length > 0) { %>
                     <%= message2%> <b><%=chosenTechnique%></b> <%=message3%><br><br><br>
                 <% } else { %>

@@ -32,7 +32,11 @@
             <h1><a href="/">Lacquer Tracker</a></h1>
             <div id="logininfo">
                 <% if (isAuthenticated) { %>
-                    <p>Hello <%= user.username %> | <a href="/logout">Logout</a></p>
+                    <% if (user.level == "admin") { %>
+                        <p><a href="/admin/portal">Admin Portal - </a>Hello <%= user.username %> | <a href="/logout">Logout</a></p>
+                    <% } else { %>
+                        <p>Hello <%= user.username %> | <a href="/logout">Logout</a></p>
+                    <% } %>
                 <% } else { %>
                     <p><a href="/login">Login</a> | <a href="/signup">Signup</a></p>
                 <% } %>
@@ -44,13 +48,9 @@
                     <li><a href="/browse">Browse</a></li>
                     <li><a href="/freshcoats">Fresh Coats</a></li>
                     <li><a href="/forums">Forums</a></li>
+                    <li><a href="/random">Random</a></li>
                     <li><a href="/profile">Profile</a></li>
                     <li><a href="/contact">Contact</a></li>
-                    <% if (isAuthenticated) { %>
-                        <% if (user.level == "admin") { %>
-                            <li><a href="/admin/portal">Admin</a></li>
-                        <% } %>
-                    <% } %>
                 </ul>
             </nav>
         </div>
@@ -59,13 +59,9 @@
                 <a href="/browse">Browse</a> |
                 <a href="/freshcoats">Fresh Coats</a> |
                 <a href="/forums">Forums</a> |
+                <a href="/random">Random</a> |
                 <a href="/profile">Profile</a> |
                 <a href="/contact">Contact</a>
-                <% if (isAuthenticated) { %>
-                    <% if (user.level == "admin") { %>
-                        | <a href="/admin/portal">Admin</a>
-                    <% } %>
-                <% } %>
             </nav>
         </div>
     </header>
