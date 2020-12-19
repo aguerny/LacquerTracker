@@ -92,6 +92,9 @@ app.post('/swatch/crop/:id', isLoggedIn, function(req, res) {
                         polish.colorsrgb = colorsrgb;
                         polish.colorsname = colorsname;
                         polish.colorscategory = colorscategory;
+                        if (polish.colorstodisplay.length == 0) {
+                            polish.colorstodisplay = _.union(colorscategory);
+                        }
                         polish.dateupdated = new Date();
                         polish.swatch = '/images/swatches/' + req.params.id + sanitizer.sanitize(req.body.ext);
                         polish.save(function(err) {
@@ -155,6 +158,9 @@ app.post('/swatch/edit/:pid/:id', isLoggedIn, function(req, res) {
                     polish.colorsrgb = colorsrgb;
                     polish.colorsname = colorsname;
                     polish.colorscategory = colorscategory;
+                    if (polish.colorstodisplay.length == 0) {
+                        polish.colorstodisplay = _.union(colorscategory);
+                    }
                     polish.dateupdated = new Date();
                     polish.swatch = '/images/swatches/' + polish.id + sanitizer.sanitize(req.body.ext);
                     polish.save(function(err) {

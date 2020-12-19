@@ -622,34 +622,33 @@ app.get('/admin/portal', isLoggedIn, function(req, res) {
 
 
 
-//update colors based on current swatches and color list
-app.get('/admin/updatecolors', isLoggedIn, function(req, res) {
-    Polish.find({}, function (err, polish) {
-        for (i=0; i<polish.length; i++) {
-            if (polish[i].swatch) {
-                if (polish[i].swatch.length > 0) {
-                    var colorThief = new ColorThief();
-                    var colorsrgb = colorThief.getPalette(path.resolve('./public/' + polish[i].swatch), 2);
-                    var colorsname = [];
-                    var colorscategory = [];
-                    for (j=0; j<colorsrgb.length; j++) {
-                        var deltas = [];
-                        for (k=0; k<PolishColors.length; k++) {
-                            deltas.push(deltaE(rgb2lab(PolishColors[k].rgb), rgb2lab(colorsrgb[j])));
-                        }
-                        colorsname.push(PolishColors[deltas.indexOf(Math.min(...deltas))].name);
-                        colorscategory.push(PolishColors[deltas.indexOf(Math.min(...deltas))].category);
-                    }
-                    polish[i].colorsrgb = colorsrgb;
-                    polish[i].colorsname = colorsname;
-                    polish[i].colorscategory = colorscategory;
-                    polish[i].save();
-                }
-            }
-        }
-    })
-});
-
+//update colors based on current swatches and color list (do not use as now colors are coming manually into colorstodisplay field)
+// app.get('/admin/updatecolors', isLoggedIn, function(req, res) {
+//     Polish.find({}, function (err, polish) {
+//         for (i=0; i<polish.length; i++) {
+//             if (polish[i].swatch) {
+//                 if (polish[i].swatch.length > 0) {
+//                     var colorThief = new ColorThief();
+//                     var colorsrgb = colorThief.getPalette(path.resolve('./public/' + polish[i].swatch), 2);
+//                     var colorsname = [];
+//                     var colorscategory = [];
+//                     for (j=0; j<colorsrgb.length; j++) {
+//                         var deltas = [];
+//                         for (k=0; k<PolishColors.length; k++) {
+//                             deltas.push(deltaE(rgb2lab(PolishColors[k].rgb), rgb2lab(colorsrgb[j])));
+//                         }
+//                         colorsname.push(PolishColors[deltas.indexOf(Math.min(...deltas))].name);
+//                         colorscategory.push(PolishColors[deltas.indexOf(Math.min(...deltas))].category);
+//                     }
+//                     polish[i].colorsrgb = colorsrgb;
+//                     polish[i].colorsname = colorsname;
+//                     polish[i].colorscategory = colorscategory;
+//                     polish[i].save();
+//                 }
+//             }
+//         }
+//     })
+// });
 
 
 

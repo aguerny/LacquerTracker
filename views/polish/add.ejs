@@ -15,6 +15,19 @@
         			Brand:<br><input type="text" list="brands" name="brand" class="width50" placeholder="If unbranded, choose 'Unknown'" required><br><br><br>
                     Collection:<br><input type="text" name="batch" class="width50" placeholder="Leave blank if unknown"><br><i>Please format like: 2013 Off Shore (Summer)</i><br><br><br>
                     Code:<br><input type="text" name="code" class="width50" placeholder="Leave blank if unknown"><br><br><br>
+                    Color:<br><ul>
+                    <input type="checkbox" name="colorcategory" value="black">Black<br>
+                    <input type="checkbox" name="colorcategory" value="blue">Blue<br>
+                    <input type="checkbox" name="colorcategory" value="brown">Brown<br>
+                    <input type="checkbox" name="colorcategory" value="gray">Gray<br>
+                    <input type="checkbox" name="colorcategory" value="green">Green<br>
+                    <input type="checkbox" name="colorcategory" value="orange">Orange<br>
+                    <input type="checkbox" name="colorcategory" value="pink">Pink<br>
+                    <input type="checkbox" name="colorcategory" value="purple">Purple<br>
+                    <input type="checkbox" name="colorcategory" value="red">Red<br>
+                    <input type="checkbox" name="colorcategory" value="white">White<br>
+                    <input type="checkbox" name="colorcategory" value="yellow">Yellow<br>
+                    </ul><br><br><br>
                     Type:<br><ul>
                     Polish Types:<br>
                     <% for (i=0; i<types.length; i++) { %>
@@ -29,19 +42,6 @@
                         <% } %>
                     <% } %>
                     </ul><br><br><br>
-                    Color:<br><ul>
-                    <input type="checkbox" name="colorcategory" value="Black">Black<br>
-                    <input type="checkbox" name="colorcategory" value="Blue">Blue<br>
-                    <input type="checkbox" name="colorcategory" value="Brown">Brown<br>
-                    <input type="checkbox" name="colorcategory" value="Gray">Gray<br>
-                    <input type="checkbox" name="colorcategory" value="Green">Green<br>
-                    <input type="checkbox" name="colorcategory" value="Orange">Orange<br>
-                    <input type="checkbox" name="colorcategory" value="Pink">Pink<br>
-                    <input type="checkbox" name="colorcategory" value="Purple">Purple<br>
-                    <input type="checkbox" name="colorcategory" value="Red">Red<br>
-                    <input type="checkbox" name="colorcategory" value="White">White<br>
-                    <input type="checkbox" name="colorcategory" value="Yellow">Yellow<br>
-                    </ul><br><br><br><br>
                     <input type="submit" value="Submit" class="button">
         		</form>
             </div>

@@ -13,7 +13,8 @@ module.exports = function(app, passport) {
 app.get('/random', isLoggedIn, function(req, res) {
     User.findOne({username: req.user.username}).populate('ownedpolish', 'name brand type swatch tool').exec(function (err, user) {
         var data = {};
-        data.title = "Manicure Generator";
+        data.title = "Polish Picker";
+        data.meta = 'Use our random polish picker to generate a manicure using nail polish from your collection.';
         data.results = false;
         data.number = "surprise";
         data.technique = "no";

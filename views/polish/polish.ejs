@@ -51,12 +51,16 @@ $(window).load(function () {
                         <% if (isAuthenticated) { %>
                             <b>Code:</b> <a href="#" id="code" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/code" data-value="<%= pcode %>"><%= pcode %> <span title="Edit" class="edit-icon">&#9998;</span></a><br><br>
                             <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch" data-value="<%= pbatch %>"><%= pbatch %> <span title="Edit" class="edit-icon">&#9998;</span></a><br><br>
-                            <% if (user.level == "admin") {%><b>Color:</b> <%= pcolors %><br><br><%}%>
-                            <% if (user.level == "admin") {%><b>ColorCat:</b> <%= pcolors2 %><br><br><%}%>
+                            <% if (displaycolors == true) { %>
+                                <b>Color:</b> <a href="#" id="color" data-pk="1" class="editablecolor" data-type="checklist" data-url="/polishedit/<%= pid %>/color" data-value="<%= pcolor %>" data-defaultValue="?" data-separator=","><%= pcolor.toString().replace(/,/g,", ") %> <span title="Edit" class="edit-icon">&#9998;</span></a><br><br>
+                            <% } %>
                             <b>Type:</b> <a href="#" id="type" data-pk="1" class="editabletype" data-type="checklist" data-url="/polishedit/<%= pid %>/type" data-value="<%= ptype %>" data-defaultValue="?" data-separator=","><%= ptype.toString().replace(/,/g,", ") %> <span title="Edit" class="edit-icon">&#9998;</span></a><br><br>
                         <% } else { %>
                             <b>Code:</b> <%= pcode %><br><br>
                             <b>Collection:</b> <%= pbatch %><br><br>
+                            <% if (displaycolors == true) { %>
+                                <b>Color:</b> <%= pcolor.toString().replace(/,/g,", ") %><br><br>
+                            <% } %>
                             <b>Type:</b> <%= ptype.toString().replace(/,/g,", ") %>
                         <% } %>
                     </div>
@@ -148,12 +152,16 @@ $(window).load(function () {
                 <% if (isAuthenticated) { %>
                     <b>Code:</b> <a href="#" id="code" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/code" data-value="<%= pcode %>"><%= pcode %> <span title="Edit" class="edit-icon">&#9998;</span></a><br><br>
                     <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch" data-value="<%= pbatch %>"><%= pbatch %> <span title="Edit" class="edit-icon">&#9998;</span></a><br><br>
-                    <% if (user.level == "admin") {%><b>Color:</b> <%= pcolors %><br><br><%}%>
-                    <% if (user.level == "admin") {%><b>ColorCat:</b> <%= pcolors2 %><br><br><%}%>
+                    <% if (displaycolors == true) { %>
+                        <b>Color:</b> <a href="#" id="color" data-pk="1" class="editablecolor" data-type="checklist" data-url="/polishedit/<%= pid %>/color" data-value="<%= pcolor %>" data-defaultValue="?" data-separator=","><%= pcolor.toString().replace(/,/g,", ") %> <span title="Edit" class="edit-icon">&#9998;</span></a><br><br>
+                    <% } %>
                     <b>Type:</b> <a href="#" id="type" data-pk="1" class="editabletype" data-type="checklist" data-url="/polishedit/<%= pid %>/type" data-value="<%= ptype %>" data-defaultValue="?" data-separator=","><%= ptype.toString().replace(/,/g,", ") %> <span title="Edit" class="edit-icon">&#9998;</span></a><br><br>
                 <% } else { %>
                     <b>Code:</b> <%= pcode %><br><br>
                     <b>Collection:</b> <%= pbatch %><br><br>
+                    <% if (displaycolors == true) { %>
+                        <b>Color:</b> <%= pcolor.toString().replace(/,/g,", ") %><br><br>
+                    <% } %>
                     <b>Type:</b> <%= ptype.toString().replace(/,/g,", ") %>
                 <% } %>
             </div>
@@ -238,6 +246,11 @@ $(document).ready(function() {
     $(function(){
         $('.editabletype').editable({
             source: <%- JSON.stringify(types)%>
+        });
+    });
+    $(function(){
+        $('.editablecolor').editable({
+            source: <%- JSON.stringify(colors)%>
         });
     });
 });

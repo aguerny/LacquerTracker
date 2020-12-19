@@ -18,7 +18,6 @@ module.exports = function(app, passport) {
 
 //view a polish by name
 app.get('/polish/:brand/:name', function(req, res) {
-
     Polish.findOne({brand: req.params.brand.replace(/_/g," "), name:req.params.name.replace(/_/g," ")}).populate('dupes', 'brand name').populate('checkins', 'photo pendingdelete creationdate type', null, {sort:{creationdate:-1}}).populate('photos').exec(function(err, polish) {
         if (polish === null) {
             res.redirect('/error');
@@ -36,6 +35,7 @@ app.get('/polish/:brand/:name', function(req, res) {
             data.pswatch = polish.swatch;
             data.pcolors = polish.colorsname;
             data.pcolors2 = polish.colorscategory;
+            data.pcolor = polish.colorstodisplay;
             data.ptype = polish.type;
             data.pcode = polish.code;
             data.pid = polish.id;
@@ -51,6 +51,13 @@ app.get('/polish/:brand/:name', function(req, res) {
                 return {value: type.name, text: type.name};
             });
             data.types = formattedTypes;
+
+            if ((polish.tool == true) || (polish.type.indexOf("base") > -1) || (polish.type.indexOf("top") > -1)) {
+                data.displaycolors = false;
+            } else {
+                data.displaycolors = true;
+            }
+            data.colors = ["black", "blue", "brown", "gray", "green", "orange", "pink", "purple", "red", "white", "yellow"];
 
             var allphotos = [];
             polish.photos.map(function(x) {
@@ -124,6 +131,7 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                 data.pswatch = polish.swatch;
                 data.pcolors = polish.colorsname;
                 data.pcolors2 = polish.colorscategory;
+                data.pcolor = polish.colorstodisplay;
                 data.ptype = polish.type;
                 data.pcode = polish.code;
                 data.pid = polish.id;
@@ -139,6 +147,13 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                     return {value: type.name, text: type.name};
                 });
                 data.types = formattedTypes;
+
+                if ((polish.tool == true) || (polish.type.indexOf("base") > -1) || (polish.type.indexOf("top") > -1)) {
+                    data.displaycolors = false;
+                } else {
+                    data.displaycolors = true;
+                }
+                data.colors = ["black", "blue", "brown", "gray", "green", "orange", "pink", "purple", "red", "white", "yellow"];
 
                 var allphotos = [];
                 polish.photos.map(function(x) {
@@ -406,6 +421,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                         dupes: sanitizer.sanitize(req.body.dupes),
                         swatch: '',
                         checkins: [],
+                        colorstodisplay: [],
                         tool: false,
                     });
                     newPolish.save(function(err) {
@@ -431,6 +447,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                             }
                             if (req.body.colorcategory !== undefined) {
                                 newPolish.colorscategory = sanitizer.sanitize(req.body.colorcategory).split(',');
+                                newPolish.colorstodisplay = sanitizer.sanitize(req.body.colorcategory).split(',');
                             }
                             newPolish.save(function(err) {
                                 Brand.findOne({name: polishBrandToFind}, function(err, brand) {
@@ -594,6 +611,28 @@ app.post('/polishedit/:id/batch', isLoggedIn, function(req, res) {
                     res.end();
                 })
             });
+        }
+    });
+});
+
+app.post('/polishedit/:id/color', isLoggedIn, function(req, res) {
+    Polish.findById(req.params.id, function(err, p) {
+        if (!p) {
+            res.redirect('/error');
+        } else {
+            if (req.body.value !== undefined) {
+                p.colorstodisplay = sanitizer.sanitize(req.body.value).split(',')
+                p.dateupdated = new Date();
+                p.save(function(err) {
+                    res.end();
+                })
+            } else {
+                p.dateupdated = new Date();
+                p.colorstodisplay = [];
+                p.save(function(err) {
+                    res.end();
+                })
+            }
         }
     });
 });

@@ -92,7 +92,7 @@ app.post('/browse', function(req, res) {
     if (!req.body.colorcategory) {
         var datacolor = '';
     } else if (req.body.colorcategory !== "choose") {
-        search.colorscategory = {$in: sanitizer.sanitize(req.body.colorcategory).split(",")};
+        search.colorstodisplay = {$in: sanitizer.sanitize(req.body.colorcategory).split(",")};
         var datacolor = sanitizer.sanitize(req.body.colorcategory).split(",");
     } else {
         function hexToRgb(hex) {

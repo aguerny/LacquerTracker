@@ -210,6 +210,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
                                             }
                                         }
                                         polish.colorscategory = formatted;
+                                        polish.colorstodisplay = formatted;
                                     }
                                 }
 
@@ -302,8 +303,10 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
                                                 }
                                             }
                                             newPolish.colorscategory = formatted;
+                                            newPolish.colorstodisplay = formatted;
                                         } else {
                                             newPolish.colorscategory = [];
+                                            newPolish.colorstodisplay = [];
                                         }
                                     }
 
@@ -364,7 +367,7 @@ app.get('/profile/:username/export', isLoggedIn, function(req, res) {
                     var brand = accents.remove(polish[i].brand).replace(/,/g, '').replace(/•/g, '.');
                     var name = accents.remove(polish[i].name).replace(/,/g, '');
                     var batch = accents.remove(polish[i].batch).replace(/,/g, '');
-                    var color = _.uniqBy(polish[i].colorscategory).join("/").toLowerCase();
+                    var color = _.uniqBy(polish[i].colorstodisplay).join("/").toLowerCase();
                     var type = polish[i].type.join("/");
                     if (user.ownedpolish.indexOf(polish[i].id) > -1) {
                         var status = "owned";

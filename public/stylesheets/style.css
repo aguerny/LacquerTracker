@@ -95,7 +95,7 @@
 
     .smallfont {font-size:11px;}
 
-    #code, #batch, #colorcat, #type, #indie {color:black;}
+    #code, #batch, #color, #type, #indie {color:black;}
 
     .edit-icon {display: inline-block; transform: rotateZ(90deg); color:#000000;}
 

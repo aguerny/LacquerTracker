@@ -26,6 +26,7 @@ var polishSchema = mongoose.Schema({
     colorsrgb: [],
     colorsname: [],
     colorscategory: [],
+    colorstodisplay: [],
     tool: Boolean,
 });
 
