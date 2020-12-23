@@ -22,9 +22,9 @@ module.exports = function(app, passport) {
 //         data.title = 'Forums - Lacquer Tracker';
 //         var allposts = posts.map(function(x) {
 //             if (req.isAuthenticated() && req.user.timezone.length > 0) {
-//                 x.dateupdated = moment(x.dateupdated).tz(req.user.timezone).calendar();
+//                 x.dateupdatednew = moment(x.dateupdated).tz(req.user.timezone).calendar();
 //             } else {
-//                 x.dateupdated = moment(x.dateupdated).tz("America/New_York").calendar();
+//                 x.dateupdatednew = moment(x.dateupdated).tz("America/New_York").calendar();
 //             }
 //             return x;
 //         })
@@ -114,6 +114,7 @@ app.post('/forums/:forum/add', isLoggedIn, function(req, res) {
         forum: sanitizer.sanitize(req.body.forum),
         comments: [],
         photo: '',
+        archieved: false,
     });
     newForumPost.save(function(err) {
         if (req.files.photo.name.length > 0) {
@@ -186,7 +187,7 @@ app.get('/forums/:forum/:id', function(req, res) {
 });
 
 
-//eply to a post or comment
+//reply to a post or comment
 app.post('/forums/:forum/:id/:cid/add', isLoggedIn, function(req, res) {
     ForumPost.findById(req.params.id).populate('user').exec(function (err, post){
         var newForumComment = new ForumComment ({

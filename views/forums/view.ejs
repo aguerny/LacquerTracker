@@ -34,7 +34,7 @@ function confirm_alert(node) {
                 </div>
             <% } %>
             <br><br><br>
-            <p style="white-space: pre;"><%- postmessage %><% if (postphoto !== undefined) { if (postphoto.length>0) {%><br><br><img src=<%=postphoto%>><%}}%></p><br><hr><br>
+            <p style="white-space: pre;"><%- postmessage %><% if (postphoto !== undefined) { if (postphoto.length>0) {%><br><img src=<%=postphoto%>><%}}%></p><br><hr><br>
             <b>Comments (<%= postcomments.length %>)</b> |
             <% if (isAuthenticated) { %>
                 <span class="replylink"><a href="">Add a comment</a></span>

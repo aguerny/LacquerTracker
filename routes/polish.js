@@ -48,7 +48,7 @@ app.get('/polish/:brand/:name', function(req, res) {
             data.checkins = polish.checkins;
 
             var formattedTypes = PolishTypes.map(function(type) {
-                return {value: type.name, text: type.name};
+                return {value: type.name, text: type.display};
             });
             data.types = formattedTypes;
 
@@ -144,7 +144,7 @@ app.get('/polishid/:id', isLoggedIn, function(req, res) {
                 data.checkins = polish.checkins;
 
                 var formattedTypes = PolishTypes.map(function(type) {
-                    return {value: type.name, text: type.name};
+                    return {value: type.name, text: type.display};
                 });
                 data.types = formattedTypes;
 

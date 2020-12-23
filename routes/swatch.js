@@ -5,6 +5,7 @@ var UserPhoto = require('../app/models/userphoto');
 var fs = require('fs');
 var path = require('path');
 var sanitizer = require('sanitizer');
+var _ = require('lodash');
 var gm = require('gm').subClass({ imageMagick: true });
 var http = require('http');
 var request = require('request');

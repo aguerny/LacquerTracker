@@ -9,21 +9,20 @@
         <table class="forumtable">
             <col width="30%">
             <col width="20%">
-            <col width="20%">
-            <col width="10%">
+            <col width="15%">
+            <col width="15%">
             <col width="20%">
             <tr><th><span>Post Title</span></th><th><span>Started By</span></th><th><span>Category</span></th><th><span>Comments</span></th><th><span>Last Updated</span></th></tr>
             <% for (i=0; i<forumposts.length; i++) { %>
                 <tr><td><a href="/forums/<%= forumposts[i].forum %>/<%= forumposts[i].id %>"><span><%= forumposts[i].title %></span></a></td>
                 <td><a href='/profile/<%= forumposts[i].user.username %>'><span><%= forumposts[i].user.username %></span></a></td>
-                <td><% if (forumposts[i].forum === "intro") { %>Intro
+                <td><% if (forumposts[i].forum === "intro") { %>Introductions
                     <%} else if (forumposts[i].forum === "general") {%>General
-                    <%} else if (forumposts[i].forum === "notd") {%>NOTD
-                    <%} else if (forumposts[i].forum === "lt") {%>Feedback
+                    <%} else if (forumposts[i].forum === "lt") {%>Lacquer Tracker
                     <%} else if (forumposts[i].forum === "ot") {%>Off Topic<%}%>
                 </td>
                 <td><% if (forumposts[i].comments.length === 1) {%><span><%= forumposts[i].comments.length %> Reply</span><%} else {%><span><%= forumposts[i].comments.length %> Replies</span><%}%></td>
-                <td><span><%= forumposts[i].dateupdated %></span></td></tr>
+                <td><span><%= forumposts[i].dateupdatednew %></span></td></tr>
             <% } %>
         </table>
         </center>
