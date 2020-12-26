@@ -228,6 +228,7 @@ app.get('/addown/:id', isLoggedIn, function(req, res) {
 
 //add wishlist polish
 app.get('/addwant/:id', isLoggedIn, function(req, res) {
+    req.user.ownedpolish.remove(req.params.id);
     req.user.wantedpolish.addToSet(req.params.id);
     req.user.save();
     Polish.findById(req.params.id, function(err, p) {
@@ -253,6 +254,7 @@ app.post('/addownbrowse/:id', isLoggedIn, function(req, res) {
 
 //add wishlist polish browse
 app.post('/addwantbrowse/:id', isLoggedIn, function(req, res) {
+    req.user.ownedpolish.remove(req.params.id);
     req.user.wantedpolish.addToSet(req.params.id);
     req.user.save();
     Polish.findById(req.params.id, function(err, p) {
