@@ -81,12 +81,13 @@
     #preview {
         float:middle;
         margin-bottom: 2%;
+        max-height: 500px;
     }
 
     .hovermenu {display:none;}
     .hoverholder:hover + .hovermenu, .hovermenu:hover, .hoverholder:focus + .hovermenu, .hovermenu:focus{display:block;}
 
-    .polishphotosmall {max-width:300px;}
+    .polishphotosmall {max-width:300px; max-height: 500px;}
 
     .nomargin {margin-left:0; margin-right:0; padding-left:0; padding-right:0;}
 
@@ -135,7 +136,7 @@
     h4{font-size:14px;}
     h5{font-size:16px;}
 
-    img{max-width:600px; max-height:700px;}
+    img{max-width:600px;}
 
 
     /*---Main Content---*/
@@ -313,8 +314,6 @@
     h3{font-size:16px;}
     h4{font-size:14px;}
     h5{font-size:12px;}
-
-    img{max-height:500px;}
 
 
     /*---Header---*/
