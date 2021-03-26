@@ -35,6 +35,11 @@ app.get('/import', isLoggedIn, function(req, res) {
 app.post('/import', isLoggedIn, function(req, res) {
     if (req.files.spreadsheet.name.length > 0) {
         if (req.files.spreadsheet.mimetype.startsWith("text/csv") ||
+            req.files.spreadsheet.mimetype.startsWith("application/csv") ||
+            req.files.spreadsheet.mimetype.startsWith("application/x-csv") ||
+            req.files.spreadsheet.mimetype.startsWith("text/comma-separated-values") ||
+            req.files.spreadsheet.mimetype.startsWith("text/x-comma-separated-values") ||
+            req.files.spreadsheet.mimetype.startsWith("text/tab-separated-values") ||
             req.files.spreadsheet.mimetype.startsWith("application/vnd.ms-excel") ||
             req.files.spreadsheet.mimetype.startsWith("application/vnd.openxmlformats-officedocument.spreadsheetml")
             ) {
