@@ -53,6 +53,10 @@ $(window).load(function () {
                             <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch" data-value="<%= pbatch %>"><%= pbatch %> <span title="Edit" class="edit-icon">&#9998;</span></a><br><br>
                             <% if (displaycolors == true) { %>
                                 <b>Color:</b> <a href="#" id="color" data-pk="1" class="editablecolor" data-type="checklist" data-url="/polishedit/<%= pid %>/color" data-value="<%= pcolor %>" data-defaultValue="?" data-separator=","><%= pcolor.toString().replace(/,/g,", ") %> <span title="Edit" class="edit-icon">&#9998;</span></a><br><br>
+                                <% if (isAuthenticated) {%><% if (user.adminview === true) { %>
+                                    <b>A-Colors:</b> <%= pcolors2.toString().replace(/,/g,", ") %><br><br>
+                                    <b>A-Cats:</b> <%= pcolors.toString().replace(/,/g,", ") %><br><br>
+                                <% } %><% } %>
                             <% } %>
                             <b>Type:</b> <a href="#" id="type" data-pk="1" class="editabletype" data-type="checklist" data-url="/polishedit/<%= pid %>/type" data-value="<%= ptype %>" data-defaultValue="?" data-separator=","><%= ptype.toString().replace(/,/g,", ") %> <span title="Edit" class="edit-icon">&#9998;</span></a><br><br>
                         <% } else { %>
@@ -154,6 +158,10 @@ $(window).load(function () {
                     <b>Collection:</b> <a href="#" id="batch" data-pk="1" class="editable" data-type="text" data-url="/polishedit/<%= pid %>/batch" data-value="<%= pbatch %>"><%= pbatch %> <span title="Edit" class="edit-icon">&#9998;</span></a><br><br>
                     <% if (displaycolors == true) { %>
                         <b>Color:</b> <a href="#" id="color" data-pk="1" class="editablecolor" data-type="checklist" data-url="/polishedit/<%= pid %>/color" data-value="<%= pcolor %>" data-defaultValue="?" data-separator=","><%= pcolor.toString().replace(/,/g,", ") %> <span title="Edit" class="edit-icon">&#9998;</span></a><br><br>
+                        <% if (isAuthenticated) {%><% if (user.adminview === true) { %>
+                            <b>A-Colors:</b> <%= pcolors2.toString().replace(/,/g,", ") %><br><br>
+                            <b>A-Cats:</b> <%= pcolors.toString().replace(/,/g,", ") %><br><br>
+                        <% } %><% } %>
                     <% } %>
                     <b>Type:</b> <a href="#" id="type" data-pk="1" class="editabletype" data-type="checklist" data-url="/polishedit/<%= pid %>/type" data-value="<%= ptype %>" data-defaultValue="?" data-separator=","><%= ptype.toString().replace(/,/g,", ") %> <span title="Edit" class="edit-icon">&#9998;</span></a><br><br>
                 <% } else { %>

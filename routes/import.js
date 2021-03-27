@@ -173,7 +173,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
 
                                 if (data.type) {
                                     if (data.type.length > 0) {
-                                        var input = sanitizer.sanitize(data.type).toLowerCase().replace("cream","creme").replace("crème","creme").replace("holographic","holo").replace("flakes","flakie").split(/[ ,]+/);
+                                        var input = sanitizer.sanitize(data.type).toLowerCase().replace("cream","creme").replace("crème","creme").replace("holographic","holo").replace("flakes","flakie").replace("top coat","top").replace("base coat","base").split(/[ ,]+/);
                                         input = input.map(function (item) {
                                           return item.trim();
                                         });
@@ -267,7 +267,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
 
                                     if (data.type) {
                                         if (data.type.length > 0) {
-                                            var input = sanitizer.sanitize(data.type).toLowerCase().replace("cream","creme").replace("crème","creme").replace("holographic","holo").replace("flakes","flakie").split(/[ ,]+/);
+                                            var input = sanitizer.sanitize(data.type).toLowerCase().replace("cream","creme").replace("crème","creme").replace("holographic","holo").replace("flakes","flakie").replace("top coat","top").replace("base coat","base").split(/[ ,]+/);
                                             input = input.map(function (item) {
                                                 return item.trim();
                                             });
