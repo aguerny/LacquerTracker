@@ -2,8 +2,6 @@
 
 <script src="/scripts/collageplus.js"></script>
 <script src="/scripts/sorttable.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/freezeframe@3.0.10/build/css/freezeframe_styles.min.css">
-<script type="text/javascript" src="https://unpkg.com/freezeframe@3.0.10/build/js/freezeframe.pkgd.min.js"></script>
 
 <script>
 $(window).load(function () {
@@ -58,26 +56,29 @@ $(window).load(function () {
                     <br>
                     <table id="ownedpolish" class="ownedtable sortable">
                         <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th><th class="rating"><span><%= username %>'s Rating</span></th></tr>
-                    <% for(var i=0; i<opolishes.length; i++) {%>
-                        <tr><td><a id='tablelink' href='/polish/<%= opolishes[i].brand.replace(/ /g,"_") %>/<%= opolishes[i].name.replace(/ /g,"_") %>'><span><%= opolishes[i].name %></span></a></td>
-                        <td><a id='tablelink' href='/brand/<%= opolishes[i].brand.replace(/ /g,"_") %>'><span><%= opolishes[i].brand %></span></a></td>
-                        <td><span><%= opolishes[i].batch %></span></td>
-                        <td class="tableswatch"><% if (opolishes[i].swatch.length > 0) {%>
-                                <img src="<%=opolishes[i].swatch%>" alt="Nail polish swatch of shade <%= opolishes[i].brand %> <%= opolishes[i].name %>">
-                            <%} else {%>
-                                <img src="/images/swatches/noswatch.jpg" alt="">
-                            <%}%>
-                        </td>
-                        <td>
-                            <span><%= opolishes[i].type.toString().replace(/,/g,", ") %></span>
-                        </td>
-                        <td>
-                            <% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
-                                <span style="display:none;"><%=oreviews[i].rating%></span><img class="starprofile" src="/images/stars/<%=oreviews[i].rating%>star.png"alt="">
-                            <% } %>
-                        </td></tr>
-                    <% } %>
+                        <% for(var i=0; i<opolishes.length; i++) {%>
+                            <tr><td><a id='tablelink' href='/polish/<%= opolishes[i].brand.replace(/ /g,"_") %>/<%= opolishes[i].name.replace(/ /g,"_") %>'><span><%= opolishes[i].name %></span></a></td>
+                            <td><a id='tablelink' href='/brand/<%= opolishes[i].brand.replace(/ /g,"_") %>'><span><%= opolishes[i].brand %></span></a></td>
+                            <td><span><%= opolishes[i].batch %></span></td>
+                            <td class="tableswatch"><% if (opolishes[i].swatch.length > 0) {%>
+                                    <img src="<%=opolishes[i].swatch%>" alt="Nail polish swatch of shade <%= opolishes[i].brand %> <%= opolishes[i].name %>">
+                                <%} else {%>
+                                    <img src="/images/swatches/noswatch.jpg" alt="">
+                                <%}%>
+                            </td>
+                            <td>
+                                <span><%= opolishes[i].type.toString().replace(/,/g,", ") %></span>
+                            </td>
+                            <td>
+                                <% if (typeof oreviews[i] !== "undefined" && oreviews[i].rating > 0) { %>
+                                    <span style="display:none;"><%=oreviews[i].rating%></span><img class="starprofile" src="/images/stars/<%=oreviews[i].rating%>star.png"alt="">
+                                <% } %>
+                            </td></tr>
+                        <% } %>
                     </table>
+                    <% if (opolishes.length >= 200) { %>
+                        <span class="prev" style="display:none"><a href="">Previous</a> | </span><span class="next"><a href="">Next</a></span>
+                    <% } %>
                 </div>
             <% } %>
 
@@ -89,19 +90,19 @@ $(window).load(function () {
                     <br>
                     <table id="ownedpolish" class="ownedtable sortable">
                         <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="type"><span>Type</span></th><th class="rating"><span><%= username %>'s Rating</span></th></tr>
-                    <% for(var i=0; i<oaccessories.length; i++) {%>
-                        <tr><td><a id='tablelink' href='/polish/<%= oaccessories[i].brand.replace(/ /g,"_") %>/<%= oaccessories[i].name.replace(/ /g,"_") %>'><span><%= oaccessories[i].name %></span></a></td>
-                        <td><a id='tablelink' href='/brand/<%= oaccessories[i].brand.replace(/ /g,"_") %>'><span><%= oaccessories[i].brand %></span></a></td>
-                        <td><span><%= oaccessories[i].batch %></span></td>
-                        <td>
-                            <span><%= oaccessories[i].type.toString().replace(/,/g,", ") %></span>
-                        </td>
-                        <td>
-                            <% if (typeof areviews[i] !== "undefined" && areviews[i].rating > 0) { %>
-                                <span style="display:none;"><%=areviews[i].rating%></span><img class="starprofile" src="/images/stars/<%=areviews[i].rating%>star.png"alt="">
-                            <% } %>
-                        </td></tr>
-                    <% } %>
+                        <% for(var i=0; i<oaccessories.length; i++) {%>
+                            <tr><td><a id='tablelink' href='/polish/<%= oaccessories[i].brand.replace(/ /g,"_") %>/<%= oaccessories[i].name.replace(/ /g,"_") %>'><span><%= oaccessories[i].name %></span></a></td>
+                            <td><a id='tablelink' href='/brand/<%= oaccessories[i].brand.replace(/ /g,"_") %>'><span><%= oaccessories[i].brand %></span></a></td>
+                            <td><span><%= oaccessories[i].batch %></span></td>
+                            <td>
+                                <span><%= oaccessories[i].type.toString().replace(/,/g,", ") %></span>
+                            </td>
+                            <td>
+                                <% if (typeof areviews[i] !== "undefined" && areviews[i].rating > 0) { %>
+                                    <span style="display:none;"><%=areviews[i].rating%></span><img class="starprofile" src="/images/stars/<%=areviews[i].rating%>star.png"alt="">
+                                <% } %>
+                            </td></tr>
+                        <% } %>
                     </table>
                 </div>
             <% } %>
@@ -114,20 +115,20 @@ $(window).load(function () {
                     <br>
                     <table id="wantedpolish" class="wantedtable sortable">
                         <tr><th class="name"><span>Name</span></th><th class="brand"><span>Brand</span></th><th class="collection"><span>Collection</span></th><th class="swatch"><span>Swatch</span></th><th class="type"><span>Type</span></th></tr>
-                    <% for(var i=0; i<wpolishes.length; i++) {%>
-                        <tr><td><a id='tablelink' href='/polish/<%= wpolishes[i].brand.replace(/ /g,"_") %>/<%= wpolishes[i].name.replace(/ /g,"_") %>'><span><%= wpolishes[i].name %></span></a></td>
-                        <td><a id='tablelink' href='/brand/<%= wpolishes[i].brand.replace(/ /g,"_") %>'><span><%= wpolishes[i].brand %></span></a></td>
-                        <td><span><%= wpolishes[i].batch %></span></td>
-                        <td class="tableswatch"><% if (wpolishes[i].swatch.length > 0) {%>
-                                <img src="<%=wpolishes[i].swatch%>" alt="Nail polish swatch of shade <%= wpolishes[i].brand %> <%= wpolishes[i].name %>">
-                            <%} else {%>
-                                <img src="/images/swatches/noswatch.jpg" alt="">
-                            <%}%>
-                        </td>
-                        <td>
-                            <span><%= wpolishes[i].type.toString().replace(/,/g,", ") %></span>
-                        </td>
-                    <% } %>
+                        <% for(var i=0; i<wpolishes.length; i++) {%>
+                            <tr><td><a id='tablelink' href='/polish/<%= wpolishes[i].brand.replace(/ /g,"_") %>/<%= wpolishes[i].name.replace(/ /g,"_") %>'><span><%= wpolishes[i].name %></span></a></td>
+                            <td><a id='tablelink' href='/brand/<%= wpolishes[i].brand.replace(/ /g,"_") %>'><span><%= wpolishes[i].brand %></span></a></td>
+                            <td><span><%= wpolishes[i].batch %></span></td>
+                            <td class="tableswatch"><% if (wpolishes[i].swatch.length > 0) {%>
+                                    <img src="<%=wpolishes[i].swatch%>" alt="Nail polish swatch of shade <%= wpolishes[i].brand %> <%= wpolishes[i].name %>">
+                                <%} else {%>
+                                    <img src="/images/swatches/noswatch.jpg" alt="">
+                                <%}%>
+                            </td>
+                            <td>
+                                <span><%= wpolishes[i].type.toString().replace(/,/g,", ") %></span>
+                            </td>
+                        <% } %>
                     </table>
                 </div>
             <% } %>
@@ -141,7 +142,7 @@ $(window).load(function () {
                         <div class="collage">
                             <% for (i=0; i<checkins.length; i++) { %>
                                 <% if (checkins[i].pendingdelete === false) { %>
-                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>t.jpeg" alt="" id="collagephoto" <% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%></a>
+                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>t.jpeg" alt="" id="collagephoto"></a>
                                 <% } %>
                             <% } %>
                         </div>
@@ -150,7 +151,7 @@ $(window).load(function () {
                         <div class="collage">
                             <% for (i=0; i<checkins.length; i++) { %>
                                 <% if (checkins[i].pendingdelete === false) { %>
-                                    <div class='collagephoto'><a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>t.jpeg" alt="" id="collagephoto" <% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%></a></div>
+                                    <div class='collagephoto'><a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>t.jpeg" alt="" id="collagephoto"></a></div>
                                 <% } %>
                             <% } %>
                         </div>
@@ -241,7 +242,90 @@ $('.freshcoats-close').click(function() {
     $('.freshcoats-close').hide();
 });
 
-$('.freezeframe').freezeframe();
+
+var maxRows = 200;
+$('#ownedpolish').each(function() {
+    var cTable = $(this);
+    var cRows = cTable.find('tr:gt(0)');
+    var cRowCount = cRows.size();
+    if (cRowCount < maxRows) {
+        return;
+    }
+
+    cRows.filter(':gt(' + (maxRows - 1) + ')').hide();
+
+    var cPrev = cTable.siblings('.prev');
+    var cNext = cTable.siblings('.next');
+
+    cPrev.attr('id', 'disabled');
+
+    cPrev.click(function() {
+        var cFirstVisible = cRows.index(cRows.filter(':visible'));
+        
+        if (cPrev.attr('id') == 'disabled') {
+            return false;
+        }
+        
+        cRows.hide();
+        if (cFirstVisible - maxRows - 1 > 0) {
+            cRows.filter(':lt(' + cFirstVisible + '):gt(' + (cFirstVisible - maxRows - 1) + ')').show();
+        } else {
+            cRows.filter(':lt(' + cFirstVisible + ')').show();
+        }
+
+        if (cFirstVisible - maxRows <= 0) {
+            cPrev.attr('id', 'disabled');
+        }
+        
+        cNext.removeAttr('id', 'disabled');
+
+        $('span').each(function() {
+            var fontSize = 100;
+            while (this.scrollWidth > $(this).width() && fontSize > 0) {
+                // adjust the font-size 5% at a time
+                fontSize -= 5;
+                $(this).css('font-size', fontSize + '%');
+            }
+        });
+
+        $(window).scrollTop(0);
+
+        return false;
+    });
+
+    cNext.click(function() {
+        var cFirstVisible = cRows.index(cRows.filter(':visible'));
+        
+        if (cNext.attr('id') == 'disabled') {
+            return false;
+        }
+        
+        cRows.hide();
+        cRows.filter(':lt(' + (cFirstVisible +2 * maxRows) + '):gt(' + (cFirstVisible + maxRows - 1) + ')').show();
+
+        if (cFirstVisible + 2 * maxRows >= cRows.size()) {
+            cNext.attr('id', 'disabled');
+        }
+        
+        cPrev.removeAttr('id', 'disabled');
+
+
+        $('span').each(function() {
+            var fontSize = 100;
+            while (this.scrollWidth > $(this).width() && fontSize > 0) {
+                // adjust the font-size 5% at a time
+                fontSize -= 5;
+                $(this).css('font-size', fontSize + '%');
+            }
+        });
+
+        $(window).scrollTop(0);
+
+        $('.prev').show();
+
+        return false;
+    });
+});
 </script>
 
 <%- include('../layoutBottom'); %>

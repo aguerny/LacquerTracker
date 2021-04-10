@@ -543,7 +543,7 @@ app.post('/admin/brandalternate', isLoggedIn, function(req, res) {
                     if (brand) {
                         brand.alternatenames.addToSet(sanitizer.sanitize(req.body.alternate.toLowerCase()));
                         brand.save(function(err) {
-                            Brand.find({}, function (error, somebrands) {
+                            Brand.find({}).sort('name').exec(function (error, somebrands) {
                                 data = {};
                                 data.title = 'Add Alternate Brand Names - Lacquer Tracker';
                                 data.brandnames = allbrands;
@@ -553,7 +553,7 @@ app.post('/admin/brandalternate', isLoggedIn, function(req, res) {
                             })
                         })
                     } else {
-                        Brand.find({}, function (error, somebrands) {
+                        Brand.find({}).sort('name').exec(function (error, somebrands) {
                             data = {};
                             data.title = 'Add Alternate Brand Names - Lacquer Tracker';
                             data.brandnames = allbrands;

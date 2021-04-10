@@ -120,7 +120,7 @@ app.post('/freshcoats/add', isLoggedIn, function(req, res) {
         if (checkin == null) {
             // need to update below as well if under 12 hours
             if (req.files.photo.name.length > 0) {
-                if (req.files.photo.mimetype.startsWith("image")) {
+                if (req.files.photo.mimetype.startsWith("image") && !req.files.photo.mimetype.endsWith("gif")) {
                     if (req.files.photo.size <= 5242880) {
                         var ext = path.extname(req.files.photo.name);
                         var newCheckin = new Checkin ({
@@ -276,7 +276,7 @@ app.post('/freshcoats/add', isLoggedIn, function(req, res) {
             })
         } else {
             if (req.files.photo.name.length > 0) {
-                if (req.files.photo.mimetype.startsWith("image")) {
+                if (req.files.photo.mimetype.startsWith("image") && !req.files.photo.mimetype.endsWith("gif")) {
                     if (req.files.photo.size <= 5242880) {
                         var ext = path.extname(req.files.photo.name);
                         var newCheckin = new Checkin ({
