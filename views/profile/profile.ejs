@@ -142,7 +142,7 @@ $(window).load(function () {
                         <div class="collage">
                             <% for (i=0; i<checkins.length; i++) { %>
                                 <% if (checkins[i].pendingdelete === false) { %>
-                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>t.jpeg" alt="" id="collagephoto"></a>
+                                    <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>t.jpeg" alt="" id="collagephoto"</a>
                                 <% } %>
                             <% } %>
                         </div>

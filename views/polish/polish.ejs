@@ -204,7 +204,7 @@ $(window).load(function () {
                             <div class="collage">
                                 <% for (i=0; i<checkins.length; i++) { %>
                                     <% if (checkins[i].pendingdelete === false) { %>
-                                        <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>t.jpeg" alt="" id="collagephoto" <% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%></a>
+                                        <a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>t.jpeg" alt="" id="collagephoto"</a>
                                     <% } %>
                                 <% } %>
                             </div>
@@ -213,7 +213,7 @@ $(window).load(function () {
                             <div class="collage">
                                 <% for (i=0; i<checkins.length; i++) { %>
                                     <% if (checkins[i].pendingdelete === false) { %>
-                                        <div class='collagephoto'><a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>t.jpeg" alt="" id="collagephoto" <% if (checkins[i].photo.slice(checkins[i].photo.length - 4)==".gif") { %>class="freezeframe"><%}%></a></div>
+                                        <div class='collagephoto'><a href="/freshcoats/<%=checkins[i].id%>"><img src="<%= checkins[i].photo.split('.').slice(0, -1).join('.') %>t.jpeg" alt="" id="collagephoto"></a></div>
                                     <% } %>
                                 <% } %>
                             </div>

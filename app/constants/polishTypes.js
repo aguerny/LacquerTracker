@@ -27,7 +27,8 @@ var types = [
 	{name:"pearl", display:"pearl", category:"polish"},
 	{name:"pen", display:"pen", category:"polish"},
 	{name:"plate", display:"stamping plate", category:"tool"},
-    {name:"powder", display:"powder", category:"polish"},
+	{name:"powder", display:"powder", category:"polish"},
+	{name:"press", display:"press-on", category:"polish"},
 	{name:"scented", display:"scented", category:"polish"},
 	{name:"sheer", display:"sheer", category:"polish"},
 	{name:"shimmer", display:"shimmer", category:"polish"},
@@ -40,7 +41,8 @@ var types = [
 	{name:"top", display:"top coat", category:"polish"},
 	{name:"topper", display:"topper", category:"polish"},
 	{name:"uv", display:"uv", category:"polish"},
-	{name:"vinyl", display:"vinyl/stencil", category:"tool"}
+	{name:"vinyl", display:"vinyl/stencil", category:"tool"},
+	{name:"wrap", display:"wrap/strip", category:"polish"}
 ];
 
 

@@ -158,6 +158,17 @@ function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
         User.findById(req.user.id).exec(function(err, user) {
             user.lastlogindate = new Date();
+            if (user.ipaddress) {
+                if (user.ipaddress.includes(req.header('X-Real-IP') || req.connection.remoteAddress) == false) {
+                    user.ipaddress.push(req.header('X-Real-IP') || req.connection.remoteAddress);
+                    if (user.ipaddress.length > 5) {
+                        user.ipaddress.shift();
+                    }
+                }
+            } else {
+                user.ipaddress = [];
+                user.ipaddress.push(req.header('X-Real-IP') || req.connection.remoteAddress);
+            }
             user.save();
         })
     }

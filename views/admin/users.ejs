@@ -7,7 +7,7 @@
     <div id="container" class="clear">
     <section>
         <table class="sortable">
-            <tr><th style="overflow:hidden; width:10%">#</th><th style="overflow:hidden; width:25%">Username</th><th style="overflow:hidden; width:10%">E-mail</th><th style="overflow:hidden; width:15%">Source</th><th style="overflow:hidden; width:10%">Created</th><th style="overflow:hidden; width:20%">Last Login</th><th style="overflow:hidden; width:10%">Validated</th><th style="overflow:hidden; width:5%">User Level</th></tr>
+            <tr><th style="overflow:hidden; width:10%">#</th><th style="overflow:hidden; width:25%">Username</th><th style="overflow:hidden; width:10%">E-mail</th><th style="overflow:hidden; width:15%">Source</th><th style="overflow:hidden; width:10%">Created</th><th style="overflow:hidden; width:20%">Last Login</th><th style="overflow:hidden; width:10%">IP</th><th style="overflow:hidden; width:10%">Validated</th><th style="overflow:hidden; width:2%">User Level</th></tr>
             <% for (i=0; i < allusers.length; i++) { %>
                 <tr>
                     <td style="overflow:hidden"><%=allusers[i].usernumber%></td>
@@ -24,6 +24,7 @@
                             <%= moment(allusers[i].lastlogindate).tz("America/New_York").calendar() %>
                         <% } %>
                     </td>
+                    <td style="overflow:hidden"><%= allusers[i].ipaddress %></td>
                     <td style="overflow:hidden"><%= allusers[i].isvalidated %></td>
                     <td style="overflow:hidden"><%= allusers[i].level %></td>
                 </tr>

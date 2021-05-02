@@ -19,6 +19,7 @@ var userSchema = mongoose.Schema({
 	useremail    : String,
 	creationdate : Date,
 	lastlogindate: Date,
+	ipaddress    : [],
 	country      : String,
 	timezone     : String,
 	checkins     : [{type: mongoose.Schema.Types.ObjectId, ref: 'Checkin'}],
