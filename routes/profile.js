@@ -154,6 +154,10 @@ app.get('/profile/:username/delete', isLoggedIn, function(req, res) {
                 user.adminview = false;
                 user.notifications = "off";
                 user.useremail = "off";
+                user.ipaddress = [];
+                user.country = "";
+                user.timezone = "";
+                user.source = "";
                 CheckinComment.find({user:user.id}, function(err, comments) {
                     for (i=0; i<comments.length; i++) {
                         var comment = comments[i];

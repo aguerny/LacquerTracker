@@ -17,7 +17,7 @@ function confirm_alert(node) {
     <section>
         <div class="photo500">
         <h2><%= posttitle %></h2><br>
-            Posted by <a href="/profile/<%= postuser.username%>"><%= postuser.username %></a> on <%= postdate %>
+            Posted by <a href="/profile/<%= postuser.username%>"><%= postuser.username %></a> on <%= postdate %><% if (postedited === true) { %>*<% } %>
             <% if (isAuthenticated) { %>
                  | <span class="postflag" style="opacity:0.5"><a href="">&#128681</a></span>
                 <% if (user.username === postuser.username) { %>

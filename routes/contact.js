@@ -7,7 +7,17 @@ module.exports = function(app, passport) {
 
 
 app.get('/contact', function(req, res) {
-    res.render('contact.ejs', {title: 'Contact - Lacquer Tracker'});
+    if (req.isAuthenticated()) {
+        data = {};
+        data.title = 'Contact - Lacquer Tracker';
+        User.findById(req.user.id).select('username email').exec(function(err, user) {
+            data.username = user.username;
+            data.email = user.email;
+            res.render('contact.ejs', data);
+        })
+    } else {
+        res.render('contact.ejs', {title: 'Contact - Lacquer Tracker'});
+    }
 });
 
 app.post('/contact', function (req, res) {
@@ -54,6 +64,13 @@ app.post('/contact', function (req, res) {
             }
         })
     }
+});
+
+
+
+//privacy policy
+app.get('/privacy', function(req, res) {
+    res.render('privacy.ejs', {title: 'Privacy Policy - Lacquer Tracker'});
 });
 
 

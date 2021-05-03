@@ -24,7 +24,7 @@
                             <%= moment(allusers[i].lastlogindate).tz("America/New_York").calendar() %>
                         <% } %>
                     </td>
-                    <td style="overflow:hidden"><%= allusers[i].ipaddress %></td>
+                    <td style="overflow:hidden"><%= allusers[i].ipaddress.toString().replace(",", " ") %></td>
                     <td style="overflow:hidden"><%= allusers[i].isvalidated %></td>
                     <td style="overflow:hidden"><%= allusers[i].level %></td>
                 </tr>

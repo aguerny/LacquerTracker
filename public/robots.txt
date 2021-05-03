@@ -23,6 +23,7 @@ Disallow: /logout
 Disallow: /validate
 Disallow: /revalidate
 Disallow: /reset
+Disallow: /privacy
 
 
 User-agent: MJ12bot

@@ -167,6 +167,11 @@ app.get('/forums/:forum/:id', function(req, res) {
             } else {
                 data.postdate = moment(post.date).tz("America/New_York").format('MMM D YYYY, h:mm a');
             }
+            if (moment(post.date).add(5, 'minutes').toDate() < moment(post.dateupdated).toDate() === true && post.dateupdated) {
+                data.postedited = true;
+            } else {
+                data.postedited = false;
+            }
             data.postforum = post.forum;
             var allcomments = post.comments.map(function(x) {
                 if (req.isAuthenticated() && req.user.timezone.length > 0) {

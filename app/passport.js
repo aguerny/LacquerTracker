@@ -57,6 +57,13 @@ module.exports = function(passport) {
 			} else {
 				return done(null, user);
 			}
+
+			//account has been deleted
+			if (user.deleted === true) {
+				return done(null, false, req.flash('loginMessage', 'This account has been deleted.'));
+			} else {
+				return done(null, user);
+			}
 		});
 	}));
 };
