@@ -16,7 +16,7 @@
     "ejs": "3.0.1",
     "errorhandler": "1.5.1",
     "express": "4.17.1",
-    "express-fileupload": "1.1.9",
+    "express-fileupload": "1.1.6",
     "express-session": "1.17.0",
     "gm": "1.23.1",
     "lodash": "4.17.21",
