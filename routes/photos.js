@@ -23,7 +23,7 @@ module.exports = function(app, passport) {
 //add polish photo
 app.get('/photo/add/:id', isLoggedIn, function(req, res) {
     Polish.findById(req.params.id, function(err, p) {
-        if (p === null) {
+        if (p === null || p === undefined) {
             res.redirect('/error');
         } else {
             var data = {};

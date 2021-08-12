@@ -19,7 +19,7 @@ module.exports = function(app, passport) {
 //view a polish by name
 app.get('/polish/:brand/:name', function(req, res) {
     Polish.findOne({brand: req.params.brand.replace(/_/g," "), name:req.params.name.replace(/_/g," ")}).populate('dupes', 'brand name').populate('checkins', 'photo pendingdelete creationdate type', null, {sort:{creationdate:-1}}).populate('photos').exec(function(err, polish) {
-        if (polish === null) {
+        if (polish === null || polish === undefined) {
             res.redirect('/error');
         } else {
             data = {};
@@ -115,7 +115,7 @@ app.get('/polish/:brand/:name', function(req, res) {
 app.get('/polishid/:id', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {
         Polish.findById(req.params.id).populate('dupes', 'brand name').populate('checkins', 'photo pendingdelete creationdate type', null, {sort:{creationdate:-1}}).populate('photos').exec(function(err, polish) {
-            if (polish === null) {
+            if (polish === null || polish === undefined) {
                 res.redirect('/error');
             } else {
                 data = {};
@@ -292,7 +292,7 @@ app.get('/polish/:brand/:name/delete', isLoggedIn, function(req, res) {
         res.redirect('/error')
     } else if (req.user.level === "admin") {
         Polish.findOne({brand: req.params.brand.replace(/_/g," "), name:req.params.name.replace(/_/g," ")}, function(err, polish) {
-            if (polish === null) {
+            if (polish === null || polish === undefined) {
                 res.redirect('/error');
             } else {
                 req.user.ownedpolish.remove(polish.id);
@@ -335,7 +335,7 @@ app.get('/polishid/:id/delete', isLoggedIn, function(req, res) {
         res.redirect('/error')
     } else if (req.user.level === "admin") {
         Polish.findById(req.params.id).exec(function(err, polish) {
-            if (polish === null) {
+            if (polish === null || polish === undefined) {
                 res.redirect('/error');
             } else {
                 req.user.ownedpolish.remove(polish.id);
@@ -497,7 +497,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
 //edit polish
 app.get('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
     Polish.findById(req.params.id).populate('dupes', 'brand name').exec(function(err, p) {
-        if (p === null || err) {
+        if (p === null || p === undefined || err) {
             res.redirect('/error');
         } else {
             Polish.find({}).sort({brand: 1}).sort({name: 1}).exec(function (err, polishes) {

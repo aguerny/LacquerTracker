@@ -18,7 +18,7 @@ app.get('/brand/:brandname', function(req, res) {
     var thisbrand = sanitizer.sanitize(req.params.brandname.replace(/_/g, " "));
 
     Brand.findOne({alternatenames: thisbrand.toLowerCase()}, function(err, brand) {
-        if (brand === null) {
+        if (brand === null || brand === undefined) {
             data = {};
             data.title = thisbrand + ' - Lacquer Tracker';
             data.meta = 'Information about the nail polish brand ' + thisbrand + ', including shade names, reviews, photos, swatches, dupes, colors, and types.';
