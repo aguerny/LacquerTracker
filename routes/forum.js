@@ -50,15 +50,17 @@ app.get('/forums', function(req, res) {
         for (i=0; i < latest.length; i++) {
             if (latest[i] !== undefined) {
                 if (req.isAuthenticated() && req.user.timezone.length > 0) {
-                    latestdates.push("Updated " + moment(latest[i].dateupdated).tz(req.user.timezone).calendar());
+                    latestdates.push(moment(latest[i].dateupdated).tz(req.user.timezone).calendar());
                 } else {
-                    latestdates.push("Updated " + moment(latest[i].dateupdated).tz("America/New_York").calendar());
+                    latestdates.push(moment(latest[i].dateupdated).tz("America/New_York").calendar());
                 }
             } else {
                 latestdates.push("Be the first!");
             }
         }
-        data.latest = latestdates;
+        data.latest = latest;
+        data.latestdate = latestdates;
+        data.threads = _.countBy(posts, 'forum');
         res.render('forums/forums.ejs', data);
     })
 });

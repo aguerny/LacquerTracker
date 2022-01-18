@@ -6,9 +6,9 @@
     <section>
         <center><h3>
             <% if (forumcat === "general") { %>
-                General Polish Dicussion</h3><br>Any discussion related to polish is welcome here.<%}%>
+                General Polish Dicussion</h3><br>Any discussion related to polish is welcome.<%}%>
             <% if (forumcat === "intro") { %>
-                Introductions</h3><br>New to Lacquer Tracker? Introduce yourself here.<%}%>
+                Introductions</h3><br>New to Lacquer Tracker? Introduce yourself and show off your collection.<%}%>
             <% if (forumcat === "lt") { %>
                 Announcements/Feedback</h3><br>Let's talk Lacquer Tracker.<%}%>
             <% if (forumcat === "offtopic") { %>
@@ -33,7 +33,7 @@
 </div>
 
 <script>
-$('td span').each(function() {
+$('span').each(function() {
     var fontSize = 100;
     while (this.scrollWidth > $(this).width() && fontSize > 0) {
         // adjust the font-size 5% at a time

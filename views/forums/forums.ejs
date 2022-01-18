@@ -4,6 +4,62 @@
 <div class="wrapper row2">
     <div id="container" class="clear">
     <section>
+        <center>
+        <div>
+            <h2 align="center">Forums</h2><br><br>
+            <table class="forumtable">
+                <col width="45%">
+                <col width="15%">
+                <col width="40%">
+                <tr>
+                    <th><span>Forum Name</span></th>
+                    <th><span>Threads</span></th>
+                    <th><span>Latest Post</span></th>
+                </tr>
+                <tr>
+                    <td><a href="/forums/general/">General Polish Discussion</a></td>
+                    <td><center><% if (threads["general"] != undefined) { %> <%=threads["general"]%> <% } else { %>0<%}%></center></td>
+                    <td><%=latestdate[0]%><% if (latest[0] != undefined) { %> - <%=latest[0].title%> <% } %></td>
+                </tr>
+                <tr>
+                    <td><a href="/forums/intro/">Introductory Posts</a></td>
+                    <td><center><% if (threads["intro"] != undefined) { %> <%=threads["intro"]%> <% } else { %>0<%}%></center></td>
+                    <td><%=latestdate[1]%><% if (latest[1] != undefined) { %> - <%=latest[1].title%> <% } %></td>
+                </tr>
+                <tr>
+                    <td><a href="/forums/offtopic/">Off Topic</a></td>
+                    <td><center><% if (threads["offtopic"] != undefined) { %> <%=threads["offtopic"]%> <% } else { %>0<%}%></center></td>
+                    <td><%=latestdate[2]%><% if (latest[2] != undefined) { %> - <%=latest[2].title%> <% } %></td>
+                </tr>
+                <tr>
+                    <td><a href="/forums/lt/">Announcements/Feedback</a></td>
+                    <td><center><% if (threads["lt"] != undefined) { %> <%=threads["lt"]%> <% } else { %>0<%}%></center></td>
+                    <td><%=latestdate[3]%><% if (latest[3] != undefined) { %> - <%=latest[3].title%> <% } %></td>
+                </tr>
+            </table>
+        </div>
+        </center>
+    </section>
+    </div>
+</div>
+
+<script>
+$('span').each(function() {
+    var fontSize = 100;
+    while (this.scrollWidth > $(this).width() && fontSize > 0) {
+        // adjust the font-size 5% at a time
+        fontSize -= 5;
+        $(this).css('font-size', fontSize + '%');
+    }
+});
+</script>
+
+
+
+
+<!-- <div class="wrapper row2">
+    <div id="container" class="clear">
+    <section>
         <div>
             <h2 align="center">Forums</h2><br>
             <ul class="forumlist">
@@ -18,6 +74,7 @@
         </div>
     </section>
     </div>
-</div>
+</div> -->
+
 
 <%- include('../layoutBottom'); %>
