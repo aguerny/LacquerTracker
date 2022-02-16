@@ -390,8 +390,8 @@ app.get('/polishadd', isLoggedIn, function(req, res) {
 
 app.post('/polishadd', isLoggedIn, function(req, res) {
     if (req.body.name.length > 0 && req.body.brand.length > 0) {
-        var polishNameToFind = sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,"").replace(/\s+/g, " ").replace(/[_]/g,"-").trim());
-        var polishBrandEntered = sanitizer.sanitize(req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,"").replace(/\s+/g, " ").replace(/[_]/g,"-").trim());
+        var polishNameToFind = sanitizer.sanitize(req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,"").replace(/\s+/g, " ").replace(/[_]/g,"-").replace(/[’]/g,"'").replace(/[…]/g,"...").trim());
+        var polishBrandEntered = sanitizer.sanitize(req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,"").replace(/\s+/g, " ").replace(/[_]/g,"-").replace(/[’]/g,"'").replace(/[…]/g,"...").trim());
         var polishBrandToFind;
         Brand.findOne({alternatenames:polishBrandEntered.toLowerCase()}, function(err, brand) {
             if (brand) {
@@ -522,8 +522,8 @@ app.post('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
             res.redirect('/error');
         } else {
             if (req.user.level === "admin") {
-                var polishName = sanitizer.sanitize((req.body.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")));
-                var polishBrand = sanitizer.sanitize((req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-")));
+                var polishName = sanitizer.sanitize(req.body.name.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,"").replace(/\s+/g, " ").replace(/[_]/g,"-").replace(/[’]/g,"'").replace(/[…]/g,"...").trim());
+                var polishBrand = sanitizer.sanitize(req.body.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,"").replace(/\s+/g, " ").replace(/[_]/g,"-").replace(/[’]/g,"'").replace(/[…]/g,"...").trim());
                 polish.name = polishName;
                 polish.brand = polishBrand;
                 Brand.findOne({name:currentBrand}, function (err, brand) {

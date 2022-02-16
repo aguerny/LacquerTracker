@@ -104,7 +104,7 @@ app.post('/admin/importbrands', isLoggedIn, function(req, res) {
             var reader = csv.createCsvFileReader(req.files.spreadsheet.tempFilePath, {columnsFromHeader:true, 'separator': ','});
             reader.addListener('data', function(data, err) {
                 if (data.brand.length > 0) {
-                    var polishBrandEntered = sanitizer.sanitize(data.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/\s+/g, " ").trim());
+                    var polishBrandEntered = sanitizer.sanitize(data.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,"").replace(/\s+/g, " ").replace(/[_]/g,"-").replace(/[’]/g,"'").replace(/[…]/g,"...").trim());
                     Brand.findOne({alternatenames:polishBrandEntered.toLowerCase()}, function(err, brand) {
                         if (!brand) {
                             var newBrand = new Brand ({
@@ -146,8 +146,8 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
             var reader = csv.createCsvFileReader(req.files.spreadsheet.tempFilePath, {columnsFromHeader:true, 'separator': ','});
             reader.addListener('data', function(data, err) {
                 if (data.name.length > 0 && data.brand.length > 0) {
-                    var polishNameToFind = sanitizer.sanitize(data.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,"").replace(/\s+/g, " ").replace(/[_]/g,"-").trim());
-                    var polishBrandEntered = sanitizer.sanitize(data.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,"").replace(/\s+/g, " ").replace(/[_]/g,"-").trim());
+                    var polishNameToFind = sanitizer.sanitize(data.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,"").replace(/\s+/g, " ").replace(/[_]/g,"-").replace(/[’]/g,"'").replace(/[…]/g,"...").trim());
+                    var polishBrandEntered = sanitizer.sanitize(data.brand.replace(/[\(\)?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,"").replace(/\s+/g, " ").replace(/[_]/g,"-").replace(/[’]/g,"'").replace(/[…]/g,"...").trim());
                     var polishBrandToFind;
                     Brand.findOne({alternatenames:polishBrandEntered.toLowerCase()}, function(err, brand) {
                         polishBrandToFind = brand.name;

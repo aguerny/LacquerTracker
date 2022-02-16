@@ -325,14 +325,14 @@ app.post('/admin/combine', isLoggedIn, function(req, res) {
                     if (!keep.batch.length) {
                         if (remove.batch.length) {
                             keep.batch = remove.batch;
-                            keep.keywords = keep.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.batch + " " + keep.code;
+                            keep.keywords = keep.name + " " + keep.brand + " " + keep.batch + " " + keep.code;
                         }
                     }
 
                     if (!keep.code.length) {
                         if (remove.code.length) {
                             keep.code = remove.code;
-                            keep.keywords = keep.name.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.brand.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\/]/g,"-") + " " + keep.batch + " " + keep.code;
+                            keep.keywords = keep.name + " " + keep.brand + " " + keep.batch + " " + keep.code;
                         }
                     }
 

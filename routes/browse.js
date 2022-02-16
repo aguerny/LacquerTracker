@@ -72,7 +72,7 @@ app.post('/browse', function(req, res) {
     var search = {};
 
     if (req.body.keywords.length > 0) {
-        search.keywords = new RegExp(sanitizer.sanitize(req.body.keywords.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'')), "i");
+        search.keywords = new RegExp(sanitizer.sanitize(req.body.keywords.replace(/[?]/g,"").replace(/[&]/g,"and").replace(/[\\/]/g,"-").replace(/^\s+|\s+$/g,'').replace(/[#]/g,"").replace(/\s+/g, " ").replace(/[_]/g,"-").replace(/[’]/g,"'").replace(/[…]/g,"...").trim()), "i");
     }
 
     if (req.body.brand) {
