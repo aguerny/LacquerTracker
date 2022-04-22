@@ -17,6 +17,7 @@ var timeout = require('connect-timeout');
 var errorHandler = require('errorhandler');
 var fileUpload = require('express-fileupload');
 var MongoDBStore = require('connect-mongodb-session')(session);
+var helmet = require("helmet");
 
 var app = express();
 
@@ -68,6 +69,10 @@ app.use(function (req, res, next) {
 });
 
 app.use(timeout(10000));
+
+app.use(helmet({
+    contentSecurityPolicy: false
+}));
 
 /*error handling, but doesn't work anymore
 app.use(function(req,res){
