@@ -12,6 +12,7 @@ var photoSchema = mongoose.Schema({
     pendingdelete: Boolean,
     pendingreason: String,
     date: Date,
+    method: String,
 });
 
 

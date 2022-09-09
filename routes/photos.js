@@ -39,7 +39,7 @@ app.get('/photo/add/:id', isLoggedIn, function(req, res) {
 app.post('/photo/add/:id', isLoggedIn, function(req, res) {
     if (req.files.photo.name.length > 0) {
         if ((req.files.photo.mimetype.startsWith("image")) && (req.files.photo.mimetype !== "image/gif")) {
-            var ext = ".jpg"; //path.extname(req.files.photo.name);
+            var ext = '.jpg'; //path.extname(req.files.photo.name);
             Polish.findById(req.params.id, function(err, p) {
                 var newPhoto = new Photo ({
                     polishid: p.id,
@@ -50,6 +50,7 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
                     pendingdelete: false,
                     pendingreason: '',
                     date: new Date(),
+                    method: 'upload',
                 })
                 newPhoto.save(function(err) {
                     p.dateupdated = new Date();
@@ -90,59 +91,64 @@ app.post('/photo/add/:id', isLoggedIn, function(req, res) {
         }
     } else if (req.body.url.length > 0) {
         fs.unlink(req.files.photo.tempFilePath, function() {
-            var ext = path.extname(sanitizer.sanitize(req.body.url.replace(/^(.+?\.(png|jpe?g)).*$/i, '$1')));
-            Polish.findById(req.params.id, function(err, p) {
-                var newPhoto = new Photo ({
-                    polishid: p.id,
-                    userid: req.user.id,
-                    location: '',
-                    creditname: sanitizer.sanitize(req.body.creditname),
-                    creditlink: sanitizer.sanitize(req.body.creditlink),
-                    pendingdelete: false,
-                    pendingreason: '',
-                    date: new Date(),
-                })
-                newPhoto.save(function(err) {
-                    var targetPath = path.resolve('./public/images/polish/' + req.params.id + '-' + newPhoto.id + ext);
-                    p.dateupdated = new Date();
-                    p.photos.push(newPhoto.id);
-                    p.save();
-                    download(sanitizer.sanitize(req.body.url.replace(/^(.+?\.(png|jpe?g)).*$/i, '$1')), targetPath, function(err) {
-                        if (err) {
-                            newPhoto.remove();
-                            p.photos.remove(newPhoto.id);
-                            p.save(function(err) {
-                                res.redirect('/error');
-                            })
-                        } else {
-                            gm(targetPath).strip().resize(600).write(targetPath, function (err) {
-                                if (err) {
-                                    fs.unlink(targetPath, function() {
-                                        newPhoto.remove();
-                                        p.photos.remove(newPhoto.id);
-                                        p.save(function(err) {
-                                            res.redirect('/error');
+            if (sanitizer.sanitize(req.body.url).substring(0,4) == 'data') {
+                res.redirect('/error');
+            } else {
+                var ext = '.jpg'; //path.extname(sanitizer.sanitize(req.body.url.replace(/^(.+?\.(png|jpe?g)).*$/i, '$1')));
+                Polish.findById(req.params.id, function(err, p) {
+                    var newPhoto = new Photo ({
+                        polishid: p.id,
+                        userid: req.user.id,
+                        location: '',
+                        creditname: sanitizer.sanitize(req.body.creditname),
+                        creditlink: sanitizer.sanitize(req.body.creditlink),
+                        pendingdelete: false,
+                        pendingreason: '',
+                        date: new Date(),
+                        method: 'URL: ' + sanitizer.sanitize(req.body.url),
+                    })
+                    newPhoto.save(function(err) {
+                        var targetPath = path.resolve('./public/images/polish/' + req.params.id + '-' + newPhoto.id + ext);
+                        p.dateupdated = new Date();
+                        p.photos.push(newPhoto.id);
+                        p.save();
+                        download(sanitizer.sanitize(req.body.url), targetPath, function(err) {
+                            if (err) {
+                                newPhoto.remove();
+                                p.photos.remove(newPhoto.id);
+                                p.save(function(err) {
+                                    res.redirect('/error');
+                                })
+                            } else {
+                                gm(targetPath).strip().resize(600).write(targetPath, function (err) {
+                                    if (err) {
+                                        fs.unlink(targetPath, function() {
+                                            newPhoto.remove();
+                                            p.photos.remove(newPhoto.id);
+                                            p.save(function(err) {
+                                                res.redirect('/error');
+                                            })
                                         })
-                                    })
-                                } else {
-                                    newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
-                                    newPhoto.save(function(err) {
-                                        if (p.tool == true || (p.type.indexOf("base") > -1) || (p.type.indexOf("top") > -1)) {
-                                            res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
-                                        } else {
-                                            if (p.swatch.length > 0) {
+                                    } else {
+                                        newPhoto.location = '/images/polish/' + p.id + "-" + newPhoto.id + ext;
+                                        newPhoto.save(function(err) {
+                                            if (p.tool == true || (p.type.indexOf("base") > -1) || (p.type.indexOf("top") > -1)) {
                                                 res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
                                             } else {
-                                                res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
+                                                if (p.swatch.length > 0) {
+                                                    res.redirect('/polish/' + p.brand.replace(/ /g,"_") + "/" + p.name.replace(/ /g,"_"));
+                                                } else {
+                                                    res.redirect('/photo/swatch/' + p.id + '/' + newPhoto.id);
+                                                }
                                             }
-                                        }
-                                    })
-                                }
-                            })
-                        }
+                                        })
+                                    }
+                                })
+                            }
+                        })
                     })
                 })
-            })
+            }
         })
     } else {
         res.redirect('/error');

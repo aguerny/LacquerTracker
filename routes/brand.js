@@ -43,7 +43,7 @@ app.get('/brand/:brandname', function(req, res) {
             data.bindie = brand.indie;
             data.bid = brand.id;
 
-            Polish.find({brand: thisbrand}).sort('name').exec(function(err, polishes) {
+            Polish.find({alternatenames: thisbrand.toLowerCase()}).sort('name').exec(function(err, polishes) {
                 var statuses = [];
                 data.colors = PolishColors;
 
