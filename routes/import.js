@@ -238,7 +238,7 @@ app.post('/admin/importpolish', isLoggedIn, function(req, res) {
                                         dateupdated: new Date(),
                                         createddate: new Date(),
                                         createdby: user.id,
-                                        createdmethod: 'excel',
+                                        createdmethod: 'import',
                                         dupes: [],
                                         photos: [],
                                         reviews: [],

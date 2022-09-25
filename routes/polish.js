@@ -420,6 +420,7 @@ app.post('/polishadd', isLoggedIn, function(req, res) {
                         dateupdated: new Date(),
                         createddate: new Date(),
                         createdby: sanitizer.sanitize(req.user.id),
+                        createdmethod: 'manual',
                         dupes: sanitizer.sanitize(req.body.dupes),
                         swatch: '',
                         checkins: [],
