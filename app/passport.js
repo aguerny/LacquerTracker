@@ -38,7 +38,7 @@ module.exports = function(passport) {
 
 		//find a user who username is the same as the form's username
 		//we are checking to see if the user trying to login already exists
-		User.findOne({ 'username' : new RegExp(["^", sanitizer.sanitize(username), "$"].join(""), "i")}, function(err, user) {
+		User.findOne({ 'username' : new RegExp(["^", sanitizer.sanitize(username.replace(/[^A-Za-z0-9]/g,"")), "$"].join(""), "i")}, function(err, user) {
 			//if there are any errors, return the error before anything else
 			if (err)
 				return done(err);

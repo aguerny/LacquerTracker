@@ -29,6 +29,7 @@ var types = [
 	{name:"plate", display:"stamping plate", category:"tool"},
 	{name:"powder", display:"powder", category:"polish"},
 	{name:"press-on", display:"press-on", category:"polish"},
+	{name:"reflective", display:"reflective", category:"polish"},
 	{name:"scented", display:"scented", category:"polish"},
 	{name:"sheer", display:"sheer", category:"polish"},
 	{name:"shimmer", display:"shimmer", category:"polish"},
