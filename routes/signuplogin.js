@@ -45,7 +45,7 @@ app.post('/signup', function(req, res) {
                                     request(verificationUrl,function(error,response,body) {
                                         body = JSON.parse(body);
                                         // Success will be true or false depending upon captcha validation.
-                                        if(body.success !== undefined && !body.success) {
+                                        if(body.success === false) {
                                             res.render('account/signup.ejs', {title: 'Signup - Lacquer Tracker', message: 'Captcha wrong. Try again.', email:sanitizer.sanitize(req.body.email), username:sanitizer.sanitize(req.body.username)});
                                         }
                                         if (body.success === true) {

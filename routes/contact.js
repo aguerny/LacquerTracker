@@ -33,7 +33,7 @@ app.post('/contact', function (req, res) {
         request(verificationUrl,function(error,response,body) {
             body = JSON.parse(body);
             // Success will be true or false depending upon captcha validation.
-            if(body.success !== undefined && !body.success) {
+            if(body.success === false) {
                 res.render('contact.ejs', {title: 'Contact - Lacquer Tracker', message:'Captcha wrong. Try again.', inputname:sanitizer.sanitize(req.body.name), inputemail:sanitizer.sanitize(req.body.email), inputmessage:sanitizer.sanitize(req.body.usermessage)});
             }
             if (body.success === true) {

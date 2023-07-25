@@ -58,7 +58,7 @@ app.post('/admin/message', isLoggedIn, function(req, res) {
     request(verificationUrl,function(error,response,body) {
         body = JSON.parse(body);
         // Success will be true or false depending upon captcha validation.
-        if(body.success !== undefined && !body.success) {
+        if(body.success === false) {
             res.render('admin/message.ejs', {title: 'Send Message - Lacquer Tracker', message: 'Captcha wrong. Try again.', emailmessage:sanitizer.sanitize(req.body.emailmessage), username:sanitizer.sanitize(req.params.username)});
         } else {
             if (body.success === true) {
