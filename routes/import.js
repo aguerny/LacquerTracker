@@ -364,42 +364,58 @@ app.get('/profile/:username/export', isLoggedIn, function(req, res) {
         if (!user) {
             res.redirect('/error');
         } else if (req.user.username == user.username || req.user.level == "admin") {
-            Polish.find().populate('reviews').sort({brand:1, name:1}).exec(function(err, polish) {
-                var polish = _.sortBy(polish, function (x) {return x.brand.toLowerCase();});
-                var data = [',Brand,Name,Collection,Color,Type,Status,Rating,Review,Notes'];
-                // Brand, Name, Collection, Color, Type, Status, Rating, Review, Notes
-                for (i=0; i<polish.length; i++) {
-                    var brand = accents.remove(polish[i].brand).replace(/,/g, '').replace(/•/g, '.');
-                    var name = accents.remove(polish[i].name).replace(/,/g, '');
-                    var batch = accents.remove(polish[i].batch).replace(/,/g, '');
-                    var color = _.uniqBy(polish[i].colorstodisplay).join("/").toLowerCase();
-                    var type = polish[i].type.join("/");
-                    if (user.ownedpolish.indexOf(polish[i].id) > -1) {
-                        var status = "owned";
-                    } else if (user.wantedpolish.indexOf(polish[i].id) > -1) {
-                        var status = "wanted";
-                    } else {
-                        var status = "";
-                    }
-                    var index = _.findIndex(polish[i].reviews, function(reviews) { return reviews.user == user.id })
-                    if (index > -1) {
-                        var rating = accents.remove(polish[i].reviews[index].rating).replace(/,/g, '').replace(/\r\n/g, ' - ');
-                        var review = accents.remove(polish[i].reviews[index].review).replace(/,/g, '').replace(/\r\n/g, ' - ');
-                        var notes = accents.remove(polish[i].reviews[index].notes).replace(/,/g, '').replace(/\r\n/g, ' - ');
-                    } else {
-                        var rating = "";
-                        var review = "";
-                        var notes = "";
-                    }
-                    if (status !== "" || rating.length > 0 || review.length > 0 || notes.length > 0) {
-                        data.push("\n");
-                        data.push(brand +","+ name +","+ batch +","+ color +","+ type +","+ status +","+ rating +","+ review +","+ notes);
+            var polishForExport = [];
+            Review.find({user:user}).exec(function(err, reviews) {
+                for (i=0; i<reviews.length; i++) {
+                    if (user.ownedpolish.indexOf(reviews[i].polish) == -1 && user.wantedpolish.indexOf(reviews[i].polish) == -1) {
+                        polishForExport.push(reviews[i].polish);
                     }
                 }
-                fs.writeFile(path.resolve('./public/images/tmp/export-' + user.username + ".csv"), data, 'utf8', function(err) {
-                    res.download(path.resolve('./public/images/tmp/export-' + user.username + ".csv"), function(err) {
-                        fs.unlink(path.resolve('./public/images/tmp/export-' + user.username + ".csv"), function(err){});
-                    });
+                for (i=0; i<user.ownedpolish.length; i++) {
+                    polishForExport.push(user.ownedpolish[i]);
+                }
+                for (j=0; j<user.wantedpolish.length; j++) {
+                    polishForExport.push(user.wantedpolish[j]);
+                }
+                Polish.find({_id: { $in: polishForExport },}).populate('reviews').sort({brand:1, name:1}).exec(function(err, polishExport) {
+                    var polishExport = _.sortBy(polishExport, function (x) {return x.brand.toLowerCase();});
+                    var data = [',Brand,Name,Code,Collection,Color,Type,Code,Status,Rating,Review,Notes'];
+                    // Brand, Name, Code, Collection, Color, Type, Status, Rating, Review, Notes
+                    for (k=0; k<polishExport.length; k++) {
+                        var brand = accents.remove(polishExport[k].brand).replace(/,/g, '').replace(/•/g, '.');
+                        var name = accents.remove(polishExport[k].name).replace(/,/g, '');
+                        var code = accents.remove(polishExport[k].name).replace(/,/g, '');
+                        var batch = accents.remove(polishExport[k].batch).replace(/,/g, '');
+                        var color = _.uniqBy(polishExport[k].colorstodisplay).join("/").toLowerCase();
+                        var type = polishExport[k].type.join("/");
+                        var code = accents.remove(polishExport[k].code).replace(/,/g, '');
+                        if (user.ownedpolish.indexOf(polishExport[k].id) > -1) {
+                            var status = "owned";
+                        } else if (user.wantedpolish.indexOf(polishExport[k].id) > -1) {
+                            var status = "wanted";
+                        } else {
+                            var status = "";
+                        }
+                        var index = _.findIndex(polishExport[k].reviews, function(reviews) { return reviews.user == user.id })
+                        if (index > -1) {
+                            var rating = accents.remove(polishExport[k].reviews[index].rating).replace(/,/g, '').replace(/\r\n/g, ' - ');
+                            var review = accents.remove(polishExport[k].reviews[index].review).replace(/,/g, '').replace(/\r\n/g, ' - ');
+                            var notes = accents.remove(polishExport[k].reviews[index].notes).replace(/,/g, '').replace(/\r\n/g, ' - ');
+                        } else {
+                            var rating = "";
+                            var review = "";
+                            var notes = "";
+                        }
+                        if (status !== "" || rating.length > 0 || review.length > 0 || notes.length > 0) {
+                            data.push("\n");
+                            data.push(brand +","+ name +","+ code +","+ batch +","+ color +","+ type +","+ status +","+ rating +","+ review +","+ notes);
+                        }
+                    }
+                    fs.writeFile(path.resolve('./public/images/tmp/export-' + user.username + ".csv"), data, 'utf8', function(err) {
+                        res.download(path.resolve('./public/images/tmp/export-' + user.username + ".csv"), function(err) {
+                            fs.unlink(path.resolve('./public/images/tmp/export-' + user.username + ".csv"), function(err){});
+                        });
+                    })
                 })
             })
         } else {
