@@ -45,11 +45,11 @@ module.exports = function(passport) {
 
 			//if no user is found, return the message
 			if (!user)
-				return done(null, false, req.flash('loginMessage', 'Wrong username or password combination.'));
+				return done(null, false, req.flash('loginMessage', 'Wrong username or password combination. (Error code #361)'));
 
 			//if the user is found but the password is wrong
 			if (!user.validPassword(sanitizer.sanitize(password)))
-				return done(null, false, req.flash('loginMessage', 'Wrong username or password combination.'));
+				return done(null, false, req.flash('loginMessage', 'Wrong username or password combination. (Error code #432)'));
 
 			//if user has not validated yet
 			if (user.isvalidated === false) {
