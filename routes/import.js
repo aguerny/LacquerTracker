@@ -379,16 +379,17 @@ app.get('/profile/:username/export', isLoggedIn, function(req, res) {
                 }
                 Polish.find({_id: { $in: polishForExport },}).populate('reviews').sort({brand:1, name:1}).exec(function(err, polishExport) {
                     var polishExport = _.sortBy(polishExport, function (x) {return x.brand.toLowerCase();});
-                    var data = [',Brand,Name,Code,Collection,Color,Type,Code,Status,Rating,Review,Notes'];
+                    var data = [',Brand,Name,Code,Collection,Color,Type,Status,Rating,Review,Notes'];
+                    //var data = [',LTID,Brand,Name,Code,Collection,Color,Type,Status,Rating,Review,Notes'];
                     // Brand, Name, Code, Collection, Color, Type, Status, Rating, Review, Notes
                     for (k=0; k<polishExport.length; k++) {
-                        var brand = accents.remove(polishExport[k].brand).replace(/,/g, '').replace(/•/g, '.');
-                        var name = accents.remove(polishExport[k].name).replace(/,/g, '');
-                        var code = accents.remove(polishExport[k].name).replace(/,/g, '');
-                        var batch = accents.remove(polishExport[k].batch).replace(/,/g, '');
+                        var ltid = polishExport[k].id;
+                        var brand = accents.remove(polishExport[k].brand).replace(/,/g, '').replace(/•/g, '.').replace(/;/g, ' - ');
+                        var name = accents.remove(polishExport[k].name).replace(/,/g, '').replace(/;/g, ' - ');
+                        var code = accents.remove(polishExport[k].code).replace(/,/g, '').replace(/;/g, ' - ');
+                        var batch = accents.remove(polishExport[k].batch).replace(/,/g, '').replace(/;/g, ' - ');
                         var color = _.uniqBy(polishExport[k].colorstodisplay).join("/").toLowerCase();
                         var type = polishExport[k].type.join("/");
-                        var code = accents.remove(polishExport[k].code).replace(/,/g, '');
                         if (user.ownedpolish.indexOf(polishExport[k].id) > -1) {
                             var status = "owned";
                         } else if (user.wantedpolish.indexOf(polishExport[k].id) > -1) {
@@ -398,9 +399,9 @@ app.get('/profile/:username/export', isLoggedIn, function(req, res) {
                         }
                         var index = _.findIndex(polishExport[k].reviews, function(reviews) { return reviews.user == user.id })
                         if (index > -1) {
-                            var rating = accents.remove(polishExport[k].reviews[index].rating).replace(/,/g, '').replace(/\r\n/g, ' - ');
-                            var review = accents.remove(polishExport[k].reviews[index].review).replace(/,/g, '').replace(/\r\n/g, ' - ');
-                            var notes = accents.remove(polishExport[k].reviews[index].notes).replace(/,/g, '').replace(/\r\n/g, ' - ');
+                            var rating = accents.remove(polishExport[k].reviews[index].rating).replace(/,/g, '').replace(/\r\n/g, ' - ').replace(/;/g, ' - ');
+                            var review = accents.remove(polishExport[k].reviews[index].review).replace(/,/g, '').replace(/\r\n/g, ' - ').replace(/;/g, ' - ');
+                            var notes = accents.remove(polishExport[k].reviews[index].notes).replace(/,/g, '').replace(/\r\n/g, ' - ').replace(/;/g, ' - ');
                         } else {
                             var rating = "";
                             var review = "";
@@ -409,6 +410,7 @@ app.get('/profile/:username/export', isLoggedIn, function(req, res) {
                         if (status !== "" || rating.length > 0 || review.length > 0 || notes.length > 0) {
                             data.push("\n");
                             data.push(brand +","+ name +","+ code +","+ batch +","+ color +","+ type +","+ status +","+ rating +","+ review +","+ notes);
+                            //data.push(ltid +","+ brand +","+ name +","+ code +","+ batch +","+ color +","+ type +","+ status +","+ rating +","+ review +","+ notes);
                         }
                     }
                     fs.writeFile(path.resolve('./public/images/tmp/export-' + user.username + ".csv"), data, 'utf8', function(err) {
