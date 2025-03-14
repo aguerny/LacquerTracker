@@ -133,6 +133,34 @@ app.post('/profile/:username/edit', isLoggedIn, function(req, res) {
 });
 
 
+//user requests account deletion
+app.post('/requestaccountdeletion/:username', isLoggedIn, function(req, res) {
+    User.findOne({username:new RegExp(["^", sanitizer.sanitize(req.params.username), "$"].join(""), "i")}, function(err, user) {
+        if (err || !user) {
+            res.redirect('/error');
+        } else {
+           var transport = nodemailer.createTransport({
+                sendmail: true,
+                path: "/usr/sbin/sendmail"
+            });
+
+            var mailOptions = {
+                from: "polishrobot@lacquertracker.com",
+                replyTo: user.email,
+                to: 'lacquertrackermailer@gmail.com',
+                subject: 'Account Deletion Request',
+                text: user.username + " has requested their account be deleted.",
+            }
+
+            transport.sendMail(mailOptions, function(error, response) {
+                transport.close();
+            });
+            res.redirect('/profile');
+        }
+    })
+});
+
+
 //delete user profile
 app.get('/profile/:username/delete', isLoggedIn, function(req, res) {
     if (req.user.level === "admin") {

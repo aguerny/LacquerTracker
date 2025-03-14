@@ -27,7 +27,14 @@ $(window).load(function () {
             <h2 style="display:inline-block"><%= username %>'s Profile</h2>
             <% if (isAuthenticated) { %>
                 <% if (user.username === username) { %>
-                    - <a href="/profile/<%= username %>/edit">Edit profile</a> | <a href="/import">Import polish</a> | <a href="/profile/<%= username %>/export">Export polish</a>
+                    - <a href="/profile/<%= username %>/edit">Edit profile</a> | <span class="postflag"><a href="">Request Account Deletion</a></span> | <a href="/import">Import polish</a> | <a href="/profile/<%= username %>/export">Export polish</a>
+                    <div class="postbox"><br>
+                        <form action="/requestaccountdeletion/<%= username %>" method="post">
+                            <textarea name="message" cols="50" rows="5" placeholder="Are you sure you want to permanently delete your Lacquer Tracker account? To continue, click submit to initiate your account deletion request. Once submitted, an admin will be in touch with next steps." style="max-width:98%"></textarea>
+                            <br>
+                            <input type="submit" value="Submit" class="button">
+                        </form>
+                    </div>
                 <% } else if (useremail === "on") {%>
                     - <a href="/profile/<%= username %>/message">Send a message</a>
                 <% } %>
@@ -325,6 +332,11 @@ $('#ownedpolish').each(function() {
 
         return false;
     });
+});
+
+$(".postflag").click(function(){
+    $(this).siblings(".postbox").show();
+    return false;
 });
 </script>
 
