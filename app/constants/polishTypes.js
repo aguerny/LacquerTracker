@@ -43,6 +43,7 @@ var types = [
 	{name:"topper", display:"topper", category:"polish"},
 	{name:"uv", display:"uv", category:"polish"},
 	{name:"vinyl", display:"vinyl/stencil", category:"tool"},
+	{name:"water", display:"water-based", category:"polish"},
 	{name:"wrap", display:"wrap/strip", category:"polish"}
 ];
 
