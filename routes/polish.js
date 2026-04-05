@@ -501,16 +501,13 @@ app.get('/polishedit/:id/dupes', isLoggedIn, function(req, res) {
         if (p === null || p === undefined || err) {
             res.redirect('/error');
         } else {
-            Polish.find({}).sort({brand: 1}).sort({name: 1}).exec(function (err, polishes) {
-                var data = {};
-                data.title = 'Edit Dupes - Lacquer Tracker';
-                data.editid = p.id;
-                data.editname = p.name;
-                data.editbrand = p.brand;
-                data.editdupes = p.dupes;
-                data.polish = polishes;
-                res.render('polish/edit.ejs', data);
-            })
+            var data = {};
+            data.title = 'Edit Dupes - Lacquer Tracker';
+            data.editid = p.id;
+            data.editname = p.name;
+            data.editbrand = p.brand;
+            data.editdupes = p.dupes;
+            res.render('polish/edit.ejs', data);
         }
     });
 });
