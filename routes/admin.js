@@ -163,7 +163,11 @@ app.get('/admin/flaggedphotos/:pid/:id/:action', isLoggedIn, function(req, res) 
                 })
             } else if (req.params.action === "remove") {
                 fs.unlink(path.resolve('./public/'+photo.location), function(err) {
-                    if (err) throw err;
+                    if (err) {
+                        fs.unlink(path.resolve('./public/images/polish/' + req.params.pid + '-' + req.params.id + '.jpg'), function(err) {
+                            if (err) throw err;
+                        })
+                    }
                 })
                 photo.remove();
                 Polish.findById(req.params.pid, function(err, p) {
