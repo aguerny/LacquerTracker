@@ -10,6 +10,8 @@
             <div>
         		<form action="/polishedit/<%= editid %>/dupes" method="post">
     	     		<h3>Add dupes:</h3><br><br>
+                    Dupes added below are meant to be polishes from another brand that look similar to this polish.<br><br>
+                    If you'd like to report a mistaken duplicate entry for this exact same polish, please instead click the flag icon on the polish's page.<br><br><br>
         			Name:<br>
                     <input type="text" name="name" value="<%= editname %>" class="width50" <% if (isAuthenticated) { if (user.level !== "admin") { %> readonly="readonly" <% } } %> required><br><br><br>
                     Brand:<br>
